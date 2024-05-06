@@ -1,82 +1,81 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
+import React, { Children, useState } from 'react';
 import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { Box, IconButton, ListItemIcon } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home'
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 
-const drawerWidth = 240;
+function Sidebar() {
+  const listItems = [
+    { id: 1, text: "Đào tạo", IconText: ImportContactsIcon },
+    { id: 2, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: ["Nhu cầu", "Kế hoạch tuyển dụng", "Phỏng vấn"] },
+    { id: 3, text: "Thống kê", IconText: SignalCellularAltIcon }
+  ]
+  // const [isOpen, setIsOpen] = useState(false);
+  // const handleMouseEnter = () => {
+  //   setIsOpen(true);
+  // };
 
-export default function PermanentDrawerLeft() {
+  // const handleMouseLeave = () => {
+  //   setIsOpen(false);
+  // };
+  //    onMouseEnter={handleMouseEnter}
+  // onMouseLeave={handleMouseLeave}
+    const [open, setOpen] = useState({});
+  
+    const handleClick = (id) => {
+      setOpen(prev => ({ ...prev, [id]: !prev[id] }));
+    };
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+    <Box>
+      {/* <IconButton
+
+        color='red'
+        edge='start'
+        sx={{ mr: 2 }}
       >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Permanent drawer
-          </Typography>
-        </Toolbar>
-      </AppBar>
+        <HomeIcon />
+      </IconButton> */}
       <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="permanent"
+        variant='permanent'
         anchor="left"
+        sx={{ width: 240, flexShrink: 0, '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box', marginTop: '64px', backgroundColor: '#f3f3f3' } }}
       >
-        <Toolbar />
-        <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
+          {listItems.map(({ id, text, IconText, children }) => (
+             <div key={id}> {/* Sử dụng div thay cho React.Fragment */}
+             <ListItem button onClick={() => children && handleClick(id)}>
+               <ListItemIcon>
+                 <IconText />
+               </ListItemIcon>
+               <ListItemText primary={text} />
+               {children ? (open[id] ? <ExpandLess /> : <ExpandMore />) : null}
+             </ListItem>
+             {children && (
+               <Collapse in={open[id] ?? false} timeout="auto" unmountOnExit>
+                 <List component="div" disablePadding>
+                   {children.map((subItem, index) => (
+                     <ListItem button key={subItem - index} sx={{ pl: 4 }}>
+                       <ListItemText primary={subItem} />
+                     </ListItem>
+                   ))}
+                 </List>
+               </Collapse>
+             )}
+           </div>
           ))}
         </List>
       </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
-      >
-        <Toolbar />
-      
-      </Box>
     </Box>
+
   );
 }
+
+export default Sidebar;
