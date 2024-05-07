@@ -71,8 +71,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export default function MiniDrawer() {
-   
+export default function Navbar() {
+
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -98,9 +98,19 @@ export default function MiniDrawer() {
         setOpen(true);
     };
 
-    const handleDrawerClose = () => {
+    
+    const handleDrawerClose = (event) => {
+        const drawer = document.getElementById('drawer')
         setOpen(false);
+        if(!drawer.contains(event.relatedTarget)){
+            setOpenChil(prevState => {
+                const newState = { ...prevState };
+                Object.keys(newState).forEach(key => newState[key] = false);
+                return newState;
+            });
+        }
     };
+
 
 
     const listItems = [
@@ -114,13 +124,16 @@ export default function MiniDrawer() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box
+        
+            sx={{ display: 'flex' }}>
             <CssBaseline />
-           
+
             <Drawer
                 sx={{ flexShrink: 0, '& .MuiDrawer-paper': { boxSizing: 'border-box', marginTop: '64px', backgroundColor: '#f3f3f3' } }}
                 onMouseOver={handleDrawerOpen}
                 onMouseOut={handleDrawerClose}
+                id='drawer'
                 variant="permanent" open={open}>
                 <Divider />
                 <List>
@@ -162,10 +175,7 @@ export default function MiniDrawer() {
                     ))}
                 </List>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader />
 
-            </Box>
         </Box >
     );
 }

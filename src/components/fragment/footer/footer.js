@@ -1,15 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.css'
 
-export default function footer() {
+export default function Footer() {
   return (
     <>
-      <div
+      <div 
         className="text-center p-4"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
       >
-        © 2021 Copyright:
+        © 2021 Copyright 
         <a className="text-reset fw-bold" href="https://mdbootstrap.com/">
-          MDBootstrap.com
+          : MDBootstrap.com
         </a>
       </div>
     </>
