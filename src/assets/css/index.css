@@ -5,11 +5,13 @@ html, body {
     display: flex; /* Thiết lập Flexbox */
     flex-direction: column; /* Các thành phần con sắp xếp theo chiều dọc */
     min-height: 100vh; /* Đảm bảo body có ít nhất chiều cao bằng viewport */
-    position: relative;
+    background-color: rgb(231, 227, 227) !important;
 }
 
 #root {
     flex: 1; /* Cho phép div này mở rộng để chiếm mọi không gian có sẵn */
+    position: relative;
+
 }
 
 footer {
@@ -17,3 +19,5 @@ footer {
     width: 100%;
     bottom: 0;
 }
+
+
