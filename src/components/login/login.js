@@ -46,7 +46,6 @@ const defaultTheme = createTheme();
 
 export default function Login() {
   const [visible, setVisible] = React.useState(true)
-    const firstRender = React.useRef(true)
     const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -63,6 +62,13 @@ export default function Login() {
     const [flagValidate, setFlagValidate] = React.useState({
         validEmail: false,
         validPass: false,
+        emailError: "Email không được để trống",
+        passwordError: "Mật khẩu không được để trống",
+    })
+
+    const [showErrors, setShowErrors] = React.useState({
+        showEmailError: false,
+        showPassError: false,
     })
 
 
@@ -71,8 +77,11 @@ export default function Login() {
         let patternEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
         if (value.match(patternEmail)){
             setFlagValidate({...flagValidate, validEmail : true})
-        } else {
-            setFlagValidate({...flagValidate, validEmail : false})
+        } else if (value===""){
+            setFlagValidate({...flagValidate, validEmail : false, emailError: "Email không được bỏ trống"})
+        }
+        else {
+            setFlagValidate({...flagValidate, validEmail : false, emailError: "Không đúng định dạng email"})
         }
     }
 
@@ -81,8 +90,11 @@ export default function Login() {
         let patternPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm
         if (value.match(patternPassword)){
             setFlagValidate({...flagValidate, validPass: true})
-        } else {
-            setFlagValidate({...flagValidate, validPass: false})
+        } else if (value === ""){
+            setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu không được để trống" })
+        }
+        else {
+            setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu phải ít nhất 8 ký tự và có viết hoa, thường và số"})
         }
     }
 
@@ -95,12 +107,12 @@ export default function Login() {
     const submitButton = React.useRef()
 
     // Chạy hàm check cho lần chạy đầu tiên
-    React.useEffect(() => {
-        firstRender.current=false
-    }, []);
 
-    console.log("ok")
 
+
+    function checkValidate() {
+        console.log(emailInput.current)
+    }
 
     return (
     <ThemeProvider theme={defaultTheme}>
@@ -129,13 +141,15 @@ export default function Login() {
               label="Email Address"
               name="email"
               autoComplete="email"
-
+              inputProps={{pattern: "^[A-Za-z0-9]{3,16}$"}}
               placeholder="Example123@gmail.com"
               inputRef={emailInput}
               onChange={(e) => checkEmail(e.currentTarget.value)}
               // onChange={checkValidate}
-              error={!firstRender.current && !flagValidate.validEmail }
-              helperText={!firstRender.current && !flagValidate.validEmail ? "Không đúng định dạng email" : null}
+              onFocus={() => {setShowErrors({...showErrors,  showEmailError: true})}}
+              onBlur={() => {setShowErrors({...showErrors,  showEmailError: false})}}
+              error={showErrors.showEmailError && !flagValidate.validEmail}
+              helperText={showErrors.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
               // onFocus={(e) => checkEmail(e.currentTarget.value)}
             />
             <TextField
@@ -150,13 +164,14 @@ export default function Login() {
               InputProps={{
                 endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
               }}
-
+              onFocus={() => {setShowErrors({...showErrors,  showPassError: true})}}
+              onBlur={() => {setShowErrors({...showErrors,  showPassError: false})}}
               placeholder={"Example123"}
               inputRef={passwordInput}
-              error={!firstRender.current && !flagValidate.validPass}
+              error={showErrors.showPassError && !flagValidate.validPass}
               onChange={(e) => checkPass(e.currentTarget.value)}
               // onChange={checkValidate}
-              helperText={!firstRender.current && !flagValidate.validPass ? "Mật khẩu phải ít nhất 8 ký tự và có viết hoa, thường và số" : null}
+              helperText={showErrors.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -167,7 +182,7 @@ export default function Login() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={firstRender.current || validForm}
+              disabled={validForm}
               ref={submitButton}
             >
               Sign In
