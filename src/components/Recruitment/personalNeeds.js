@@ -70,7 +70,8 @@ export default function PersonalNeeds() {
                         onClose={handleClickPracticeClose}
                         id="dialog"
                     >
-                        <DialogContent sx={{
+                        <DialogContent id="test" sx={{
+                            overflow: 'hidden',
                             p: 0,
                             position: 'relative'
                         }}>
@@ -84,7 +85,7 @@ export default function PersonalNeeds() {
                             >
                                 <ClearIcon />
                             </IconButton>
-                            <img src={imagePractice} alt="image" style={{ width: '100%' }} />
+                            <img src={imagePractice} alt="image" style={{ width: '100%' , backgroundSize: 'contain', backgroundRepeat: 'no-repeat'}} />
                         </DialogContent>
                     </Dialog>
                     <div className=" mt-2">

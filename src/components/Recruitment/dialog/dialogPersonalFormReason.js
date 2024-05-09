@@ -6,25 +6,10 @@ import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CreateIcon from '@mui/icons-material/Create';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-
-
+import axios from 'axios';
 
 
 export default function DialogPersonalFormReason({ open, onClose }) {
-    // const [text, setText] = useState("");
-    // const textareaRef = useRef(null);
-    // useEffect(() => {
-    //     setHeight();
-    // }, [text])
-    // const setHeight = () => { 
-    //     if(textareaRef.current){
-    //         textareaRef.current.style.height = 'auto'; 
-    //         textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'; 
-    //     }
-    // }
-    // const handleChange = (event) =>{
-    //     setText(event.target.value)
-    // }
     return (
         <>
             <Dialog
@@ -55,7 +40,6 @@ export default function DialogPersonalFormReason({ open, onClose }) {
                                     placeholder="Leave a comment here"
                                     id="floatingTextarea2"
                                     style={{ height: 200 }}
-                                    // onChange={handleChange}
                                 >
 
                                 </textarea>
@@ -70,9 +54,6 @@ export default function DialogPersonalFormReason({ open, onClose }) {
                             </div>
                         </div>
                     </form>
-
-
-
                 </DialogTitle>
             </Dialog >
         </>
