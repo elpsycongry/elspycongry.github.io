@@ -12,9 +12,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {IconButton, InputAdornment} from '@mui/material';
+import {Alert, IconButton, InputAdornment} from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import axios from "axios";
+import {SnackbarProvider, useSnackbar} from 'notistack';
+import {useNavigate} from "react-router-dom";
 
 function Copyright(props) {
 
@@ -46,13 +49,31 @@ const defaultTheme = createTheme();
 
 export default function Login() {
     const [visible, setVisible] = React.useState(true)
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            passwordInput: data.get('password'),
-        });
+        const formData = new FormData(event.currentTarget);
+        const data = {};
+        formData.forEach((value, key) => data[key] = value);
+        setFlagValidate({...flagValidate, validSubmit: false})
+        axios.post("http://localhost:8080/login", data).then(
+            res => {
+                console.log(res.data.data)
+                if (res.data.code === "401") {
+                    enqueueSnackbar(res.data.msg, { variant:"error", anchorOrigin: { horizontal: "right", vertical: "top"}});
+                }
+                if (res.data.code === "200") {
+                    localStorage.setItem("currentUser", res.data.data)
+                    enqueueSnackbar('Đăng nhập thành công !', { variant:"success"});
+                    navigate("/home")
+                }
+                setFlagValidate({...flagValidate, validSubmit: true})
+            }
+        ).catch(reason => {
+            setFlagValidate({...flagValidate, validSubmit: true})
+            console.log(reason)
+        })
     };
 
     // Ép buộc component re-render
@@ -62,20 +83,23 @@ export default function Login() {
     const [flagValidate, setFlagValidate] = React.useState({
         validEmail: false,
         validPass: false,
+        validSubmit: true,
         emailError: "Email không được để trống",
         passwordError: "Mật khẩu không được để trống",
     })
 
-    const [showErrors, setShowErrors] = React.useState({
+    const [showMsg, setShowMsg] = React.useState({
         showEmailError: false,
         showPassError: false,
+        showUserNotFoundError: false,
+        showSuccesAlert: false,
+        showFailAlert: false,
     })
 
 
     // Hàm kiểm tra email
     let checkEmail = (value) => {
         let patternEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        console.log(value)
         if (value.match(patternEmail)) {
             setFlagValidate({...flagValidate, validEmail: true})
         } else if (value === "") {
@@ -117,90 +141,104 @@ export default function Login() {
     }
 
     return (
-        <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline/>
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar sx={{m: 1, bgcolor: 'orange'}}>
-                        <LockOutlinedIcon/>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            inputProps={{pattern: "^[A-Za-z0-9]{3,16}$"}}
-                            placeholder="Example123@gmail.com"
 
-                            inputRef={emailInput}
-                            onChange={(e) => checkEmail(e.currentTarget.value)}
-                            onFocus={() => {
-                                setShowErrors({...showErrors, showEmailError: true})
-                            }}
-                            error={showErrors.showEmailError && !flagValidate.validEmail}
-                            helperText={showErrors.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type={visible ? "password" : "text"}
-                            id="password"
-                            autoComplete="current-password"
-                            InputProps={{
-                                endAdornment: <EndAdorment visible={visible} setVisible={setVisible}/>
-                            }}
+            <ThemeProvider theme={defaultTheme}>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline/>
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{m: 1, bgcolor: 'orange'}}>
+                            <LockOutlinedIcon/>
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="name"
+                                autoComplete="email"
+                                inputProps={{pattern: "^[A-Za-z0-9]{3,16}$"}}
+                                placeholder="Example123@gmail.com"
 
-                            onFocus={() => {
-                                setShowErrors({...showErrors, showPassError: true})
-                            }}
-                            placeholder={"Example123"}
-                            inputRef={passwordInput}
-                            error={showErrors.showPassError && !flagValidate.validPass}
-                            onChange={(e) => checkPass(e.currentTarget.value)}
-                            helperText={showErrors.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
-                        />
-                        {/* <FormControlLabel
+                                inputRef={emailInput}
+                                onChange={(e) => checkEmail(e.currentTarget.value)}
+                                onFocus={() => {
+                                    setShowMsg({...showMsg, showEmailError: true})
+                                }}
+                                error={showMsg.showEmailError && !flagValidate.validEmail}
+                                helperText={showMsg.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type={visible ? "password" : "text"}
+                                id="password"
+                                autoComplete="current-password"
+                                InputProps={{
+                                    endAdornment: <EndAdorment visible={visible} setVisible={setVisible}/>
+                                }}
+
+                                onFocus={() => {
+                                    setShowMsg({...showMsg, showPassError: true})
+                                }}
+                                placeholder={"Example123"}
+                                inputRef={passwordInput}
+                                error={showMsg.showPassError && !flagValidate.validPass}
+                                onChange={(e) => checkPass(e.currentTarget.value)}
+                                helperText={showMsg.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
+                            />
+                            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{mt: 3, mb: 2}}
-                            disabled={validForm}
-                            ref={submitButton}
-                        >
-                            Sign In
-                        </Button>
-                        {/* <Grid container>
+                            {flagValidate.showSuccesAlert
+                                &&
+                                <Alert style={{marginTop: 5}} severity="success">
+                                    This is a success Alert.
+                                </Alert>
+                            }
+                            {flagValidate.showFailAlert
+                                &&
+                                <Alert style={{marginTop: 5}} severity="error">
+                                    This is a success Alert.
+                                </Alert>
+                            }
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{mt: 3, mb: 2}}
+                                disabled={validForm}
+                                ref={submitButton}
+                            >
+                                Sign In
+                            </Button>
+                            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
             </Grid> */}
+                        </Box>
                     </Box>
-                </Box>
-                <Copyright sx={{mt: 8, mb: 4}}/>
-            </Container>
-        </ThemeProvider>
+                    <Copyright sx={{mt: 8, mb: 4}}/>
+                </Container>
+            </ThemeProvider>
+
     );
 }
