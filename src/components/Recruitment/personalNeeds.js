@@ -16,7 +16,7 @@ import moment from 'moment';
 import { useEffect, useState } from "react";
 import axios from "axios";
 export default function PersonalNeeds() {
-    
+
     const [open, setOpen] = useState(false);
     const handleClickPracticeOpen = () => {
         setOpen(true);
@@ -138,12 +138,14 @@ export default function PersonalNeeds() {
                                     <td className="count-td"></td>
                                     <td>{item.name}</td>
                                     <td>{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
-                                    <td className=" text-center">{item.status}</td>
-                                    <td className=" text-center">{item.users.name}</td>
-                                    <td className=" text-center">
-                                        <RemoveRedEyeIcon className="color-blue white-div font-size-large"/>
-                                        <CreateIcon className="color-orange pencil-btn font-size-medium"/>
-                                    </td>
+                                    <td className="text-center">{item.status}</td>
+<td className="text-center">{item.users.name}</td>
+<td className="text-center">
+  <RemoveRedEyeIcon className="color-blue white-div font-size-large" />
+  {item.status.toLowerCase() === 'đã hủy' ? (<CreateIcon className="color-orange pencil-btn font-size-medium bg-whiteImportant"/>) : (
+        <CreateIcon className="color-orange pencil-btn font-size-medium" />
+  )}
+</td>
                                 </tr>
                             ))}
                         </table>

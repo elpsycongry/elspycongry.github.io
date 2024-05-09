@@ -105,7 +105,9 @@ body{
 .count-tr {
     height: 40px;
 }
-
+.hidden {
+    display: none;
+  }
 
 /*Có thể tái sử dụng */
 .text-right {
@@ -146,6 +148,9 @@ body{
 
 .color-blue {
     color: #4f4fe5 !important
+}
+.bg-whiteImportant{
+    background-color: #fdfdfd !important;
 }
 
 /*Có thể tái sử dụng */
