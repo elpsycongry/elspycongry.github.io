@@ -75,6 +75,7 @@ export default function Login() {
     // Hàm kiểm tra email
     let checkEmail = (value) => {
         let patternEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+        console.log(value)
         if (value.match(patternEmail)){
             setFlagValidate({...flagValidate, validEmail : true})
         } else if (value===""){
@@ -87,12 +88,11 @@ export default function Login() {
 
     // Hàm kiểm tra pass
     let checkPass = (value) => {
-        let patternPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm
+        let patternPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/g
         if (value.match(patternPassword)){
             setFlagValidate({...flagValidate, validPass: true})
         } else if (value === ""){
             setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu không được để trống" })
-            setShowErrors({...showErrors, showPassError: false})
         }
         else {
             setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu phải ít nhất 8 ký tự và có viết hoa, thường và số"})
@@ -144,14 +144,12 @@ export default function Login() {
               autoComplete="email"
               inputProps={{pattern: "^[A-Za-z0-9]{3,16}$"}}
               placeholder="Example123@gmail.com"
+
               inputRef={emailInput}
               onChange={(e) => checkEmail(e.currentTarget.value)}
-              // onChange={checkValidate}
               onFocus={() => {setShowErrors({...showErrors,  showEmailError: true})}}
-              // onBlur={() => {setShowErrors({...showErrors,  showEmailError: false})}}
               error={showErrors.showEmailError && !flagValidate.validEmail}
               helperText={showErrors.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
-              // onFocus={(e) => checkEmail(e.currentTarget.value)}
             />
             <TextField
               margin="normal"
@@ -165,13 +163,12 @@ export default function Login() {
               InputProps={{
                 endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
               }}
+
               onFocus={() => {setShowErrors({...showErrors,  showPassError: true})}}
-              // onBlur={() => {setShowErrors({...showErrors,  showPassError: false})}}
               placeholder={"Example123"}
               inputRef={passwordInput}
               error={showErrors.showPassError && !flagValidate.validPass}
               onChange={(e) => checkPass(e.currentTarget.value)}
-              // onChange={checkValidate}
               helperText={showErrors.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
             />
             {/* <FormControlLabel
