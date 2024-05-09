@@ -5,7 +5,7 @@
 }
 
 .practice {
-    color: #4d4dff;
+    color: #005B9F;
 }
 
 .content-recruiment {
@@ -18,43 +18,45 @@
 
 }
 
+.hover-btn:hover {
+    background-color: #21912e;
+    transition: 0.5s ease-in-out;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }
 
 .w-px {
-    width: 250px;
+    width: 300px;
 }
 
-.h-px {
-    margin-left: 10px;
-
-    height: 30px !important;
-    padding: 0 !important;
-}
-
-.top-left {
-    left: 5px !important;
-    top: -12px !important;
+.ml-10 {
+    margin-left: 10px !important;
 }
 
 .search-icon {
     right: 7px;
-    top: 2px;
+    top: 5.1px;
     width: 25px;
     height: 25px;
 }
 
 .plus-icon {
-    left: 6px;
+    font-size: 27px !important;
+    left: 2px;
     top: 4px;
 }
 
 .btn-create {
+    font-size: 20px;
     border: none;
-    height: 110%;
-    background-color: #20af30;
+    height: 100%;
+    background-color: #419A00;
     padding: 0 10px;
+    box-sizing: border-box;
+    transition: 0.5s ease-in-out;
+
 }
 
 .search-input input {
@@ -62,23 +64,28 @@
     border: 1px solid light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
     padding-left: 14px;
     padding-right: 36px;
-
+    height: 35px;
 }
-.pencil-btn{
-    background-color: #ff8a00 !important;
+
+.pencil-btn {
+    background-color: #FFAA00 !important;
     border-radius: 50% !important;
     width: 25px !important;
     height: 25px !important;
     padding: 3px !important;
     color: white !important;
 }
+
+
+
 .search-input input:focus {
     outline: none;
-    border: 2px solid #4088FF;
+    border: 2px solid #4088FF !important;
 }
 
+
 .min-width {
-    min-width: 195px;
+    min-width: 240px;
 }
 
 .header-tr th {
@@ -91,23 +98,86 @@
     font-size: 25px;
 }
 
+#dialog .MuiPaper-root {
+    max-width: 1315px;
+}
 
-body{
+#formWatch .MuiPaper-root {
+    width: 40%;
+    overflow: hidden;
+}
+
+#select-form .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+    top: -10px !important;
+}
+
+#select-form .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+    padding: 5px;
+}
+
+#select-form .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+    height: 100%;
+}
+
+
+body {
     counter-reset: rowNumber;
 }
-.count-tr{
+
+.count-tr {
     counter-increment: rowNumber;
 }
-.count-tr td:first-child::before{
+
+.count-tr td:first-child::before {
     content: counter(rowNumber);
 }
 
 .count-tr {
     height: 40px;
 }
-.hidden {
-    display: none;
-  }
+
+
+.send {
+    text-align: right;
+    display: flex;
+    margin-top: 7px;
+    justify-content: flex-end;
+
+}
+
+.send-btn {
+    width: 80px;
+    text-align: left;
+    background-color: #388738;
+    color: #fdfdfd;
+    border-radius: 3px;
+}
+
+.plusTech {
+    margin-left: 14px;
+    font-size: 13px;
+}
+
+/* .send button {
+    width: 100%;
+    border: none;
+    color: #e9e9e9;
+    text-align: left;
+
+
+}
+
+.send-child {
+    background-color: #239f23;
+
+} */
+
+.send .iconSend {
+    top: 6px;
+    right: 9px;
+    color: #fdfdfd;
+}
+
 
 /*Có thể tái sử dụng */
 .text-right {
@@ -137,7 +207,8 @@ body{
 .font-size-medium {
     font-size: 36px !important;
 }
-.font-size-large{
+
+.font-size-large {
     font-size: 40px !important;
 }
 
@@ -147,10 +218,121 @@ body{
 
 
 .color-blue {
-    color: #4f4fe5 !important
+    color: #258BD0 !important
 }
 .bg-whiteImportant{
     background-color: #fdfdfd !important;
 }
 
+.color-red {
+    color: red;
+}
+
+.border-clr-grey {
+    border-color: light-dark(rgb(163 163 163), rgb(133, 133, 133)) !important;
+}
+
+.border {
+    border: 1px solid;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.last-child:last-child {
+    margin-bottom: 0;
+}
+
+.w-130 {
+    width: 130px;
+}
+
+.w-250 {
+    width: 220px;
+}
+
+.p-tricklord {
+    padding-right: 31px;
+}
+
+.align-item-center {
+    align-items: center !important;
+}
+
+.fs-edit {
+    font-size: 45px !important;
+}
+
+.fs-15 {
+    font-size: 15px !important;
+}
+
+.fs-1_5em {
+    font-size: 1.5em !important;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.mr-15 {
+    margin-right: 15px;
+}
+
+.fs-18_5 {
+    font-size: 18.5px;
+}
+
+.bg-clr-danger {
+    background-color: #FF4A4A !important;
+}
+
+.bg-clr-success {
+    background-color: #419A00 !important;
+}
+
+.w-98 {
+    width: 98%;
+}
+
+.height-35 {
+    height: 35px;
+}
+
+.resize {
+    overflow: hidden;
+    resize: none;
+}
+.pr-0{
+    padding-right: 0;
+}
+
 /*Có thể tái sử dụng */
+.table-edit th,
+.table-edit td {
+    border: 2px solid;
+    border-color: #D5D5D5;
+}
+
+.namePersonal {
+    font-size: 16px;
+    font-weight: 200;
+    margin-bottom: 3px;
+}
+
+.time-edit {
+    font-size: 16px;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    line-height: 36px;
+    margin-left: 15px;
+}
+
+.btn-edit {
+    border-radius: 4px;
+    font-size: 20px;
+    padding: 3px 6px;
+}
