@@ -91,12 +91,15 @@
     font-size: 25px;
 }
 
-/* .count-td{
-    counter-reset: my-sec-counter;
-} */
-.count-td::before {
-    counter-increment: my-sec-counter;
-    content: counter(my-sec-counter);
+
+body{
+    counter-reset: rowNumber;
+}
+.count-tr{
+    counter-increment: rowNumber;
+}
+.count-tr td:first-child::before{
+    content: counter(rowNumber);
 }
 
 .count-tr {

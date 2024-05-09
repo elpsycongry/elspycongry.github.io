@@ -11,11 +11,13 @@ import AddIcon from '@mui/icons-material/Add';
 import imagePractice from '../../assets/image/z5420560028155_279ad92bb3d475ee7a7d0139eac6402f.jpg'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CreateIcon from '@mui/icons-material/Create';
+import moment from 'moment';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 export default function PersonalNeeds() {
+    
     const [open, setOpen] = useState(false);
-
     const handleClickPracticeOpen = () => {
         setOpen(true);
     }
@@ -43,7 +45,12 @@ export default function PersonalNeeds() {
         { id: 6, name: 'DECEN- Nhu cầu 3', time: '14:19 11/11/2019', status: 'Đã gửi', man: 'KongDT' },
         { id: 7, name: 'DECEN- Nhu cầu 3', time: '14:19 11/11/2019', status: 'Đã gửi', man: 'KongDT' }
     ]
-
+    const [recuitments , setRecuitment] = useState([]);
+    useEffect(() =>{
+        axios.get("http://localhost:8080/api/recruitmentRequests").then(res =>{
+            setRecuitment(res.data);
+        })
+    },[])
     return (
         <>
             <Header />
@@ -126,13 +133,13 @@ export default function PersonalNeeds() {
                                 <th className=" text-center">Người gửi</th>
                                 <th className=" text-center">Hành động</th>
                             </tr>
-                            {listPersonal.map(item => (
+                            {recuitments.map(item => (
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td className="count-td"></td>
                                     <td>{item.name}</td>
-                                    <td>{item.time}</td>
+                                    <td>{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className=" text-center">{item.status}</td>
-                                    <td className=" text-center">{item.man}</td>
+                                    <td className=" text-center">{item.users.name}</td>
                                     <td className=" text-center">
                                         <RemoveRedEyeIcon className="color-blue white-div font-size-large"/>
                                         <CreateIcon className="color-orange pencil-btn font-size-medium"/>
