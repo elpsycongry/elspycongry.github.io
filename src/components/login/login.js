@@ -92,6 +92,7 @@ export default function Login() {
             setFlagValidate({...flagValidate, validPass: true})
         } else if (value === ""){
             setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu không được để trống" })
+            setShowErrors({...showErrors, showPassError: false})
         }
         else {
             setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu phải ít nhất 8 ký tự và có viết hoa, thường và số"})
@@ -147,7 +148,7 @@ export default function Login() {
               onChange={(e) => checkEmail(e.currentTarget.value)}
               // onChange={checkValidate}
               onFocus={() => {setShowErrors({...showErrors,  showEmailError: true})}}
-              onBlur={() => {setShowErrors({...showErrors,  showEmailError: false})}}
+              // onBlur={() => {setShowErrors({...showErrors,  showEmailError: false})}}
               error={showErrors.showEmailError && !flagValidate.validEmail}
               helperText={showErrors.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
               // onFocus={(e) => checkEmail(e.currentTarget.value)}
@@ -165,7 +166,7 @@ export default function Login() {
                 endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
               }}
               onFocus={() => {setShowErrors({...showErrors,  showPassError: true})}}
-              onBlur={() => {setShowErrors({...showErrors,  showPassError: false})}}
+              // onBlur={() => {setShowErrors({...showErrors,  showPassError: false})}}
               placeholder={"Example123"}
               inputRef={passwordInput}
               error={showErrors.showPassError && !flagValidate.validPass}
