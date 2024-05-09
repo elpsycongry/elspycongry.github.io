@@ -3,18 +3,15 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { IconButton, InputAdornment } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import logoImage from '../../assets/image/logoA.jpg'
 
 function Copyright(props) {
 
@@ -46,7 +43,7 @@ const defaultTheme = createTheme();
 
 export default function Login() {
   const [visible, setVisible] = React.useState(true)
-    const handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -55,69 +52,66 @@ export default function Login() {
     });
   };
 
-    // Ép buộc component re-render
-    const [, forceRender] = React.useReducer(x => x + 1, 0);
+  // Ép buộc component re-render
+  const [, forceRender] = React.useReducer(x => x + 1, 0);
 
-    // Validation
-    const [flagValidate, setFlagValidate] = React.useState({
-        validEmail: false,
-        validPass: false,
-        emailError: "Email không được để trống",
-        passwordError: "Mật khẩu không được để trống",
-    })
+  // Validation
+  const [flagValidate, setFlagValidate] = React.useState({
+    validEmail: false,
+    validPass: false,
+    emailError: "Email không được để trống",
+    passwordError: "Mật khẩu không được để trống",
+  })
 
-    const [showErrors, setShowErrors] = React.useState({
-        showEmailError: false,
-        showPassError: false,
-    })
+  const [showErrors, setShowErrors] = React.useState({
+    showEmailError: false,
+    showPassError: false,
+  })
 
 
-    // Hàm kiểm tra email
-    let checkEmail = (value) => {
-        let patternEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
-        console.log(value)
-        if (value.match(patternEmail)){
-            setFlagValidate({...flagValidate, validEmail : true})
-        } else if (value===""){
-            setFlagValidate({...flagValidate, validEmail : false, emailError: "Email không được bỏ trống"})
-        }
-        else {
-            setFlagValidate({...flagValidate, validEmail : false, emailError: "Không đúng định dạng email"})
-        }
+  // Hàm kiểm tra email
+  let checkEmail = (value) => {
+    let patternEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    console.log(value)
+    if (value.match(patternEmail)) {
+      setFlagValidate({ ...flagValidate, validEmail: true })
+    } else if (value === "") {
+      setFlagValidate({ ...flagValidate, validEmail: false, emailError: "Email không được bỏ trống" })
     }
-
-    // Hàm kiểm tra pass
-    let checkPass = (value) => {
-        let patternPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/g
-        if (value.match(patternPassword)){
-            setFlagValidate({...flagValidate, validPass: true})
-        } else if (value === ""){
-            setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu không được để trống" })
-        }
-        else {
-            setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu phải ít nhất 8 ký tự và có viết hoa, thường và số"})
-        }
+    else {
+      setFlagValidate({ ...flagValidate, validEmail: false, emailError: "Không đúng định dạng email" })
     }
+  }
 
-    // Disabled submit nếu một trong các flag là false
-    const validForm = Object.values(flagValidate).some(value => !value);
-
-    // Tạo các ref dể lấy giá trị của input nếu cần
-    const emailInput = React.useRef();
-    const passwordInput = React.useRef();
-    const submitButton = React.useRef()
-
-    // Chạy hàm check cho lần chạy đầu tiên
-
-
-
-    function checkValidate() {
-        console.log(emailInput.current)
+  // Hàm kiểm tra pass
+  let checkPass = (value) => {
+    let patternPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/g
+    if (value.match(patternPassword)) {
+      setFlagValidate({ ...flagValidate, validPass: true })
+    } else if (value === "") {
+      setFlagValidate({ ...flagValidate, validPass: false, passwordError: "Mật khẩu không được để trống" })
     }
+    else {
+      setFlagValidate({ ...flagValidate, validPass: false, passwordError: "Mật khẩu phải ít nhất 8 ký tự và có viết hoa, thường và số" })
+    }
+  }
 
-    return (
+  // Disabled submit nếu một trong các flag là false
+  const validForm = Object.values(flagValidate).some(value => !value);
+
+  // Tạo các ref dể lấy giá trị của input nếu cần
+  const emailInput = React.useRef();
+  const passwordInput = React.useRef();
+  const submitButton = React.useRef()
+
+  // Chạy hàm check cho lần chạy đầu tiên
+  function checkValidate() {
+    console.log(emailInput.current)
+  }
+
+  return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" style={{ marginTop: '160px' }}>
         <CssBaseline />
         <Box
           sx={{
@@ -128,7 +122,7 @@ export default function Login() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'orange' }}>
-            <LockOutlinedIcon />
+            <img src={logoImage} style={{ width: '40px', height: '40px' }} />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
@@ -142,12 +136,12 @@ export default function Login() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              inputProps={{pattern: "^[A-Za-z0-9]{3,16}$"}}
+              inputProps={{ pattern: "^[A-Za-z0-9]{3,16}$" }}
               placeholder="Example123@gmail.com"
 
               inputRef={emailInput}
               onChange={(e) => checkEmail(e.currentTarget.value)}
-              onFocus={() => {setShowErrors({...showErrors,  showEmailError: true})}}
+              onFocus={() => { setShowErrors({ ...showErrors, showEmailError: true }) }}
               error={showErrors.showEmailError && !flagValidate.validEmail}
               helperText={showErrors.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
             />
@@ -164,7 +158,7 @@ export default function Login() {
                 endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
               }}
 
-              onFocus={() => {setShowErrors({...showErrors,  showPassError: true})}}
+              onFocus={() => { setShowErrors({ ...showErrors, showPassError: true }) }}
               placeholder={"Example123"}
               inputRef={passwordInput}
               error={showErrors.showPassError && !flagValidate.validPass}
