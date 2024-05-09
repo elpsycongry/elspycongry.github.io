@@ -3,12 +3,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
@@ -18,7 +14,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import {SnackbarProvider, useSnackbar} from 'notistack';
 import {useNavigate} from "react-router-dom";
-
+import logoImage from '../../assets/image/logoA.jpg';
 function Copyright(props) {
 
     return (
@@ -53,13 +49,12 @@ export default function Login() {
     const navigate = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
+        setFlagValidate({...flagValidate, validSubmit: false})
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
-        setFlagValidate({...flagValidate, validSubmit: false})
         axios.post("http://localhost:8080/login", data).then(
             res => {
-                console.log(res.data.data)
                 if (res.data.code === "401") {
                     enqueueSnackbar(res.data.msg, { variant:"error", anchorOrigin: { horizontal: "right", vertical: "top"}});
                 }
@@ -71,13 +66,13 @@ export default function Login() {
                 setFlagValidate({...flagValidate, validSubmit: true})
             }
         ).catch(reason => {
+            enqueueSnackbar("Có lỗi ở phía máy chủ", { variant:"error", anchorOrigin: { horizontal: "right", vertical: "top"}, autoHideDuration: 3000});
             setFlagValidate({...flagValidate, validSubmit: true})
-            console.log(reason)
         })
     };
 
-    // Ép buộc component re-render
-    const [, forceRender] = React.useReducer(x => x + 1, 0);
+  // Ép buộc component re-render
+  const [, forceRender] = React.useReducer(x => x + 1, 0);
 
     // Validation
     const [flagValidate, setFlagValidate] = React.useState({
@@ -125,25 +120,18 @@ export default function Login() {
         }
     }
 
+
     // Disabled submit nếu một trong các flag là false
     const validForm = Object.values(flagValidate).some(value => !value);
 
     // Tạo các ref dể lấy giá trị của input nếu cần
     const emailInput = React.useRef();
     const passwordInput = React.useRef();
-    const submitButton = React.useRef()
-
-    // Chạy hàm check cho lần chạy đầu tiên
-
-
-    function checkValidate() {
-        console.log(emailInput.current)
-    }
+    const submitButton = React.useRef();
 
     return (
-
             <ThemeProvider theme={defaultTheme}>
-                <Container component="main" maxWidth="xs">
+                <Container component="main" maxWidth="xs" style={{ marginTop: '160px' }}>
                     <CssBaseline/>
                     <Box
                         sx={{
@@ -153,8 +141,8 @@ export default function Login() {
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{m: 1, bgcolor: 'orange'}}>
-                            <LockOutlinedIcon/>
+                        <Avatar sx={{ m: 1, bgcolor: 'orange' }}>
+                            <img src={logoImage} style={{ width: '40px', height: '40px' }} />
                         </Avatar>
                         <Typography component="h1" variant="h5">
                             Sign in
@@ -201,10 +189,6 @@ export default function Login() {
                                 onChange={(e) => checkPass(e.currentTarget.value)}
                                 helperText={showMsg.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
                             />
-                            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
                             {flagValidate.showSuccesAlert
                                 &&
                                 <Alert style={{marginTop: 5}} severity="success">
@@ -227,18 +211,10 @@ export default function Login() {
                             >
                                 Sign In
                             </Button>
-                            {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid> */}
                         </Box>
                     </Box>
                     <Copyright sx={{mt: 8, mb: 4}}/>
                 </Container>
             </ThemeProvider>
-
-    );
+    )
 }

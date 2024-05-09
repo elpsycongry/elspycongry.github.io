@@ -1,8 +1,21 @@
-*{
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+html, body {
+    height: 100%; /* Đảm bảo chiều cao của html và body bằng với chiều cao viewport */
+    margin: 0; /* Xóa các margin mặc định */
+    padding: 0; /* Xóa các padding mặc định */
+    display: flex; /* Thiết lập Flexbox */
+    flex-direction: column; /* Các thành phần con sắp xếp theo chiều dọc */
+    min-height: 100vh; /* Đảm bảo body có ít nhất chiều cao bằng viewport */
+    background-color: rgb(231, 227, 227) !important;
 }
-body{
- height: 1000px;
+
+#root {
+    flex: 1; /* Cho phép div này mở rộng để chiếm mọi không gian có sẵn */
+    position: relative;
+
+}
+
+footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
 }
