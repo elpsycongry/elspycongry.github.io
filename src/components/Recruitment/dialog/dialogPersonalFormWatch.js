@@ -12,37 +12,37 @@ import { useFormik } from "formik";
 
 
 
-export default function DialogPersonalFormWatch({id}) {
-    const [tenhnology,setTenhnology] = useState([]);
+export default function DialogPersonalFormWatch({ id }) {
+    const [tenhnology, setTenhnology] = useState([]);
     // Dữ liệu fake
     const formData = useFormik({
         initialValues: {
-          idUser: null,
-          recruitmentRequest: {
-            dateStart: "",
-            dateEnd: "",
-            name: "",
-            status: "",
-            details: [
-              {
-                type: "",
-                quantity: "",
-              },
-            ],
-          },
-          
+            idUser: null,
+            recruitmentRequest: {
+                dateStart: "",
+                dateEnd: "",
+                name: "",
+                status: "",
+                details: [
+                    {
+                        type: "",
+                        quantity: "",
+                    },
+                ],
+            },
+
         },
-      });
-      useEffect(() => {
+    });
+    useEffect(() => {
         axios.get("http://localhost:8080/api/recruitmentRequests/" + id).then((res) => {
             formData.setValues(res.data);
             const detail = res.data.details;
             setTenhnology(
                 detail.map((item) => ({ type: item.type, quantity: item.quantity }))
-              );
-          });
-      }, []);
-       console.log(tenhnology)
+            );
+        });
+    }, []);
+    console.log(tenhnology)
     // const testId = [useState()]
 
     // Xử lý mở form
@@ -57,7 +57,7 @@ export default function DialogPersonalFormWatch({id}) {
 
     // Xử lý dialog 
     const [openFormReason, setOpenFormReason] = useState(false);
-    const handleCloseWatchOpenReason = () =>{
+    const handleCloseWatchOpenReason = () => {
         setOpenForm(false);
         setOpenFormReason(true);
     }
@@ -108,13 +108,13 @@ export default function DialogPersonalFormWatch({id}) {
                                                     <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
                                                 </thead>
                                                 <tbody>
-                                                {tenhnology.map((item) => (
-  <tr key={item.id}>
-    <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
-    <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
-  </tr>
-))}
-                                                    
+                                                    {tenhnology.map((item) => (
+                                                        <tr key={item.id}>
+                                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
+                                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
+                                                        </tr>
+                                                    ))}
+
                                                 </tbody>
                                             </table>
                                         </td>
@@ -137,7 +137,7 @@ export default function DialogPersonalFormWatch({id}) {
                     </form>
                 </DialogTitle>
             </Dialog>
-            <DialogPersonalFormReason idUser={id} open={openFormReason} onClose={() => setOpenFormReason(false)}/>
+            <DialogPersonalFormReason idUser={id} open={openFormReason} onClose={() => setOpenFormReason(false)} />
         </>
     )
 }

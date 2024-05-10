@@ -124,7 +124,7 @@ export default function DialogPersonalForm() {
         setOpenForm(false);
     }
     // Xử lý thêm công nghệ
-    const [tech, setTech] = useState([]);
+    const [tech, setTech] = useState([{ type: "", quantity: "" }]);
     const addTech = () => {
       setTech((prevTech) => [...prevTech, { type: "", quantity: "" }]);
     };
