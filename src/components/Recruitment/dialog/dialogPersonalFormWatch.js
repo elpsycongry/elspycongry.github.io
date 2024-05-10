@@ -104,7 +104,7 @@ export default function DialogPersonalFormWatch() {
                     </form>
                 </DialogTitle>
             </Dialog>
-            <DialogPersonalFormReason open={openFormReason} onClose={() => setOpenFormReason(false)}/>
+            <DialogPersonalFormReason id="7"  open={openFormReason} onClose={() => setOpenFormReason(false)}/>
         </>
     )
 }
