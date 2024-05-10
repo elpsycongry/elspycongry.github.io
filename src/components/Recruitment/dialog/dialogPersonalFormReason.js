@@ -10,7 +10,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 
 
-export default function DialogPersonalFormReason({ open, onClose }) {
+export default function DialogPersonalFormReason({id, open, onClose }) {
     // const [text, setText] = useState("");
     // const textareaRef = useRef(null);
     // useEffect(() => {

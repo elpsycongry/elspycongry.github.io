@@ -137,7 +137,7 @@ export default function DialogPersonalFormWatch({id}) {
                     </form>
                 </DialogTitle>
             </Dialog>
-            <DialogPersonalFormReason open={openFormReason} onClose={() => setOpenFormReason(false)}/>
+            <DialogPersonalFormReason idUser={id} open={openFormReason} onClose={() => setOpenFormReason(false)}/>
         </>
     )
 }
