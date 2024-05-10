@@ -29,37 +29,34 @@ export default function DialogPersonalFormUpdate({ id }) {
           },
         ],
       },
-      
     },
-    // validationSchema: Yup.object({
-    //   dateEnd: Yup.string()
-    //       .required('Required'),
-    //       name: Yup.string()
-    //       .required('Required')
-    // }),
-    onSubmit : async (values) =>{
-     
-      try{
-        await axios.put("http://localhost:8080/api/recruitmentRequests/" + id,values,tech).then(res =>{
-          window.location.href = "/";
-          swal("update recruitment success",{
-            icon:"success",
-            buttons:false,
-            timer:2000
-         })
-          })
-      }catch(error){
-        swal("update recruitment false",{
-          icon:"error",
-          buttons:false,
-          timer:2000
-       })
+    onSubmit: async (values) => {
+        // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
+        values.details = [...tech];
+        console.log(values);
+        try {
+          await axios.put("http://localhost:8080/api/recruitmentRequests/" + id, values).then(res => {
+            window.location.href = "/";
+            swal(" cập nhật nhu cầu nhân sự thành công", {
+              icon: "success",
+              buttons: false,
+              timer: 2000
+            });
+          });
+        } catch (error) {
+          swal("cập nhật nhu cầu nhân sự thất bại", {
+            icon: "error",
+            buttons: false,
+            timer: 2000
+          });
+        }
       }
-     
-    }
   });
 
   function PersonalQuantity({ number, onQuantityChange  }) {
+    if(number === ""){
+      number = 1;
+    }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
@@ -96,7 +93,13 @@ export default function DialogPersonalFormUpdate({ id }) {
     updatedTech[index].quantity = newQuantity;
     setTech(updatedTech);
   };
-
+const Dlt = ({index}) => {
+        if (tech.length > 1) {
+            return (
+                <BackspaceIcon onClick={() => removeTech(index)} />
+            )
+        }
+    }
   // Xử lý mở form
   const listTechnology = [
     { id: 1, text: "PHP" },
@@ -111,11 +114,7 @@ export default function DialogPersonalFormUpdate({ id }) {
     { id: 10, text: "JAVA" },
     { id: 11, text: ".NET" },
   ];
-  const [status, setStatus] = useState("");
-  const handleChange = (e) => {
-    setStatus(e.target.value);
-    console.log(e.target.value);
-  };
+
   const listTestSelect = [
     { id: 1, text: "Hoạt động" },
     { id: 2, text: "Không hoạt động" },
@@ -185,18 +184,19 @@ export default function DialogPersonalFormUpdate({ id }) {
     </IconButton>
   </div>
   <div className="col-md-12">
-    <label htmlFor="name" className="form-label grey-text">
-      Tên <span className="color-red">*</span>
-    </label>
-    <input
-      type="text"
-      onChange={formData.handleChange}
-      value={formData.values.recruitmentRequest.name}
-      className="form-control"
-      id="recruitmentRequest.name"
-      name="recruitmentRequest.name"
-    />
-  </div>
+  <label htmlFor="name" className="form-label grey-text">
+    Tên <span className="color-red">*</span>
+  </label>
+  <input
+    type="text"
+    onChange={formData.handleChange}
+    onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
+    value={formData.values.recruitmentRequest.name}
+    className={`form-control`}
+    id="recruitmentRequest.name"
+    name="recruitmentRequest.name"
+  />
+</div>
   <div className="col-md-12 m-0 d-flex">
     <div className="col-md-6 mb-0">
       <label className="form-label grey-text">
@@ -235,7 +235,7 @@ export default function DialogPersonalFormUpdate({ id }) {
             handleQuantityChange(newQuantity, index)
           }
         />
-        <BackspaceIcon onClick={() => removeTech(index)} />
+        <Dlt index={index}/>
       </div>
     </>
   ))}
@@ -243,20 +243,24 @@ export default function DialogPersonalFormUpdate({ id }) {
     <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
   </div>
   <div className="col-md-12">
-    <div className="col-md-6 mt-2">
-      <label htmlFor="time" className="form-label grey-text">
-        Thời hạn bàn giao <span className="color-red">*</span>
-      </label>
-      <input
-        type="date"
-        value={formData.values.recruitmentRequest.dateEnd}
-        onChange={formData.handleChange}
-        className="form-control text-center grey-text"
-        id="recruitmentRequest.dateEnd"
-        name="recruitmentRequest.dateEnd"
-      />
-    </div>
+  <div className="col-md-6 mt-2">
+    <label htmlFor="time" className="form-label grey-text">
+      Thời hạn bàn giao <span className="color-red">*</span>
+    </label>
+    <input
+      type="date"
+      value={formData.values.recruitmentRequest.dateEnd}
+      onChange={formData.handleChange}
+      onBlur={formData.handleBlur}
+      className={`form-control text-center grey-text`}
+      id="recruitmentRequest.dateEnd"
+      name="recruitmentRequest.dateEnd"
+    />
+    {/* {formData.errors.recruitmentRequest?.dateEnd && formData.touched.recruitmentRequest?.dateEnd && (
+      <div className="invalid-feedback">{formData.errors.recruitmentRequest.dateEnd}</div>
+    )} */}
   </div>
+</div>
   <div className="col-md-6 mt-2 pr-0">
     <label htmlFor="status" className="form-label grey-text">
       Trạng thái
