@@ -15,6 +15,7 @@ import axios from "axios";
 import {SnackbarProvider, useSnackbar} from 'notistack';
 import {useNavigate} from "react-router-dom";
 import logoImage from '../../assets/image/logoA.jpg';
+import {useState} from "react";
 function Copyright(props) {
 
     return (
@@ -44,6 +45,9 @@ const EndAdorment = ({visible, setVisible}) => {
 const defaultTheme = createTheme();
 
 export default function Login() {
+
+    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
@@ -55,13 +59,14 @@ export default function Login() {
         formData.forEach((value, key) => data[key] = value);
         axios.post("http://localhost:8080/login", data).then(
             res => {
+                console.log(currentUser)
                 if (res.data.code === "401") {
                     enqueueSnackbar(res.data.msg, { variant:"error", anchorOrigin: { horizontal: "right", vertical: "top"}});
                 }
                 if (res.data.code === "200") {
-                    localStorage.setItem("currentUser", res.data.data)
+                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar('Đăng nhập thành công !', { variant:"success"});
-                    navigate("/home")
+                    // navigate("/home")
                 }
                 setFlagValidate({...flagValidate, validSubmit: true})
             }
