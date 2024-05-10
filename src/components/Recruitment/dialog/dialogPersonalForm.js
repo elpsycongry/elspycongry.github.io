@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 
 export default function DialogPersonalForm() {
   // Xử lý số lượng nhân sự
-  const checkDate = (dateSet, techArr) => {
+  const checkValid = (dateSet, techArr) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const futureDate = new Date(today);
@@ -63,7 +63,7 @@ export default function DialogPersonalForm() {
     onSubmit: async (values, { setSubmitting }) => {
       console.log(techErr)
       const date = new Date(values.recruitmentRequest.dateEnd);
-      if (!checkDate(date, tech)) {
+      if (!checkValid(date, tech)) {
         setSubmitting(false);
         return;
       } else {
