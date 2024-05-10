@@ -1,10 +1,7 @@
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import HomeIcon from '@mui/icons-material/Home';
+import codeGym from '../../../assets/image/CodeGym.jpg';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
@@ -104,7 +101,7 @@ export default function Header() {
                         edge="start"
                      
                     >
-                        <HomeIcon sx={{ fontSize: 30 }} />
+                        <img src={codeGym} alt='codeGym' className='iconCodeGym' />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
                         Tyson Lại - Hệ thống quản lý đào tạo

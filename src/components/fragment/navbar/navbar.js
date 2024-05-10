@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import { Icon } from '@iconify/react';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -110,11 +111,16 @@ export default function Navbar() {
             });
         }
     };
-    
+
+    const Book = () =>{
+        return(
+            <Icon icon="ion:book-sharp" width="24" height="24" />
+        )
+    }
 
 
     const listItems = [
-        { id: 1, text: "Đào tạo", IconText: ImportContactsIcon },
+        { id: 1, text: "Đào tạo", IconText: Book },
         { id: 2, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: ["Nhu cầu", "Kế hoạch tuyển dụng", "Phỏng vấn"] },
         { id: 3, text: "Thống kê", IconText: SignalCellularAltIcon }
     ]

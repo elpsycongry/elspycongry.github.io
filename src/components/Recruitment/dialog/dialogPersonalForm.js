@@ -6,7 +6,6 @@ import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import axios from "axios";
-
 import * as Yup from "yup"
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +13,20 @@ import { useFormik } from "formik";
 
 export default function DialogPersonalForm() {
   // Xử lý số lượng nhân sự
+  const checkDate = (dateSet) =>{
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + 75);
+
+      if (dateSet < futureDate) {
+          setDateErr(true);
+          return false;
+      } else {
+          setDateErr(false);
+          return true;
+      }
+  }
   const formData = useFormik({
     initialValues: {
       idUser: null,
@@ -30,7 +43,18 @@ export default function DialogPersonalForm() {
         ],
       },
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values,  { setSubmitting }) => {
+
+      const date = new Date(values.recruitmentRequest.dateEnd);
+      console.log(date);
+      const checkDateEnd = checkDate(date);
+      console.log(checkDateEnd);
+      console.log(dateErr)
+      if(!checkDate(date)){
+        setSubmitting(false);
+        // console.log("dm")
+      }
+
       // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
       values.details = [...tech];
       values.idUser = 1;
@@ -101,6 +125,11 @@ export default function DialogPersonalForm() {
       )
     }
   }
+  // Xử lý validate
+  const [date, setDate] = useState('');
+  const [dateErr, setDateErr] = useState(false);
+ 
+
 
   // Xử lý mở form
   const listTechnology = [
@@ -221,7 +250,7 @@ export default function DialogPersonalForm() {
             <div className="col-md-12 mt-2" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
-            <div className="col-md-12">
+            <div className="col-md-12 d-flex">
               <div className="col-md-6 mt-2">
                 <label htmlFor="time" className="form-label grey-text">
                   Thời hạn bàn giao <span className="color-red">*</span>
@@ -234,18 +263,20 @@ export default function DialogPersonalForm() {
                   id="recruitmentRequest.dateEnd"
                   name="recruitmentRequest.dateEnd"
                 />
+                {dateErr && <p className="err-valid">Date must be greater than 75 days</p> }
                 {/* {formData.errors.recruitmentRequest?.dateEnd && formData.touched.recruitmentRequest?.dateEnd && (
       <div className="invalid-feedback">{formData.errors.recruitmentRequest.dateEnd}</div>
     )} */}
               </div>
-            </div>
-            <div className="col-md-6 mt-2">
-              <label className="form-label"></label>
-              <div className="send text-right">
-                <div className="send-child position-relative">
-                  <button type="submit" className="btn send-btn btn-success text-center">
-                    Lưu
-                  </button>
+              <div className="col-md-6 mt-2">
+                <label className="form-label"></label>
+                <div className="send text-right">
+                  <div className="send-child position-relative">
+                    <button type="submit" className="btn send-btn btn-success ">
+                      Gửi
+                    <SendIcon className="iconSend position-absolute" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

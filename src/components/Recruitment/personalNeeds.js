@@ -215,6 +215,7 @@ export default function PersonalNeeds() {
                                         label="Grouping"
                                         onChange={handleStatusChange}
                                         value={selectedStatus}
+                                        className="select-edit grey-text"
                                     >
                                         {
                                             listTestSelect.map(item => (
@@ -232,7 +233,7 @@ export default function PersonalNeeds() {
                     <div>
                         <table className=" table ">
                             <tr className="header-tr grey-text">
-                                <th style={{ width: 48 }}>STT</th>
+                                <th  style={{ width: 48 }}>STT</th>
                                 <th style={{ width: 144 }}>Tên nhu cầu</th>
                                 <th style={{ width: 130 }} className=" text-center">
                                     Thời gian khởi tạo
@@ -243,10 +244,10 @@ export default function PersonalNeeds() {
                             </tr>
                             {recuitments.map((item) => (
                                 <tr className="grey-text count-tr" key={item.id}>
-                                    <td className="count-td"></td>
+                                    <td className="count-td pl-20"></td>
 
                                     <td>{item.name}</td>
-                                    <td>{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
+                                    <td className="text-center">{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
