@@ -85,7 +85,7 @@
 
 
 .min-width {
-    min-width: 240px;
+    min-width: 243px;
 }
 
 .header-tr th {
@@ -179,7 +179,8 @@ body {
 /*Có thể tái sử dụng */
 .err-valid{
     padding-left: 8px;
-    margin-top: 4px;
+    margin-top: 0;
+    margin-bottom: 0;
     font-size: 14px;
     color: #ff3535;
 }
@@ -231,6 +232,7 @@ body {
 .color-red {
     color: red;
 }
+
 
 .border-clr-grey {
     border-color: light-dark(rgb(163 163 163), rgb(133, 133, 133)) !important;

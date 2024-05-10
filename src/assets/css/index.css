@@ -24,4 +24,7 @@ footer {
     width: 40px;
     border-radius: 8px;
 }
+.breadCrumbs .css-1wuw8dw-MuiBreadcrumbs-separator{
+    margin: 0;      
+}
 

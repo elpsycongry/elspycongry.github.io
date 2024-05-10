@@ -13,20 +13,37 @@ import { useFormik } from "formik";
 
 export default function DialogPersonalForm() {
   // Xử lý số lượng nhân sự
-  const checkDate = (dateSet) =>{
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const futureDate = new Date(today);
-      futureDate.setDate(today.getDate() + 75);
-
-      if (dateSet < futureDate) {
-          setDateErr(true);
-          return false;
-      } else {
-          setDateErr(false);
-          return true;
+  const checkDate = (dateSet, techArr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const futureDate = new Date(today);
+    futureDate.setDate(today.getDate() + 75);
+    const err = techArr.map(item => {
+      if(item.type === "" || item.type === "default"){
+        return true;
+      } else{
+        return false;
       }
+    })
+    console.log(err);
+    const hasErrTech = err.some(item => item === true);
+    
+    setTechErr(hasErrTech);
+
+    if (dateSet < futureDate) {
+      setDateErr(true);
+    } else {
+      setDateErr(false);
+    }
+
+
+    if (dateSet < futureDate || hasErrTech) {
+      return false;
+    } else {
+      return true;
+    }
   }
+
   const formData = useFormik({
     initialValues: {
       idUser: null,
@@ -43,37 +60,32 @@ export default function DialogPersonalForm() {
         ],
       },
     },
-    onSubmit: async (values,  { setSubmitting }) => {
-
+    onSubmit: async (values, { setSubmitting }) => {
+      console.log(techErr)
       const date = new Date(values.recruitmentRequest.dateEnd);
-      console.log(date);
-      const checkDateEnd = checkDate(date);
-      console.log(checkDateEnd);
-      console.log(dateErr)
-      if(!checkDate(date)){
+      if (!checkDate(date, tech)) {
         setSubmitting(false);
-        // console.log("dm")
-      }
-
-      // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-      values.details = [...tech];
-      values.idUser = 1;
-      console.log(values);
-      try {
-        await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
-          window.location.href = "/";
-          swal("tạo nhu cầu nhân sự thành công", {
-            icon: "success",
+        return;
+      } else {
+        // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
+        values.details = [...tech];
+        values.idUser = 1;
+        try {
+          await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
+            window.location.href = "/";
+            swal("tạo nhu cầu nhân sự thành công", {
+              icon: "success",
+              buttons: false,
+              timer: 2000
+            });
+          });
+        } catch (error) {
+          swal("tạo nhu cầu nhân sự thất bại", {
+            icon: "error",
             buttons: false,
             timer: 2000
           });
-        });
-      } catch (error) {
-        swal("tạo nhu cầu nhân sự thất bại", {
-          icon: "error",
-          buttons: false,
-          timer: 2000
-        });
+        }
       }
     }
   });
@@ -126,9 +138,9 @@ export default function DialogPersonalForm() {
     }
   }
   // Xử lý validate
-  const [date, setDate] = useState('');
   const [dateErr, setDateErr] = useState(false);
- 
+  const [techErr, setTechErr] = useState(false);
+
 
 
   // Xử lý mở form
@@ -182,6 +194,9 @@ export default function DialogPersonalForm() {
         <DialogTitle>
           <form className="row g-3" onSubmit={formData.handleSubmit}>
             <div className="col-md-12">
+              <h2 className="grey-text" style={{ paddingBottom: 3 }}>
+                Thêm nhu cầu nhân sự
+              </h2>
               <IconButton
                 sx={{
                   position: "absolute",
@@ -199,6 +214,7 @@ export default function DialogPersonalForm() {
               </label>
               <input
                 type="text"
+                placeholder="Nhập tên nhu cầu..."
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
                 className={`form-control`}
@@ -224,10 +240,11 @@ export default function DialogPersonalForm() {
                   <select
                     className="form-select grey-text"
                     aria-label="Default select example"
+                    defaultValue="default"
                     onChange={(e) => handleChangeSelect(e, index)}
                     name={`tech[${index}].type`}
                   >
-                    <option value={tech.type}>{tech.type}</option>
+                    <option value="default">Chọn công nghệ...</option>
                     {listTechnology.map((item) => (
                       <option key={item.id} value={item.text}>
                         {item.text}
@@ -247,6 +264,7 @@ export default function DialogPersonalForm() {
                 </div>
               </>
             ))}
+            {techErr && <p className="err-valid">Technology cannot be null</p>}
             <div className="col-md-12 mt-2" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
@@ -263,7 +281,7 @@ export default function DialogPersonalForm() {
                   id="recruitmentRequest.dateEnd"
                   name="recruitmentRequest.dateEnd"
                 />
-                {dateErr && <p className="err-valid">Date must be greater than 75 days</p> }
+                {dateErr && <p className="err-valid">Date must be greater than 75 days</p>}
                 {/* {formData.errors.recruitmentRequest?.dateEnd && formData.touched.recruitmentRequest?.dateEnd && (
       <div className="invalid-feedback">{formData.errors.recruitmentRequest.dateEnd}</div>
     )} */}
@@ -274,7 +292,7 @@ export default function DialogPersonalForm() {
                   <div className="send-child position-relative">
                     <button type="submit" className="btn send-btn btn-success ">
                       Gửi
-                    <SendIcon className="iconSend position-absolute" />
+                      <SendIcon className="iconSend position-absolute" />
                     </button>
                   </div>
                 </div>

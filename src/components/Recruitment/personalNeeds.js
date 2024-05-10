@@ -28,6 +28,8 @@ import DialogPersonalFormUpdate from "./dialog/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialog/dialogPersonalFormWatch";
 import axios from "axios";
 import moment from "moment";
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+
 
 export default function PersonalNeeds() {
     const [open, setOpen] = useState(false);
@@ -163,7 +165,7 @@ export default function PersonalNeeds() {
             <Header />
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
-                <BreadCrumbs />
+                <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Nhu cầu nhân sự" icon={<BusinessCenterIcon sx={{ marginBottom: '5px',marginRight: '2px'}}/>} />
                 <div className="content-recruiment">
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
@@ -233,7 +235,7 @@ export default function PersonalNeeds() {
                     <div>
                         <table className=" table ">
                             <tr className="header-tr grey-text">
-                                <th  style={{ width: 48 }}>STT</th>
+                                <th style={{ width: 48 }}>STT</th>
                                 <th style={{ width: 144 }}>Tên nhu cầu</th>
                                 <th style={{ width: 130 }} className=" text-center">
                                     Thời gian khởi tạo
@@ -252,8 +254,8 @@ export default function PersonalNeeds() {
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogPersonalFormWatch key={item.id} id={item.id} />
-                                        {item.status.toLowerCase() === "đã hủy" || item.status.toLowerCase() === "đã xác nhận" ? (
-                                            ""
+                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
+                                            <DialogPersonalFormUpdate key={item.id} id={item.id} check={true} />
                                         ) : (
                                             <DialogPersonalFormUpdate key={item.id} id={item.id} />
                                         )}
