@@ -136,6 +136,7 @@ body {
     height: 40px;
 }
 
+
 .send {
     text-align: right;
     display: flex;
@@ -218,6 +219,9 @@ body {
 
 .color-blue {
     color: #258BD0 !important
+}
+.bg-whiteImportant{
+    background-color: #fdfdfd !important;
 }
 
 .color-red {

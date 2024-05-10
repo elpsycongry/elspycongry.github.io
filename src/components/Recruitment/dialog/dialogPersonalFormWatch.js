@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, Grid, IconButton } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
@@ -7,12 +7,42 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import CreateIcon from '@mui/icons-material/Create';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DialogPersonalFormReason from "./dialogPersonalFormReason";
+import axios from "axios";
+import { useFormik } from "formik";
 
 
 
-export default function DialogPersonalFormWatch() {
+export default function DialogPersonalFormWatch({ id }) {
+    const [tenhnology, setTenhnology] = useState([]);
     // Dữ liệu fake
-    const personalDetail = [{ id: 1, name: 'DECEN- Nhu cầu nhân sự quý 3', time: '11/11/2019', personal: '123', tech: 'PHP' }]
+    const formData = useFormik({
+        initialValues: {
+            idUser: null,
+            recruitmentRequest: {
+                dateStart: "",
+                dateEnd: "",
+                name: "",
+                status: "",
+                details: [
+                    {
+                        type: "",
+                        quantity: "",
+                    },
+                ],
+            },
+
+        },
+    });
+    useEffect(() => {
+        axios.get("http://localhost:8080/api/recruitmentRequests/" + id).then((res) => {
+            formData.setValues(res.data);
+            const detail = res.data.details;
+            setTenhnology(
+                detail.map((item) => ({ type: item.type, quantity: item.quantity }))
+            );
+        });
+    }, []);
+    console.log(tenhnology)
     // const testId = [useState()]
 
     // Xử lý mở form
@@ -27,7 +57,7 @@ export default function DialogPersonalFormWatch() {
 
     // Xử lý dialog 
     const [openFormReason, setOpenFormReason] = useState(false);
-    const handleCloseWatchOpenReason = () =>{
+    const handleCloseWatchOpenReason = () => {
         setOpenForm(false);
         setOpenFormReason(true);
     }
@@ -64,7 +94,7 @@ export default function DialogPersonalFormWatch() {
                                             <label htmlFor="name" style={{ color: '#6F6F6F' }} className="form-label fw-500 mr-15 fs-20">Tên </label>
                                         </th>
                                         <th>
-                                            <p className="namePersonal" style={{ color: '#838383' }}>{personalDetail[0].name}</p>
+                                            <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
                                         </th>
                                     </tr>
                                 </thead>
@@ -78,10 +108,13 @@ export default function DialogPersonalFormWatch() {
                                                     <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{personalDetail[0].tech}</td>
-                                                        <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{personalDetail[0].personal}</td>
-                                                    </tr>
+                                                    {tenhnology.map((item) => (
+                                                        <tr key={item.id}>
+                                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
+                                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
+                                                        </tr>
+                                                    ))}
+
                                                 </tbody>
                                             </table>
                                         </td>
@@ -91,7 +124,7 @@ export default function DialogPersonalFormWatch() {
                         </div>
                         <div className="col-md-12 mt-2 d-flex height-35">
                             <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20">Thời hạn bàn giao: </label>
-                            <p className="time-edit" style={{ color: '#838383' }}>{personalDetail[0].time}</p>
+                            <p className="time-edit" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.dateEnd}</p>
                         </div>
                         <div className="col-md-12 mt-0 d-flex">
                             <div className="col-md-3 mt-2">
@@ -104,7 +137,7 @@ export default function DialogPersonalFormWatch() {
                     </form>
                 </DialogTitle>
             </Dialog>
-            <DialogPersonalFormReason open={openFormReason} onClose={() => setOpenFormReason(false)}/>
+            <DialogPersonalFormReason idUser={id} open={openFormReason} onClose={() => setOpenFormReason(false)} />
         </>
     )
 }

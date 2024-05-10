@@ -6,25 +6,29 @@ import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CreateIcon from '@mui/icons-material/Create';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
 
 
+export default function DialogPersonalFormReason({ idUser, open, onClose }) {
 
+    const navigate = useNavigate();
+    const [reason, setReason] = useState('');
 
-export default function DialogPersonalFormReason({ open, onClose }) {
-    // const [text, setText] = useState("");
-    // const textareaRef = useRef(null);
-    // useEffect(() => {
-    //     setHeight();
-    // }, [text])
-    // const setHeight = () => { 
-    //     if(textareaRef.current){
-    //         textareaRef.current.style.height = 'auto'; 
-    //         textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'; 
-    //     }
-    // }
-    // const handleChange = (event) =>{
-    //     setText(event.target.value)
-    // }
+    const handleSubmit = async (e) => {
+
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/api/recruitmentRequests/' + idUser + '/users/2',
+                { reason }
+            );
+            console.log('Response:', response.data);
+            navigate("/");
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     return (
         <>
             <Dialog
@@ -34,7 +38,7 @@ export default function DialogPersonalFormReason({ open, onClose }) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle >
-                    <form className=" row g-3">
+                    <form className=" row g-3" onSubmit={handleSubmit}>
                         <div className=" col-md-12">
                             <h2 className="grey-text text-center">Lý do</h2>
                             <IconButton
@@ -55,7 +59,8 @@ export default function DialogPersonalFormReason({ open, onClose }) {
                                     placeholder="Leave a comment here"
                                     id="floatingTextarea2"
                                     style={{ height: 200 }}
-                                    // onChange={handleChange}
+                                    value={reason}
+                                    onChange={(e) => setReason(e.target.value)}
                                 >
 
                                 </textarea>
@@ -66,13 +71,10 @@ export default function DialogPersonalFormReason({ open, onClose }) {
                                 <button type="button" onClick={onClose} className="btn btn-danger w-100 bg-clr-danger btn-edit">Hủy</button>
                             </div>
                             <div className="col-md-6 mt-2 ms-2">
-                                <button className=" btn-edit btn btn-success w-98 bg-clr-success">Gửi</button>
+                                <button className=" btn-edit btn btn-success w-98 bg-clr-success" type="submit">Gửi</button>
                             </div>
                         </div>
                     </form>
-
-
-
                 </DialogTitle>
             </Dialog >
         </>
