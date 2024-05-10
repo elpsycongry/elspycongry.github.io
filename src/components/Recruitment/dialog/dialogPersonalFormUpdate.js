@@ -55,7 +55,7 @@ export default function DialogPersonalFormUpdate({ id }) {
 
   function PersonalQuantity({ number, onQuantityChange  }) {
     if(number === ""){
-      number = 1;
+      number = 0;
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
