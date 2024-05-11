@@ -14,6 +14,7 @@
     min-height: 800px;
     padding: 20px;
     width: 100%;
+    min-width: 1000px;
     background-color: #fdfdfd;
 
 }
@@ -85,7 +86,7 @@
 
 
 .min-width {
-    min-width: 240px;
+    min-width: 243px;
 }
 
 .header-tr th {
@@ -155,22 +156,19 @@ body {
 
 .plusTech {
     margin-left: 14px;
-    font-size: 13px;
+    font-size: 14px;
 }
 
-/* .send button {
-    width: 100%;
-    border: none;
-    color: #e9e9e9;
-    text-align: left;
-
-
+.select-edit {
+    padding-right: 34px;
+    padding-left: 14px;
+    transition: 0.2s ease-in-out;
+}
+.select-edit:focus{
+    color: rgb(43, 42, 42) !important;
+    transition: 0.2s ease-in-out;
 }
 
-.send-child {
-    background-color: #239f23;
-
-} */
 
 .send .iconSend {
     top: 6px;
@@ -180,6 +178,13 @@ body {
 
 
 /*Có thể tái sử dụng */
+.err-valid{
+    padding-left: 8px;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #ff3535;
+}
 .text-right {
     text-align: right;
 }
@@ -201,7 +206,7 @@ body {
 }
 
 .grey-text {
-    color: #687168;
+    color: #687168 !important;
 }
 
 .font-size-medium {
@@ -220,13 +225,15 @@ body {
 .color-blue {
     color: #258BD0 !important
 }
-.bg-whiteImportant{
+
+.bg-whiteImportant {
     background-color: #fdfdfd !important;
 }
 
 .color-red {
     color: red;
 }
+
 
 .border-clr-grey {
     border-color: light-dark(rgb(163 163 163), rgb(133, 133, 133)) !important;
@@ -306,8 +313,13 @@ input[type="number"]::-webkit-outer-spin-button {
     overflow: hidden;
     resize: none;
 }
-.pr-0{
+
+.pr-0 {
     padding-right: 0;
+}
+
+.pl-20 {
+    padding-left: 20px;
 }
 
 /*Có thể tái sử dụng */

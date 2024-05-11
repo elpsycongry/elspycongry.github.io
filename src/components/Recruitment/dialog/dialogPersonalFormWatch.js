@@ -42,7 +42,6 @@ export default function DialogPersonalFormWatch({ id }) {
             );
         });
     }, []);
-    console.log(tenhnology)
     // const testId = [useState()]
 
     // Xử lý mở form
@@ -108,8 +107,8 @@ export default function DialogPersonalFormWatch({ id }) {
                                                     <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
                                                 </thead>
                                                 <tbody>
-                                                    {tenhnology.map((item) => (
-                                                        <tr key={item.id}>
+                                                    {tenhnology.map(item => (
+                                                        <tr key={item.type}>
                                                             <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
                                                             <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
                                                         </tr>
@@ -126,6 +125,7 @@ export default function DialogPersonalFormWatch({ id }) {
                             <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20">Thời hạn bàn giao: </label>
                             <p className="time-edit" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.dateEnd}</p>
                         </div>
+                        {formData.values.recruitmentRequest.status === "Bị từ chối bởi DET" ? ("") : (
                         <div className="col-md-12 mt-0 d-flex">
                             <div className="col-md-3 mt-2">
                                 <button type="button" className="btn btn-danger w-100 bg-clr-danger btn-edit stop" onClick={handleCloseWatchOpenReason}>Từ chối</button>
@@ -133,7 +133,7 @@ export default function DialogPersonalFormWatch({ id }) {
                             <div className="col-md-9 mt-2 ms-2">
                                 <button className=" btn-edit btn btn-success w-98    bg-clr-success">Khởi tạo kế hoạch tuyển dụng</button>
                             </div>
-                        </div>
+                        </div>)}
                     </form>
                 </DialogTitle>
             </Dialog>

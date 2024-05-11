@@ -1,10 +1,7 @@
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import HomeIcon from '@mui/icons-material/Home';
+import codeGym from '../../../assets/image/CodeGym.jpg';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
@@ -39,8 +36,8 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function Header() {
-     // Notification
-     const StyledIconWrapper = styled(Box)(({ theme }) => ({
+    // Notification
+    const StyledIconWrapper = styled(Box)(({ theme }) => ({
         position: 'relative',
         display: 'inline-flex',
         alignItems: 'center',
@@ -93,58 +90,61 @@ export default function Header() {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    return(
+    return (
         <>
-         <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        // onClick={handleDrawerOpen}
-                        edge="start"
-                     
-                    >
-                        <HomeIcon sx={{ fontSize: 30 }} />
-                    </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Tyson Lại - Hệ thống quản lý đào tạo
-                    </Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
-                    <Box sx={{ marginRight: '10px' }}>
-                        <StyledIconWrapper>
-                            <NotificationsIcon sx={{ fontSize: '35px' }} />
-                        </StyledIconWrapper>
-                    </Box>
-                    <Tooltip title="Open settings">
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                            <ArrowDropDownIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Menu
-                        sx={{ mt: '45px' }}
-                        id="menu-appbar"
-                        anchorEl={anchorElUser}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={Boolean(anchorElUser)}
-                        onClose={handleCloseUserMenu}
-                    >
-                        {settings.map((setting) => (
-                            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center">{setting}</Typography>
-                            </MenuItem>
-                        ))}
-                    </Menu>
-                </Toolbar>
+            <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
+                <Toolbar className='responsive-align-item-center min-width-height justify-content-between'>
+                    <div className='d-flex align-item-center'>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            // onClick={handleDrawerOpen}
+                            edge="start"
 
+                        >
+                            <img src={codeGym} alt='codeGym' className='iconCodeGym' />
+                        </IconButton>
+                        <Typography variant="h6" noWrap component="div">
+                            Tyson Lại - Hệ thống quản lý đào tạo
+                        </Typography>
+                    </div>
+                    <div className='d-flex align-item-center'>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
+                        <Box sx={{ marginRight: '10px' }}>
+                            <StyledIconWrapper>
+                                <NotificationsIcon sx={{ fontSize: '35px' }} />
+                            </StyledIconWrapper>
+                        </Box>
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                <ArrowDropDownIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            {settings.map((setting) => (
+                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                    <Typography textAlign="center">{setting}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                    </div>
+                </Toolbar>
             </AppBar>
         </>
     )

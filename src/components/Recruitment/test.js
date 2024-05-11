@@ -3,41 +3,83 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
+import { validEmail, validPhone } from "./regex/regex";
+import { useState } from "react";
+import Navbar from '../fragment/navbar/navbar';
+
 
 export default function SelectSmall() {
-    const [status, setStatus] = React.useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [date, setDate] = useState('');
+    const [emailErr, setEmailErr] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
+    const [dateErr, setDateErr] = useState(false);
+    const validate = (e) => {
+        console.log(emailErr, phoneError)
+        if (!validEmail.test(email)) {
+            setEmailErr(true);
+        } else {
+            setEmailErr(false);
+        }
+        if (!validPhone.test(phone)) {
+            setPhoneError(true);
+        } else {
+            setPhoneError(false);
+        }
+        // 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const futureDate = new Date(today);
+        futureDate.setDate(today.getDate() + 75);
 
-    const handleChange = (event) => {
-        setStatus(event.target.value);
+        const dateSet = new Date(date);
+        if (dateSet < futureDate) {
+            setDateErr(true);
+        } else {
+            setDateErr(false);
+        }
     };
 
-    const listTestSelect = [
-        { id: 1, text: "Hoạt động" },
-        { id: 2, text: "Không hoạt động" },
-        { id: 3, text: "Đang chờ" }
-    ]
+
+
+
+    const checkDate = (e) => {
+        const newDate = e.target.value;
+        setDate(newDate);
+        const datE = new Date(date);
+        console.log(datE);
+
+    }
+
+
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel id="demo-select-small-label">Status</InputLabel>
-            <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small"
-                value={status}
-                label="status"
-                onChange={handleChange}
-            >
-                {listTestSelect.map(item => (
-                    <MenuItem value={item.id} key={item.id}>{item.text}</MenuItem>
-                ))
-                }
-                {/* <MenuItem value="">
-                    <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem> */}
-            </Select>
-        </FormControl>
+        <div>
+            <Navbar/>
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+                type="phone"
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+            />
+            <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+            />
+            <div>
+                <button onClick={validate}>Validate</button>
+            </div>
+            {/* {emailErr && <p>Your email is invalid</p>}
+            {phoneError && <p>Your phone is invalid</p>} */}
+            {dateErr && <p>Your date is invalid</p>}
+        </div>
     );
-}
+};

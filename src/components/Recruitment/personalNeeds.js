@@ -1,33 +1,30 @@
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import ClearIcon from "@mui/icons-material/Clear";
 import {
     Box,
     Dialog,
     DialogContent,
-    IconButton,
     FormControl,
+    IconButton,
     InputLabel,
-    Menu,
     MenuItem,
-    Select,
-    TextField,
-    Typography,
-    ListSubheader,
+    Select
 } from "@mui/material";
+import axios from "axios";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
+import "../../assets/css/cssRecruitment/recruitment.css";
+import "../../assets/css/cssRecruitment/responsiveRecruitment.css";
+import imagePractice from "../../assets/image/PracticeImage.jpg";
 import BreadCrumbs from "../fragment/breadcrumbs/breadcrumbs";
 import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
-import "../../assets/css/cssRecruitment/recruitment.css";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
-import ClearIcon from "@mui/icons-material/Clear";
-import imagePractice from "../../assets/image/PracticeImage.jpg";
-import CreateIcon from '@mui/icons-material/Create';
-import { useEffect, useState } from "react";
-import DialogPersonalForm from "./dialog/dialogPersonalForm";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import DialogPersonalForm from "./dialog/DialogPersonalForm";
 import DialogPersonalFormUpdate from "./dialog/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialog/dialogPersonalFormWatch";
-import axios from "axios";
-import moment from "moment";
+
 
 export default function PersonalNeeds() {
     const [open, setOpen] = useState(false);
@@ -162,8 +159,8 @@ export default function PersonalNeeds() {
         <>
             <Header />
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
-                <BreadCrumbs />
+            <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
+                <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Nhu cầu nhân sự" icon={<BusinessCenterIcon sx={{ marginBottom: '5px',marginRight: '2px'}}/>} />
                 <div className="content-recruiment">
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
@@ -215,10 +212,11 @@ export default function PersonalNeeds() {
                                         label="Grouping"
                                         onChange={handleStatusChange}
                                         value={selectedStatus}
+                                        className="select-edit grey-text"
                                     >
                                         {
                                             listTestSelect.map(item => (
-                                                <MenuItem value={item.id} key={item.status} onClick={handleSubmitSelect}>{item.text}</MenuItem>
+                                                <MenuItem value={item.id} key="{item.status}" onClick={handleSubmitSelect}>{item.text}</MenuItem>
                                             ))}
                                     </Select>
                                 </FormControl>
@@ -230,7 +228,7 @@ export default function PersonalNeeds() {
 
                     </div>
                     <div>
-                        <table className=" table ">
+                        <table className="table responsive-table">
                             <tr className="header-tr grey-text">
                                 <th style={{ width: 48 }}>STT</th>
                                 <th style={{ width: 144 }}>Tên nhu cầu</th>
@@ -243,18 +241,18 @@ export default function PersonalNeeds() {
                             </tr>
                             {recuitments.map((item) => (
                                 <tr className="grey-text count-tr" key={item.id}>
-                                    <td className="count-td"></td>
+                                    <td className="count-td pl-20"></td>
 
                                     <td>{item.name}</td>
-                                    <td>{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
+                                    <td className="text-center">{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
-                                        <DialogPersonalFormWatch key={item.id} id={item.id} />
-                                        {item.status.toLowerCase() === "đã hủy" || item.status.toLowerCase() === "đã xác nhận" ? (
-                                            ""
+                                        <DialogPersonalFormWatch id={item.id} />
+                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
+                                            <DialogPersonalFormUpdate id={item.id} check={true} />
                                         ) : (
-                                            <DialogPersonalFormUpdate key={item.id} id={item.id} />
+                                            <DialogPersonalFormUpdate id={item.id} />
                                         )}
                                     </td>
                                 </tr>

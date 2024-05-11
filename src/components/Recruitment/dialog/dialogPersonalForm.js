@@ -6,7 +6,6 @@ import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import axios from "axios";
-
 import * as Yup from "yup"
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +13,37 @@ import { useFormik } from "formik";
 
 export default function DialogPersonalForm() {
   // Xử lý số lượng nhân sự
+  const checkValid = (dateSet, techArr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const futureDate = new Date(today);
+    futureDate.setDate(today.getDate() + 75);
+    const err = techArr.map(item => {
+      if (item.type === "" || item.type === "default" || item.quantity == 0 || item.quantity === "") {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    const hasErrTech = err.some(item => item === true);
+    console.log(hasErrTech)
+
+    setTechErr(hasErrTech);
+
+    if (dateSet < futureDate || dateSet == "Invalid Date") {
+      setDateErr(true);
+    } else {
+      setDateErr(false);
+    }
+
+
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech  ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   const formData = useFormik({
     initialValues: {
       idUser: null,
@@ -30,32 +60,38 @@ export default function DialogPersonalForm() {
         ],
       },
     },
-    onSubmit: async (values) => {
-      // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-      values.details = [...tech];
-      values.idUser = 1;
-      console.log(values);
-      try {
-        await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
-          window.location.href = "/";
-          swal("tạo nhu cầu nhân sự thành công", {
-            icon: "success",
+    onSubmit: async (values, { setSubmitting }) => {
+      const date = new Date(values.recruitmentRequest.dateEnd);
+      if (!checkValid(date, tech)) {
+        setSubmitting(false);
+        return;
+      } else {
+        // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
+        values.details = [...tech];
+        values.idUser = 1;
+        try {
+          await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
+            window.location.href = "/";
+            swal("tạo nhu cầu nhân sự thành công", {
+              icon: "success",
+              buttons: false,
+              timer: 2000
+            });
+          });
+        } catch (error) {
+          swal("tạo nhu cầu nhân sự thất bại", {
+            icon: "error",
             buttons: false,
             timer: 2000
           });
-        });
-      } catch (error) {
-        swal("tạo nhu cầu nhân sự thất bại", {
-          icon: "error",
-          buttons: false,
-          timer: 2000
-        });
+        }
       }
     }
   });
 
   function PersonalQuantity({ number, onQuantityChange }) {
-    if (number === "") {
+    console.log(number)
+    if (number === "" || number == 0) {
       number = 0;
     }
     const [count, setCount] = useState(number);
@@ -101,6 +137,11 @@ export default function DialogPersonalForm() {
       )
     }
   }
+  // Xử lý validate
+  const [dateErr, setDateErr] = useState(false);
+  const [techErr, setTechErr] = useState(false);
+  const [quantityErr, setQuantityErr] = useState(false);
+
 
   // Xử lý mở form
   const listTechnology = [
@@ -153,6 +194,9 @@ export default function DialogPersonalForm() {
         <DialogTitle>
           <form className="row g-3" onSubmit={formData.handleSubmit}>
             <div className="col-md-12">
+              <h2 className="grey-text" style={{ paddingBottom: 3 }}>
+                Thêm nhu cầu nhân sự
+              </h2>
               <IconButton
                 sx={{
                   position: "absolute",
@@ -170,6 +214,7 @@ export default function DialogPersonalForm() {
               </label>
               <input
                 type="text"
+                placeholder="Nhập tên nhu cầu..."
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
                 className={`form-control`}
@@ -195,10 +240,11 @@ export default function DialogPersonalForm() {
                   <select
                     className="form-select grey-text"
                     aria-label="Default select example"
+                    defaultValue="default"
                     onChange={(e) => handleChangeSelect(e, index)}
                     name={`tech[${index}].type`}
                   >
-                    <option value={tech.type}>{tech.type}</option>
+                    <option value="default">Chọn công nghệ...</option>
                     {listTechnology.map((item) => (
                       <option key={item.id} value={item.text}>
                         {item.text}
@@ -218,10 +264,13 @@ export default function DialogPersonalForm() {
                 </div>
               </>
             ))}
+              {techErr && <p className="err-valid">Technology or quantity cannot be null</p>}
+
+
             <div className="col-md-12 mt-2" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
-            <div className="col-md-12">
+            <div className="col-md-12 d-flex">
               <div className="col-md-6 mt-2">
                 <label htmlFor="time" className="form-label grey-text">
                   Thời hạn bàn giao <span className="color-red">*</span>
@@ -234,18 +283,17 @@ export default function DialogPersonalForm() {
                   id="recruitmentRequest.dateEnd"
                   name="recruitmentRequest.dateEnd"
                 />
-                {/* {formData.errors.recruitmentRequest?.dateEnd && formData.touched.recruitmentRequest?.dateEnd && (
-      <div className="invalid-feedback">{formData.errors.recruitmentRequest.dateEnd}</div>
-    )} */}
+                {dateErr && <p className="err-valid">Date must be greater than 75 days</p>}
               </div>
-            </div>
-            <div className="col-md-6 mt-2">
-              <label className="form-label"></label>
-              <div className="send text-right">
-                <div className="send-child position-relative">
-                  <button type="submit" className="btn send-btn btn-success text-center">
-                    Lưu
-                  </button>
+              <div className="col-md-6 mt-2">
+                <label className="form-label"></label>
+                <div className="send text-right">
+                  <div className="send-child position-relative">
+                    <button type="submit" className="btn send-btn btn-success ">
+                      Gửi
+                      <SendIcon className="iconSend position-absolute" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -11,7 +11,47 @@ import { useFormik } from "formik";
 import * as Yup from "yup"
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
-export default function DialogPersonalFormUpdate({ id }) {
+export default function DialogPersonalFormUpdate({ id, check }) {
+  const [dateErr, setDateErr] = useState(false);
+  const [techErr, setTechErr] = useState(false);
+
+
+  const checkValid = (dateEnd, dateStart, techArr) => {
+    const dateStartChange = new Date(dateStart);
+    dateStartChange.setHours(0, 0, 0, 0);
+    const futureDate = new Date(dateStartChange);
+    futureDate.setDate(dateStartChange.getDate() + 75);
+
+    const dateEndChange = new Date(dateEnd);
+    dateEnd.setHours(0, 0, 0, 0);
+    const dateSet = new Date(dateEndChange)
+    const err = techArr.map(item => {
+      if (item.type === "" || item.type === "default" || item.quantity == 0 || item.quantity === "") {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    const hasErrTech = err.some(item => item === true);
+
+    setTechErr(hasErrTech);
+
+    if (dateSet < futureDate || dateSet == "Invalid Date") {
+      setDateErr(true);
+    } else {
+      setDateErr(false);
+    }
+
+
+    if (dateSet < futureDate || hasErrTech || dateSet == "Invalid Date" ) {
+      return false;
+    } else {
+      return true;
+    }
+
+
+
+  }
   const navigate = useNavigate();
   // Xử lý số lượng nhân sự
   const formData = useFormik({
@@ -30,7 +70,14 @@ export default function DialogPersonalFormUpdate({ id }) {
         ],
       },
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { setSubmitting }) => {
+      setSubmitting(false);
+      const dateEnd = new Date(values.recruitmentRequest.dateEnd);
+      const dateStart = new Date(values.recruitmentRequest.dateStart);
+      if (!checkValid(dateEnd, dateStart, tech)) {
+        setSubmitting(false);
+        return;
+      } else {
         // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
         values.details = [...tech];
         console.log(values);
@@ -51,12 +98,13 @@ export default function DialogPersonalFormUpdate({ id }) {
           });
         }
       }
+    }
   });
 
-  function PersonalQuantity({ number, onQuantityChange  }) {
-    if(number === ""){
+  function PersonalQuantity({ number, onQuantityChange }) {
+    if (number === "" || number == 0) {
       number = 0;
-    }
+    } 
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
@@ -68,12 +116,12 @@ export default function DialogPersonalFormUpdate({ id }) {
         onQuantityChange(count - 1);
       }
     };
-   
+
     const handleInputChange = (e) => {
-        const newCount = parseInt(e.target.value);
-        setCount(newCount);
-        onQuantityChange(newCount); // Gọi hàm xử lý sự kiện từ component cha và truyền giá trị "quantity" mới
-      };
+      const newCount = parseInt(e.target.value);
+      setCount(newCount);
+      onQuantityChange(newCount); // Gọi hàm xử lý sự kiện từ component cha và truyền giá trị "quantity" mới
+    };
     return (
       <div className="d-flex justify-content-center align-items-center">
         <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
@@ -93,13 +141,13 @@ export default function DialogPersonalFormUpdate({ id }) {
     updatedTech[index].quantity = newQuantity;
     setTech(updatedTech);
   };
-const Dlt = ({index}) => {
-        if (tech.length > 1) {
-            return (
-                <BackspaceIcon onClick={() => removeTech(index)} />
-            )
-        }
+  const Dlt = ({ index }) => {
+    if (tech.length > 1) {
+      return (
+        <BackspaceIcon onClick={() => removeTech(index)} />
+      )
     }
+  }
   // Xử lý mở form
   const listTechnology = [
     { id: 1, text: "PHP" },
@@ -137,9 +185,9 @@ const Dlt = ({index}) => {
     const updateTech = tech.filter((_, idx) => idx !== index);
     setTech(updateTech);
   };
-  const  handleChangeSelect = (e, index) =>{
+  const handleChangeSelect = (e, index) => {
     const updateTech = [...tech];
-    updateTech[index] = {...updateTech[index],type: e.target.value};
+    updateTech[index] = { ...updateTech[index], type: e.target.value };
     setTech(updateTech);
   }
   useEffect(() => {
@@ -156,10 +204,13 @@ const Dlt = ({index}) => {
 
   return (
     <>
-      <CreateIcon
+      {check ? <CreateIcon
+        className="bg-whiteImportant pencil-btn font-size-medium"
+      /> : <CreateIcon
         className="color-orange pencil-btn font-size-medium"
         onClick={handleClickFormOpen}
-      />
+      />}
+
       <Dialog
         open={openForm}
         onClose={handleClickFormClose}
@@ -167,130 +218,130 @@ const Dlt = ({index}) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle>
-        <form className="row g-3" onSubmit={formData.handleSubmit}>
-  <div className="col-md-12">
-    <h2 className="grey-text" style={{ paddingBottom: 3 }}>
-      Cập nhật nhu cầu nhân sự
-    </h2>
-    <IconButton
-      sx={{
-        position: "absolute",
-        right: 0,
-        top: 0,
-      }}
-      onClick={handleClickFormClose}
-    >
-      <ClearIcon />
-    </IconButton>
-  </div>
-  <div className="col-md-12">
-  <label htmlFor="name" className="form-label grey-text">
-    Tên <span className="color-red">*</span>
-  </label>
-  <input
-    type="text"
-    onChange={formData.handleChange}
-    onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
-    value={formData.values.recruitmentRequest.name}
-    className={`form-control`}
-    id="recruitmentRequest.name"
-    name="recruitmentRequest.name"
-  />
-</div>
-  <div className="col-md-12 m-0 d-flex">
-    <div className="col-md-6 mb-0">
-      <label className="form-label grey-text">
-        Công nghệ <span className="color-red">*</span>
-      </label>
-    </div>
-    <div className="col-md-6 mb-0 text-center">
-      <label className="form-label grey-text">
-        Số lượng nhân sự <span className="color-red">*</span>
-      </label>
-    </div>
-  </div>
-  {tech.map((tech, index) => (
-    <>
-      <div key={index} className="col-md-6 mt-0 mb-2 last-child">
-        <select
-          className="form-select grey-text"
-          value={tech.type}
-          aria-label="Default select example"
-          onChange={(e) => handleChangeSelect(e, index)}
-          name={`tech[${index}].type`}
-        >
-          <option value={tech.type}>{tech.type}</option>
-          {listTechnology.map((item) => (
-            <option key={item.id} value={item.text}>
-              {item.text}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="col-md-6 text-center mt-0 mb-2 d-flex align-item-center">
-        <PersonalQuantity
-          number={tech.quantity}
-          key={tech.quantity}
-          onQuantityChange={(newQuantity) =>
-            handleQuantityChange(newQuantity, index)
-          }
-        />
-        <Dlt index={index}/>
-      </div>
-    </>
-  ))}
-  <div className="col-md-12 mt-2" onClick={addTech}>
-    <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
-  </div>
-  <div className="col-md-12">
-  <div className="col-md-6 mt-2">
-    <label htmlFor="time" className="form-label grey-text">
-      Thời hạn bàn giao <span className="color-red">*</span>
-    </label>
-    <input
-      type="date"
-      value={formData.values.recruitmentRequest.dateEnd}
-      onChange={formData.handleChange}
-      onBlur={formData.handleBlur}
-      className={`form-control text-center grey-text`}
-      id="recruitmentRequest.dateEnd"
-      name="recruitmentRequest.dateEnd"
-    />
-    {/* {formData.errors.recruitmentRequest?.dateEnd && formData.touched.recruitmentRequest?.dateEnd && (
-      <div className="invalid-feedback">{formData.errors.recruitmentRequest.dateEnd}</div>
-    )} */}
-  </div>
-</div>
-  <div className="col-md-6 mt-2 pr-0">
-    <label htmlFor="status" className="form-label grey-text">
-      Trạng thái
-    </label>
-    <select
-      value={formData.values.recruitmentRequest.status}
-      onChange={formData.handleChange}
-      className="form-select grey-text"
-      aria-label="Default select example"
-      name="recruitmentRequest.status"
-      id="recruitmentRequest.status"
-    >
-      {listTestSelect.map((item) => (
-        <option key={item.id} value={item.text}>
-          {item.text}
-        </option>
-      ))}
-    </select>
-  </div>
-  <div className="col-md-6 mt-2">
-    <label className="form-label"></label>
-    <div className="send text-right">
-      <div className="send-child position-relative">
-        <button type="submit" className="btn send-btn btn-success text-center">
-          Lưu
-        </button>
-      </div>
-    </div>
-  </div>
-</form>
+          <form className="row g-3" onSubmit={formData.handleSubmit}>
+            <div className="col-md-12">
+              <h2 className="grey-text" style={{ paddingBottom: 3 }}>
+                Cập nhật nhu cầu nhân sự
+              </h2>
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  right: 0,
+                  top: 0,
+                }}
+                onClick={handleClickFormClose}
+              >
+                <ClearIcon />
+              </IconButton>
+            </div>
+            <div className="col-md-12">
+              <label htmlFor="name" className="form-label grey-text">
+                Tên <span className="color-red">*</span>
+              </label>
+              <input
+                type="text"
+                onChange={formData.handleChange}
+                onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
+                value={formData.values.recruitmentRequest.name}
+                className={`form-control`}
+                id="recruitmentRequest.name"
+                name="recruitmentRequest.name"
+              />
+            </div>
+            <div className="col-md-12 m-0 d-flex">
+              <div className="col-md-6 mb-0">
+                <label className="form-label grey-text">
+                  Công nghệ <span className="color-red">*</span>
+                </label>
+              </div>
+              <div className="col-md-6 mb-0 text-center">
+                <label className="form-label grey-text">
+                  Số lượng nhân sự <span className="color-red">*</span>
+                </label>
+              </div>
+            </div>
+            {tech.map((tech, index) => (
+              <>
+                <div key={index} className="col-md-6 mt-0 mb-2 last-child">
+                  <select
+                    className="form-select grey-text"
+                    value={tech.type}
+                    aria-label="Default select example"
+                    onChange={(e) => handleChangeSelect(e, index)}
+                    name={`tech[${index}].type`}
+                  >
+                    <option value={tech.type}>{tech.type}</option>
+                    {listTechnology.map((item) => (
+                      <option key={item.id} value={item.text}>
+                        {item.text}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-6 text-center mt-0 mb-2 d-flex align-item-center">
+                  <PersonalQuantity
+                    number={tech.quantity}
+                    key={tech.quantity}
+                    onQuantityChange={(newQuantity) =>
+                      handleQuantityChange(newQuantity, index)
+                    }
+                  />
+                  <Dlt index={index} />
+                </div>
+              </>
+            ))}
+              {techErr && <p className="err-valid">Technology or quantity cannot be null</p>}
+
+            <div className="col-md-12 mt-2" onClick={addTech}>
+              <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
+            </div>
+            <div className="col-md-12">
+              <div className="col-md-6 mt-2">
+                <label htmlFor="time" className="form-label grey-text">
+                  Thời hạn bàn giao <span className="color-red">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={formData.values.recruitmentRequest.dateEnd}
+                  onChange={formData.handleChange}
+                  onBlur={formData.handleBlur}
+                  className={`form-control text-center grey-text`}
+                  id="recruitmentRequest.dateEnd"
+                  name="recruitmentRequest.dateEnd"
+                />
+                {dateErr && <p className="err-valid">Date must be greater than 75 days</p>}
+              </div>
+            </div>
+            <div className="col-md-6 mt-2 pr-0">
+              <label htmlFor="status" className="form-label grey-text">
+                Trạng thái
+              </label>
+              <select
+                value={formData.values.recruitmentRequest.status}
+                onChange={formData.handleChange}
+                className="form-select grey-text"
+                aria-label="Default select example"
+                name="recruitmentRequest.status"
+                id="recruitmentRequest.status"
+              >
+                {listTestSelect.map((item) => (
+                  <option key={item.id} value={item.text}>
+                    {item.text}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-6 mt-2">
+              <label className="form-label"></label>
+              <div className="send text-right">
+                <div className="send-child position-relative">
+                  <button type="submit" className="btn send-btn btn-success text-center">
+                    Lưu
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </DialogTitle>
       </Dialog>
     </>
