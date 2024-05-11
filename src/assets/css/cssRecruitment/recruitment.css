@@ -108,15 +108,15 @@
     overflow: hidden;
 }
 
-#select-form .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+.select-form .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
     top: -10px !important;
 }
 
-#select-form .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+.select-form .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
     padding: 5px;
 }
 
-#select-form .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+.select-form .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
     height: 100%;
 }
 

@@ -132,12 +132,12 @@ export default function Navbar() {
                 {
                     id: 2,
                     name: "Kế hoạch tuyển dụng",
-                    linkTo: "/",
+                    linkTo: "/recruitment/personalNeeds",
                 },
                 {
                     id: 3,
-                    name: "Phỏng vấn",
-                    linkTo: "#",
+                    name: "Quản lý ứng viên",
+                    linkTo: "/recruitment/candidateManagement",
                 }
             ]
         },

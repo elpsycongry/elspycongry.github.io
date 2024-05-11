@@ -23,7 +23,7 @@ export default function DialogPersonalFormReason({ idUser, open, onClose }) {
                 { reason }
             );
             console.log('Response:', response.data);
-            navigate("/");
+            navigate("/recruitment/personalNeeds");
         } catch (error) {
             console.error('Error:', error);
         }

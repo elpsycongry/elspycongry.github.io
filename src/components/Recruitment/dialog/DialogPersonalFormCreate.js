@@ -71,7 +71,7 @@ export default function DialogPersonalForm() {
         values.idUser = 1;
         try {
           await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
-            window.location.href = "/";
+            window.location.href = "/recruitment/personalNeeds";
             swal("tạo nhu cầu nhân sự thành công", {
               icon: "success",
               buttons: false,

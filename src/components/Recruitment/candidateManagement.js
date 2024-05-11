@@ -24,9 +24,11 @@ import Navbar from "../fragment/navbar/navbar";
 import DialogPersonalForm from "./dialog/DialogPersonalFormCreate";
 import DialogPersonalFormUpdate from "./dialog/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialog/dialogPersonalFormWatch";
+import NativeSelect from '@mui/material/NativeSelect';
+import { styled } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+export default function CandidateManagement() {
 
-
-export default function PersonalNeeds() {
     const [open, setOpen] = useState(false);
     const handleClickPracticeOpen = () => {
         setOpen(true);
@@ -46,56 +48,34 @@ export default function PersonalNeeds() {
     };
 
 
-    const listPersonal = [
+    const CandidateManagementTest = [
         {
             id: 1,
-            name: "DECEN- Nhu cầu nhân sự quý 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
+            name: "trọng",
+            email: "trong@gmail.com",
+            number: "0392017345",
+            scoreTest: "53",
+            scorePV: "8",
+            status: "Chưa có kq",
         },
         {
             id: 2,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
+            name: "Hoàng",
+            email: "trong@gmail.com",
+            number: "0392017345",
+            scoreTest: "53",
+            scorePV: "8",
+            status: "Chưa có kq",
         },
         {
             id: 3,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 4,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 5,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 6,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 7,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
+            name: "Hoa",
+            email: "trong@gmail.com",
+            number: "0392017345",
+            scoreTest: "53",
+            scorePV: "8",
+            status: "Chưa có kq",
+        }
     ];
 
     const [valueRecuitments, setSearchName] = useState('');
@@ -146,8 +126,6 @@ export default function PersonalNeeds() {
             console.error('Error searching by status:', error);
         }
     };
-
-
     const [recuitments, setRecuitment] = useState([]);
     useEffect(() => {
         axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
@@ -155,16 +133,20 @@ export default function PersonalNeeds() {
         });
     }, []);
 
+
+
+ 
+
     return (
         <>
             <Header />
             <Navbar />
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
-                <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Nhu cầu nhân sự" icon={<BusinessCenterIcon sx={{ marginBottom: '5px',marginRight: '2px'}}/>} />
+                <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Quản lý ứng viên" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
                 <div className="content-recruiment">
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
-                            Nhu cầu nhân sự
+                            Quản lý ứng viên
                         </p>
                         <div className="d-flex align-items-center cursor-pointer" onClick={handleClickPracticeOpen}>
                             <p className="practice text-center mb-0 me-1">
@@ -205,11 +187,26 @@ export default function PersonalNeeds() {
                                         <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
                                     </form>
                                 </div>
-                                <FormControl className="ml-10 select-form"  sx={{ minWidth: 300 }}>
-                                    <InputLabel htmlFor="grouped-select">Trạng thái</InputLabel>
+                                <FormControl className="ml-10 select-form" sx={{ minWidth: 300 }}>
+                                    <InputLabel htmlFor="grouped-select">Trạng thái...</InputLabel>
                                     <Select defaultValue=""
                                         id="grouped-select"
-                                        label="Grouping"
+                                        label="Trạng thái..."
+                                        onChange={handleStatusChange}
+                                        value={selectedStatus}
+                                        className="select-edit grey-text"
+                                    >
+                                        {
+                                            listTestSelect.map(item => (
+                                                <MenuItem value={item.id} key="{item.status}" onClick={handleSubmitSelect}>{item.text}</MenuItem>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl className="ml-10 select-form" sx={{ minWidth: 300 }}>
+                                    <InputLabel htmlFor="grouped-select">Kế hoạch tuyển dụng...</InputLabel>
+                                    <Select defaultValue=""
+                                        id="grouped-select"
+                                        label="Kế hoạch tuyển dụng..."
                                         onChange={handleStatusChange}
                                         value={selectedStatus}
                                         className="select-edit grey-text"
@@ -231,12 +228,14 @@ export default function PersonalNeeds() {
                         <table className="table responsive-table">
                             <tr className="header-tr grey-text">
                                 <th style={{ width: 48 }}>STT</th>
-                                <th style={{ width: 144 }}>Tên nhu cầu</th>
+                                <th style={{ width: 144 }}>Tên ứng viên</th>
                                 <th style={{ width: 130 }} className=" text-center">
-                                    Thời gian khởi tạo
+                                    Email
                                 </th>
+                                <th className="w-130 text-center">Số điện thoại</th>
+                                <th className="w-130 text-center">Điểm Test(%)</th>
+                                <th className="w-130 text-center">Điểm PV</th>
                                 <th className="w-130 text-center">Trạng thái</th>
-                                <th className="w-130 text-center">Người gửi</th>
                                 <th className="w-130 text-right">Hành động</th>
                             </tr>
                             {recuitments.map((item) => (
@@ -244,9 +243,11 @@ export default function PersonalNeeds() {
                                     <td className="count-td pl-20"></td>
 
                                     <td>{item.name}</td>
-                                    <td className="text-center">{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
+                                    <td className="text-center">{item.email}</td>
+                                    <td className="text-center">{item.number}</td>
+                                    <td className="text-center">{item.scoreTest}</td>
+                                    <td className="text-center">{item.scorePV}</td>
                                     <td className="text-center">{item.status}</td>
-                                    <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogPersonalFormWatch id={item.id} />
                                         {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
@@ -264,5 +265,8 @@ export default function PersonalNeeds() {
             </Box>
             <Footer />
         </>
-    );
+    )
 }
+
+
+
