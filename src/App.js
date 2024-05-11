@@ -1,30 +1,23 @@
 import './App.css';
 import {Route, Routes} from 'react-router-dom';
 import Login from "./components/login/login";
-
-import {SnackbarProvider} from "notistack";
 import HomePage from "./components/homePage/homePage";
 import Users from "./components/users/users";
-import CheckToken from "./components/checkToken/checkToken";
+import NavigateConfig from "./components/checkToken/navigateConfig";
 
 function App() {
     return (
         <>
             <Routes>
                 <Route path={"/home"} element={
-                    <CheckToken>
-                        <SnackbarProvider>
-                            <HomePage/>
-                        </SnackbarProvider>
-                    </CheckToken>}/>
-                <Route path={"/users"} element={
-                    <CheckToken>
-                        <SnackbarProvider>
-                            <Users/>
-                        </SnackbarProvider>
-                    </CheckToken>
+                    <NavigateConfig><HomePage/></NavigateConfig>
                 }/>
-                <Route path={"/login"} element={<SnackbarProvider><Login/></SnackbarProvider>}/>
+                <Route path={"/users"} element={
+                    <NavigateConfig><Users/></NavigateConfig>
+                }/>
+                <Route path={"/login"} element={
+                   <NavigateConfig> <Login/></NavigateConfig>
+                }/>
             </Routes>
         </>
     )

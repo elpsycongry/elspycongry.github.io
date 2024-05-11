@@ -16,7 +16,8 @@ import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import {doLogout} from "../../checkToken/navigateConfig";
+const settings = ['Logout'];
 const drawerWidth = 240;
 
 
@@ -138,7 +139,7 @@ export default function Header() {
                         onClose={handleCloseUserMenu}
                     >
                         {settings.map((setting) => (
-                            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                            <MenuItem key={setting} onClick={doLogout}>
                                 <Typography textAlign="center">{setting}</Typography>
                             </MenuItem>
                         ))}

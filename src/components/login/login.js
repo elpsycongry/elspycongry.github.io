@@ -46,7 +46,7 @@ const defaultTheme = createTheme();
 
 export default function Login() {
 
-    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+
 
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
@@ -59,14 +59,14 @@ export default function Login() {
         formData.forEach((value, key) => data[key] = value);
         axios.post("http://localhost:8080/login", data).then(
             res => {
-                console.log(currentUser)
+
                 if (res.data.code === "401") {
                     enqueueSnackbar(res.data.msg, { variant:"error", anchorOrigin: { horizontal: "right", vertical: "top"}});
                 }
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar('Đăng nhập thành công !', { variant:"success"});
-                    // navigate("/home")
+                    enqueueSnackbar('Đăng nhập thành công !', { variant:"success",  anchorOrigin: { horizontal: "right", vertical: "top"}});
+                    navigate("/users")
                 }
                 setFlagValidate({...flagValidate, validSubmit: true})
             }

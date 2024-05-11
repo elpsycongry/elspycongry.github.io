@@ -4,14 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
-import CheckToken from "./components/checkToken/checkToken";
+import NavigateConfig from "./components/checkToken/navigateConfig";
+import {SnackbarProvider} from "notistack";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter >
-
+    <SnackbarProvider autoHideDuration={1500} anchorOrigin={{vertical: "top", horizontal: "right"}}>
+        <BrowserRouter >
             <App />
-    </BrowserRouter>
+        </BrowserRouter>
+    </SnackbarProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

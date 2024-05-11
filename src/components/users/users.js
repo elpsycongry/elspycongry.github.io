@@ -19,7 +19,6 @@ export default function Users() {
 
 
     const location = useLocation();
-    console.log(location);
 
     const [open, setOpen] = useState(false);
 
