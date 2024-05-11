@@ -19,15 +19,15 @@ export default function DialogPersonalForm() {
     const futureDate = new Date(today);
     futureDate.setDate(today.getDate() + 75);
     const err = techArr.map(item => {
-      if(item.type === "" || item.type === "default"){
+      if (item.type === "" || item.type === "default") {
         return true;
-      } else{
+      } else {
         return false;
       }
     })
     console.log(err);
     const hasErrTech = err.some(item => item === true);
-    
+
     setTechErr(hasErrTech);
 
     if (dateSet < futureDate) {
@@ -37,7 +37,7 @@ export default function DialogPersonalForm() {
     }
 
 
-    if (dateSet < futureDate || hasErrTech) {
+    if (dateSet < futureDate || hasErrTech || quantityErr) {
       return false;
     } else {
       return true;
@@ -91,8 +91,12 @@ export default function DialogPersonalForm() {
   });
 
   function PersonalQuantity({ number, onQuantityChange }) {
-    if (number === "") {
+    console.log(number)
+    if (number === "" || number == 0) {
+      setQuantityErr(true);
       number = 0;
+    } else {
+      setQuantityErr(false);
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
@@ -140,7 +144,7 @@ export default function DialogPersonalForm() {
   // Xử lý validate
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
-
+  const [quantityErr, setQuantityErr] = useState(false);
 
 
   // Xử lý mở form
@@ -264,7 +268,11 @@ export default function DialogPersonalForm() {
                 </div>
               </>
             ))}
-            {techErr && <p className="err-valid">Technology cannot be null</p>}
+            <div className="d-flex col-md-12">
+              {techErr || quantityErr && <p className="err-valid">Technology or quantity cannot be null</p>}
+            </div>
+
+
             <div className="col-md-12 mt-2" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
@@ -282,9 +290,6 @@ export default function DialogPersonalForm() {
                   name="recruitmentRequest.dateEnd"
                 />
                 {dateErr && <p className="err-valid">Date must be greater than 75 days</p>}
-                {/* {formData.errors.recruitmentRequest?.dateEnd && formData.touched.recruitmentRequest?.dateEnd && (
-      <div className="invalid-feedback">{formData.errors.recruitmentRequest.dateEnd}</div>
-    )} */}
               </div>
               <div className="col-md-6 mt-2">
                 <label className="form-label"></label>

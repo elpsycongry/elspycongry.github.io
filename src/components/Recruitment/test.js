@@ -5,6 +5,7 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 import { validEmail, validPhone } from "./regex/regex";
 import { useState } from "react";
+import Navbar from '../fragment/navbar/navbar';
 
 
 export default function SelectSmall() {
@@ -55,6 +56,7 @@ export default function SelectSmall() {
 
     return (
         <div>
+            <Navbar/>
             <input
                 type="email"
                 placeholder="Email"

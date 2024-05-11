@@ -17,6 +17,7 @@ import { Icon } from '@iconify/react';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { Link } from 'react-router-dom';
 
 
 const drawerWidth = 240;
@@ -99,11 +100,11 @@ export default function Navbar() {
         setOpen(true);
     };
 
-    
+
     const handleDrawerClose = (event) => {
         const drawer = document.getElementById('drawer')
         setOpen(false);
-        if(!drawer.contains(event.relatedTarget)){
+        if (!drawer.contains(event.relatedTarget)) {
             setOpenChil(prevState => {
                 const newState = { ...prevState };
                 Object.keys(newState).forEach(key => newState[key] = false);
@@ -112,8 +113,8 @@ export default function Navbar() {
         }
     };
 
-    const Book = () =>{
-        return(
+    const Book = () => {
+        return (
             <Icon icon="ion:book-sharp" width="24" height="24" />
         )
     }
@@ -121,7 +122,25 @@ export default function Navbar() {
 
     const listItems = [
         { id: 1, text: "Đào tạo", IconText: Book },
-        { id: 2, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: ["Nhu cầu", "Kế hoạch tuyển dụng", "Phỏng vấn"] },
+        {
+            id: 2, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: [
+                {
+                    id: 1,
+                    name: "Nhu cầu",
+                    linkTo: "#",
+                },
+                {
+                    id: 2,
+                    name: "Kế hoạch tuyển dụng",
+                    linkTo: "/",
+                },
+                {
+                    id: 3,
+                    name: "Phỏng vấn",
+                    linkTo: "#",
+                }
+            ]
+        },
         { id: 3, text: "Thống kê", IconText: SignalCellularAltIcon }
     ]
     const [openChil, setOpenChil] = useState({});
@@ -129,9 +148,10 @@ export default function Navbar() {
         setOpenChil(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
+
     return (
         <Box
-        
+
             sx={{ display: 'flex' }}>
             <CssBaseline />
 
@@ -140,38 +160,45 @@ export default function Navbar() {
                 onMouseOver={handleDrawerOpen}
                 onMouseOut={handleDrawerClose}
                 id='drawer'
-                variant="permanent" open={open}>
+                variant="permanent"
+                open={open}
+            >
                 <Divider />
                 <List>
                     {listItems.map(({ id, text, IconText, children }) => (
-                        <div key={text}>
-                            <ListItem onClick={() => children && handleClick(id)} disablePadding sx={{ display: 'block' }}>
-                                <ListItemButton
-                                    sx={{
-                                        minHeight: 48,
-                                        justifyContent: openChil ? 'initial' : 'center',
-                                        px: 2.5,
-                                    }}
-                                >
-                                    <ListItemIcon
+                        <div key={id}>
+                            <div className='test'>
+                                <ListItem onClick={() => children && handleClick(id)} disablePadding sx={{  display: 'block' }}>
+                                    <ListItemButton
                                         sx={{
-                                            minWidth: 0,
-                                            mr: openChil ? 3 : 'auto',
-                                            justifyContent: 'center',
+                                            minHeight: 48,
+                                            justifyContent: openChil ? 'initial' : 'center',
+                                            px: 2.5,
                                         }}
                                     >
-                                        <IconText />
-                                    </ListItemIcon>
-                                    <ListItemText primary={text} sx={{ opacity: openChil ? 1 : 0 }} />
-                                    {children ? (openChil[id] ? <ExpandLess /> : <ExpandMore />) : null}
-                                </ListItemButton>
-                            </ListItem>
+                                        <ListItemIcon
+                                            sx={{
+                                                minWidth: 0,
+                                                mr: openChil ? 3 : 'auto',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <IconText />
+                                        </ListItemIcon>
+                                        <ListItemText primary={text} sx={{ opacity: openChil ? 1 : 0 }} />
+                                        {children ? (openChil[id] ? <ExpandLess /> : <ExpandMore />) : null}
+                                    </ListItemButton>
+                                </ListItem>
+                            </div>
+
                             {children && (
                                 <Collapse in={openChil[id] ?? false} timeout="auto" unmountOnExit>
-                                    <List component="div" disablePadding>
-                                        {children.map((subItem, index) => (
-                                            <ListItem button key={subItem - index} sx={{ pl: 4 }}>
-                                                <ListItemText primary={subItem} />
+                                    <List className='listChild' component="div" disablePadding>
+                                        {Object.keys(children).map((subItem, index) => (
+                                            <ListItem button key={subItem} sx={{ pl: 4 }}>
+                                                <Link className='linkChild' to={children[subItem].linkTo}>
+                                                    <ListItemText className='child' primary={children[subItem].name} />
+                                                </Link>
                                             </ListItem>
                                         ))}
                                     </List>

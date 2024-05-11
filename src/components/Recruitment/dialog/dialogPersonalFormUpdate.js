@@ -31,19 +31,18 @@ export default function DialogPersonalFormUpdate({ id, check }) {
         return false;
       }
     })
-    console.log(err);
     const hasErrTech = err.some(item => item === true);
     
     setTechErr(hasErrTech);
 
-    if (dateSet < futureDate) {
+    if (dateSet < futureDate ||  dateSet == "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
 
-    if (dateSet < futureDate || hasErrTech) {
+    if (dateSet < futureDate || hasErrTech ||  dateSet == "Invalid Date") {
       return false;
     } else {
       return true;

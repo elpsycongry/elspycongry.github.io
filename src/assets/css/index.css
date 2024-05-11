@@ -27,4 +27,17 @@ footer {
 .breadCrumbs .css-1wuw8dw-MuiBreadcrumbs-separator{
     margin: 0;      
 }
+.linkChild{
+    text-decoration: none;
+    color: inherit;
+    padding-left:38px;
+}
+.linkChild span{
+    font-size: 14px !important;
+}
+.listChild .css-1aosqlb-MuiButtonBase-root-MuiListItem-root{
+    padding-top: 0;
+    padding-bottom: 2px;
+}
+
 

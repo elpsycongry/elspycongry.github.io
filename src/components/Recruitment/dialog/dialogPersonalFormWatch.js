@@ -107,8 +107,8 @@ export default function DialogPersonalFormWatch({ id }) {
                                                     <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
                                                 </thead>
                                                 <tbody>
-                                                    {tenhnology.map((item) => (
-                                                        <tr key={item.id}>
+                                                    {tenhnology.map(item => (
+                                                        <tr key={item.type}>
                                                             <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
                                                             <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
                                                         </tr>
