@@ -15,41 +15,42 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
 
+
   const checkValid = (dateEnd, dateStart, techArr) => {
     const dateStartChange = new Date(dateStart);
     dateStartChange.setHours(0, 0, 0, 0);
     const futureDate = new Date(dateStartChange);
     futureDate.setDate(dateStartChange.getDate() + 75);
-    
+
     const dateEndChange = new Date(dateEnd);
-    dateEnd.setHours(0,0,0,0);
+    dateEnd.setHours(0, 0, 0, 0);
     const dateSet = new Date(dateEndChange)
     const err = techArr.map(item => {
-      if(item.type === "" || item.type === "default"){
+      if (item.type === "" || item.type === "default" || item.quantity == 0 || item.quantity === "") {
         return true;
-      } else{
+      } else {
         return false;
       }
     })
     const hasErrTech = err.some(item => item === true);
-    
+
     setTechErr(hasErrTech);
 
-    if (dateSet < futureDate ||  dateSet == "Invalid Date") {
+    if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
 
-    if (dateSet < futureDate || hasErrTech ||  dateSet == "Invalid Date") {
+    if (dateSet < futureDate || hasErrTech || dateSet == "Invalid Date" ) {
       return false;
     } else {
       return true;
     }
 
 
-    
+
   }
   const navigate = useNavigate();
   // Xử lý số lượng nhân sự
@@ -73,7 +74,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
       setSubmitting(false);
       const dateEnd = new Date(values.recruitmentRequest.dateEnd);
       const dateStart = new Date(values.recruitmentRequest.dateStart);
-        if (!checkValid(dateEnd,dateStart,tech)) {
+      if (!checkValid(dateEnd, dateStart, tech)) {
         setSubmitting(false);
         return;
       } else {
@@ -101,9 +102,9 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   });
 
   function PersonalQuantity({ number, onQuantityChange }) {
-    if (number === "") {
+    if (number === "" || number == 0) {
       number = 0;
-    }
+    } 
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
@@ -289,8 +290,8 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 </div>
               </>
             ))}
-            {techErr && <p className="err-valid">Technology cannot be null</p>}
-            
+              {techErr && <p className="err-valid">Technology or quantity cannot be null</p>}
+
             <div className="col-md-12 mt-2" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
@@ -309,10 +310,6 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                   name="recruitmentRequest.dateEnd"
                 />
                 {dateErr && <p className="err-valid">Date must be greater than 75 days</p>}
-
-                {/* {formData.errors.recruitmentRequest?.dateEnd && formData.touched.recruitmentRequest?.dateEnd && (
-      <div className="invalid-feedback">{formData.errors.recruitmentRequest.dateEnd}</div>
-    )} */}
               </div>
             </div>
             <div className="col-md-6 mt-2 pr-0">

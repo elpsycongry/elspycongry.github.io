@@ -19,25 +19,25 @@ export default function DialogPersonalForm() {
     const futureDate = new Date(today);
     futureDate.setDate(today.getDate() + 75);
     const err = techArr.map(item => {
-      if (item.type === "" || item.type === "default") {
+      if (item.type === "" || item.type === "default" || item.quantity == 0 || item.quantity === "") {
         return true;
       } else {
         return false;
       }
     })
-    console.log(err);
     const hasErrTech = err.some(item => item === true);
+    console.log(hasErrTech)
 
     setTechErr(hasErrTech);
 
-    if (dateSet < futureDate) {
+    if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
 
-    if (dateSet < futureDate || hasErrTech || quantityErr) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech  ) {
       return false;
     } else {
       return true;
@@ -61,7 +61,6 @@ export default function DialogPersonalForm() {
       },
     },
     onSubmit: async (values, { setSubmitting }) => {
-      console.log(techErr)
       const date = new Date(values.recruitmentRequest.dateEnd);
       if (!checkValid(date, tech)) {
         setSubmitting(false);
@@ -93,10 +92,7 @@ export default function DialogPersonalForm() {
   function PersonalQuantity({ number, onQuantityChange }) {
     console.log(number)
     if (number === "" || number == 0) {
-      setQuantityErr(true);
       number = 0;
-    } else {
-      setQuantityErr(false);
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
@@ -268,9 +264,7 @@ export default function DialogPersonalForm() {
                 </div>
               </>
             ))}
-            <div className="d-flex col-md-12">
-              {techErr || quantityErr && <p className="err-valid">Technology or quantity cannot be null</p>}
-            </div>
+              {techErr && <p className="err-valid">Technology or quantity cannot be null</p>}
 
 
             <div className="col-md-12 mt-2" onClick={addTech}>
