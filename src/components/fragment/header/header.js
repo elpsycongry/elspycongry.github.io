@@ -13,6 +13,7 @@ import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
+import { Link } from 'react-router-dom';
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const drawerWidth = 240;
 
@@ -95,15 +96,17 @@ export default function Header() {
             <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
                 <Toolbar className='responsive-align-item-center min-width-height justify-content-between'>
                     <div className='d-flex align-item-center'>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            // onClick={handleDrawerOpen}
-                            edge="start"
+                        <Link to={'/'}>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                // onClick={handleDrawerOpen}
+                                edge="start"
 
-                        >
-                            <img src={codeGym} alt='codeGym' className='iconCodeGym' />
-                        </IconButton>
+                            >
+                                <img src={codeGym} alt='codeGym' className='iconCodeGym' />
+                            </IconButton>
+                        </Link>
                         <Typography variant="h6" noWrap component="div">
                             Tyson Lại - Hệ thống quản lý đào tạo
                         </Typography>

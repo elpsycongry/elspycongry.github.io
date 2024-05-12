@@ -120,17 +120,16 @@ export default function DialogPersonalFormUpdate({ id, check }) {
       setCount(count + 1);
       onQuantityChange(count + 1);
     };
+    const handleInputChange = (e) => {
+      const newCount = parseInt(e.target.value);
+      setCount(newCount);
+      onQuantityChange(newCount);
+    };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
         setCount(count - 1);
         onQuantityChange(count - 1);
       }
-    };
-
-    const handleInputChange = (e) => {
-      const newCount = parseInt(e.target.value);
-      setCount(newCount);
-      onQuantityChange(newCount); // Gọi hàm xử lý sự kiện từ component cha và truyền giá trị "quantity" mới
     };
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -140,7 +139,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
-          onChange={(e) => setCount(e.target.value)}
+          onChange={handleInputChange}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>

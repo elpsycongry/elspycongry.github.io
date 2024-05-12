@@ -123,10 +123,6 @@ export default function DialogPersonalForm() {
         onQuantityChange(count - 1);
       }
     };
-    console.log(count)
-
-
-
     return (
       <div className="d-flex justify-content-center align-items-center">
         <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
