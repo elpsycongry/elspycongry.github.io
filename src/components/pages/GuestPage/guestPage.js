@@ -39,7 +39,7 @@ const HomePage = () => {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             color: 'black'
-                        }} variant="h4">Nâng cao kỹ năng - Nâng tầm giá trị</Typography>
+                        }} variant="h4">Tài khoản của bạn chưa được kích hoạt</Typography>
                     </Box>
                 </Container>
             </React.Fragment>
