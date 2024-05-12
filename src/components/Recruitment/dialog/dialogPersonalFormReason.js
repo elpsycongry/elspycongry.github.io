@@ -8,22 +8,28 @@ import CreateIcon from '@mui/icons-material/Create';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
+import swal from "sweetalert";
 
 
 export default function DialogPersonalFormReason({ idUser, open, onClose }) {
 
-    const navigate = useNavigate();
     const [reason, setReason] = useState('');
 
     const handleSubmit = async (e) => {
-
+        e.preventDefault();
         try {
-            const response = await axios.post(
+            await axios.post(
                 'http://localhost:8080/api/recruitmentRequests/' + idUser + '/users/2',
                 { reason }
-            );
-            console.log('Response:', response.data);
-            navigate("/recruitment/personalNeeds");
+            ).then(() => {
+                swal("Cập nhật lý do thành công", {
+                  icon: "success",
+                  buttons: false,
+                  timer: 2000
+                }).then(() => {
+                  window.location.href = "/recruitment/personalNeeds";
+                });
+              });
         } catch (error) {
             console.error('Error:', error);
         }

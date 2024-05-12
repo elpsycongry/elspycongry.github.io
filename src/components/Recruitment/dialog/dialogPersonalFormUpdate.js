@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 export default function DialogPersonalFormUpdate({ id, check }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
+  const [quantityErr, setQuantityErr] = useState(false);
 
 
   const checkValid = (dateEnd, dateStart, techArr) => {
@@ -25,16 +26,24 @@ export default function DialogPersonalFormUpdate({ id, check }) {
     const dateEndChange = new Date(dateEnd);
     dateEnd.setHours(0, 0, 0, 0);
     const dateSet = new Date(dateEndChange)
-    const err = techArr.map(item => {
-      if (item.type === "" || item.type === "default" || item.quantity == 0 || item.quantity === "") {
+    const errTech = techArr.map(item => {
+      if (item.type === "" || item.type === "default") {
         return true;
       } else {
         return false;
       }
     })
-    const hasErrTech = err.some(item => item === true);
-
+    const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
+    const errQuantity = techArr.map(item => {
+      if (item.quantity == 0 || item.quantity === "" || item.quantity < 0) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    const hasErrQuantity = errQuantity.some(item => item === true);
+    setQuantityErr(hasErrQuantity);
 
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
@@ -43,7 +52,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
     }
 
 
-    if (dateSet < futureDate || hasErrTech || dateSet == "Invalid Date" ) {
+    if (dateSet < futureDate || hasErrTech || dateSet == "Invalid Date" || hasErrQuantity) {
       return false;
     } else {
       return true;
@@ -83,11 +92,12 @@ export default function DialogPersonalFormUpdate({ id, check }) {
         console.log(values);
         try {
           await axios.put("http://localhost:8080/api/recruitmentRequests/" + id, values).then(res => {
-            window.location.href = "/recruitment/personalNeeds";
             swal(" cập nhật nhu cầu nhân sự thành công", {
               icon: "success",
               buttons: false,
               timer: 2000
+            }).then(() => {
+              window.location.href = "/recruitment/personalNeeds";
             });
           });
         } catch (error) {
@@ -104,7 +114,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   function PersonalQuantity({ number, onQuantityChange }) {
     if (number === "" || number == 0) {
       number = 0;
-    } 
+    }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
@@ -290,8 +300,14 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 </div>
               </>
             ))}
-              {techErr && <p className="err-valid">Technology or quantity cannot be null</p>}
-
+            <div className=" col-md-12 d-flex justify-content-between mt-0">
+              <div>
+                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
+              </div>
+              <div>
+                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng không được rỗng hoặc bé hơn 0</p>}
+              </div>
+            </div>
             <div className="col-md-12 mt-2" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
@@ -309,7 +325,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                   id="recruitmentRequest.dateEnd"
                   name="recruitmentRequest.dateEnd"
                 />
-                {dateErr && <p className="err-valid">Date must be greater than 75 days</p>}
+                {dateErr && <p className="err-valid ">Thời hạn bàn giao phải tối thiểu 75 ngày</p>}
               </div>
             </div>
             <div className="col-md-6 mt-2 pr-0">

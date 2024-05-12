@@ -11,7 +11,6 @@ import {
     Select
 } from "@mui/material";
 import axios from "axios";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
 import "../../assets/css/cssRecruitment/recruitment.css";
@@ -24,9 +23,6 @@ import Navbar from "../fragment/navbar/navbar";
 import DialogPersonalForm from "./dialog/DialogPersonalFormCreate";
 import DialogPersonalFormUpdate from "./dialog/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialog/dialogPersonalFormWatch";
-import NativeSelect from '@mui/material/NativeSelect';
-import { styled } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
 export default function CandidateManagement() {
 
     const [open, setOpen] = useState(false);
@@ -141,7 +137,7 @@ export default function CandidateManagement() {
         <>
             <Header />
             <Navbar />
-            <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
+            <Box component="main" sx={{ minWidth: '1246px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Quản lý ứng viên" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
                 <div className="content-recruiment">
                     <div className=" d-flex align-items-centent justify-content-between">
@@ -232,8 +228,8 @@ export default function CandidateManagement() {
                                 <th style={{ width: 130 }} className=" text-center">
                                     Email
                                 </th>
-                                <th className="w-130 text-center">Số điện thoại</th>
-                                <th className="w-130 text-center">Điểm Test(%)</th>
+                                <th className="w-130 text-center ws-nowrap">Số điện thoại</th>
+                                <th className="w-130 text-center ws-nowrap">Điểm Test(%)</th>
                                 <th className="w-130 text-center">Điểm PV</th>
                                 <th className="w-130 text-center">Trạng thái</th>
                                 <th className="w-130 text-right">Hành động</th>
@@ -242,7 +238,7 @@ export default function CandidateManagement() {
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td className="count-td pl-20"></td>
 
-                                    <td>{item.name}</td>
+                                    <td className='ws-nowrap'>{item.name}</td>
                                     <td className="text-center">{item.email}</td>
                                     <td className="text-center">{item.number}</td>
                                     <td className="text-center">{item.scoreTest}</td>
