@@ -16,7 +16,8 @@ import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import {doLogout} from "../../checkToken/navigateConfig";
+import {doLogout} from "../../checkToken/AuthContext";
+import {useNavigate} from "react-router-dom";
 const settings = ['Logout'];
 const drawerWidth = 240;
 
@@ -94,6 +95,7 @@ export default function Header() {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const navigate = useNavigate();
     return(
         <>
          <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
@@ -139,7 +141,7 @@ export default function Header() {
                         onClose={handleCloseUserMenu}
                     >
                         {settings.map((setting) => (
-                            <MenuItem key={setting} onClick={doLogout}>
+                            <MenuItem key={setting} onClick={() => {doLogout(navigate)}}>
                                 <Typography textAlign="center">{setting}</Typography>
                             </MenuItem>
                         ))}

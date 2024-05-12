@@ -14,14 +14,14 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import {SnackbarProvider, useSnackbar} from 'notistack';
 import {useNavigate} from "react-router-dom";
-import logoImage from '../../assets/image/logoA.jpg';
+import logoImage from '../../../assets/image/logoA.jpg';
 import {useState} from "react";
 function Copyright(props) {
 
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="/">
+            <Link color="inherit" href="/public">
                 Quản lý đào tạo
             </Link>{' '}
             {new Date().getFullYear()}
@@ -66,7 +66,7 @@ export default function Login() {
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar('Đăng nhập thành công !', { variant:"success",  anchorOrigin: { horizontal: "right", vertical: "top"}});
-                    navigate("/users")
+                    navigate("/users", -1 )
                 }
                 setFlagValidate({...flagValidate, validSubmit: true})
             }

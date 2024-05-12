@@ -4,12 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
-import NavigateConfig from "./components/checkToken/navigateConfig";
+import AuthContext from "./components/checkToken/AuthContext";
 import {SnackbarProvider} from "notistack";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <SnackbarProvider autoHideDuration={1500} anchorOrigin={{vertical: "top", horizontal: "right"}}>
+    <SnackbarProvider style={{ marginTop: '60px' , marginRight: '18px'}} autoHideDuration={1000} anchorOrigin={{vertical: "top", horizontal: "right"}}>
         <BrowserRouter >
             <App />
         </BrowserRouter>

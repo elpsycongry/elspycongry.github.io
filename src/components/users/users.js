@@ -1,4 +1,15 @@
-import { Box, Dialog, DialogContent, IconButton, FormControl, InputLabel, MenuItem, Select, Typography, Link } from "@mui/material";
+import {
+    Box,
+    Dialog,
+    DialogContent,
+    IconButton,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Typography,
+    Link
+} from "@mui/material";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
@@ -10,8 +21,8 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CreateIcon from '@mui/icons-material/Create';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
 
@@ -19,7 +30,7 @@ export default function Users() {
 
 
     const location = useLocation();
-
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
     const handleClickPracticeOpen = () => {
@@ -36,7 +47,7 @@ export default function Users() {
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
-    
+
     const fetchListRoleSelect = async () => {
         try {
             const response = await axios.get("http://localhost:8080/api/users/role");
@@ -73,31 +84,39 @@ export default function Users() {
 
     const handleFilterRole = async () => {
         if (selectedRole === '') {
-          return fetchListUser(); // Không có lọc nếu không có role được chọn
+            return fetchListUser(); // Không có lọc nếu không có role được chọn
         }
         try {
-          const response = await axios.get(`http://localhost:8080/api/users/filter/${selectedRole}`);
-          setListUser(response.data);
+            const response = await axios.get(`http://localhost:8080/api/users/filter/${selectedRole}`);
+            setListUser(response.data);
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
-      };
+    };
 
-      const handleRoleChange = (event) => {
+    const handleRoleChange = (event) => {
         setSelectedRole(event.target.value);
-      };
-    
-      useEffect(() => {
-        handleFilterRole();
-      }, [selectedRole]);
-    
+    };
+
+    useEffect(() => {
+        // handleFilterRole();
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+
+        if (user != null) {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get("http://localhost:8080/users").then((res) => {
+                setListUser(res.data);
+            })
+        }
+    }, [selectedRole]);
+
 
     return (
         <>
-            <Header />
-            <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
-                <Box m={2} style={{ display: 'flex' }}>
+            <Header/>
+            <Navbar/>
+            <Box component="main" sx={{flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px'}}>
+                <Box m={2} style={{display: 'flex'}}>
                     {/* <Breadcrumbs
                         aria-label='breadcrumb'
                         separator={<NavigateNextIcon fontSize="small" />}>
@@ -106,8 +125,13 @@ export default function Users() {
                         <Link underline="hover" href='#'>Access</Link>
                         <Typography color='text.primary'><GroupIcon /> Users</Typography>
                     </Breadcrumbs> */}
-                    <GroupIcon style={{ paddingBottom: '3px' }} />
-                    <p color='text.primary' style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550' }}>Quản lý người dùng</p>
+                    <GroupIcon style={{paddingBottom: '3px'}}/>
+                    <p color='text.primary' style={{
+                        marginLeft: '10px',
+                        marginBottom: '0px',
+                        fontFamily: 'sans-serif',
+                        fontWeight: '550'
+                    }}>Quản lý người dùng</p>
                 </Box>
                 <div className="content-recruiment">
                     <div className=" d-flex align-items-centent justify-content-between">
@@ -131,7 +155,7 @@ export default function Users() {
                                 }}
                                 onClick={handleClickPracticeClose}
                             >
-                                <ClearIcon />
+                                <ClearIcon/>
                             </IconButton>
                         </DialogContent>
                     </Dialog>
@@ -142,16 +166,21 @@ export default function Users() {
                                     <input
                                         type="text"
                                         className="w-px position-relative"
-                                        style={{ width: '300px' }}
+                                        style={{width: '300px'}}
                                         value={searchTerm}
                                         onChange={handleChangeSearch}
                                         onKeyUp={handleSearch}
                                         placeholder="Tìm kiếm với tên hoặc email..."
                                     />
-                                    <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
+                                    <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg"
+                                         width="16" height="16" viewBox="0 0 24 24">
+                                        <path fill="rgb(131 125 125 / 87%)"
+                                              d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/>
+                                    </svg>
                                 </div>
-                                <FormControl className="h-px" sx={{ minWidth: '250px' }}>
-                                    <InputLabel className="top-left" id="demo-simple-small-label">Vai trò...</InputLabel>
+                                <FormControl className="h-px" sx={{minWidth: '250px'}}>
+                                    <InputLabel className="top-left" id="demo-simple-small-label">Vai
+                                        trò...</InputLabel>
                                     <Select
                                         labelId="demo-simple-small-label"
                                         className="h-px"
@@ -159,7 +188,7 @@ export default function Users() {
                                         label="Status"
                                         value={selectedRole}
                                         onChange={handleRoleChange}>
-                                        <MenuItem value={""} >Select</MenuItem>
+                                        <MenuItem value={""}>Select</MenuItem>
 
                                         {listRoleSelect.map(item => (
                                             <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>
@@ -171,6 +200,7 @@ export default function Users() {
                     </div>
                     <div>
                         <table className=" table ">
+                            <thead>
                             <tr className="header-tr grey-text">
                                 <th>STT</th>
                                 <th>Tên</th>
@@ -179,7 +209,9 @@ export default function Users() {
                                 <th className=" text-center">Trạng thái</th>
                                 <th className=" text-center">Hành động</th>
                             </tr>
-                            {listUser.map(item => (
+                            </thead>
+                            <tbody>
+                            {listUser.map((item, index) => (
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td className="count-td"></td>
                                     <td>{item.name}</td>
@@ -191,19 +223,21 @@ export default function Users() {
                                     </td>
                                     <td className=" text-center">{item.status}</td>
                                     <td className=" text-center">
-                                        <RemoveRedEyeIcon className="color-blue white-div font-size-large" />
-                                        <CreateIcon className="color-orange pencil-btn font-size-medium" />
+                                        <RemoveRedEyeIcon className="color-blue white-div font-size-large"/>
+                                        <CreateIcon className="color-orange pencil-btn font-size-medium"/>
                                     </td>
                                 </tr>
                             ))}
+                            </tbody>
+
                         </table>
-                        <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
-                            <Pagination count={10} shape="rounded" />
+                        <Stack spacing={1} style={{marginTop: '190px', alignItems: 'center'}}>
+                            <Pagination count={10} shape="rounded"/>
                         </Stack>
                     </div>
                 </div>
             </Box>
-            <Footer />
+            <Footer/>
         </>
-    )
+    );
 }
