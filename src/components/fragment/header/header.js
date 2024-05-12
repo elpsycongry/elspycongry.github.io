@@ -110,7 +110,7 @@ export default function Header() {
                         <HomeIcon sx={{ fontSize: 30 }} />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                        Tyson Lại - Hệ thống quản lý đào tạo
+                        Hệ thống quản lý đào tạo
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
                     <Box sx={{ marginRight: '10px' }}>
