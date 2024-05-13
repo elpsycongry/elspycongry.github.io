@@ -11,16 +11,8 @@ function AuthContext({children}) {
             return <Navigate to="/login"/>
         }
     } else {
-        if (currentUser.roles[0].authority === "ROLE_GUEST"
-            && pathName !== "/guest") {
-            return <Navigate to="/guest"/>
-        }
-        if (currentUser.roles[0].authority !== "ROLE_GUEST"
-            && pathName === "/guest") {
-            return <Navigate to="/users"/>
-        }
         if (pathName === "/login") {
-            return <Navigate to="/users"/>
+            return <Navigate to="/"/>
         }
     }
     if (children === undefined) {
