@@ -28,6 +28,7 @@ import axios from "axios";
 
 export default function Users() {
 
+    axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -98,17 +99,6 @@ export default function Users() {
         setSelectedRole(event.target.value);
     };
 
-    useEffect(() => {
-        // handleFilterRole();
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-
-        if (user != null) {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/users").then((res) => {
-                setListUser(res.data);
-            })
-        }
-    }, [selectedRole]);
 
 
     return (
