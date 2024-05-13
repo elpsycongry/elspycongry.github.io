@@ -108,7 +108,7 @@ export default function Header() {
                         <img src={logoCodeGym} style={{ width: '35px', height: '35px' }} />
                     </Avatar>
                     <Typography variant="h6" noWrap component="div">
-                        Aristotle - Hệ thống quản lý đào tạo
+                        Hệ thống quản lý đào tạo
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
                     {/* <Box sx={{ marginRight: '10px' }}>

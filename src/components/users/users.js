@@ -49,6 +49,7 @@ export default function  Users() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
 
+
     useEffect(() => {
         fetchListRoleSelect();
         fetchListUser();
@@ -201,7 +202,7 @@ export default function  Users() {
                                         value={selectedRole}
                                         onChange={handleRoleChange}
                                         onClick={handleFilterRole}>
-                                        <MenuItem value={""} >Select</MenuItem>
+                                        <MenuItem value={""} >Tất cả</MenuItem>
                                         {listRoleSelect.map(item => (
                                             <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
                                         ))}
@@ -211,15 +212,15 @@ export default function  Users() {
                         </div>
                     </div>
                     <div>
-                        <table className=" table ">
+                        <table className=" table text-center">
                             <thead>
                                 <tr className="header-tr grey-text">
                                     <th>STT</th>
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Vai trò</th>
-                                    <th className=" text-center">Trạng thái</th>
-                                    <th className=" text-center">Hành động</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -227,21 +228,17 @@ export default function  Users() {
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td>{index + 1}</td>
                                         <td>{item.name}</td>
-                                        <td>{item.email}</td>
+                                        <td>{item.name}</td>
                                         <td>
                                             {item.roles.map((role, index) => (
-                                                <label key={role.id} style={{ padding: '0px' }}>
-                                                    {role.display_name}{index !== item.roles.length - 1 ? ',': ''}
+                                                <label key={role.id} style={{ paddingRight: '3 px' }}>
+                                                    {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
                                                 </label>
                                             ))}
 
                                         </td>
-                                        <td className=" text-center">
-                                        {item.roles.map((role, index) => (
-                                            <label key={role.id} style={{padding: '0px'}}>
-                                                {role.display_name == "NA" ? 'Đang chờ duyệt' : 'Đã xác nhận'}
-                                            </label>
-                                        ))}
+                                        <td>
+                                            {item.roles[0].display_name === 'NA' ? ('Chưa xác nhận') : ('Đã xác nhận')}
                                         </td>
                                         <td className=" text-center">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
