@@ -66,7 +66,7 @@ export default function Login() {
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    navigate("/users", -1)
+                    navigate("/")
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
