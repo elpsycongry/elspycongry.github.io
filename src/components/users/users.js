@@ -27,7 +27,7 @@ import axios from "axios";
 import './users.css'
 import DialogUpdateUserForm from "./updateUser";
 
-export default function  Users() {
+export default function Users() {
 
 
     const location = useLocation();
@@ -42,8 +42,6 @@ export default function  Users() {
     }
 
     const [status, setStatus] = useState('');
-
-
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -128,7 +126,7 @@ export default function  Users() {
         <>
             <Header />
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
                 <Box m={2} style={{ display: 'flex' }}>
                     {/* <Breadcrumbs
                         aria-label='breadcrumb'
@@ -138,8 +136,9 @@ export default function  Users() {
                         <Link underline="hover" href='#'>Access</Link>
                         <Typography color='text.primary'><GroupIcon /> Users</Typography>
                     </Breadcrumbs> */}
-                    <GroupIcon style={{ paddingBottom: '3px' }} />
-                    <p color='text.primary' style={{
+                    <GroupIcon style={{ paddingBottom: '3px', color: 'rgba(0, 0, 0, 0.60)' }} />
+                    <p style={{
+                        color: 'rgba(0, 0, 0, 0.60)',
                         marginLeft: '10px',
                         marginBottom: '0px',
                         fontFamily: 'sans-serif',
@@ -211,35 +210,47 @@ export default function  Users() {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <table className=" table text-center">
+
+                    <div className="table-container">
+                        <table className=" table-user ">
+
                             <thead>
                                 <tr className="header-tr grey-text">
-                                    <th>STT</th>
+                                    <th className="user-id">STT</th>
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Vai trò</th>
-                                    <th>Trạng thái</th>
-                                    <th>Hành động</th>
+
+                                    {/* <th className=" text-center ">Trạng thái</th> */}
+                                    <th className=" text-center ">Hành động</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td>{index + 1}</td>
+                                        <td className="user-id">{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.name}</td>
                                         <td>
                                             {item.roles.map((role, index) => (
-                                                <label key={role.id} style={{ paddingRight: '3 px' }}>
-                                                    {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
+
+                                                <label key={role.id} style={{ padding: '0px' }}>
+                                                    {role.display_name}{index !== item.roles.length - 1 ? ',' : ''}
+
                                                 </label>
                                             ))}
 
                                         </td>
-                                        <td>
-                                            {item.roles[0].display_name === 'NA' ? ('Chưa xác nhận') : ('Đã xác nhận')}
-                                        </td>
+
+                                        {/* <td className=" text-center">
+                                            {item.roles.map((role, index) => (
+                                                <label key={role.id} style={{ padding: '0px' }}>
+                                                    {role.display_name == "NA" ? 'Đang chờ duyệt' : 'Đã xác nhận'}
+                                                </label>
+                                            ))}
+                                        </td> */}
+
                                         <td className=" text-center">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
                                             <DialogUpdateUserForm />                                        </td>
@@ -248,13 +259,13 @@ export default function  Users() {
                             </tbody>
 
                         </table>
-                        {/* <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
+                        <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
                             <Pagination count={10} shape="rounded" />
-                        </Stack> */}
+                        </Stack>
                     </div>
                 </div>
             </Box>
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 }

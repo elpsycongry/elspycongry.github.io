@@ -16,13 +16,13 @@ import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import {doLogout} from "../../checkToken/AuthContext";
-import {useNavigate} from "react-router-dom";
+import { doLogout } from "../../checkToken/AuthContext";
+import { useNavigate } from "react-router-dom";
 import logoCodeGym from '../../../assets/image/logoCodeGym.png'
 import avatarDemo from '../../../assets/image/boy_2.png'
-import './header.css'   
+import './header.css'
 
-const settings = ['Logout'];
+const settings = ['Đăng xuất'];
 const drawerWidth = 240;
 
 
@@ -45,8 +45,8 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function Header() {
-     // Notification
-     const StyledIconWrapper = styled(Box)(({ theme }) => ({
+    // Notification
+    const StyledIconWrapper = styled(Box)(({ theme }) => ({
         position: 'relative',
         display: 'inline-flex',
         alignItems: 'center',
@@ -100,12 +100,12 @@ export default function Header() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const navigate = useNavigate();
-    return(
+    return (
         <>
-         <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
+            <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
                 <Toolbar>
-                <Avatar sx={{ m: 1, bgcolor: 'blue', width: '35px', height: '35px' }}>
-                        <img src={logoCodeGym} style={{ width: '35px', height: '35px' }} />
+                    <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
+                        <img src={logoCodeGym} style={{ width: '30px', height: '30px' }} />
                     </Avatar>
                     <Typography variant="h6" noWrap component="div">
                         Hệ thống quản lý đào tạo
@@ -139,7 +139,7 @@ export default function Header() {
                         onClose={handleCloseUserMenu}
                     >
                         {settings.map((setting) => (
-                            <MenuItem key={setting} onClick={() => {doLogout(navigate)}}>
+                            <MenuItem key={setting} onClick={() => { doLogout(navigate) }}>
                                 <Typography textAlign="center">{setting}</Typography>
                             </MenuItem>
                         ))}

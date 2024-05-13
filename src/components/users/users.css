@@ -1,5 +1,27 @@
-.table-user th, 
-.table-user td{
-    text-align: center;
+.table-container {
+    width: 100%;
+}
+
+.table-user {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
     flex: 1;
+}
+
+.table-user tr {
+    display: flex;
+}
+
+.table-user td,
+.table-user th {
+    text-align: center;
+    min-width: 120px;
+    flex: 1;
+    padding: 8px;
+}
+
+.user-id {
+    max-width: 60px;
+    padding-left: 0;
 }

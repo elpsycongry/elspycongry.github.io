@@ -7,15 +7,15 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {Alert, IconButton, InputAdornment} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Alert, IconButton, InputAdornment } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
-import {SnackbarProvider, useSnackbar} from 'notistack';
-import {useNavigate} from "react-router-dom";
+import { SnackbarProvider, useSnackbar } from 'notistack';
+import { useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
-import {useState} from "react";
+import { useState } from "react";
 function Copyright(props) {
 
     return (
@@ -31,11 +31,11 @@ function Copyright(props) {
 }
 
 // Show and hide password
-const EndAdorment = ({visible, setVisible}) => {
+const EndAdorment = ({ visible, setVisible }) => {
     return (
         <InputAdornment position='end'>
             <IconButton onClick={() => setVisible(!visible)}>
-                {visible ? <VisibilityOffIcon/> : <RemoveRedEyeIcon/>}
+                {visible ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
             </IconButton>
         </InputAdornment>
     )
@@ -53,7 +53,7 @@ export default function Login() {
     const navigate = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
-        setFlagValidate({...flagValidate, validSubmit: false})
+        setFlagValidate({ ...flagValidate, validSubmit: false })
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
@@ -61,23 +61,23 @@ export default function Login() {
             res => {
 
                 if (res.data.code === "401") {
-                    enqueueSnackbar(res.data.msg, { variant:"error", anchorOrigin: { horizontal: "right", vertical: "top"}});
+                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar('Đăng nhập thành công !', { variant:"success",  anchorOrigin: { horizontal: "right", vertical: "top"}});
-                    navigate("/users", -1 )
+                    enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    navigate("/users", -1)
                 }
-                setFlagValidate({...flagValidate, validSubmit: true})
+                setFlagValidate({ ...flagValidate, validSubmit: true })
             }
         ).catch(reason => {
-            enqueueSnackbar("Có lỗi ở phía máy chủ", { variant:"error", anchorOrigin: { horizontal: "right", vertical: "top"}, autoHideDuration: 3000});
-            setFlagValidate({...flagValidate, validSubmit: true})
+            enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+            setFlagValidate({ ...flagValidate, validSubmit: true })
         })
     };
 
-  // Ép buộc component re-render
-  const [, forceRender] = React.useReducer(x => x + 1, 0);
+    // Ép buộc component re-render
+    const [, forceRender] = React.useReducer(x => x + 1, 0);
 
     // Validation
     const [flagValidate, setFlagValidate] = React.useState({
@@ -101,11 +101,11 @@ export default function Login() {
     let checkEmail = (value) => {
         let patternEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
         if (value.match(patternEmail)) {
-            setFlagValidate({...flagValidate, validEmail: true})
+            setFlagValidate({ ...flagValidate, validEmail: true })
         } else if (value === "") {
-            setFlagValidate({...flagValidate, validEmail: false, emailError: "Email không được bỏ trống"})
+            setFlagValidate({ ...flagValidate, validEmail: false, emailError: "Email không được bỏ trống" })
         } else {
-            setFlagValidate({...flagValidate, validEmail: false, emailError: "Không đúng định dạng email"})
+            setFlagValidate({ ...flagValidate, validEmail: false, emailError: "Không đúng định dạng email" })
         }
     }
 
@@ -113,9 +113,9 @@ export default function Login() {
     let checkPass = (value) => {
         let patternPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/g
         if (value.match(patternPassword)) {
-            setFlagValidate({...flagValidate, validPass: true})
+            setFlagValidate({ ...flagValidate, validPass: true })
         } else if (value === "") {
-            setFlagValidate({...flagValidate, validPass: false, passwordError: "Mật khẩu không được để trống"})
+            setFlagValidate({ ...flagValidate, validPass: false, passwordError: "Mật khẩu không được để trống" })
         } else {
             setFlagValidate({
                 ...flagValidate,
@@ -135,94 +135,94 @@ export default function Login() {
     const submitButton = React.useRef();
 
     return (
-            <ThemeProvider theme={defaultTheme}>
-                <Container component="main" maxWidth="xs" style={{ marginTop: '160px' }}>
-                    <CssBaseline/>
-                    <Box
-                        sx={{
-                            marginTop: 8,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{ m: 1, bgcolor: 'orange' }}>
-                            <img src={logoImage} style={{ width: '40px', height: '40px' }} />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign in
-                        </Typography>
-                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="name"
-                                autoComplete="email"
-                                placeholder="Example123@gmail.com"
-                                
-                                inputRef={emailInput}
-                                onChange={(e) => checkEmail(e.currentTarget.value)}
-                                onFocus={() => {
-                                    setShowMsg({...showMsg, showEmailError: true})
-                                }}
-                                error={showMsg.showEmailError && !flagValidate.validEmail}
-                                helperText={showMsg.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                // onInput = {(e) =>{
-                                //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4)
-                                // }}
-                                // inputProps={{maxLenght: 12}}
-                                name="password"
-                                label="Password"
-                                type={visible ? "password" : "text"}
-                                id="password"
-                                autoComplete="current-password"
-                                InputProps={{
-                                    endAdornment: <EndAdorment visible={visible} setVisible={setVisible}/>
-                                }}
+        <ThemeProvider theme={defaultTheme}>
+            <Container component="main" maxWidth="xs" style={{ paddingTop: '140px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
+                        <img src={logoImage} style={{ width: '30px', height: '30px' }} />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="name"
+                            autoComplete="email"
+                            placeholder="Example123@gmail.com"
 
-                                onFocus={() => {
-                                    setShowMsg({...showMsg, showPassError: true})
-                                }}
-                                placeholder={"Example123"}
-                                inputRef={passwordInput}
-                                error={showMsg.showPassError && !flagValidate.validPass}
-                                onChange={(e) => checkPass(e.currentTarget.value)}
-                                helperText={showMsg.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
-                            />
-                            {flagValidate.showSuccesAlert
-                                &&
-                                <Alert style={{marginTop: 5}} severity="success">
-                                    This is a success Alert.
-                                </Alert>
-                            }
-                            {flagValidate.showFailAlert
-                                &&
-                                <Alert style={{marginTop: 5}} severity="error">
-                                    This is a success Alert.
-                                </Alert>
-                            }
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{mt: 3, mb: 2}}
-                                disabled={validForm}
-                                ref={submitButton}
-                            >
-                                Sign In
-                            </Button>
-                        </Box>
+                            inputRef={emailInput}
+                            onChange={(e) => checkEmail(e.currentTarget.value)}
+                            onFocus={() => {
+                                setShowMsg({ ...showMsg, showEmailError: true })
+                            }}
+                            error={showMsg.showEmailError && !flagValidate.validEmail}
+                            helperText={showMsg.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            // onInput = {(e) =>{
+                            //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4)
+                            // }}
+                            // inputProps={{maxLenght: 12}}
+                            name="password"
+                            label="Password"
+                            type={visible ? "password" : "text"}
+                            id="password"
+                            autoComplete="current-password"
+                            InputProps={{
+                                endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
+                            }}
+
+                            onFocus={() => {
+                                setShowMsg({ ...showMsg, showPassError: true })
+                            }}
+                            placeholder={"Example123"}
+                            inputRef={passwordInput}
+                            error={showMsg.showPassError && !flagValidate.validPass}
+                            onChange={(e) => checkPass(e.currentTarget.value)}
+                            helperText={showMsg.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
+                        />
+                        {flagValidate.showSuccesAlert
+                            &&
+                            <Alert style={{ marginTop: 5 }} severity="success">
+                                This is a success Alert.
+                            </Alert>
+                        }
+                        {flagValidate.showFailAlert
+                            &&
+                            <Alert style={{ marginTop: 5 }} severity="error">
+                                This is a success Alert.
+                            </Alert>
+                        }
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={validForm}
+                            ref={submitButton}
+                        >
+                            Sign In
+                        </Button>
                     </Box>
-                    <Copyright sx={{mt: 8, mb: 4}}/>
-                </Container>
-            </ThemeProvider>
+                </Box>
+                <Copyright sx={{ mt: 36, mb: 4 }} />
+            </Container>
+        </ThemeProvider>
     )
 }
