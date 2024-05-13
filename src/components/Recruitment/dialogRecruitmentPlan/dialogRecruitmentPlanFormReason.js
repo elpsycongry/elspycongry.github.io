@@ -1,17 +1,12 @@
 import { Dialog, DialogTitle, Grid, IconButton, TextareaAutosize } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
-import SendIcon from '@mui/icons-material/Send';
-import RemoveIcon from '@mui/icons-material/Remove';
-import CreateIcon from '@mui/icons-material/Create';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import swal from "sweetalert";
 
 
-export default function DialogPersonalFormReason({ idUser, open, onClose }) {
+export default function DialogRecruitmentPlanFormReason({ idUser, open, onClose }) {
 
     const [reason, setReason] = useState('');
 
@@ -23,13 +18,13 @@ export default function DialogPersonalFormReason({ idUser, open, onClose }) {
                 { reason }
             ).then(() => {
                 swal("Cập nhật lý do thành công", {
-                  icon: "success",
-                  buttons: false,
-                  timer: 2000
+                    icon: "success",
+                    buttons: false,
+                    timer: 2000
                 }).then(() => {
-                  window.location.href = "/recruitment/personalNeeds";
+                    window.location.href = "/recruitment/personalNeeds";
                 });
-              });
+            });
         } catch (error) {
             console.error('Error:', error);
         }
@@ -61,15 +56,15 @@ export default function DialogPersonalFormReason({ idUser, open, onClose }) {
                         <div className="col-md-12">
                             <div className="form-floating">
                                 <textarea
-                                    className="form-control resize pt-2"
-                                    placeholder="Leave a comment here"
+                                    className="form-control resize pt-2 text-area"
+                                    placeholder="Describe yourself here..."
                                     id="floatingTextarea2"
                                     style={{ height: 200 }}
                                     value={reason}
                                     onChange={(e) => setReason(e.target.value)}
                                 >
-
                                 </textarea>
+                                <label className=" grey-text" htmlFor="floatingTextarea2">Lý do từ chối...</label>
                             </div>
                         </div>
                         <div className="col-md-12 mt-2 d-flex">

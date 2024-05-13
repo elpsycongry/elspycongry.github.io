@@ -132,7 +132,7 @@ export default function Navbar() {
                 {
                     id: 2,
                     name: "Kế hoạch tuyển dụng",
-                    linkTo: "#",
+                    linkTo: "/recruitment/recruitmentPlan",
                 },
                 {
                     id: 3,

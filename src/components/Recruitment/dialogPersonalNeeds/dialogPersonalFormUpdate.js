@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Grid, IconButton, MenuItem } from "@mui/material";
+import { Dialog, DialogTitle, Grid, IconButton, MenuItem, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -153,7 +153,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-        <BackspaceIcon onClick={() => removeTech(index)} />
+        <BackspaceIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{right: '55px' , top: '6px'}} onClick={() => removeTech(index)} />
       )
     }
   }
@@ -173,9 +173,9 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   ];
 
   const listTestSelect = [
-    { id: 1, text: "Hoạt động" },
-    { id: 2, text: "Không hoạt động" },
-    { id: 3, text: "Đang chờ" },
+    { id: 1, text: "Trạng thái" },
+    { id: 2, text: "Bị từ chối bởi DET" },
+    { id: 3, text: "Đã gửi" },
   ];
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
@@ -213,13 +213,14 @@ export default function DialogPersonalFormUpdate({ id, check }) {
 
   return (
     <>
-      {check ? <CreateIcon
-        className="bg-whiteImportant pencil-btn font-size-medium"
-      /> : <CreateIcon
-        className="color-orange pencil-btn font-size-medium"
-        onClick={handleClickFormOpen}
-      />}
-
+      <Tooltip title="Chỉnh sửa chi tiết">
+        {check ? <CreateIcon
+          className="bg-whiteImportant pencil-btn font-size-medium"
+        /> : <CreateIcon
+          className="color-orange pencil-btn font-size-medium hover-warning"
+          onClick={handleClickFormOpen}
+        />}
+      </Tooltip>
       <Dialog
         open={openForm}
         onClose={handleClickFormClose}
@@ -287,7 +288,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                     ))}
                   </select>
                 </div>
-                <div className="col-md-6 text-center mt-0 mb-2 d-flex align-item-center">
+                <div className="col-md-6 text-center mt-0 mb-2 d-flex position-relative align-item-center">
                   <PersonalQuantity
                     number={tech.quantity}
                     key={tech.quantity}
@@ -304,7 +305,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
               </div>
               <div>
-                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng không được rỗng hoặc bé hơn 0</p>}
+                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng phải bé hơn 0</p>}
               </div>
             </div>
             <div className="col-md-12 mt-2" onClick={addTech}>

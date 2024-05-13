@@ -100,6 +100,14 @@
     font-size: 25px;
 }
 
+#formCreateRecruitmentPlan .MuiPaper-root {
+    max-width: 960px;
+}
+#formWatchRecruitmentPlan .MuiPaper-root {
+    max-width: 800px;
+}
+
+
 #dialog .MuiPaper-root {
     max-width: 1315px;
 }
@@ -165,7 +173,8 @@ body {
     padding-left: 14px;
     transition: 0.2s ease-in-out;
 }
-.select-edit:focus{
+
+.select-edit:focus {
     color: rgb(43, 42, 42) !important;
     transition: 0.2s ease-in-out;
 }
@@ -179,16 +188,18 @@ body {
 
 
 /*Có thể tái sử dụng */
-.ws-nowrap{
+.ws-nowrap {
     white-space: nowrap;
 }
-.err-valid{
+
+.err-valid {
     padding-left: 8px;
     margin-top: 0;
     margin-bottom: 0;
     font-size: 14px;
     color: #ff3535;
 }
+
 .text-right {
     text-align: right;
 }
@@ -207,6 +218,9 @@ body {
 
 .non-outline {
     outline: none;
+}
+.transformTooltip{
+    inset: 0 10px 10px 10px !important; 
 }
 
 .grey-text {
@@ -253,12 +267,15 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-.child:last-child{
-    margin-bottom: 0 ;
+.child:last-child {
+    margin-bottom: 0;
 }
 
 .w-130 {
     width: 130px;
+}
+.w-1 {
+    width: 1px;
 }
 
 .w-250 {
@@ -304,6 +321,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .bg-clr-success {
     background-color: #419A00 !important;
 }
+.clr-danger{
+    color: #FF4A4A !important;
+}
+.oc-08{
+    opacity: 0.8;
+}
 
 .w-98 {
     width: 98%;
@@ -316,6 +339,10 @@ input[type="number"]::-webkit-outer-spin-button {
 .resize {
     overflow: hidden;
     resize: none;
+}
+.text-area{
+    height: 200px;
+    padding-top: 32px !important;
 }
 
 .pr-0 {
@@ -351,4 +378,30 @@ input[type="number"]::-webkit-outer-spin-button {
     border-radius: 4px;
     font-size: 20px;
     padding: 3px 6px;
+}
+.hover-danger:hover{
+    color: #FF4A4A !important;
+    opacity: 1;
+    transition: 0.2s ease-in-out;
+}
+.hover-danger{
+    transition: 0.2s ease-in-out;
+}
+
+.hover-warning:hover{
+    background-color: #fab11f !important;
+    opacity: 1;
+    transition: 0.2s ease-in-out;
+}
+.hover-warning{
+    transition: 0.2s ease-in-out;
+}
+
+.hover-primary:hover{
+    color: #3165f3 !important;
+    opacity: 1;
+    transition: 0.2s ease-in-out;
+}
+.hover-primary{
+    transition: 0.2s ease-in-out;
 }
