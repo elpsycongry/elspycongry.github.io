@@ -24,8 +24,10 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
+import './users.css'
+import DialogUpdateUserForm from "./updateUser";
 
-export default function Users() {
+export default function  Users() {
 
 
     const location = useLocation();
@@ -242,9 +244,8 @@ export default function Users() {
                                         ))}
                                         </td>
                                         <td className=" text-center">
-                                            <RemoveRedEyeIcon className="color-blue white-div font-size-large" />
-                                            <CreateIcon className="color-orange pencil-btn font-size-medium" />
-                                        </td>
+                                            {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
+                                            <DialogUpdateUserForm />                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
