@@ -10,6 +10,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import logoImage from '../../../assets/image/logoA.jpg'
 import {doLogout} from "../../checkToken/AuthContext";
+import { Icon } from '@mui/material';
 
 const HomePage = () => {
     const navigate = useNavigate()

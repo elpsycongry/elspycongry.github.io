@@ -61,7 +61,7 @@ export default function Users() {
 
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/admin/users/role").then((res) => {
+            axios.get("http://localhost:8080/role").then((res) => {
                 setListRoleSelect(res.data);
             });
 
@@ -73,7 +73,7 @@ export default function Users() {
 
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/admin/users").then((res) => {
+            axios.get("http://localhost:8080/listUser").then((res) => {
                 setListUser(res.data);
             });
 
@@ -250,9 +250,9 @@ export default function Users() {
                             </tbody>
 
                         </table>
-                        <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
+                        {/* <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
                             <Pagination count={10} shape="rounded" />
-                        </Stack>
+                        </Stack> */}
                     </div>
                 </div>
             </Box>

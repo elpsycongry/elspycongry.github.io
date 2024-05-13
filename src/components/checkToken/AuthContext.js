@@ -19,8 +19,7 @@ function AuthContext({children}) {
             && pathName === "/guest") {
             return <Navigate to="/users"/>
         }
-
-        if (pathName === "login") {
+        if (pathName === "/login") {
             return <Navigate to="/users"/>
         }
     }
