@@ -12,23 +12,35 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
 export default function DialogPersonalForm() {
+  const [dateErr, setDateErr] = useState(false);
+  const [techErr, setTechErr] = useState(false);
+  const [quantityErr, setQuantityErr] = useState(false);
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const futureDate = new Date(today);
     futureDate.setDate(today.getDate() + 75);
-    const err = techArr.map(item => {
-      if (item.type === "" || item.type === "default" || item.quantity == 0 || item.quantity === "") {
+    const errTech = techArr.map(item => {
+      if (item.type === "" || item.type === "default") {
         return true;
       } else {
         return false;
       }
     })
-    const hasErrTech = err.some(item => item === true);
-    console.log(hasErrTech)
-
+    const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
+    const errQuantity = techArr.map(item => {
+      if (item.quantity == 0 || item.quantity === "" || item.quantity < 0) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    const hasErrQuantity = errQuantity.some(item => item === true);
+    setQuantityErr(hasErrQuantity);
+
+
 
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
@@ -37,7 +49,7 @@ export default function DialogPersonalForm() {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech  ) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrQuantity) {
       return false;
     } else {
       return true;
@@ -71,11 +83,12 @@ export default function DialogPersonalForm() {
         values.idUser = 1;
         try {
           await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
-            window.location.href = "/";
             swal("tạo nhu cầu nhân sự thành công", {
               icon: "success",
               buttons: false,
               timer: 2000
+            }).then(() => {
+              window.location.href = "/recruitment/personalNeeds";
             });
           });
         } catch (error) {
@@ -89,8 +102,8 @@ export default function DialogPersonalForm() {
     }
   });
 
+
   function PersonalQuantity({ number, onQuantityChange }) {
-    console.log(number)
     if (number === "" || number == 0) {
       number = 0;
     }
@@ -99,17 +112,16 @@ export default function DialogPersonalForm() {
       setCount(count + 1);
       onQuantityChange(count + 1);
     };
+    const handleInputChange = (e) => {
+      const newCount = parseInt(e.target.value);
+      setCount(newCount);
+      onQuantityChange(newCount);
+    };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
         setCount(count - 1);
         onQuantityChange(count - 1);
       }
-    };
-
-    const handleInputChange = (e) => {
-      const newCount = parseInt(e.target.value);
-      setCount(newCount);
-      onQuantityChange(newCount); // Gọi hàm xử lý sự kiện từ component cha và truyền giá trị "quantity" mới
     };
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -119,7 +131,7 @@ export default function DialogPersonalForm() {
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
-          onChange={(e) => setCount(e.target.value)}
+          onChange={handleInputChange}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
@@ -137,10 +149,7 @@ export default function DialogPersonalForm() {
       )
     }
   }
-  // Xử lý validate
-  const [dateErr, setDateErr] = useState(false);
-  const [techErr, setTechErr] = useState(false);
-  const [quantityErr, setQuantityErr] = useState(false);
+
 
 
   // Xử lý mở form
@@ -222,7 +231,7 @@ export default function DialogPersonalForm() {
                 name="recruitmentRequest.name"
               />
             </div>
-            <div className="col-md-12 m-0 d-flex">
+            <div className="col-md-12  d-flex">
               <div className="col-md-6 mb-0">
                 <label className="form-label grey-text">
                   Công nghệ <span className="color-red">*</span>
@@ -236,7 +245,7 @@ export default function DialogPersonalForm() {
             </div>
             {tech.map((tech, index) => (
               <>
-                <div key={index} className="col-md-6 mt-0 mb-2 last-child">
+                <div key={index} className="col-md-6 mt-0 mb-2 child">
                   <select
                     className="form-select grey-text"
                     aria-label="Default select example"
@@ -251,8 +260,10 @@ export default function DialogPersonalForm() {
                       </option>
                     ))}
                   </select>
+
+
                 </div>
-                <div className="col-md-6 text-center mt-0 mb-2 d-flex align-item-center">
+                <div className="col-md-6 text-center mt-0 mb-2 d-flex  align-item-center">
                   <PersonalQuantity
                     number={tech.quantity}
                     key={tech.quantity}
@@ -264,7 +275,14 @@ export default function DialogPersonalForm() {
                 </div>
               </>
             ))}
-              {techErr && <p className="err-valid">Technology or quantity cannot be null</p>}
+            <div className=" col-md-12 d-flex justify-content-between mt-0">
+              <div>
+                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
+              </div>
+              <div>
+                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng không được rỗng hoặc bé hơn 0</p>}
+              </div>
+            </div>
 
 
             <div className="col-md-12 mt-2" onClick={addTech}>
@@ -283,7 +301,7 @@ export default function DialogPersonalForm() {
                   id="recruitmentRequest.dateEnd"
                   name="recruitmentRequest.dateEnd"
                 />
-                {dateErr && <p className="err-valid">Date must be greater than 75 days</p>}
+                {dateErr && <p className="err-valid ">Thời hạn bàn giao phải tối thiểu 75 ngày</p>}
               </div>
               <div className="col-md-6 mt-2">
                 <label className="form-label"></label>
