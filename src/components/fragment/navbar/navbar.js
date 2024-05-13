@@ -127,12 +127,12 @@ export default function Navbar() {
                 {
                     id: 1,
                     name: "Nhu cầu",
-                    linkTo: "#",
+                    linkTo: "/recruitment/personalNeeds",
                 },
                 {
                     id: 2,
                     name: "Kế hoạch tuyển dụng",
-                    linkTo: "/recruitment/personalNeeds",
+                    linkTo: "#",
                 },
                 {
                     id: 3,
