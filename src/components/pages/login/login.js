@@ -14,7 +14,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import {SnackbarProvider, useSnackbar} from 'notistack';
 import {useNavigate} from "react-router-dom";
-import logoImage from '../../../assets/image/logoA.jpg';
+import logoImage from '../../../assets/image/logoCodeGym.png';
 import {useState} from "react";
 function Copyright(props) {
 
@@ -161,9 +161,8 @@ export default function Login() {
                                 label="Email Address"
                                 name="name"
                                 autoComplete="email"
-                                inputProps={{pattern: "^[A-Za-z0-9]{3,16}$"}}
                                 placeholder="Example123@gmail.com"
-
+                                
                                 inputRef={emailInput}
                                 onChange={(e) => checkEmail(e.currentTarget.value)}
                                 onFocus={() => {
@@ -176,6 +175,10 @@ export default function Login() {
                                 margin="normal"
                                 required
                                 fullWidth
+                                // onInput = {(e) =>{
+                                //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4)
+                                // }}
+                                // inputProps={{maxLenght: 12}}
                                 name="password"
                                 label="Password"
                                 type={visible ? "password" : "text"}

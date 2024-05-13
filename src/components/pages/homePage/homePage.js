@@ -7,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import {useNavigate} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import logoImage from '../../../assets/image/logoA.jpg'
+import logoImage from '../../../assets/image/logoCodeGym.png'
 import {doLogout} from "../../checkToken/AuthContext";
 
 const HomePage = () => {

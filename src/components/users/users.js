@@ -24,8 +24,10 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
+import './users.css'
+import DialogUpdateUserForm from "./updateUser";
 
-export default function Users() {
+export default function  Users() {
 
 
     const location = useLocation();
@@ -62,7 +64,7 @@ export default function Users() {
 
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/admin/users/role").then((res) => {
+            axios.get("http://localhost:8080/role").then((res) => {
                 setListRoleSelect(res.data);
             });
 
@@ -74,7 +76,7 @@ export default function Users() {
 
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/admin/users").then((res) => {
+            axios.get("http://localhost:8080/listUser").then((res) => {
                 setListUser(res.data);
             });
 
@@ -238,16 +240,15 @@ export default function Users() {
                                         <td>
                                             {item.roles[0].display_name === 'NA' ? ('Chưa xác nhận') : ('Đã xác nhận')}
                                         </td>
-                                        <td>
+                                        <td className=" text-center">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            <CreateIcon className="color-orange pencil-btn font-size-medium" />
-                                        </td>
+                                            <DialogUpdateUserForm />                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
 
                         </table>
-                        {/* <Stack spacing={1} style={{ alignItems: 'center' }}>
+                        {/* <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
                             <Pagination count={10} shape="rounded" />
                         </Stack> */}
                     </div>

@@ -8,8 +8,9 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import {Link, useNavigate} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import logoImage from '../../../assets/image/logoA.jpg'
+import logoImage from '../../../assets/image/logoCodeGym.png'
 import {doLogout} from "../../checkToken/AuthContext";
+import { Icon } from '@mui/material';
 
 const HomePage = () => {
     const navigate = useNavigate()
