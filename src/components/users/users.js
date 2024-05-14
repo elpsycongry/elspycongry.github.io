@@ -29,6 +29,7 @@ import DialogUpdateUserForm from "./updateUser";
 
 export default function Users() {
 
+    const user = JSON.parse(localStorage.getItem("currentUser"))
     axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
 
     const location = useLocation();
@@ -75,7 +76,6 @@ export default function Users() {
 
 
     // const fetchListRoleSelect = async () => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
     const [token, setToken] = useState("")
     const fetchListRoleSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
