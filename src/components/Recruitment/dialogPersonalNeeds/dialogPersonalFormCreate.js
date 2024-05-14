@@ -5,6 +5,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+
 import axios from "axios";
 import * as Yup from "yup"
 import swal from "sweetalert";
@@ -103,25 +104,30 @@ export default function DialogPersonalFormCreate() {
   });
 
 
-  function PersonalQuantity({ number, onQuantityChange }) {
+  function PersonalQuantity({ number, idx }) {
     if (number === "" || number == 0) {
       number = 0;
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
-      onQuantityChange(count + 1);
+      handleQuantityChange(number+1, idx)
+
     };
     const handleInputChange = (e) => {
       const newCount = parseInt(e.target.value);
       setCount(newCount);
-      onQuantityChange(newCount);
+
     };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
         setCount(count - 1);
-        onQuantityChange(count - 1);
+      handleQuantityChange(number-1, idx)
+
       }
+    };
+    const handleBlur = () => {
+      handleQuantityChange(count, idx)
     };
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -132,6 +138,7 @@ export default function DialogPersonalFormCreate() {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
@@ -145,7 +152,7 @@ export default function DialogPersonalFormCreate() {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-        <BackspaceIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{right: '55px' , top: '6px'}} onClick={() => removeTech(index)} />
+        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
       )
     }
   }
@@ -188,6 +195,10 @@ export default function DialogPersonalFormCreate() {
     updateTech[index] = { ...updateTech[index], type: e.target.value };
     setTech(updateTech);
   }
+
+
+
+
   return (
     <>
       <div className=" min-width position-relative " onClick={handleClickFormOpen}>
@@ -250,6 +261,7 @@ export default function DialogPersonalFormCreate() {
                     className="form-select grey-text"
                     aria-label="Default select example"
                     defaultValue="default"
+                    value={tech.type}
                     onChange={(e) => handleChangeSelect(e, index)}
                     name={`tech[${index}].type`}
                   >
@@ -267,9 +279,7 @@ export default function DialogPersonalFormCreate() {
                   <PersonalQuantity
                     number={tech.quantity}
                     key={tech.quantity}
-                    onQuantityChange={(newQuantity) =>
-                      handleQuantityChange(newQuantity, index)
-                    }
+                    idx={index}
                   />
                   <Dlt index={index} />
                 </div>

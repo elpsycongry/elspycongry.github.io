@@ -64,7 +64,7 @@ export default function DialogRecruitmentPlanFormReason({ idUser, open, onClose 
                                     onChange={(e) => setReason(e.target.value)}
                                 >
                                 </textarea>
-                                <label className=" grey-text" htmlFor="floatingTextarea2">Lý do từ chối...</label>
+                                <label className=" grey-text" htmlFor="floatingTextarea2">Nhập lý do từ chối...</label>
                             </div>
                         </div>
                         <div className="col-md-12 mt-2 d-flex">
