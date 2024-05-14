@@ -13,7 +13,7 @@ function App() {
         <>
             <Routes>
                 <Route path={"/"} element={
-                    <AuthContext><Users /></AuthContext>
+                    <AuthContext><HomePage /></AuthContext>
                 } />
                 <Route path={"/users"} element={
                     <AuthContext><Users /></AuthContext>
