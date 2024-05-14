@@ -105,9 +105,9 @@ export default function PersonalNeeds() {
     const handleSearch = (event) => {
         setSearchName(event.target.value);
         // clearTimeout(search);
-        const search = setTimeout(() =>{
+        setTimeout(() => {
             handleSubmitSearch(event);
-        },3000);
+        }, 3000);
     };
 
     const handleSubmitSearch = async (event) => {

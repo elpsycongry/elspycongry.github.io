@@ -118,7 +118,7 @@ export default function Navbar() {
             <Icon icon="ion:book-sharp" width="24" height="24" />
         )
     }
-
+   
 
     const listItems = [
         { id: 1, text: "Đào tạo", IconText: Book },
@@ -168,7 +168,7 @@ export default function Navbar() {
                     {listItems.map(({ id, text, IconText, children }) => (
                         <div key={id}>
                             <div className='test'>
-                                <ListItem onClick={() => children && handleClick(id)} disablePadding sx={{  display: 'block' }}>
+                                <ListItem onClick={() => children && handleClick(id)} disablePadding sx={{ display: 'block' }}>
                                     <ListItemButton
                                         sx={{
                                             minHeight: 48,

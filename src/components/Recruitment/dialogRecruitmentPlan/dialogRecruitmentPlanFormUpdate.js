@@ -5,6 +5,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+
 import axios from "axios";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +16,8 @@ import CreateIcon from "@mui/icons-material/Create";
 export default function DialogRecruitmentPlanFormUpdate({ check }) {
     const [dateErr, setDateErr] = useState(false);
     const [techErr, setTechErr] = useState(false);
-    const [quantityErr, setQuantityErr] = useState(false);
+    const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
+    const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
     // Xử lý số lượng nhân sự
     const checkValid = (dateSet, techArr) => {
         const today = new Date();
@@ -31,18 +33,26 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
         })
         const hasErrTech = errTech.some(item => item === true);
         setTechErr(hasErrTech);
-        const errQuantity = techArr.map(item => {
-            if (item.quantity == 0 || item.quantity === "" || item.quantity < 0) {
+        // 
+        const errNumberPersonal = techArr.map(item => {
+            if (item.numberOfOutputPersonnel == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
                 return true;
             } else {
                 return false;
             }
         })
-        const hasErrQuantity = errQuantity.some(item => item === true);
-        setQuantityErr(hasErrQuantity);
-
-
-
+        const hasErrOfPersonal = errNumberPersonal.some(item => item === true);
+        setErrNumberOfPersonal(hasErrOfPersonal);
+        // 
+        const errNumberOutput = techArr.map(item => {
+            if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        const hasErrNumberOutput = errNumberOutput.some(item => item === true);
+        setErrNumberOfOutput(hasErrNumberOutput);
         if (dateSet < futureDate || dateSet == "Invalid Date") {
             setDateErr(true);
         } else {
@@ -50,7 +60,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
         }
 
 
-        if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrQuantity) {
+        if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal) {
             return false;
         } else {
             return true;
@@ -152,66 +162,32 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
     }
 
 
-    function NumberOfOutputPersonnel({ number, onQuantityChange }) {
-        if (number === "" || number == 0) {
-            number = 0;
-        }
-        const [count, setCount] = useState(number);
-        const handleClickCountPlus = () => {
-            setCount(count + 1);
-            onQuantityChange(count + 1);
-        };
-        const handleInputChange = (e) => {
-            const newCount = parseInt(e.target.value);
-            setCount(newCount);
-            onQuantityChange(newCount);
-        };
-        const handleClickCountMinus = () => {
-            if (!count <= 0) {
-                setCount(count - 1);
-                onQuantityChange(count - 1);
-            }
-        };
-        return (
-            <div className="d-flex justify-content-center align-items-center">
-                       <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
-                <input
-                    value={count}
-                    style={{ fontSize: "15px", height: "36px" }}
-                    className="form-control w-25 border-clr-grey border text-center"
-                    type="number"
-                    onChange={handleInputChange}
-                />
-                <AddIcon onClick={handleClickCountPlus} className="ms-1" />
-            </div>
-        );
-    }
-    const handleQuantityChangeOutput = (newQuantity, index) => {
-        const updatedTech = [...tech];
-        updatedTech[index].numberOfOutputPersonnel = newQuantity;
-        setTech(updatedTech);
-        handleQuantityOffPersonal(newQuantity * 3, index);
-    };
-
-    function NumberOfPersonnelNeeded({ number, onQuantityChange }) {
+    // Hàm dữ liệu đầu ra
+    function NumberOfOutputPersonnel({ number, idx }) {
         if (number === "" || number == 0) {
             number = 0;
         }
         const [countOf, setCountOf] = useState(number);
         const handleClickCountPlus = () => {
-            setCountOf(countOf + 1);
-            onQuantityChange(countOf + 1);
+            if (number < 40) {
+                setCountOf(countOf + 1);
+                numberOfOutputPersonnel(number + 1, idx)
+            }
         };
         const handleInputChange = (e) => {
-            const newCount = parseInt(e.target.value);
-            setCountOf(newCount);
-            onQuantityChange(newCount);
+            if (e.target.value < 40) {
+                const newCount = parseInt(e.target.value);
+                setCountOf(newCount);
+            }
         };
         const handleClickCountMinus = () => {
             if (!countOf <= 0) {
                 setCountOf(countOf - 1);
-                onQuantityChange(countOf - 1);
+                numberOfOutputPersonnel(number - 1, idx)
             }
+        };
+        const handleBlur = () => {
+            numberOfOutputPersonnel(countOf, idx)
         };
         return (
             <div className="d-flex justify-content-center align-items-center">
@@ -222,33 +198,82 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                     className="form-control w-25 border-clr-grey border text-center"
                     type="number"
                     onChange={handleInputChange}
+                    onBlur={handleBlur}
                 />
                 <AddIcon onClick={handleClickCountPlus} className="ms-1" />
             </div>
         );
     }
-    const handleQuantityOffPersonal = (newQuantity, index) => {
+    const numberOfOutputPersonnel = (countOf, index) => {
         const updatedTech = [...tech];
-        updatedTech[index].numberOfPersonnelNeeded = newQuantity;
+        updatedTech[index].numberOfOutputPersonnel = countOf;
+        setTech(updatedTech);
+        handleQuantityOffPersonal(countOf * 3, index);
+    };
+
+    // Hàm dữ liệu cần tuyển
+    function NumberOfPersonnelNeeded({ number, idx }) {
+        if (number === "" || number == 0) {
+            number = 0;
+        }
+        const [countOf, setCountOf] = useState(number);
+        const handleClickCountPlus = () => {
+            setCountOf(countOf + 1);
+            handleQuantityOffPersonal(number + 1, idx)
+        };
+        const handleInputChange = (e) => {
+            const newCount = parseInt(e.target.value);
+            setCountOf(newCount);
+
+        };
+        const handleClickCountMinus = () => {
+            if (!countOf <= 0) {
+                setCountOf(countOf - 1);
+                handleQuantityOffPersonal(number - 1, idx)
+            }
+        };
+        const handleBlur = () => {
+            handleQuantityOffPersonal(countOf, idx)
+        };
+        return (
+            <div className="d-flex justify-content-center align-items-center">
+                <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
+                <input
+                    value={countOf}
+                    style={{ fontSize: "15px", height: "36px" }}
+                    className="form-control w-25 border-clr-grey border text-center"
+                    type="number"
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                />
+                <AddIcon onClick={handleClickCountPlus} className="ms-1" />
+            </div>
+        );
+    }
+    const handleQuantityOffPersonal = (countOf, index) => {
+        const updatedTech = [...tech];
+        updatedTech[index].numberOfPersonnelNeeded = countOf;
         setTech(updatedTech);
     };
     const Dlt = ({ index }) => {
         if (tech.length > 1) {
             return (
-                <BackspaceIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
+                <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
             )
         }
     }
     return (
         <>
-            <Tooltip title="Chỉnh sửa chi tiết">
-                {check ? <CreateIcon
-                    className="bg-whiteImportant pencil-btn font-size-medium"
-                /> : <CreateIcon
-                    className="color-orange pencil-btn font-size-medium hover-warning"
-                    onClick={handleClickFormOpen}
-                />}
-            </Tooltip>
+            {check ? <CreateIcon
+                className="bg-whiteImportant pencil-btn font-size-medium"
+            /> :
+                <Tooltip title="Chỉnh sửa chi tiết">
+                    <CreateIcon
+                        className="color-orange pencil-btn font-size-medium hover-warning"
+                        onClick={handleClickFormOpen}
+                    />
+                </Tooltip >
+            }
             <Dialog
                 id="formCreateRecruitmentPlan"
                 open={openForm}
@@ -328,6 +353,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                                         className="form-select grey-text"
                                         aria-label="Default select example"
                                         defaultValue="default"
+                                        value={tech.type}
                                         onChange={(e) => handleChangeSelect(e, index)}
                                         name={`tech[${index}].type`}
                                     >
@@ -343,30 +369,27 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                                     <NumberOfPersonnelNeeded
                                         number={tech.numberOfPersonnelNeeded}
                                         key={tech.numberOfPersonnelNeeded}
-                                        onQuantityChange={(newQuantity) =>
-                                            handleQuantityOffPersonal(newQuantity, index)
-                                        }
+                                        idx={index}
                                     />
                                 </div>
                                 <div className="col-md-4 text-center mt-0 mb-2  position-relative align-item-center">
                                     <NumberOfOutputPersonnel
                                         number={tech.numberOfOutputPersonnel}
                                         key={tech.numberOfOutputPersonnel}
-                                        onQuantityChange={(newQuantity) =>
-                                            handleQuantityChangeOutput(newQuantity, index)
-                                        }
+                                        idx={index}
                                     />
                                     <Dlt index={index} />
                                 </div>
                             </>
                         ))}
-                        <div className=" col-md-12 d-flex justify-content-between mt-0">
-                            <div>
-                                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
-                            </div>
-                            <div>
-                                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng phải bé hơn 0</p>}
-                            </div>
+                        <div className="col-md-4 mt-0">
+                            {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để rỗng</p>}
+                        </div>
+                        <div className="col-md-4 mt-0 text-center">
+                            {errNumberOfPersonal && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
+                        </div>
+                        <div className="col-md-4 mt-0 text-center">
+                            {errNumberofOutput && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
                         </div>
 
 
@@ -376,12 +399,12 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                         <div className="col-md-12  d-flex">
                             <div className="col-md-4 mb-0">
                                 <label className="form-label grey-text">
-                                    Công nghệ <span className="color-red">*</span>
+                                    Thời hạn tuyển dụng <span className="color-red">*</span>
                                 </label>
                             </div>
                             <div className="col-md-4 mb-0 text-center">
                                 <label className="form-label grey-text">
-                                    Số lượng nhân sự cần tuyển <span className="color-red">*</span>
+                                    Thời hạn bàn giao <span className="color-red">*</span>
                                 </label>
                             </div>
                             <div className="col-md-4 mb-0 text-center">

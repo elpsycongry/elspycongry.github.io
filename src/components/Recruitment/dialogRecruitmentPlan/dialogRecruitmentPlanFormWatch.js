@@ -88,12 +88,12 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                         <div className="col-md-12 ">
                             <table className="w-100">
                                 <tbody>
-                                    <tr>
+                                    <tr className=" mb-2">
                                         <th className="w-1">
                                             <label htmlFor="name" style={{ color: '#6F6F6F', whiteSpace: 'nowrap' }} className="fw-500 mr-15 fs-20">Từ nhu cầu nhân sự: </label>
                                         </th>
                                         <th>
-                                            <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
+                                            <p className="namePersonal mb-0" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
                                         </th>
 
                                     </tr>
@@ -102,40 +102,58 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                                             <label htmlFor="name" style={{ color: '#6F6F6F', whiteSpace: 'nowrap' }} className="fw-500 mr-15 fs-20">Tên kế hoạch tuyển dụng: </label>
                                         </th>
                                         <th>
-                                            <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
+                                            <p className="namePersonal mb-0" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
                                         </th>
                                     </tr>
-
+                                    <tr>
+                                        <td colSpan={2}>
+                                            <div className="col-md-12 d-flex justify-content-center">
+                                                <table className="table-edit w-600" >
+                                                    <thead className="grey-text">
+                                                        <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Công nghệ</th>
+                                                        <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
+                                                        <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        {tenhnology.map(item => (
+                                                            <tr key={item.type}>
+                                                                <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
+                                                                <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
+                                                                <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr className="mt-2">
+                                        <td className="w-1">
+                                            <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20 mb-0">Thời hạn tuyển dụng: </label>
+                                        </td>
+                                        <td>
+                                            <p className=" namePersonal mb-0" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.dateEnd}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20 ">Thời hạn bàn giao: </label>
+                                        </td>
+                                        <td>
+                                            <p className=" namePersonal mb-0" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.dateEnd}</p>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <div className="col-md-12 d-flex justify-content-center">
-                            <table className="table-edit">
-                                <thead className="grey-text">
-                                    <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Công nghệ</th>
-                                    <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
-                                    <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
+
+                        <div className="col-md-12 ">
+                            <table className="w-100" style={{ whiteSpace: 'nowrap' }}>
+                                <thead>
+
                                 </thead>
-                                <tbody>
-                                    {tenhnology.map(item => (
-                                        <tr key={item.type}>
-                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
-                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
-                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
                             </table>
-                        </div>
-
-                        <div className="col-md-12 mt-2 d-flex height-35">
-                            <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20 mb-0">Thời hạn tuyển dụng: </label>
-                            <p className="time-edit mb-0" style={{ color: '#838383', marginLeft: '70px' }}>{formData.values.recruitmentRequest.dateEnd}</p>
-                        </div>
-                        <div className="col-md-12 mt-0 mb-2 d-flex height-35">
-                            <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20 ">Thời hạn bàn giao: </label>
-                            <p className="time-edit " style={{ color: '#838383', marginLeft: '70px' }}>{formData.values.recruitmentRequest.dateEnd}</p>
                         </div>
                         {formData.values.recruitmentRequest.status === "Bị từ chối bởi DET" ? (
                             <div className="col-md-12  d-flex ">

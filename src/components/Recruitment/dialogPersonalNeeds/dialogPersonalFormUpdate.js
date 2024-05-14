@@ -6,6 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CreateIcon from "@mui/icons-material/Create";
 import BackspaceIcon from "@mui/icons-material/Backspace";
+
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup"
@@ -111,25 +112,29 @@ export default function DialogPersonalFormUpdate({ id, check }) {
     }
   });
 
-  function PersonalQuantity({ number, onQuantityChange }) {
+  function PersonalQuantity({ number, idx }) {
     if (number === "" || number == 0) {
       number = 0;
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
-      onQuantityChange(count + 1);
+      handleQuantityChange(number+1, idx)
+
     };
     const handleInputChange = (e) => {
       const newCount = parseInt(e.target.value);
       setCount(newCount);
-      onQuantityChange(newCount);
     };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
         setCount(count - 1);
-        onQuantityChange(count - 1);
+        handleQuantityChange(number-1, idx)
+
       }
+    };
+    const handleBlur = () => {
+      handleQuantityChange(count, idx)
     };
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -140,6 +145,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
@@ -153,7 +159,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-        <BackspaceIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{right: '55px' , top: '6px'}} onClick={() => removeTech(index)} />
+        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
       )
     }
   }
@@ -213,14 +219,16 @@ export default function DialogPersonalFormUpdate({ id, check }) {
 
   return (
     <>
-      <Tooltip title="Chỉnh sửa chi tiết">
-        {check ? <CreateIcon
-          className="bg-whiteImportant pencil-btn font-size-medium"
-        /> : <CreateIcon
-          className="color-orange pencil-btn font-size-medium hover-warning"
-          onClick={handleClickFormOpen}
-        />}
-      </Tooltip>
+      {check ? <CreateIcon
+        className="bg-whiteImportant pencil-btn font-size-medium"
+      /> :
+        <Tooltip title="Chỉnh sửa chi tiết">
+          <CreateIcon
+            className="color-orange pencil-btn font-size-medium hover-warning"
+            onClick={handleClickFormOpen}
+          />
+        </Tooltip>
+      }
       <Dialog
         open={openForm}
         onClose={handleClickFormClose}
@@ -275,8 +283,8 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 <div key={index} className="col-md-6 mt-0 mb-2 last-child">
                   <select
                     className="form-select grey-text"
-                    value={tech.type}
                     aria-label="Default select example"
+                    value={tech.type}
                     onChange={(e) => handleChangeSelect(e, index)}
                     name={`tech[${index}].type`}
                   >
@@ -292,9 +300,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                   <PersonalQuantity
                     number={tech.quantity}
                     key={tech.quantity}
-                    onQuantityChange={(newQuantity) =>
-                      handleQuantityChange(newQuantity, index)
-                    }
+                    idx={index}
                   />
                   <Dlt index={index} />
                 </div>
