@@ -1,18 +1,16 @@
-import * as React from 'react';
-import {Dialog, DialogTitle} from "@mui/material";
 import CreateIcon from "@mui/icons-material/Create";
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import './updateUser.css';
-import '../../assets/css/cssRecruitment/recruitment.css';
+import * as React from "react";
+import {Dialog, DialogTitle} from "@mui/material";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import DialogActions from "@mui/material/DialogActions";
+import {useState} from "react";
 
-export default function DialogUpdateUserForm() {
-
-    const [open, setOpen] = React.useState(false);
+export function ModalMark() {
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
