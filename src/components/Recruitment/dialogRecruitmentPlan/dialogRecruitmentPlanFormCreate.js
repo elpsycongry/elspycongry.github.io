@@ -170,13 +170,13 @@ export default function DialogRecruitmentPlanFormCreate() {
     }
     const [countOf, setCountOf] = useState(number);
     const handleClickCountPlus = () => {
-      if (number < 40) {
+      if (number <= 20) {
         setCountOf(countOf + 1);
         numberOfOutputPersonnel(number + 1, idx)
       }
     };
     const handleInputChange = (e) => {
-      if (e.target.value < 40) {
+      if (e.target.value <= 20) {
         const newCount = parseInt(e.target.value);
         setCountOf(newCount);
       }
@@ -209,7 +209,12 @@ export default function DialogRecruitmentPlanFormCreate() {
     const updatedTech = [...tech];
     updatedTech[index].numberOfOutputPersonnel = countOf;
     setTech(updatedTech);
-    handleQuantityOffPersonal(countOf * 3, index);
+    const count = countOf * 3;
+    if (count > 40) {
+      handleQuantityOffPersonal(40, index);
+    } else {
+      handleQuantityOffPersonal(count, index);
+    }
   };
 
   // Hàm dữ liệu cần tuyển
@@ -219,13 +224,16 @@ export default function DialogRecruitmentPlanFormCreate() {
     }
     const [countOf, setCountOf] = useState(number);
     const handleClickCountPlus = () => {
-      setCountOf(countOf + 1);
-      handleQuantityOffPersonal(number + 1, idx)
+      if (number <= 40) {
+        setCountOf(countOf + 1);
+        handleQuantityOffPersonal(number + 1, idx)
+      }
     };
     const handleInputChange = (e) => {
-      const newCount = parseInt(e.target.value);
-      setCountOf(newCount);
-
+      if (e.target.value <= 40) {
+        const newCount = parseInt(e.target.value);
+        setCountOf(newCount);
+      }
     };
     const handleClickCountMinus = () => {
       if (!countOf <= 0) {
@@ -283,7 +291,7 @@ export default function DialogRecruitmentPlanFormCreate() {
             // value={timeRecruitment}
             id="recruitmentRequest.dateEnd"
             name="recruitmentRequest.dateEnd"
-            // min={timeNowValue}
+          // min={timeNowValue}
           />
         </div>
         <div className="col-md-4 mt-0 mb-2 child">
@@ -355,6 +363,7 @@ export default function DialogRecruitmentPlanFormCreate() {
                 Tên kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
               <input
+                maxLength={60}
                 type="text"
                 placeholder="Ví dụ: DECEN - Kế hoạch tuyển dụng quý 3/2021"
                 onChange={formData.handleChange}
