@@ -24,7 +24,7 @@ const HomePage = () => {
                         Quản lý đào tạo
                     </Typography>
                     <Button onClick={() => {doLogout(navigate)}} color="inherit">
-                        Đăng xuất
+                        Logout
                     </Button>
                 </Toolbar>
             </AppBar>

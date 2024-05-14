@@ -1,0 +1,21 @@
+@media  (max-width: 1300px) {
+    .responsive-table {
+        white-space: nowrap;
+    }
+}
+@media (max-width: 900px){
+    .responsive-align-item-center{
+        align-items: center;
+    }
+    .min-width-height{
+        min-width: 610px;
+        min-height: 64px;
+    }
+}
+
+@media (max-width: 600px){
+    .min-width-height{
+        min-width: 610px;
+        min-height: 64px !important;
+    }
+}

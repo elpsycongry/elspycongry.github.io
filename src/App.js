@@ -7,13 +7,13 @@ import NotFoundPage from "./components/pages/NotFoundPage/notFoundPage";
 import Training from './components/training/training';
 import HomePage from "./components/pages/homePage/homePage";
 import {InternPage} from "./components/pages/InternPage/Internpage";
-
+import './assets/css/index.css'
 function App() {
     return (
         <>
             <Routes>
                 <Route path={"/"} element={
-                    <AuthContext><Users /></AuthContext>
+                    <AuthContext><HomePage /></AuthContext>
                 } />
                 <Route path={"/users"} element={
                     <AuthContext><Users /></AuthContext>
