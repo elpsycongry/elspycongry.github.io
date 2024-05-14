@@ -16,7 +16,13 @@ import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { doLogout } from "../../checkToken/AuthContext";
+import { useNavigate } from "react-router-dom";
+import logoCodeGym from '../../../assets/image/logoCodeGym.png'
+import avatarDemo from '../../../assets/image/boy_2.png'
+import './header.css'
+
+const settings = ['Đăng xuất'];
 const drawerWidth = 240;
 
 
@@ -39,8 +45,8 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function Header() {
-     // Notification
-     const StyledIconWrapper = styled(Box)(({ theme }) => ({
+    // Notification
+    const StyledIconWrapper = styled(Box)(({ theme }) => ({
         position: 'relative',
         display: 'inline-flex',
         alignItems: 'center',
@@ -93,31 +99,26 @@ export default function Header() {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    return(
+    const navigate = useNavigate();
+    return (
         <>
-         <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
+            <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        // onClick={handleDrawerOpen}
-                        edge="start"
-                     
-                    >
-                        <HomeIcon sx={{ fontSize: 30 }} />
-                    </IconButton>
+                    <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
+                        <img src={logoCodeGym} style={{ width: '30px', height: '30px' }} />
+                    </Avatar>
                     <Typography variant="h6" noWrap component="div">
-                        Tyson Lại - Hệ thống quản lý đào tạo
+                        Hệ thống quản lý đào tạo
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
-                    <Box sx={{ marginRight: '10px' }}>
+                    {/* <Box sx={{ marginRight: '10px' }}>
                         <StyledIconWrapper>
                             <NotificationsIcon sx={{ fontSize: '35px' }} />
                         </StyledIconWrapper>
-                    </Box>
+                    </Box> */}
                     <Tooltip title="Open settings">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                            <Avatar className='avt-img' alt="Remy Sharp" src={avatarDemo} />
                             <ArrowDropDownIcon />
                         </IconButton>
                     </Tooltip>
@@ -138,7 +139,7 @@ export default function Header() {
                         onClose={handleCloseUserMenu}
                     >
                         {settings.map((setting) => (
-                            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                            <MenuItem key={setting} onClick={() => { doLogout(navigate) }}>
                                 <Typography textAlign="center">{setting}</Typography>
                             </MenuItem>
                         ))}

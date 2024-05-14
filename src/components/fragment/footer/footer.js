@@ -6,9 +6,9 @@ export default function Footer() {
       <footer 
         className="text-center p-4 pb-1"
       >
-        © 2021 Copyright 
-        <a className="text-reset fw-bold" href="https://mdbootstrap.com/">
-          : MDBootstrap.com
+        © 2024 Copyright 
+        <a className="text-reset fw-bold">
+          : Hệ thống quản lý đào tạo
         </a>
       </footer>
     </>
