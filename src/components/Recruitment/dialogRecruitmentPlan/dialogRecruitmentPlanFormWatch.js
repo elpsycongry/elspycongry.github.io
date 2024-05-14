@@ -15,29 +15,37 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
     const formData = useFormik({
         initialValues: {
             idUser: null,
-            recruitmentRequest: {
-                dateStart: "",
-                dateEnd: "",
+            recruitmentPlan: {
+                recruitmentRequest: {
+                    dateStart: "",
+                    dateEnd: "",
+                    name: "",
+                    reason: "",
+                    division: null,
+                    status: ""
+                },
                 name: "",
-                status: "",
-                reason: "",
-                details: [
-                    {
-                        type: "",
-                        quantity: "",
-                    },
-                ],
+                handoverDeadline: "",
+                dateRecruitmentEnd: "",
+                status : ""
             },
-
+            planDetails: [
+                {
+                    recruitmentPlan: null,
+                    type: "",
+                    numberOfPersonnelNeeded: "",
+                    numberOfOutputPersonnel: ""
+                },
+               
+            ],
         },
     });
     useEffect(() => {
-        axios.get("http://localhost:8080/api/recruitmentRequests/" + id).then((res) => {
+        axios.get("http://localhost:8080/api/plan/" + id).then((res) => {
             formData.setValues(res.data);
-            const detail = res.data.details;
-            setTenhnology(
-                detail.map((item) => ({ type: item.type, quantity: item.quantity }))
-            );
+            const detail = res.data.planDetails;
+            setTenhnology(detail);
+            console.log(tenhnology)
         });
     }, []);
     // const testId = [useState()]
@@ -93,7 +101,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                                             <label htmlFor="name" style={{ color: '#6F6F6F', whiteSpace: 'nowrap' }} className="fw-500 mr-15 fs-20">Từ nhu cầu nhân sự: </label>
                                         </th>
                                         <th>
-                                            <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
+                                            <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentPlan.recruitmentRequest.name}</p>
                                         </th>
 
                                     </tr>
@@ -102,7 +110,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                                             <label htmlFor="name" style={{ color: '#6F6F6F', whiteSpace: 'nowrap' }} className="fw-500 mr-15 fs-20">Tên kế hoạch tuyển dụng: </label>
                                         </th>
                                         <th>
-                                            <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
+                                            <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentPlan.name}</p>
                                         </th>
                                     </tr>
 
@@ -114,15 +122,15 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                             <table className="table-edit">
                                 <thead className="grey-text">
                                     <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Công nghệ</th>
-                                    <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
-                                    <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự</th>
+                                    <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự cần tuyển</th>
+                                    <th style={{ color: '#6F6F6F' }} className="text-center p-2 w-250 fw-500">Số lượng nhân sự đầu ra</th>
                                 </thead>
                                 <tbody>
                                     {tenhnology.map(item => (
                                         <tr key={item.type}>
                                             <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.type}</td>
-                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
-                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.quantity}</td>
+                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.numberOfPersonnelNeeded}</td>
+                                            <td style={{ color: '#838383' }} className="text-center p-2 w-250 fs-15 grey-text">{item.numberOfOutputPersonnel}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -131,13 +139,13 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
 
                         <div className="col-md-12 mt-2 d-flex height-35">
                             <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20 mb-0">Thời hạn tuyển dụng: </label>
-                            <p className="time-edit mb-0" style={{ color: '#838383', marginLeft: '70px' }}>{formData.values.recruitmentRequest.dateEnd}</p>
+                            <p className="time-edit mb-0" style={{ color: '#838383', marginLeft: '70px' }}>{formData.values.recruitmentPlan.dateRecruitmentEnd}</p>
                         </div>
                         <div className="col-md-12 mt-0 mb-2 d-flex height-35">
                             <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20 ">Thời hạn bàn giao: </label>
-                            <p className="time-edit " style={{ color: '#838383', marginLeft: '70px' }}>{formData.values.recruitmentRequest.dateEnd}</p>
+                            <p className="time-edit " style={{ color: '#838383', marginLeft: '70px' }}>{formData.values.recruitmentPlan.handoverDeadline}</p>
                         </div>
-                        {formData.values.recruitmentRequest.status === "Bị từ chối bởi DET" ? (
+                        {formData.values.recruitmentPlan.status === "Bị từ chối bởi DET" ? (
                             <div className="col-md-12  d-flex ">
                                 <label htmlFor="time" style={{ color: '#6F6F6F', whiteSpace: 'nowrap' }} className="form-label fs-20 me-2">Lý do:</label>
                                 <textarea
@@ -145,7 +153,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
 
                                     className="form-control resize pt-2 "
                                     style={{ color: '#838383' }}
-                                    value={formData.values.recruitmentRequest.reason}
+                                    value={formData.values.recruitmentPlan.reason}
                                 >
 
                                 </textarea>

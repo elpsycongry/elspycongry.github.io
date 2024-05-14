@@ -12,7 +12,7 @@ import { useFormik } from "formik";
 import CreateIcon from "@mui/icons-material/Create";
 
 
-export default function DialogRecruitmentPlanFormUpdate({ check }) {
+export default function DialogRecruitmentPlanFormUpdate({ check , id }) {
     const [dateErr, setDateErr] = useState(false);
     const [techErr, setTechErr] = useState(false);
     const [quantityErr, setQuantityErr] = useState(false);
@@ -40,60 +40,78 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
         })
         const hasErrQuantity = errQuantity.some(item => item === true);
         setQuantityErr(hasErrQuantity);
-
-
-
         if (dateSet < futureDate || dateSet == "Invalid Date") {
             setDateErr(true);
         } else {
             setDateErr(false);
         }
-
-
         if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrQuantity) {
             return false;
         } else {
             return true;
         }
-    }
 
-    const formData = useFormik({
+    }
+    const checkValidInput = (recruitmentPlanName) => {
+        if (recruitmentPlanName.length <= 60) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+const formData = useFormik({
         initialValues: {
             idUser: null,
-            recruitmentRequest: {
-                dateStart: "",
-                dateEnd: "",
+            recruitmentPlan: {
+                recruitmentRequest: {
+                    id:null,
+                    dateStart: "",
+                    dateEnd: "",
+                    name: "",
+                    reason: "",
+                    division: null,
+                    status: ""
+                },
                 name: "",
-                status: "",
-                details: [
-                    {
-                        type: "",
-                        quantity: "",
-                    },
-                ],
+                handoverDeadline: "",
+                dateRecruitmentEnd: "",
+                status : ""
             },
+            planDetails: [
+                {
+                    recruitmentPlan: null,
+                    type: "",
+                    numberOfPersonnelNeeded: "",
+                    numberOfOutputPersonnel: ""
+                },
+               
+            ],
         },
         onSubmit: async (values, { setSubmitting }) => {
-            const date = new Date(values.recruitmentRequest.dateEnd);
+            const date = new Date(values.recruitmentPlan.handoverDeadline);
             if (!checkValid(date, tech)) {
+                setSubmitting(false);
+                return;
+            } else if(!checkValidInput(values.recruitmentPlan.name)){
                 setSubmitting(false);
                 return;
             } else {
                 // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-                values.details = [...tech];
+                values.planDetails = [...tech];
                 values.idUser = 1;
                 try {
-                    await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
-                        swal("tạo nhu cầu nhân sự thành công", {
+                    await axios.put("http://localhost:8080/api/plan/" + id, values).then(res => {
+                        swal("Cập nhật kế hoạch tuyển dụng thành công", {
                             icon: "success",
                             buttons: false,
                             timer: 2000
                         }).then(() => {
-                            window.location.href = "/recruitment/personalNeeds";
+                            window.location.href = "/recruitment/recruitmentPlan";
                         });
                     });
                 } catch (error) {
-                    swal("tạo nhu cầu nhân sự thất bại", {
+                    swal("Cập nhật kế hoạch tuyển dụng thất bại", {
                         icon: "error",
                         buttons: false,
                         timer: 2000
@@ -108,8 +126,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
         axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
             setRecuitment(res.data);
         });
-    }, []);
-
+        axios.get("http://localhost:8080/api/plan/" + id).then(res =>{
+            formData.setValues(res.data);
+            const detail = res.data.planDetails;
+           setTech(
+              detail.map((item) => ({ type: item.type, numberOfPersonnelNeeded: item.numberOfPersonnelNeeded, numberOfOutputPersonnel: item.numberOfOutputPersonnel}))
+            );
+        })
+    },[])
 
 
 
@@ -158,8 +182,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
         }
         const [count, setCount] = useState(number);
         const handleClickCountPlus = () => {
-            setCount(count + 1);
-            onQuantityChange(count + 1);
+            if(count < 20){
+                setCount(count + 1);
+                onQuantityChange(count + 1);
+            }
         };
         const handleInputChange = (e) => {
             const newCount = parseInt(e.target.value);
@@ -199,8 +225,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
         }
         const [countOf, setCountOf] = useState(number);
         const handleClickCountPlus = () => {
-            setCountOf(countOf + 1);
-            onQuantityChange(countOf + 1);
+            if(countOf < 40){
+                setCountOf(countOf + 1);
+                onQuantityChange(countOf + 1);
+            }
         };
         const handleInputChange = (e) => {
             const newCount = parseInt(e.target.value);
@@ -260,7 +288,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                     <form className="row g-3" onSubmit={formData.handleSubmit}>
                         <div className="col-md-12">
                             <h2 className="grey-text" style={{ paddingBottom: 3 }}>
-                                Thêm kế hoạch tuyển dụng
+                                Cập nhật kế hoạch tuyển dụng
                             </h2>
                             <IconButton
                                 sx={{
@@ -281,6 +309,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                                 className="form-select grey-text"
                                 aria-label="Default select example"
                                 defaultValue="default"
+                                value={formData.values.recruitmentPlan.recruitmentRequest.id}
+                                onChange={formData.handleChange}
+                                name="recruitmentPlan.recruitmentRequest.id"
+                                id="recruitmentPlan.recruitmentRequest.id"
                             >
                                 <option value="default">Chọn nhu cầu nhân sự</option>
                                 {recuitments.map((item) => (
@@ -296,14 +328,20 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                             </label>
                             <input
                                 type="text"
-                                placeholder="Ví dụ: DECEN - Kế hoạch tuyển dụng quý 3/2021"
+                                value={formData.values.recruitmentPlan.name}
                                 onChange={formData.handleChange}
                                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
                                 className={`form-control`}
-                                id="recruitmentRequest.name"
-                                name="recruitmentRequest.name"
+                                id="recruitmentPlan.name"
+                                name="recruitmentPlan.name"
                             />
                         </div>
+                        {!checkValidInput(formData.values.recruitmentPlan.name) && (
+                                <div>
+                                   {/* Hiển thị thông báo lỗi */}
+                         <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Độ dài tối đa là 60 ký tự.</p>
+                        </div>
+                        )}
                         <div className="col-md-12  d-flex">
                             <div className="col-md-4 mb-0">
                                 <label className="form-label grey-text">
@@ -331,7 +369,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                                         onChange={(e) => handleChangeSelect(e, index)}
                                         name={`tech[${index}].type`}
                                     >
-                                        <option value="default">Chọn công nghệ...</option>
+                                        <option value={tech.type}>{tech.type}</option>
                                         {listTechnology.map((item) => (
                                             <option key={item.id} value={item.text}>
                                                 {item.text}
@@ -366,6 +404,12 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                             </div>
                             <div>
                                 {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng phải bé hơn 0</p>}
+                                {tech.values.numberOfOutputPersonne > 40 && (
+                                    <div>
+                                           <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Số lượng nhân sự đầu ra không được vượt quá 40</p>
+                                    </div>
+                                )
+                            }
                             </div>
                         </div>
 
@@ -376,12 +420,12 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                         <div className="col-md-12  d-flex">
                             <div className="col-md-4 mb-0">
                                 <label className="form-label grey-text">
-                                    Công nghệ <span className="color-red">*</span>
+                                    Thời hạn tuyển dụng <span className="color-red">*</span>
                                 </label>
                             </div>
                             <div className="col-md-4 mb-0 text-center">
                                 <label className="form-label grey-text">
-                                    Số lượng nhân sự cần tuyển <span className="color-red">*</span>
+                                    Thời hạn bàn giao <span className="color-red">*</span>
                                 </label>
                             </div>
                             <div className="col-md-4 mb-0 text-center">
@@ -394,11 +438,11 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                                 onChange={formData.handleChange}
                                 onBlur={formData.handleBlur}
                                 className={`form-control text-center grey-text`}
-                                defaultValue={'2021-01-01'}
-                                id="recruitmentRequest.dateEnd"
-                                name="recruitmentRequest.dateEnd"
+                                value={formData.values.recruitmentPlan.dateRecruitmentEnd}
+                                id="recruitmentPlan.dateRecruitmentEnd"
+                                name="recruitmentPlan.dateRecruitmentEnd"
                             />
-                            {dateErr && <p className="err-valid ">Thời hạn bàn giao phải tối thiểu 75 ngày</p>}
+                            {dateErr && <p className="err-valid ">Thời hạn tuyển dụng phải tối thiểu 75 ngày</p>}
                         </div>
                         <div className="col-md-4 mt-0 mb-2 child">
                             <input
@@ -408,7 +452,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
                                 className={`form-control text-center grey-text`}
                                 id="recruitmentRequest.dateEnd"
                                 name="recruitmentRequest.dateEnd"
-                                defaultValue={'2021-01-03'}
+                                value={formData.values.recruitmentPlan.handoverDeadline}
                             />
                             {dateErr && <p className="err-valid ">Thời hạn bàn giao phải tối thiểu 75 ngày</p>}
                         </div>
