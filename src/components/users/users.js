@@ -1,6 +1,5 @@
 import {
-    Box,
-    Dialog,
+    Box, Dialog,
     DialogContent,
     IconButton,
     FormControl,
@@ -21,10 +20,12 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CreateIcon from '@mui/icons-material/Create';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
+import './users.css'
+import DialogUpdateUserForm from "./updateUser";
 
 export default function Users() {
 
@@ -42,71 +43,154 @@ export default function Users() {
     }
 
     const [status, setStatus] = useState('');
-
-
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
+    const previousRolef = useRef('');
+    const [pagination, setPagination] = useState({
+        page: 0,
+        size: 10,
+        totalElements: 0,
+    });
 
+    const [paginationFilter, setPaginationFilter] = useState({
+        page: 0,
+        size: 10,
+        totalElements: 0,
+    });
+
+    useEffect(() => {
+        handleFilterWithFields(pagination);
+        fetchListRoleSelect();
+    }, [selectedRole]);
+
+    // Ref để lưu giá trị trước của selectedRole
+    const previousRoleRef = useRef(selectedRole);
+
+    // Cập nhật previousRoleRef mỗi khi selectedRole thay đổi
+    useEffect(() => {
+        previousRoleRef.current = selectedRole;
+    }, [selectedRole]);
+
+
+    // const fetchListRoleSelect = async () => {
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    const [token, setToken] = useState("")
     const fetchListRoleSelect = async () => {
-        try {
-            const response = await axios.get("http://localhost:8080/api/users/role");
-            setListRoleSelect(response.data);
-        } catch (error) {
-            console.error(error);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        setToken(user.accessToken)
+        if (user != null) {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get("http://localhost:8080/admin/users/role").then((res) => {
+                setListRoleSelect(res.data);
+            });
         }
     };
 
-    const fetchListUser = async () => {
-        try {
-            const response = await axios.get("http://localhost:8080/api/users/list");
-            setListUser(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+
+
+
+
+
 
     const handleSearch = async (event) => {
-        if (event.key === 'Enter') {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+
+        if (user != null && event.key === 'Enter') {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             try {
-                const response = await axios.get(`http://localhost:8080/api/users?keyword=${searchTerm}`);
-                setListUser(response.data);
-                setSearchTerm('');
+                axios.get(`http://localhost:8080/admin/users/search?keyword=${searchTerm}`).then((res) => {
+                    setListUser(res.data);
+                    setSearchTerm('');
+                });
             } catch (error) {
                 console.error(error);
             }
         }
     };
 
+
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
-    };
-
-    const handleFilterRole = async () => {
-        if (selectedRole === '') {
-            return fetchListUser(); // Không có lọc nếu không có role được chọn
-        }
-        try {
-            const response = await axios.get(`http://localhost:8080/api/users/filter/${selectedRole}`);
-            setListUser(response.data);
-        } catch (error) {
-            console.error(error);
-        }
     };
 
     const handleRoleChange = (event) => {
         setSelectedRole(event.target.value);
     };
 
+    const handleFilterRole = async () => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+
+        if (user != null) {
+            if (selectedRole === '') {
+                return fetchListUser(); // Không có lọc nếu không có role được chọn
+            }
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get(`http://localhost:8080/admin/users/filter?role_id=${selectedRole}`).then((res) => {
+                setListUser(res.data);
+            });
+        }
+    };
 
 
+    const handlePageChange = (event, value) => {
+        setPagination(prev => {
+            const newPagination = { ...prev, page: value - 1 };
+            handleFilterWithFields(newPagination);
+            return newPagination;
+        });
+
+    };
+
+    const fetchListUser = async () => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+
+        
+
+        if (user != null) {
+            
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get("http://localhost:8080/admin/users/filterWithFields?page=0&size=10&keyword=&role_id=").then((res) => {
+                setListUser(res.data.content);
+                console.log(res.data.content);
+            });
+
+            
+        }
+    };
+
+
+    const handleFilterWithFields = async (newPagination = pagination) => {
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        if (user != null) {
+        
+
+            if (selectedRole !== previousRoleRef.current) {
+                newPagination = paginationFilter;
+            }
+
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
+                .then((res) => {
+                    setListUser(res.data.content);
+                    setPagination({
+                        ...newPagination,
+                        totalElements: res.data.totalElements,
+                    });
+                });
+
+
+        }
+    };
+
+    
     return (
         <>
-            <Header/>
-            <Navbar/>
-            <Box component="main" sx={{flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px'}}>
-                <Box m={2} style={{display: 'flex'}}>
+            <Header />
+            <Navbar />
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
+                <Box m={2} style={{ display: 'flex' }}>
                     {/* <Breadcrumbs
                         aria-label='breadcrumb'
                         separator={<NavigateNextIcon fontSize="small" />}>
@@ -115,8 +199,9 @@ export default function Users() {
                         <Link underline="hover" href='#'>Access</Link>
                         <Typography color='text.primary'><GroupIcon /> Users</Typography>
                     </Breadcrumbs> */}
-                    <GroupIcon style={{paddingBottom: '3px'}}/>
-                    <p color='text.primary' style={{
+                    <GroupIcon style={{ paddingBottom: '3px', color: 'rgba(0, 0, 0, 0.60)' }} />
+                    <p style={{
+                        color: 'rgba(0, 0, 0, 0.60)',
                         marginLeft: '10px',
                         marginBottom: '0px',
                         fontFamily: 'sans-serif',
@@ -145,7 +230,7 @@ export default function Users() {
                                 }}
                                 onClick={handleClickPracticeClose}
                             >
-                                <ClearIcon/>
+                                <ClearIcon />
                             </IconButton>
                         </DialogContent>
                     </Dialog>
@@ -156,19 +241,25 @@ export default function Users() {
                                     <input
                                         type="text"
                                         className="w-px position-relative"
-                                        style={{width: '300px'}}
+                                        style={{ width: '300px' }}
                                         value={searchTerm}
                                         onChange={handleChangeSearch}
-                                        onKeyUp={handleSearch}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handleFilterWithFields(); // Gọi hàm ngay lập tức
+                                            } else {
+                                                clearTimeout(handleFilterWithFields(), 1000);
+                                            }
+                                        }}
                                         placeholder="Tìm kiếm với tên hoặc email..."
                                     />
                                     <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg"
-                                         width="16" height="16" viewBox="0 0 24 24">
+                                        width="16" height="16" viewBox="0 0 24 24">
                                         <path fill="rgb(131 125 125 / 87%)"
-                                              d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/>
+                                            d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
                                     </svg>
                                 </div>
-                                <FormControl className="h-px" sx={{minWidth: '250px'}}>
+                                <FormControl className="h-px" sx={{ minWidth: '250px' }}>
                                     <InputLabel className="top-left" id="demo-simple-small-label">Vai
                                         trò...</InputLabel>
                                     <Select
@@ -177,57 +268,65 @@ export default function Users() {
                                         id="demo-simple-select"
                                         label="Status"
                                         value={selectedRole}
-                                        onChange={handleRoleChange}>
-                                        <MenuItem value={""}>Select</MenuItem>
-
+                                        onChange={handleRoleChange}
+                                    // onClick={handleFilterRole}
+                                    >
+                                        <MenuItem value={""} >Tất cả</MenuItem>
                                         {listRoleSelect.map(item => (
-                                            <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>
+                                            <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <table className=" table ">
+
+                    <div className="table-container">
+                        <table className=" table-user ">
+
                             <thead>
-                            <tr className="header-tr grey-text">
-                                <th>STT</th>
-                                <th>Tên</th>
-                                <th>Email</th>
-                                <th>Vai trò</th>
-                                <th className=" text-center">Trạng thái</th>
-                                <th className=" text-center">Hành động</th>
-                            </tr>
+                                <tr className="header-tr grey-text">
+                                    <th className="user-id">STT</th>
+                                    <th>Tên</th>
+                                    <th>Email</th>
+                                    <th>Vai trò</th>
+                                    <th>Hành động</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {listUser.map((item, index) => (
-                                <tr className="grey-text count-tr" key={item.id}>
-                                    <td className="count-td"></td>
-                                    <td>{item.name}</td>
-                                    <td>{item.email}</td>
-                                    <td>
-                                        {item.roles.map(role => (
-                                            <label key={role.id}>{role.name}</label>
-                                        ))}
-                                    </td>
-                                    <td className=" text-center">{item.status}</td>
-                                    <td className=" text-center">
-                                        <RemoveRedEyeIcon className="color-blue white-div font-size-large"/>
-                                        <CreateIcon className="color-orange pencil-btn font-size-medium"/>
-                                    </td>
-                                </tr>
-                            ))}
+                                {listUser.map((item, index) => (
+                                    <tr className="grey-text count-tr" key={item.id}>
+                                        <td className="user-id">{index + 1}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.email}</td>
+                                        <td>
+                                            {item.roles.map((role, index) => (
+                                                <label key={role.id} style={{ paddingRight: '5px' }}>
+                                                    {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
+                                                </label>
+                                            ))}
+
+                                        </td>
+                                        <td>
+                                            {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
+                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={fetchListUser} />                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
 
                         </table>
-                        <Stack spacing={1} style={{marginTop: '190px', alignItems: 'center'}}>
-                            <Pagination count={10} shape="rounded"/>
+                        <Stack spacing={1} style={{ alignItems: 'center' }}>
+                            <Pagination
+                                count={Math.ceil(pagination.totalElements / pagination.size)}
+                                page={pagination.page + 1}
+                                shape="rounded"
+                                onChange={handlePageChange}
+                            />
                         </Stack>
                     </div>
                 </div>
             </Box>
-            <Footer/>
+            {/* <Footer /> */}
         </>
     );
 }

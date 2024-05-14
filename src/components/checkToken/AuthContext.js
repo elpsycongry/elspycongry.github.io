@@ -11,18 +11,22 @@ function AuthContext({children}) {
             return <Navigate to="/login"/>
         }
     } else {
-        if (currentUser.roles[0].authority === "ROLE_GUEST"
-            && pathName !== "/guest") {
-            return <Navigate to="/guest"/>
-        }
-        if (currentUser.roles[0].authority !== "ROLE_GUEST"
-            && pathName === "/guest") {
-            return <Navigate to="/users"/>
+        let roles = []
+        currentUser.roles.forEach(element => {
+            roles = [...roles, element.authority]
+        });
+        const isAdmin = roles.find((role) => role === 'ROLE_ADMIN') 
+        const isManager = roles.find((role) => role === 'ROLE_MANAGE') 
+        if (pathName === '/users'){
+            if (!isAdmin) {
+                return <Navigate to={"/"}/>
+            } 
         }
 
-        if (pathName === "login") {
-            return <Navigate to="/users"/>
+        if (pathName === "/login") {
+            return <Navigate to="/"/>
         }
+
     }
     if (children === undefined) {
         return <Navigate to="/notFound"/>
