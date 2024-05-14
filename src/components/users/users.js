@@ -24,6 +24,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
+import './users.css'
+import DialogUpdateUserForm from "./updateUser";
 
 export default function Users() {
 
@@ -40,8 +42,6 @@ export default function Users() {
     }
 
     const [status, setStatus] = useState('');
-
-
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -87,10 +87,11 @@ export default function Users() {
 
     const handlePageChange = (event, value) => {
         setPagination(prev => {
-            const newPagination = { ...prev, page : value - 1 };
+            const newPagination = { ...prev, page: value - 1 };
             handleFilterWithFields(newPagination);
             return newPagination;
         });
+
     };
 
 
@@ -106,40 +107,37 @@ export default function Users() {
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
-                console.log("In ra dữ liệu: ");
-                console.log(selectedRole);
-                console.log(searchTerm);
-                console.log(newPagination.page);
-                console.log(newPagination.size);
-                console.log(previousRoleRef.current);
+            console.log("In ra dữ liệu: ");
+            console.log(selectedRole);
+            console.log(searchTerm);
+            console.log(newPagination.page);
+            console.log(newPagination.size);
+            console.log(previousRoleRef.current);
 
-                if (selectedRole !== previousRoleRef.current) {
-                    newPagination = paginationFilter;
-                }
+            if (selectedRole !== previousRoleRef.current) {
+                newPagination = paginationFilter;
+            }
 
-                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
-                    .then((res) => {
-                        setListUser(res.data.content);
-                        setPagination({
-                            ...newPagination,
-                            totalElements: res.data.totalElements,
-                        });
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
+                .then((res) => {
+                    setListUser(res.data.content);
+                    setPagination({
+                        ...newPagination,
+                        totalElements: res.data.totalElements,
                     });
+                });
 
 
         }
     };
 
 
-
-
-
     return (
         <>
             <Header />
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
                 <Box m={2} style={{ display: 'flex' }}>
                     {/* <Breadcrumbs
                         aria-label='breadcrumb'
@@ -149,8 +147,9 @@ export default function Users() {
                         <Link underline="hover" href='#'>Access</Link>
                         <Typography color='text.primary'><GroupIcon /> Users</Typography>
                     </Breadcrumbs> */}
-                    <GroupIcon style={{ paddingBottom: '3px' }} />
-                    <p color='text.primary' style={{
+                    <GroupIcon style={{ paddingBottom: '3px', color: 'rgba(0, 0, 0, 0.60)' }} />
+                    <p style={{
+                        color: 'rgba(0, 0, 0, 0.60)',
                         marginLeft: '10px',
                         marginBottom: '0px',
                         fontFamily: 'sans-serif',
@@ -193,7 +192,13 @@ export default function Users() {
                                         style={{ width: '300px' }}
                                         value={searchTerm}
                                         onChange={handleChangeSearch}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleFilterWithFields()}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handleFilterWithFields(); // Gọi hàm ngay lập tức
+                                            } else {
+                                                clearTimeout(handleFilterWithFields(), 1000);
+                                            }
+                                        }}
                                         placeholder="Tìm kiếm với tên hoặc email..."
                                     />
                                     <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg"
@@ -223,11 +228,13 @@ export default function Users() {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <table className=" table text-center">
+
+                    <div className="table-container">
+                        <table className=" table-user ">
+
                             <thead>
                                 <tr className="header-tr grey-text">
-                                    <th>STT</th>
+                                    <th className="user-id">STT</th>
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Vai trò</th>
@@ -237,7 +244,7 @@ export default function Users() {
                             <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td>{index + 1}</td>
+                                        <td className="user-id">{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>
@@ -250,8 +257,7 @@ export default function Users() {
                                         </td>
                                         <td>
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            <CreateIcon className="color-orange pencil-btn font-size-medium" />
-                                        </td>
+                                            <DialogUpdateUserForm />                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -268,7 +274,7 @@ export default function Users() {
                     </div>
                 </div>
             </Box>
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 }
