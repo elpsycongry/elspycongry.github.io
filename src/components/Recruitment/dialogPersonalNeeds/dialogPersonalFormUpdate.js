@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Grid, IconButton, MenuItem } from "@mui/material";
+import { Dialog, DialogTitle, Grid, IconButton, MenuItem, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -6,6 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CreateIcon from "@mui/icons-material/Create";
 import BackspaceIcon from "@mui/icons-material/Backspace";
+
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup"
@@ -111,25 +112,29 @@ export default function DialogPersonalFormUpdate({ id, check }) {
     }
   });
 
-  function PersonalQuantity({ number, onQuantityChange }) {
+  function PersonalQuantity({ number, idx }) {
     if (number === "" || number == 0) {
       number = 0;
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
-      onQuantityChange(count + 1);
+      handleQuantityChange(number+1, idx)
+
     };
     const handleInputChange = (e) => {
       const newCount = parseInt(e.target.value);
       setCount(newCount);
-      onQuantityChange(newCount);
     };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
         setCount(count - 1);
-        onQuantityChange(count - 1);
+        handleQuantityChange(number-1, idx)
+
       }
+    };
+    const handleBlur = () => {
+      handleQuantityChange(count, idx)
     };
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -140,6 +145,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
@@ -153,7 +159,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-        <BackspaceIcon onClick={() => removeTech(index)} />
+        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
       )
     }
   }
@@ -173,9 +179,9 @@ export default function DialogPersonalFormUpdate({ id, check }) {
   ];
 
   const listTestSelect = [
-    { id: 1, text: "Hoạt động" },
-    { id: 2, text: "Không hoạt động" },
-    { id: 3, text: "Đang chờ" },
+    { id: 1, text: "Trạng thái" },
+    { id: 2, text: "Bị từ chối bởi DET" },
+    { id: 3, text: "Đã gửi" },
   ];
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
@@ -215,11 +221,14 @@ export default function DialogPersonalFormUpdate({ id, check }) {
     <>
       {check ? <CreateIcon
         className="bg-whiteImportant pencil-btn font-size-medium"
-      /> : <CreateIcon
-        className="color-orange pencil-btn font-size-medium"
-        onClick={handleClickFormOpen}
-      />}
-
+      /> :
+        <Tooltip title="Chỉnh sửa chi tiết">
+          <CreateIcon
+            className="color-orange pencil-btn font-size-medium hover-warning"
+            onClick={handleClickFormOpen}
+          />
+        </Tooltip>
+      }
       <Dialog
         open={openForm}
         onClose={handleClickFormClose}
@@ -274,8 +283,8 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 <div key={index} className="col-md-6 mt-0 mb-2 last-child">
                   <select
                     className="form-select grey-text"
-                    value={tech.type}
                     aria-label="Default select example"
+                    value={tech.type}
                     onChange={(e) => handleChangeSelect(e, index)}
                     name={`tech[${index}].type`}
                   >
@@ -287,13 +296,11 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                     ))}
                   </select>
                 </div>
-                <div className="col-md-6 text-center mt-0 mb-2 d-flex align-item-center">
+                <div className="col-md-6 text-center mt-0 mb-2 d-flex position-relative align-item-center">
                   <PersonalQuantity
                     number={tech.quantity}
                     key={tech.quantity}
-                    onQuantityChange={(newQuantity) =>
-                      handleQuantityChange(newQuantity, index)
-                    }
+                    idx={index}
                   />
                   <Dlt index={index} />
                 </div>
@@ -304,7 +311,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
               </div>
               <div>
-                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng không được rỗng hoặc bé hơn 0</p>}
+                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng phải bé hơn 0</p>}
               </div>
             </div>
             <div className="col-md-12 mt-2" onClick={addTech}>

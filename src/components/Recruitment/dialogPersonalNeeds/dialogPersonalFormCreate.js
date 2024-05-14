@@ -5,13 +5,14 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+
 import axios from "axios";
 import * as Yup from "yup"
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
-export default function DialogPersonalForm() {
+export default function DialogPersonalFormCreate() {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [quantityErr, setQuantityErr] = useState(false);
@@ -103,25 +104,30 @@ export default function DialogPersonalForm() {
   });
 
 
-  function PersonalQuantity({ number, onQuantityChange }) {
+  function PersonalQuantity({ number, idx }) {
     if (number === "" || number == 0) {
       number = 0;
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
-      onQuantityChange(count + 1);
+      handleQuantityChange(number+1, idx)
+
     };
     const handleInputChange = (e) => {
       const newCount = parseInt(e.target.value);
       setCount(newCount);
-      onQuantityChange(newCount);
+
     };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
         setCount(count - 1);
-        onQuantityChange(count - 1);
+      handleQuantityChange(number-1, idx)
+
       }
+    };
+    const handleBlur = () => {
+      handleQuantityChange(count, idx)
     };
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -132,6 +138,7 @@ export default function DialogPersonalForm() {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
@@ -145,7 +152,7 @@ export default function DialogPersonalForm() {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-        <BackspaceIcon onClick={() => removeTech(index)} />
+        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
       )
     }
   }
@@ -188,6 +195,10 @@ export default function DialogPersonalForm() {
     updateTech[index] = { ...updateTech[index], type: e.target.value };
     setTech(updateTech);
   }
+
+
+
+
   return (
     <>
       <div className=" min-width position-relative " onClick={handleClickFormOpen}>
@@ -250,6 +261,7 @@ export default function DialogPersonalForm() {
                     className="form-select grey-text"
                     aria-label="Default select example"
                     defaultValue="default"
+                    value={tech.type}
                     onChange={(e) => handleChangeSelect(e, index)}
                     name={`tech[${index}].type`}
                   >
@@ -263,13 +275,11 @@ export default function DialogPersonalForm() {
 
 
                 </div>
-                <div className="col-md-6 text-center mt-0 mb-2 d-flex  align-item-center">
+                <div className="col-md-6 text-center mt-0 mb-2 d-flex position-relative  align-item-center">
                   <PersonalQuantity
                     number={tech.quantity}
                     key={tech.quantity}
-                    onQuantityChange={(newQuantity) =>
-                      handleQuantityChange(newQuantity, index)
-                    }
+                    idx={index}
                   />
                   <Dlt index={index} />
                 </div>
@@ -280,7 +290,7 @@ export default function DialogPersonalForm() {
                 {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
               </div>
               <div>
-                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng không được rỗng hoặc bé hơn 0</p>}
+                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng phải bé hơn 0</p>}
               </div>
             </div>
 

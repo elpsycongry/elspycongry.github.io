@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Grid, IconButton } from "@mui/material";
+import { Dialog, DialogTitle, Grid, IconButton, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -23,6 +23,7 @@ export default function DialogPersonalFormWatch({ id }) {
                 dateEnd: "",
                 name: "",
                 status: "",
+                reason: "",
                 details: [
                     {
                         type: "",
@@ -62,7 +63,10 @@ export default function DialogPersonalFormWatch({ id }) {
     }
     return (
         <>
-            <RemoveRedEyeIcon className="color-blue white-div fs-edit" onClick={handleClickFormOpen} />
+            <Tooltip title='Xem chi tiết'>
+                <RemoveRedEyeIcon data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" className="color-blue white-div fs-edit hover-primary" onClick={handleClickFormOpen} />
+            </Tooltip>
+
             <Dialog
                 id="formWatch"
                 open={openForm}
@@ -90,7 +94,7 @@ export default function DialogPersonalFormWatch({ id }) {
                                 <thead>
                                     <tr>
                                         <th>
-                                            <label htmlFor="name" style={{ color: '#6F6F6F' }} className="form-label fw-500 mr-15 fs-20">Tên </label>
+                                            <label htmlFor="name" style={{ color: '#6F6F6F' }} className="form-label fw-500 mr-15 fs-20">Tên: </label>
                                         </th>
                                         <th>
                                             <p className="namePersonal" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.name}</p>
@@ -125,15 +129,28 @@ export default function DialogPersonalFormWatch({ id }) {
                             <label htmlFor="time" style={{ color: '#6F6F6F' }} className="form-label fs-20">Thời hạn bàn giao: </label>
                             <p className="time-edit" style={{ color: '#838383' }}>{formData.values.recruitmentRequest.dateEnd}</p>
                         </div>
-                        {formData.values.recruitmentRequest.status === "Bị từ chối bởi DET" ? ("") : (
-                        <div className="col-md-12 mt-0 d-flex">
-                            <div className="col-md-3 mt-2">
-                                <button type="button" className="btn btn-danger w-100 bg-clr-danger btn-edit stop" onClick={handleCloseWatchOpenReason}>Từ chối</button>
+                        {formData.values.recruitmentRequest.status === "Bị từ chối bởi DET" ? (
+                            <div className="col-md-12 mt-2 d-flex ">
+                                <label htmlFor="time" style={{ color: '#6F6F6F', whiteSpace: 'nowrap' }} className="form-label fs-20 me-2">Lý do:</label>
+                                <textarea
+                                    readOnly
+
+                                    className="form-control resize pt-2 "
+                                    style={{ color: '#838383' }}
+                                    value={formData.values.recruitmentRequest.reason}
+                                >
+
+                                </textarea>
                             </div>
-                            <div className="col-md-9 mt-2 ms-2">
-                                <button className=" btn-edit btn btn-success w-98    bg-clr-success">Khởi tạo kế hoạch tuyển dụng</button>
-                            </div>
-                        </div>)}
+                        ) : (
+                            <div className="col-md-12 mt-0 d-flex">
+                                <div className="col-md-3 mt-2">
+                                    <button type="button" className="btn btn-danger w-100 bg-clr-danger btn-edit stop" onClick={handleCloseWatchOpenReason}>Từ chối</button>
+                                </div>
+                                <div className="col-md-9 mt-2 ms-2">
+                                    <button className=" btn-edit btn btn-success w-98    bg-clr-success">Khởi tạo kế hoạch tuyển dụng</button>
+                                </div>
+                            </div>)}
                     </form>
                 </DialogTitle>
             </Dialog>

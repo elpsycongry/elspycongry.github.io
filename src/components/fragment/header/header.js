@@ -14,8 +14,12 @@ import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
+import avatar from '../../../assets/image/avatarTest.png'
+
+
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const drawerWidth = 240;
+
 
 
 const AppBar = styled(MuiAppBar, {
@@ -120,7 +124,7 @@ export default function Header() {
                         </Box>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                <Avatar alt="Remy Sharp" src={avatar} />
                                 <ArrowDropDownIcon />
                             </IconButton>
                         </Tooltip>
