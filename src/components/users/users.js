@@ -20,7 +20,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CreateIcon from '@mui/icons-material/Create';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
@@ -46,29 +46,35 @@ export default function Users() {
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
+    const previousRolef = useRef('');
     const [pagination, setPagination] = useState({
         page: 0,
         size: 10,
         totalElements: 0,
     });
 
-    useEffect(() => {
-        fetchListRoleSelect();
-        fetchListUser();
-    }, []);
+    const [paginationFilter, setPaginationFilter] = useState({
+        page: 0,
+        size: 10,
+        totalElements: 0,
+    });
 
     useEffect(() => {
-        handleFilterRole();
+        handleFilterWithFields(pagination);
+        fetchListRoleSelect();
     }, [selectedRole]);
 
+    // Ref để lưu giá trị trước của selectedRole
+    const previousRoleRef = useRef(selectedRole);
+
+    // Cập nhật previousRoleRef mỗi khi selectedRole thay đổi
     useEffect(() => {
-        handleFilterWithFields();
+        previousRoleRef.current = selectedRole;
     }, [selectedRole]);
 
 
     const fetchListRoleSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
-
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/admin/users/role").then((res) => {
@@ -79,100 +85,54 @@ export default function Users() {
     };
 
 
-    const fetchListUser = async (newPagination = pagination) => {
-        const user = JSON.parse(localStorage.getItem("currentUser"));
-        if (user != null) {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            const response = await axios.get(`http://localhost:8080/admin/users?page=${newPagination.page}&size=${newPagination.size}`);
-            setListUser(response.data.content);
-            setPagination({
-                ...newPagination,
-                totalElements: response.data.totalElements,
-            });
-        }
-    };
-
     const handlePageChange = (event, value) => {
         setPagination(prev => {
-            const newPagination = { ...prev, page: value - 1 };
-            fetchListUser(newPagination); // Gọi API với trạng thái mới
+            const newPagination = { ...prev, page : value - 1 };
+            handleFilterWithFields(newPagination);
             return newPagination;
         });
     };
 
 
-    const handleSearch = async (newPagination = pagination, event) => {
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-
-        if (user != null && event.key === 'Enter') {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            try {
-                
-                    axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                    const response = await axios.get(`http://localhost:8080/admin/users/search?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}`);
-                    setListUser(response.data.content);
-                    setSearchTerm('');
-                    setPagination({
-                        ...newPagination,
-                        totalElements: response.data.totalElements,
-                    });
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };
-
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    const handleFilterRole = async (newPagination = pagination) => {
-        const user = JSON.parse(localStorage.getItem("currentUser"));
-
-        if (user != null) {
-            if (selectedRole === '') {
-                return fetchListUser(); // Không có lọc nếu không có role được chọn
-            }
-            try {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            const response = await axios.get(`http://localhost:8080/admin/users/filter?page=${newPagination.page}&size=${newPagination.size}&role_id=${selectedRole}`);
-            setListUser(response.data.content);
-            setPagination({
-                ...newPagination,
-                totalElements: response.data.totalElements,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-        }
+    const handleRoleChange = (event) => {
+        setSelectedRole(event.target.value);
     };
 
 
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
-            if (selectedRole === '') {
-                return fetchListUser(); // Không có lọc nếu không có role được chọn
-            }
-            console.log(selectedRole);
-            console.log(searchTerm);
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
-                .then((res) => {
-                    setListUser(res.data.content);
-                    setSearchTerm('');
-                    setPagination({
-                        ...pagination,
-                        totalElements: res.data.totalElements,
+                console.log("In ra dữ liệu: ");
+                console.log(selectedRole);
+                console.log(searchTerm);
+                console.log(newPagination.page);
+                console.log(newPagination.size);
+                console.log(previousRoleRef.current);
+
+                if (selectedRole !== previousRoleRef.current) {
+                    newPagination = paginationFilter;
+                }
+
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
+                    .then((res) => {
+                        setListUser(res.data.content);
+                        setPagination({
+                            ...newPagination,
+                            totalElements: res.data.totalElements,
+                        });
                     });
-                });
+
+
         }
     };
 
 
-    const handleRoleChange = (event) => {
-        setSelectedRole(event.target.value);
-    };
+
 
 
     return (
@@ -252,8 +212,9 @@ export default function Users() {
                                         label="Status"
                                         value={selectedRole}
                                         onChange={handleRoleChange}
-                                        onClick={handleFilterRole}>
-                                        <MenuItem value={0} >Tất cả</MenuItem>
+                                    // onClick={handleFilterRole}
+                                    >
+                                        <MenuItem value={""} >Tất cả</MenuItem>
                                         {listRoleSelect.map(item => (
                                             <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
                                         ))}
@@ -270,7 +231,6 @@ export default function Users() {
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Vai trò</th>
-                                    <th>Trạng thái</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
@@ -279,7 +239,7 @@ export default function Users() {
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td>{index + 1}</td>
                                         <td>{item.name}</td>
-                                        <td>{item.name}</td>
+                                        <td>{item.email}</td>
                                         <td>
                                             {item.roles.map((role, index) => (
                                                 <label key={role.id} style={{ paddingRight: '5px' }}>
@@ -287,9 +247,6 @@ export default function Users() {
                                                 </label>
                                             ))}
 
-                                        </td>
-                                        <td>
-                                            {item.roles[0].display_name === 'NA' || item.roles[0].display_name === 'Khách' ? ('Chưa xác nhận') : ('Đã xác nhận')}
                                         </td>
                                         <td>
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
