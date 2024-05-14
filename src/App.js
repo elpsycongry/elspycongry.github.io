@@ -6,16 +6,20 @@ import AuthContext from "./components/checkToken/AuthContext";
 import NotFoundPage from "./components/pages/NotFoundPage/notFoundPage";
 import Training from './components/training/training';
 import HomePage from "./components/pages/homePage/homePage";
+import {InternPage} from "./components/pages/InternPage/Internpage";
 
 function App() {
     return (
         <>
             <Routes>
                 <Route path={"/"} element={
-                    <AuthContext><HomePage /></AuthContext>
+                    <AuthContext><Users /></AuthContext>
                 } />
                 <Route path={"/users"} element={
                     <AuthContext><Users /></AuthContext>
+                } />
+                <Route path={"/intern"} element={
+                    <AuthContext><InternPage /></AuthContext>
                 } />
                 <Route path={"/login"} element={
                     <AuthContext> <Login /></AuthContext>
