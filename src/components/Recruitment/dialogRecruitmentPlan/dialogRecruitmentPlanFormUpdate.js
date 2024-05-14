@@ -208,9 +208,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check }) {
         const updatedTech = [...tech];
         updatedTech[index].numberOfOutputPersonnel = countOf;
         setTech(updatedTech);
-        handleQuantityOffPersonal(countOf * 3, index);
-    };
+        const count = countOf * 3;
+        if (count > 40) {
+            handleQuantityOffPersonal(40, index);
+        } else {
+            handleQuantityOffPersonal(count, index);
+        }
 
+    };
     // Hàm dữ liệu cần tuyển
     function NumberOfPersonnelNeeded({ number, idx }) {
         if (number === "" || number == 0) {
