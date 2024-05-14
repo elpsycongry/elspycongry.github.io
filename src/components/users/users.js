@@ -73,14 +73,62 @@ export default function Users() {
     }, [selectedRole]);
 
 
+    // const fetchListRoleSelect = async () => {
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    const [token, setToken] = useState("")
     const fetchListRoleSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        setToken(user.accessToken)
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/admin/users/role").then((res) => {
                 setListRoleSelect(res.data);
             });
+        }
+    };
 
+
+
+
+
+
+
+    const handleSearch = async (event) => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+
+        if (user != null && event.key === 'Enter') {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            try {
+                axios.get(`http://localhost:8080/admin/users/search?keyword=${searchTerm}`).then((res) => {
+                    setListUser(res.data);
+                    setSearchTerm('');
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+
+
+    const handleChangeSearch = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleRoleChange = (event) => {
+        setSelectedRole(event.target.value);
+    };
+
+    const handleFilterRole = async () => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+
+        if (user != null) {
+            if (selectedRole === '') {
+                return fetchListUser(); // Không có lọc nếu không có role được chọn
+            }
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get(`http://localhost:8080/admin/users/filter?role_id=${selectedRole}`).then((res) => {
+                setListUser(res.data);
+            });
         }
     };
 
@@ -94,25 +142,28 @@ export default function Users() {
 
     };
 
+    const fetchListUser = async () => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
 
-    const handleChangeSearch = (event) => {
-        setSearchTerm(event.target.value);
-    };
+        
 
-    const handleRoleChange = (event) => {
-        setSelectedRole(event.target.value);
+        if (user != null) {
+            
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get("http://localhost:8080/admin/users/filterWithFields?page=0&size=10&keyword=&role_id=").then((res) => {
+                setListUser(res.data.content);
+                console.log(res.data.content);
+            });
+
+            
+        }
     };
 
 
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
-            console.log("In ra dữ liệu: ");
-            console.log(selectedRole);
-            console.log(searchTerm);
-            console.log(newPagination.page);
-            console.log(newPagination.size);
-            console.log(previousRoleRef.current);
+        
 
             if (selectedRole !== previousRoleRef.current) {
                 newPagination = paginationFilter;
@@ -132,7 +183,7 @@ export default function Users() {
         }
     };
 
-
+    
     return (
         <>
             <Header />
@@ -257,7 +308,7 @@ export default function Users() {
                                         </td>
                                         <td>
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            <DialogUpdateUserForm />                                        </td>
+                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={fetchListUser} />                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
