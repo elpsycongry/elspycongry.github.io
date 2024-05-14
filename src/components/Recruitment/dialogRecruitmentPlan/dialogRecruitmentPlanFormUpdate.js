@@ -101,7 +101,7 @@ const formData = useFormik({
                 values.planDetails = [...tech];
                 values.idUser = 1;
                 try {
-                    await axios.put("http://localhost:8080/api/plan/" + id, values).then(res => {
+                    await axios.put("http://localhost:8080/api/plans/" + id, values).then(res => {
                         swal("Cập nhật kế hoạch tuyển dụng thành công", {
                             icon: "success",
                             buttons: false,
@@ -126,7 +126,7 @@ const formData = useFormik({
         axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
             setRecuitment(res.data);
         });
-        axios.get("http://localhost:8080/api/plan/" + id).then(res =>{
+        axios.get("http://localhost:8080/api/plans/" + id).then(res =>{
             formData.setValues(res.data);
             const detail = res.data.planDetails;
            setTech(

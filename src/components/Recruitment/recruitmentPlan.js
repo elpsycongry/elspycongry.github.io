@@ -151,7 +151,7 @@ export default function RecruitmentPlan() {
 
     const [RecruitmentPlan, setRecuitmentPlan] = useState([]);
     useEffect(() => {
-        axios.get("http://localhost:8080/api/plan?page=0").then((res) => {
+        axios.get("http://localhost:8080/api/plans?page=0").then((res) => {
             console.log(res.data)
             setRecuitmentPlan(res.data.content);
         });

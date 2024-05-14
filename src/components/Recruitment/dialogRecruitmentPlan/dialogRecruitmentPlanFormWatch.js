@@ -41,7 +41,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
         },
     });
     useEffect(() => {
-        axios.get("http://localhost:8080/api/plan/" + id).then((res) => {
+        axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
             formData.setValues(res.data);
             const detail = res.data.planDetails;
             setTenhnology(detail);
