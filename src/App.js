@@ -7,7 +7,7 @@ import AuthContext from "./components/checkToken/AuthContext";
 import GuestPage from "./components/pages/GuestPage/guestPage";
 import NotFoundPage from "./components/pages/NotFoundPage/notFoundPage";
 import Training from './components/training/training';
-
+import './assets/css/index.css'
 function App() {
     return (
         <>
