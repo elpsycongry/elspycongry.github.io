@@ -19,11 +19,20 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Link } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
+import AuthContext from "../../../components/checkToken/AuthContext";
+
 
 
 const drawerWidth = 240;
 
-
+const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+let roles = []
+if (currentUser !== null) {
+    currentUser.roles.forEach(element => {
+        roles = [...roles, element.authority]
+    });
+    // console.log(currentUser.roles);
+}
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -120,12 +129,11 @@ export default function Navbar() {
         )
     }
 
-
     const listItems = [
-        { id: 1, text: "Người dùng", IconText: GroupIcon, linkTo: `/users` },
-        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training` },
+        { id: 1, text: "Người dùng", IconText: GroupIcon, linkTo: `/users`, roles: ['ROLE_ADMIN'] },
+        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
         {
-            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: [
+            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_HR'], children: [
                 {
                     id: 1,
                     name: "Nhu cầu",
@@ -143,13 +151,19 @@ export default function Navbar() {
                 }
             ]
         },
-        { id: 4, text: "Thống kê", IconText: SignalCellularAltIcon }
-    ]
+        { id: 4, text: "Thống kê", IconText: SignalCellularAltIcon, roles: ['ROLE_ADMIN'] }
+    ];
     const [openChil, setOpenChil] = useState({});
     const handleClick = (id) => {
         setOpenChil(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
+    const filteredListItems = listItems.filter(item => {
+        if (!item.roles || item.roles.length === 0) {
+            return true;
+        }
+        return item.roles.some(role => roles.includes(role));
+    });
 
     return (
         <Box
@@ -167,7 +181,7 @@ export default function Navbar() {
             >
                 <Divider />
                 <List>
-                    {listItems.map(({ id, text, IconText, children, linkTo }) => (
+                    {filteredListItems.map(({ id, text, IconText, children, linkTo }) => (
                         <div key={id}>
                             <div className='test'>
                                 <ListItem onClick={() => children && handleClick(id)} disablePadding sx={{ display: 'block' }}>
