@@ -57,15 +57,6 @@ export default function Training() {
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
                 <Box m={2} style={{ display: 'flex' }}>
-                    {/* <Breadcrumbs
-                        aria-label='breadcrumb'
-                        separator={<NavigateNextIcon fontSize="small" />}>
-                        <Link underline="hover" href='#'>Home</Link>
-                        <Link underline="hover" href='#'>Catalog</Link>
-                        <Link underline="hover" href='#'>Access</Link>
-                        <Typography color='text.primary'><GroupIcon /> Users</Typography>
-                    </Breadcrumbs> */}
-                    {/* <FontAwesomeIcon icon="fa-solid fa-book-open" />                    */}
                     <Icon style={{ width: 23, height: 23, color: 'rgba(0, 0, 0, 0.60)' }} icon="ion:book-sharp" />
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Đào tạo</p>
                 </Box>

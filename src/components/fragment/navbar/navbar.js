@@ -19,6 +19,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Link } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 
 const drawerWidth = 240;
@@ -33,6 +34,9 @@ const openedMixin = (theme) => ({
     }),
     overflowX: 'hidden',
 });
+
+
+
 
 const closedMixin = (theme) => ({
     transition: theme.transitions.create('width', {
@@ -143,7 +147,25 @@ export default function Navbar() {
                 }
             ]
         },
-        { id: 4, text: "Thống kê", IconText: SignalCellularAltIcon }
+        { 
+            id: 4, text: "Thống kê", IconText: SignalCellularAltIcon , children: [
+                {
+                    id: 1,
+                    name: "Kết quả đào tạo",
+                    linkTo: "/training/stats",
+                },
+                ,{
+                    id: 2,
+                    name: "Kết quả tuyển dụng",
+                    linkTo: "/recruitment/personalNeeds",
+                },{
+                    id: 3,
+                    name: "Thống kê sau quả đào tạo",
+                    linkTo: "/recruitment/personalNeeds",
+                },
+            ]
+        }
+        
     ]
     const [openChil, setOpenChil] = useState({});
     const handleClick = (id) => {
