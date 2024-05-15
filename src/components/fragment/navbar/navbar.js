@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -24,15 +24,6 @@ import AuthContext from "../../../components/checkToken/AuthContext";
 
 
 const drawerWidth = 240;
-
-const currentUser = JSON.parse(localStorage.getItem("currentUser"))
-let roles = []
-if (currentUser !== null) {
-    currentUser.roles.forEach(element => {
-        roles = [...roles, element.authority]
-    });
-    // console.log(currentUser.roles);
-}
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -83,10 +74,20 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export default function Navbar() {
+function Navbar() {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    let roles = [];
+    
+    if (currentUser !== null) {
+        currentUser.roles.forEach(element => {
+            roles = [...roles, element.authority]
+        });
+        // console.log(currentUser.roles);
+    }
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -230,3 +231,4 @@ export default function Navbar() {
         </Box >
     );
 }
+export default Navbar;
