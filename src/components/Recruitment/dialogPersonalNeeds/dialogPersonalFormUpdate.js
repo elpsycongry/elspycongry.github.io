@@ -224,7 +224,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
       /> :
         <Tooltip title="Chỉnh sửa chi tiết">
           <CreateIcon
-            className="color-orange pencil-btn font-size-medium hover-warning"
+            className="color-orange pencil-btn font-size-medium hover-warning cursor-pointer"
             onClick={handleClickFormOpen}
           />
         </Tooltip>
@@ -242,6 +242,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 Cập nhật nhu cầu nhân sự
               </h2>
               <IconButton
+              
                 sx={{
                   position: "absolute",
                   right: 0,
@@ -249,7 +250,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 }}
                 onClick={handleClickFormClose}
               >
-                <ClearIcon />
+                <ClearIcon className="cursor-pointer"/>
               </IconButton>
             </div>
             <div className="col-md-12">
@@ -306,14 +307,13 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 </div>
               </>
             ))}
-            <div className=" col-md-12 d-flex justify-content-between mt-0">
-              <div>
-                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
+              <div className="col-md-6 mt-0">
+                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để rỗng</p>}
               </div>
-              <div>
-                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng phải bé hơn 0</p>}
+              <div className="col-md-6 text-center mt-0">
+                {quantityErr && <p style={{ whiteSpace: 'nowrap', padding:'0px 16px 0px 8px' }} className="err-valid">Số lượng phải bé hơn 0</p>}
               </div>
-            </div>
+
             <div className="col-md-12 mt-2" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>

@@ -16,12 +16,12 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
+  const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   // Xử lý số lượng nhân sự
-  const checkValid = (dateSet, techArr) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const futureDate = new Date(today);
-    futureDate.setDate(today.getDate() + 75);
+  const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
+    console.log(techArr)
+    const futureDate = new Date(dateCreate);
+    futureDate.setDate(dateCreate.getDate() + 75);
     const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
         return true;
@@ -29,11 +29,17 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         return false;
       }
     })
+    if (nameRecruitmentPlan == "") {
+      setErrNameRecruitmentPlan(true);
+    } else {
+      setErrNameRecruitmentPlan(false);
+    }
+
     const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
     // 
     const errNumberPersonal = techArr.map(item => {
-      if (item.numberOfOutputPersonnel == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+      if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
         return true;
       } else {
         return false;
@@ -61,7 +67,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || errNameRecruitmentPlan) {
       return false;
     } else {
       return true;
@@ -91,42 +97,53 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
           recruitmentPlan: null,
           type: "",
           numberOfPersonnelNeeded: "",
-numberOfOutputPersonnel: "",
+          numberOfOutputPersonnel: "",
         },
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-        const date = new Date(values.recruitmentPlan.handoverDeadline);
-          // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-          values.planDetails = [...tech];
-          values.idUser = 1;
-          values.recruitmentPlan.recruitmentRequest = recruitment;
-          console.log(values)
-          try {
-            await axios
-              .post("http://localhost:8080/api/plans", values)
-              .then((res) => {
-                swal("Thêm kế hoạch tuyển dụng thành công", {
-                  icon: "success",
-                  buttons: false,
-                  timer: 2000,
-                }).then(() => {
-                  window.location.href = "/recruitment/recruitmentPlan";
-                });
+      const nameRecruitmentPlan = values.recruitmentPlan.name;
+      values.planDetails = [...tech];
+      values.idUser = 1;
+      values.recruitmentPlan.recruitmentRequest = recruitment;
+      // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
+      if (values.recruitmentPlan.dateRecruitmentEnd == '') {
+        values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
+      }
+      if (values.recruitmentPlan.handoverDeadline == '') {
+        values.recruitmentPlan.handoverDeadline = handoverDeadline;
+      }
+      const date = new Date(values.recruitmentPlan.handoverDeadline);
+      const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
+      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan)) {
+        setSubmitting(false);
+        return;
+      } else {
+        try {
+          await axios
+            .post("http://localhost:8080/api/plans", values)
+            .then((res) => {
+              swal("Thêm kế hoạch tuyển dụng thành công", {
+                icon: "success",
+                buttons: false,
+                timer: 2000,
+              }).then(() => {
+                window.location.href = "/recruitment/recruitmentPlan";
               });
-          } catch (error) {
-            swal("Thêm kế hoạch tuyển dụng thất bại", {
-              icon: "error",
-              buttons: false,
-              timer: 2000,
             });
-          }
+        } catch (error) {
+          swal("Thêm kế hoạch tuyển dụng thất bại", {
+            icon: "error",
+            buttons: false,
+            timer: 2000,
+          });
         }
-      },
-    );
-    const [recruitmentDateEnd,setRecuitmentDateEnd] = useState();
-const [recruitmentName,setRecuitmentName] = useState();
-const [recruitment,setRecuitment] = useState();
+      }
+    }
+  });
+  const [handoverDeadline, setHandoverDeadline] = useState();
+  const [recruitmentName, setRecuitmentName] = useState();
+  const [recruitment, setRecuitment] = useState();
   // Call api
   useEffect(() => {
 
@@ -136,7 +153,7 @@ const [recruitment,setRecuitment] = useState();
         .then((res) => {
           setRecuitmentName(res.data.recruitmentRequest.name);
           setRecuitment(res.data.recruitmentRequest);
-          setRecuitmentDateEnd(res.data.recruitmentRequest.dateEnd);
+          setHandoverDeadline(res.data.recruitmentRequest.dateEnd);
           const detail = res.data.details;
           setTech(
             detail.map((item) => ({
@@ -147,7 +164,7 @@ const [recruitment,setRecuitment] = useState();
           );
         });
     }
-    
+
   }, [id]);
 
 
@@ -166,7 +183,7 @@ const [recruitment,setRecuitment] = useState();
     { id: 10, text: "JAVA" },
     { id: 11, text: ".NET" }
   ]
-  
+
   // Xử lý thêm công nghệ
   const [tech, setTech] = useState([{ type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" }]);
   const addTech = () => {
@@ -182,7 +199,6 @@ const [recruitment,setRecuitment] = useState();
     updateTech[index] = { ...updateTech[index], type: e.target.value };
     setTech(updateTech);
   }
-  // NumberOfOutputPersonnel
 
   // Hàm dữ liệu đầu ra
   function NumberOfOutputPersonnel({ number, idx }) {
@@ -190,15 +206,15 @@ const [recruitment,setRecuitment] = useState();
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);
-    
+
     const handleClickCountPlus = () => {
       if (number < 20 || countOf < 20) {
         setCountOf(parseInt(countOf) + 1);
-        numberOfOutputPersonnel( (parseInt(number) + 1), idx);
+        numberOfOutputPersonnel((parseInt(number) + 1), idx);
       }
     };
     const handleInputChange = (e) => {
-if (e.target.value <= 20) {
+      if (e.target.value <= 20) {
         const newCount = parseInt(e.target.value);
         setCountOf(newCount);
       }
@@ -206,7 +222,7 @@ if (e.target.value <= 20) {
     const handleClickCountMinus = () => {
       if (!countOf <= 0) {
         setCountOf(countOf - 1);
-        numberOfOutputPersonnel( (parseInt(number) - 1), idx);
+        numberOfOutputPersonnel((parseInt(number) - 1), idx);
 
       }
     };
@@ -247,16 +263,16 @@ if (e.target.value <= 20) {
     }
     const [countOf, setCountOf] = useState(number);
     const handleClickCountPlus = () => {
-      if (number < 40 || countOf <40) {
+      if (number < 40 || countOf < 40) {
         setCountOf(countOf + 1);
         handleQuantityOffPersonal(parseInt(number) + 1, idx);
       }
     };
     const handleInputChange = (e) => {
       if (e.target.value <= 40) {
-      const newCount = parseInt(e.target.value);
-      setCountOf(newCount);
-    }
+        const newCount = parseInt(e.target.value);
+        setCountOf(newCount);
+      }
     };
     const handleClickCountMinus = () => {
       if (!countOf <= 0) {
@@ -290,45 +306,56 @@ if (e.target.value <= 20) {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-<ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
+        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger cursor-pointer" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
       )
     }
   }
+  const timeNow = new Date();
+  const year = timeNow.getFullYear();
+  const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+  const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const timeNowValue = `${year}-${month}-${day}`;
+  const dateDeadline = new Date(timeNow);
+  dateDeadline.setDate(timeNow.getDate() + 75);
+  const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
+  const handleDateChange = (event) => {
+    if (event.target.name === 'recruitmentPlan.dateRecruitmentEnd') {
+      setRecuitmentDateEnd(event.target.value);
+    } else if (event.target.name === 'recruitmentPlan.handoverDeadline') {
+      setHandoverDeadline(event.target.value);
+    }
+    formData.handleChange(event);
+  }
 
   function TimeRecruitment() {
-    // const timeNow = new Date();
-    // const year = timeNow.getFullYear();
-    // const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-    // const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-    // const timeNowValue = `${year}-${month}-${day}`;
-    // console.log(timeNowValue);
+
 
     return (
       <>
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
-            onChange={formData.handleChange}
+            min={timeNowValue}
+            onChange={handleDateChange}
             onBlur={formData.handleBlur}
+            value={dateRecruitmentEnd}
             className={`form-control text-center grey-text`}
-            // value={timeRecruitment}
-            id="recruitmentRequest.dateEnd"
-            name="recruitmentRequest.dateEnd"
-          // min={timeNowValue}
+            id="recruitmentPlan.dateRecruitmentEnd"
+            name="recruitmentPlan.dateRecruitmentEnd"
           />
         </div>
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
-            onChange={formData.handleChange}
+            onChange={handleDateChange}
+            value={handoverDeadline}
             onBlur={formData.handleBlur}
             className={`form-control text-center grey-text`}
-            id="recruitmentRequest.dateEnd"
-            name="recruitmentRequest.dateEnd"
-            defaultValue={'2021-01-03'}
+            id="recruitmentPlan.handoverDeadline"
+            name="recruitmentPlan.handoverDeadline"
           />
-          {dateErr && <p className="err-valid ">Thời hạn bàn giao phải tối thiểu 75 ngày</p>}
         </div>
+
       </>
     )
   }
@@ -364,23 +391,14 @@ if (e.target.value <= 20) {
               <label htmlFor="name" className="form-label grey-text">
                 Từ nhu cầu nhân sự
               </label>
-              <div>
-              <label className="input-container">
-  <span className="input-value">{recruitmentName}</span>
-  <input
-    className="hidden-input"
-    type="hidden"
-    onChange={formData.handleChange}
-    name="recruitmentPlan.recruitmentRequest"
-    id="recruitmentPlan.recruitmentRequest"
-    value={recruitment}
-    placeholder={recruitmentName}
-  />
-</label>
-</div>
-          
+              <input
+                type="text"
+                className='form-control grey-text'
+                value={recruitmentName}
+                readOnly
+              />
             </div>
-<div className="col-md-12">
+            <div className="col-md-12">
               <label htmlFor="name" className="form-label grey-text">
                 Tên kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
@@ -390,10 +408,17 @@ if (e.target.value <= 20) {
                 placeholder="Ví dụ: DECEN - Kế hoạch tuyển dụng quý 3/2021"
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
-                className={`form-control`}
+                className='form-control grey-text'
                 id="recruitmentPlan.name"
                 name="recruitmentPlan.name"
               />
+              <div className="col-md-8  mt-0">
+                {errNameRecruitmentPlan && (
+                  <p className="err-valid ws-nowrap ">
+                    Tên kế hoạch không được để rỗng
+                  </p>
+                )}
+              </div>
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
@@ -416,7 +441,7 @@ if (e.target.value <= 20) {
               <>
                 <div key={index} className="col-md-4 mt-0 mb-2 child">
                   <select
-                    className="form-select grey-text"
+                    className="form-select grey-text cursor-pointer"
                     aria-label="Default select example"
                     defaultValue="default"
                     value={tech.type}
@@ -445,7 +470,7 @@ if (e.target.value <= 20) {
                     idx={index}
                   />
                   <Dlt index={index} />
-</div>
+                </div>
               </>
             ))}
             <div className="col-md-4 mt-0">
@@ -458,7 +483,7 @@ if (e.target.value <= 20) {
               {errNumberofOutput && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
             </div>
             <div className="col-md-12 mt-2" onClick={addTech}>
-              <p className="grey-text plusTech w-125 mb-0">Thêm công nghệ +</p>
+              <p className="grey-text plusTech w-125 mb-0 cursor-pointer">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
@@ -475,39 +500,7 @@ if (e.target.value <= 20) {
                 <label className="form-label"></label>
               </div>
             </div>
-            <div className="col-md-4 mt-0 mb-2 child">
-              <input
-                type="date"
-                onChange={formData.handleChange}
-                onBlur={formData.handleBlur}
-                className={`form-control text-center grey-text`}
-                id="recruitmentPlan.dateRecruitmentEnd"
-                name="recruitmentPlan.dateRecruitmentEnd"
-              />
-              {dateErr && (
-                <p className="err-valid ">
-                  Thời hạn tuyển dụng phải tối thiểu 75 ngày
-                </p>
-              )}
-            </div>
-            <div className="col-md-4 mt-0 mb-2 child">
-              <input
-                type="date"
-                onChange={formData.handleChange}
-                onBlur={formData.handleBlur}
-                className={`form-control text-center grey-text`}
-                id="recruitmentPlan.handoverDeadline"
-                name="recruitmentPlan.handoverDeadline"
-                value={recruitmentDateEnd}
-              />
-              {dateErr && (
-                <p className="err-valid ">
-                  Thời hạn bàn giao phải tối thiểu 75 ngày
-                </p>
-              )}
-            </div>
-
-
+            <TimeRecruitment />
             <div className="col-md-4 mb-2 mt-0">
               <div className="send text-right mt-0">
                 <div className="send-child position-relative">
@@ -517,6 +510,13 @@ if (e.target.value <= 20) {
                   </button>
                 </div>
               </div>
+            </div>
+            <div className="col-md-8 text-center mt-0">
+              {dateErr && (
+                <p className="err-valid ws-nowrap ">
+                  Thời hạn bàn giao phải lớn hơn thời hạn tuyển dụng tối thiểu 75 ngày
+                </p>
+              )}
             </div>
           </form>
         </DialogTitle>

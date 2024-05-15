@@ -11,7 +11,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import DialogPersonalFormCreate from "./dialogPersonalFormCreate";
 import DialogRecruitmentPlanFormCreate from "../dialogRecruitmentPlan/dialogRecruitmentPlanFormCreate";
-import DialogRecruitmentPlanFormCreateSuccess from "./DialogRecruitmentPlanFormCreateSuccess"
+import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess"
 
 export default function DialogPersonalFormWatch({ id }) {
     const [tenhnology, setTenhnology] = useState([]);
@@ -77,7 +77,7 @@ export default function DialogPersonalFormWatch({ id }) {
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
                     title="Tooltip on top"
-                    className="color-blue white-div fs-edit hover-primary"
+                    className="color-blue white-div fs-edit hover-primary cursor-pointer"
                     onClick={handleClickFormOpen}
                 />
             </Tooltip>
@@ -101,7 +101,7 @@ export default function DialogPersonalFormWatch({ id }) {
                                 }}
                                 onClick={handleClickFormClose}
                             >
-                                <ClearIcon className="fs-1_5em" />
+                                <ClearIcon className="fs-1_5em cursor-pointer" />
                             </IconButton>
                         </div>
                         <div className="col-md-12 ">

@@ -16,12 +16,21 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
+  const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
+  const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
+
   // Xử lý số lượng nhân sự
-  const checkValid = (dateSet, techArr) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const futureDate = new Date(today);
-    futureDate.setDate(today.getDate() + 75);
+  const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
+    console.log(personalneed)
+    const futureDate = new Date(dateCreate);
+    futureDate.setDate(dateCreate.getDate() + 75);
+    // 
+    if (personalneed === "" || personalneed === null || personalneed === "default") {
+      setErrIdPersonalNeed(true);
+    } else {
+      setErrIdPersonalNeed(false);
+    }
+    // 
     const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
         return true;
@@ -33,7 +42,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     setTechErr(hasErrTech);
     // 
     const errNumberPersonal = techArr.map(item => {
-      if (item.numberOfOutputPersonnel == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+      if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
         return true;
       } else {
         return false;
@@ -52,7 +61,11 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     const hasErrNumberOutput = errNumberOutput.some(item => item === true);
     setErrNumberOfOutput(hasErrNumberOutput);
 
-
+    if (nameRecruitmentPlan == "") {
+      setErrNameRecruitmentPlan(true);
+    } else {
+      setErrNameRecruitmentPlan(false);
+    }
 
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
@@ -61,7 +74,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || errNameRecruitmentPlan || errIdPersonalNeed) {
       return false;
     } else {
       return true;
@@ -96,33 +109,46 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-      // const date = new Date(values.recruitmentRequest.dateEnd);
-      // if (!checkValid(date, tech)) {
-      //   setSubmitting(false);
-      //   return;
-      // } else {
+      // console.log(values); 
+      const personalneed = values.recruitmentPlan.recruitmentRequest.id;
+      const nameRecruitmentPlan = values.recruitmentPlan.name;
       // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
+      setSubmitting(false);
       values.planDetails = [...tech];
       values.idUser = 1;
-      console.log(values)
-      try {
-        await axios
-          .post("http://localhost:8080/api/plans", values)
-          .then((res) => {
-            swal("Thêm kế hoạch tuyển dụng thành công", {
-              icon: "success",
-              buttons: false,
-              timer: 2000,
-            }).then(() => {
-              window.location.href = "/recruitment/recruitmentPlan";
+      if (values.recruitmentPlan.dateRecruitmentEnd == '') {
+        values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
+      }
+      if (values.recruitmentPlan.handoverDeadline == '') {
+        values.recruitmentPlan.handoverDeadline = handoverDeadline;
+      }
+      const date = new Date(values.recruitmentPlan.handoverDeadline);
+      const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
+      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)) {
+        setSubmitting(false);
+        return;
+      } else {
+
+        try {
+          await axios
+            .post("http://localhost:8080/api/plans", values)
+            .then((res) => {
+              swal("Thêm kế hoạch tuyển dụng thành công", {
+                icon: "success",
+                buttons: false,
+                timer: 2000,
+              }).then(() => {
+                window.location.href = "/recruitment/recruitmentPlan";
+
+              });
             });
+        } catch (error) {
+          swal("Thêm kế hoạch tuyển dụng thất bại", {
+            icon: "error",
+            buttons: false,
+            timer: 2000,
           });
-      } catch (error) {
-        swal("Thêm kế hoạch tuyển dụng thất bại", {
-          icon: "error",
-          buttons: false,
-          timer: 2000,
-        });
+        }
       }
     }
   });
@@ -179,6 +205,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
 
   // Hàm dữ liệu đầu ra
   function NumberOfOutputPersonnel({ number, idx }) {
+
     if (number === "" || number == 0) {
       number = 0;
     }
@@ -287,37 +314,38 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       )
     }
   }
-
-  function TimeRecruitment() {
-    const timeNow = new Date();
-    const year = timeNow.getFullYear();
-    const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-    const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-    const timeNowValue = `${year}-${month}-${day}`;
-    console.log(timeNowValue);
-
-    const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
-    const [handoverDeadline, setHandoverDeadline] = useState(timeNowValue);
-    const handleDateChange = (event) =>{
-      const {name, value} = event.target;
-      if(name === 'recruitmentPlan.dateRecruitmentEnd'){
-        setRecuitmentDateEnd(value);
-      } else if( name === 'recruitmentPlan.handoverDeadline'){
-        setHandoverDeadline(value);
-      }
-      formData.handleChange(event);
+  const timeNow = new Date();
+  const year = timeNow.getFullYear();
+  const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+  const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const timeNowValue = `${year}-${month}-${day}`;
+  const dateDeadline = new Date(timeNow);
+  dateDeadline.setDate(timeNow.getDate() + 75);
+  const yearDL = dateDeadline.getFullYear();
+  const monthDL = String(dateDeadline.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+  const dayDL = String(dateDeadline.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const dateDeadlineValue = `${yearDL}-${monthDL}-${dayDL}`;
+  const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
+  const [handoverDeadline, setHandoverDeadline] = useState(dateDeadlineValue);
+  const handleDateChange = (event) => {
+    if (event.target.name === 'recruitmentPlan.dateRecruitmentEnd') {
+      setRecuitmentDateEnd(event.target.value);
+    } else if (event.target.name === 'recruitmentPlan.handoverDeadline') {
+      setHandoverDeadline(event.target.value);
     }
-
+    formData.handleChange(event);
+  }
+  function TimeRecruitment() {
 
     return (
       <>
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
+            min={timeNowValue}
             onChange={handleDateChange}
-            // value={timeNowValue}
             onBlur={formData.handleBlur}
-            value={formData.handleChange}
+            value={dateRecruitmentEnd}
             className={`form-control text-center grey-text`}
             id="recruitmentPlan.dateRecruitmentEnd"
             name="recruitmentPlan.dateRecruitmentEnd"
@@ -326,18 +354,14 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
-            onChange={formData.handleChange}
-            value={formData.handleChange}
+            onChange={handleDateChange}
+            value={handoverDeadline}
             onBlur={formData.handleBlur}
             className={`form-control text-center grey-text`}
             id="recruitmentPlan.handoverDeadline"
             name="recruitmentPlan.handoverDeadline"
           />
-          {dateErr && (
-            <p className="err-valid ">
-              Thời hạn bàn giao phải tối thiểu 75 ngày
-            </p>
-          )}
+
         </div>
       </>
     )
@@ -347,7 +371,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   return (
     <>
       <div className=" min-width position-relative " style={{ width: '280px' }} onClick={handleClickFormOpen}>
-        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline">Thêm kế hoạch tuyển dụng</button>
+        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">Thêm kế hoạch tuyển dụng</button>
         <AddIcon className=" position-absolute plus-icon clr-white" />
       </div>
       <Dialog
@@ -371,7 +395,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 }}
                 onClick={handleClickFormClose}
               >
-                <ClearIcon />
+                <ClearIcon className="cursor-pointer" />
               </IconButton>
             </div>
             <div className="col-md-12">
@@ -392,6 +416,13 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                   </option>
                 ))}
               </select>
+              <div className="col-md-8  mt-0">
+                {errIdPersonalNeed && (
+                  <p className="err-valid ws-nowrap ">
+                    Nhu cầu không được để rỗng
+                  </p>
+                )}
+              </div>
             </div>
             <div className="col-md-12">
               <label htmlFor="name" className="form-label grey-text">
@@ -403,10 +434,17 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 placeholder="Ví dụ: DECEN - Kế hoạch tuyển dụng quý 3/2021"
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
-                className={`form-control`}
+                className='form-control grey-text'
                 id="recruitmentPlan.name"
                 name="recruitmentPlan.name"
               />
+            </div>
+            <div className="col-md-8  mt-0">
+              {errNameRecruitmentPlan && (
+                <p className="err-valid ws-nowrap ">
+                  Tên kế hoạch không được để rỗng
+                </p>
+              )}
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
@@ -489,32 +527,6 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
               </div>
             </div>
             <TimeRecruitment />
-            {/* <div className="col-md-4 mt-0 mb-2 child">
-          <input
-            type="date"
-            onChange={formData.handleChange}
-            // value={timeNowValue}
-            onBlur={formData.handleBlur}
-            className={`form-control text-center grey-text`}
-            id="recruitmentPlan.dateRecruitmentEnd"
-            name="recruitmentPlan.dateRecruitmentEnd"
-          />
-        </div>
-        <div className="col-md-4 mt-0 mb-2 child">
-          <input
-            type="date"
-            onChange={formData.handleChange}
-            onBlur={formData.handleBlur}
-            className={`form-control text-center grey-text`}
-            id="recruitmentPlan.handoverDeadline"
-            name="recruitmentPlan.handoverDeadline"
-          />
-          {dateErr && (
-            <p className="err-valid ">
-              Thời hạn bàn giao phải tối thiểu 75 ngày
-            </p>
-          )}
-        </div> */}
             <div className="col-md-4 mb-2 mt-0">
               <div className="send text-right mt-0">
                 <div className="send-child position-relative">
@@ -524,6 +536,13 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                   </button>
                 </div>
               </div>
+            </div>
+            <div className="col-md-8 text-center mt-0">
+              {dateErr && (
+                <p className="err-valid ws-nowrap ">
+                  Thời hạn bàn giao phải lớn hơn thời hạn tuyển dụng tối thiểu 75 ngày
+                </p>
+              )}
             </div>
           </form>
         </DialogTitle>
