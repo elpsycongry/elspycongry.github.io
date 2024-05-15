@@ -29,8 +29,8 @@ p {
     flex-direction: column;
     text-align: center;
 
-    div {
-        margin-top: 5px;
+    > div {
+        margin-top: 10px;
     }
 
     p{
@@ -53,6 +53,9 @@ p {
         position: relative;
         left: -4px;
     }
+    option {
+        padding: 12px
+    }
 }
 
 .tl {
@@ -61,4 +64,27 @@ p {
 
 .css-hz1bth-MuiDialog-container {
     height: 70% !important;
+}
+
+.MuiDialogTitle-root+.css-ypiqx9-MuiDialogContent-root {
+    padding: 0px 24px;
+
+}
+.css-ojb00g-MuiDialogActions-root {
+    padding: 12px !important;
+}
+.save-btn {
+    background-color: #388738  ;
+    margin-right: 20px;
+    padding: 2px 16px;
+    color: white;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-radius: 2px;
+    &:hover {
+        background-color: rgba(56, 135, 56, 0.9)
+    }
+}
+.tb {
+    font-weight: 500;
 }
