@@ -196,7 +196,7 @@ export default function Users() {
                         fontWeight: '550'
                     }}>Quản lý người dùng</p>
                 </Box>
-                <div className="content-recruiment">
+                <div className="content-recruiment" style={{borderRadius: '10px'}}>
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
                             Quản lý người dùng
@@ -308,7 +308,7 @@ export default function Users() {
                             </tbody>
 
                         </table>
-                        <Stack spacing={1} style={{ alignItems: 'center', marginTop: '30px' }}>
+                        <Stack spacing={1} style={{ alignItems: 'center', marginTop: '50px' }}>
                             <Pagination
                                 count={Math.ceil(pagination.totalElements / pagination.size)}
                                 page={pagination.page + 1}
