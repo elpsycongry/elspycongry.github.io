@@ -523,8 +523,8 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur}
                 className={`form-control text-center grey-text`}
-                id="recruitmentRequest.dateEnd"
-                name="recruitmentRequest.dateEnd"
+                id="recruitmentPlan.handoverDeadline"
+                name="recruitmentPlan.handoverDeadline"
                 value={formData.values.recruitmentPlan.handoverDeadline}
               />
               {dateErr && (

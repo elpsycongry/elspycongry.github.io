@@ -206,7 +206,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                         className=" namePersonal mb-0"
                         style={{ color: "#838383" }}
                       >
-                        {formData.values.recruitmentPlan.recruitmentRequest.dateEnd}
+                        {formData.values.recruitmentPlan.dateRecruitmentEnd}
                       </p>
                     </td>
                   </tr>
@@ -225,7 +225,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                         className=" namePersonal mb-0"
                         style={{ color: "#838383" }}
                       >
-                        {formData.values.recruitmentPlan.recruitmentRequest.dateEnd}
+                        {formData.values.recruitmentPlan.handoverDeadline}
                       </p>
                     </td>
                   </tr>

@@ -11,7 +11,7 @@ import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
-export default function DialogRecruitmentPlanFormCreate({id}) {
+export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClose }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
@@ -91,51 +91,63 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
           recruitmentPlan: null,
           type: "",
           numberOfPersonnelNeeded: "",
-          numberOfOutputPersonnel: "",
+numberOfOutputPersonnel: "",
         },
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-      // const date = new Date(values.recruitmentRequest.dateEnd);
-      // if (!checkValid(date, tech)) {
-      //   setSubmitting(false);
-      //   return;
-      // } else {
-        // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-        values.planDetails = [...tech];
-        values.idUser = 1;
-        console.log(values)
-        try {
-          await axios
-            .post("http://localhost:8080/api/plans", values)
-            .then((res) => {
-              swal("Thêm kế hoạch tuyển dụng thành công", {
-                icon: "success",
-                buttons: false,
-                timer: 2000,
-              }).then(() => {
-                window.location.href = "/recruitment/recruitmentPlan";
-              });
-            });
-        } catch (error) {
-          swal("Thêm kế hoạch tuyển dụng thất bại", {
-            icon: "error",
-            buttons: false,
-            timer: 2000,
-          });
+        const date = new Date(values.recruitmentPlan.handoverDeadline);
+          // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
+          values.planDetails = [...tech];
+          values.idUser = 1;
+          console.log(values)
+        //   try {
+        //     await axios
+        //       .post("http://localhost:8080/api/plans", values)
+        //       .then((res) => {
+        //         swal("Thêm kế hoạch tuyển dụng thành công", {
+        //           icon: "success",
+        //           buttons: false,
+        //           timer: 2000,
+        //         }).then(() => {
+        //           window.location.href = "/recruitment/recruitmentPlan";
+        //         });
+        //       });
+        //   } catch (error) {
+        //     swal("Thêm kế hoạch tuyển dụng thất bại", {
+        //       icon: "error",
+        //       buttons: false,
+        //       timer: 2000,
+        //     });
+        //   }
         }
-      }
-    });
+      },
+    );
+    const [recruitmentDateEnd,setRecuitmentDateEnd] = useState();
+const [recruitmentName,setRecuitmentName] = useState();
+const [recruitment,setRecuitment] = useState();
   // Call api
-  const [recuitments, setRecuitment] = useState([]);
   useEffect(() => {
-      axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-        setRecuitment(res.data);
-      });
+
+    if (id != null) {
+      axios
+        .get("http://localhost:8080/api/recruitmentRequests/" + id)
+        .then((res) => {
+          setRecuitmentName(res.data.recruitmentRequest.name);
+          setRecuitment(res.data.recruitmentRequest);
+          setRecuitmentDateEnd(res.data.dateEnd);
+          const detail = res.data.details;
+          setTech(
+            detail.map((item) => ({
+              type: item.type,
+              numberOfOutputPersonnel: item.quantity,
+              numberOfPersonnelNeeded: item.quantity * 3,
+            }))
+          );
+        });
+    }
     
-    }, []);
-
-
+  }, [id]);
 
 
 
@@ -153,13 +165,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
     { id: 10, text: "JAVA" },
     { id: 11, text: ".NET" }
   ]
-  const [openForm, setOpenForm] = useState(false);
-  const handleClickFormOpen = () => {
-    setOpenForm(true);
-  }
-  const handleClickFormClose = () => {
-    setOpenForm(false);
-  }
+  
   // Xử lý thêm công nghệ
   const [tech, setTech] = useState([{ type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" }]);
   const addTech = () => {
@@ -191,7 +197,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
       }
     };
     const handleInputChange = (e) => {
-      if (e.target.value <= 20) {
+if (e.target.value <= 20) {
         const newCount = parseInt(e.target.value);
         setCountOf(newCount);
       }
@@ -283,7 +289,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
+<ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
       )
     }
   }
@@ -329,14 +335,10 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
 
   return (
     <>
-      <div className=" min-width position-relative " style={{ width: '280px' }} onClick={handleClickFormOpen}>
-        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline">Thêm kế hoạch tuyển dụng</button>
-        <AddIcon className=" position-absolute plus-icon clr-white" />
-      </div>
       <Dialog
         id="formCreateRecruitmentPlan"
-        open={openForm}
-        onClose={handleClickFormClose}
+        open={open}
+        onClose={onClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -352,7 +354,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
                   right: 0,
                   top: 0,
                 }}
-                onClick={handleClickFormClose}
+                onClick={onClose}
               >
                 <ClearIcon />
               </IconButton>
@@ -361,22 +363,23 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
               <label htmlFor="name" className="form-label grey-text">
                 Từ nhu cầu nhân sự
               </label>
-              <select
-  className="form-select grey-text"
-  aria-label="Default select example"
-  onChange={formData.handleChange}
-  name="recruitmentPlan.recruitmentRequest.id"
-  id="recruitmentPlan.recruitmentRequest.id"
->
-  <option value="default">Chọn nhu cầu nhân sự</option>
-  {recuitments.map((item) => (
-    <option key={item.id} value={item.id}>
-      {item.name}
-    </option>
-  ))}
-</select>
+              <div>
+              <label className="input-container">
+  <span className="input-value">{recruitmentName}</span>
+  <input
+    className="hidden-input"
+    type="hidden"
+    onChange={formData.handleChange}
+    name="recruitmentPlan.recruitmentRequest"
+    id="recruitmentPlan.recruitmentRequest"
+    value={recruitment}
+    placeholder={recruitmentName}
+  />
+</label>
+</div>
+          
             </div>
-            <div className="col-md-12">
+<div className="col-md-12">
               <label htmlFor="name" className="form-label grey-text">
                 Tên kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
@@ -441,7 +444,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
                     idx={index}
                   />
                   <Dlt index={index} />
-                </div>
+</div>
               </>
             ))}
             <div className="col-md-4 mt-0">
@@ -454,7 +457,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
               {errNumberofOutput && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
             </div>
             <div className="col-md-12 mt-2" onClick={addTech}>
-              <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
+              <p className="grey-text plusTech w-125 mb-0">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
@@ -480,6 +483,11 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
                 id="recruitmentPlan.dateRecruitmentEnd"
                 name="recruitmentPlan.dateRecruitmentEnd"
               />
+              {dateErr && (
+                <p className="err-valid ">
+                  Thời hạn tuyển dụng phải tối thiểu 75 ngày
+                </p>
+              )}
             </div>
             <div className="col-md-4 mt-0 mb-2 child">
               <input
@@ -489,6 +497,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
                 className={`form-control text-center grey-text`}
                 id="recruitmentPlan.handoverDeadline"
                 name="recruitmentPlan.handoverDeadline"
+                value={recruitmentDateEnd}
               />
               {dateErr && (
                 <p className="err-valid ">
@@ -496,6 +505,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
                 </p>
               )}
             </div>
+
 
             <div className="col-md-4 mb-2 mt-0">
               <div className="send text-right mt-0">
