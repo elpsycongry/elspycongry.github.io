@@ -26,6 +26,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
             id: null,
             name: "",
             email: "",
+            phone:"",
             roles: [] // Danh sách roles ban đầu
         },
         onSubmit: async (values) => {
@@ -129,12 +130,13 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                     onSubmit: formData.handleSubmit,
                 }}
             >
-                <div style={{ padding: '30px' }}>
+                <div style={{ padding: '33px' }}>
                     <DialogTitle className="col-md-12 grey-text" style={{ paddingBottom: 3 }}><h2 style={{ fontWeight: '700' }}>Cập nhật thông tin</h2></DialogTitle>
                     <DialogContent className="col-md-12" >
                         <DialogContentText>
                             <div className="form-label grey-text information-user">Họ tên: <span className='information-user'>{formData.values.name}</span></div>
                             <div className="form-label grey-text information-user">Email: <span>{formData.values.email}</span></div>
+                            <div className="form-label grey-text information-user">Số điện thoại: <span>{formData.values.phone}</span></div>
                             {/* <div className="form-label grey-text information-user">Trạng thái tài khoản: <span>Đang chờ duyệt</span></div> */}
                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <div className="form-label grey-text information-user">Vai trò:</div>

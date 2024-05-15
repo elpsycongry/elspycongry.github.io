@@ -8,6 +8,7 @@ import Training from './components/training/training';
 import HomePage from "./components/pages/homePage/homePage";
 import {InternPage} from "./components/pages/InternPage/Internpage";
 import './assets/css/index.css'
+import TrainingStats from './components/stats/trainingStats/trainingStats';
 function App() {
     return (
         <>
@@ -34,6 +35,11 @@ function App() {
                 <Route path={"/training"} element={
                     <AuthContext><Training /></AuthContext>
                 } />
+                <Route path={"/training/stats"} element={
+                    <AuthContext><TrainingStats /></AuthContext>
+                }>
+
+                </Route>
             </Routes>
         </>
     )
