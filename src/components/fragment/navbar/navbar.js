@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -21,10 +21,7 @@ import { Link } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
 import { isDisabled } from '@testing-library/user-event/dist/utils';
 
-
 const drawerWidth = 240;
-
-
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -34,9 +31,6 @@ const openedMixin = (theme) => ({
     }),
     overflowX: 'hidden',
 });
-
-
-
 
 const closedMixin = (theme) => ({
     transition: theme.transitions.create('width', {
@@ -59,8 +53,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
 }));
 
-
-
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         width: drawerWidth,
@@ -78,14 +70,23 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export default function Navbar() {
+function Navbar() {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    let roles = [];
+
+    if (currentUser !== null) {
+        currentUser.roles.forEach(element => {
+            roles = [...roles, element.authority]
+        });
+    }
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
+
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -99,12 +100,12 @@ export default function Navbar() {
     };
 
     const theme = useTheme();
+
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
     };
-
 
     const handleDrawerClose = (event) => {
         const drawer = document.getElementById('drawer')
@@ -124,12 +125,11 @@ export default function Navbar() {
         )
     }
 
-
     const listItems = [
-        { id: 1, text: "Người dùng", IconText: GroupIcon, linkTo: `/users` },
-        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training` },
+        { id: 1, text: "Người dùng", IconText: GroupIcon, linkTo: `/users`, roles: ['ROLE_ADMIN'] },
+        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
         {
-            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: [
+            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_HR'], children: [
                 {
                     id: 1,
                     name: "Nhu cầu",
@@ -147,38 +147,43 @@ export default function Navbar() {
                 }
             ]
         },
-        { 
-            id: 4, text: "Thống kê", IconText: SignalCellularAltIcon , children: [
+        {
+            id: 4, text: "Thống kê", IconText: SignalCellularAltIcon, roles: ['ROLE_ADMIN'], children: [
                 {
                     id: 1,
                     name: "Kết quả đào tạo",
                     linkTo: "/training/stats",
                 },
-                ,{
+                , {
                     id: 2,
                     name: "Kết quả tuyển dụng",
                     linkTo: "/recruitment/personalNeeds",
-                },{
+                }, {
                     id: 3,
                     name: "Thống kê sau quả đào tạo",
                     linkTo: "/recruitment/personalNeeds",
                 },
             ]
         }
-        
+
     ]
+
     const [openChil, setOpenChil] = useState({});
     const handleClick = (id) => {
         setOpenChil(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
+    const filteredListItems = listItems.filter(item => {
+        if (!item.roles || item.roles.length === 0) {
+            return true;
+        }
+        return item.roles.some(role => roles.includes(role));
+    });
 
     return (
         <Box
-
             sx={{ display: 'flex' }}>
             <CssBaseline />
-
             <Drawer
                 sx={{ flexShrink: 0, '& .MuiDrawer-paper': { boxSizing: 'border-box', marginTop: '64px', backgroundColor: '#f3f3f3' } }}
                 onMouseOver={handleDrawerOpen}
@@ -189,7 +194,7 @@ export default function Navbar() {
             >
                 <Divider />
                 <List>
-                    {listItems.map(({ id, text, IconText, children, linkTo }) => (
+                    {filteredListItems.map(({ id, text, IconText, children, linkTo }) => (
                         <div key={id}>
                             <div className='test'>
                                 <ListItem onClick={() => children && handleClick(id)} disablePadding sx={{ display: 'block' }}>
@@ -216,7 +221,6 @@ export default function Navbar() {
                                     </ListItemButton>
                                 </ListItem>
                             </div>
-
                             {children && (
                                 <Collapse in={openChil[id] ?? false} timeout="auto" unmountOnExit>
                                     <List className='listChild' component="div" disablePadding>
@@ -238,3 +242,4 @@ export default function Navbar() {
         </Box >
     );
 }
+export default Navbar;
