@@ -24,6 +24,7 @@ p {
 .flex {
     display: flex;
 }
+
 .table-score {
     display: flex;
     flex-direction: column;
@@ -34,10 +35,10 @@ p {
     }
 
     p{
-        min-width: 65px;
+        min-width: 90px;
     }
     .table-score__item {
-        width: 70px;
+        width: 90px;
         text-align: center;
         display: flex;
         justify-content: center;
@@ -56,19 +57,20 @@ p {
     option {
         padding: 12px
     }
-}
 
-.tl {
-    text-align: left !important;
+    .tl {
+        justify-content: left;
+    }
 }
-
+.l {
+    text-align: left;
+}
 .css-hz1bth-MuiDialog-container {
-    height: 70% !important;
+    height: 90% !important;
 }
 
 .MuiDialogTitle-root+.css-ypiqx9-MuiDialogContent-root {
     padding: 0px 24px;
-
 }
 .css-ojb00g-MuiDialogActions-root {
     padding: 12px !important;

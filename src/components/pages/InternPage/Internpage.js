@@ -1,12 +1,15 @@
 import {Dialog, DialogContent, DialogTitle, FormControl, InputLabel, NativeSelect, Select} from "@mui/material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import "./internpage.scss"
 import MenuItem from "@mui/material/MenuItem";
 import FormGroup from "@mui/material/FormGroup";
 import DialogActions from "@mui/material/DialogActions";
+import axios from "axios";
 
 export function InternPage() {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+
     const [open, setOpen] = useState(true);
     const handleClose = () => {
         setOpen(false)
@@ -34,17 +37,71 @@ export function InternPage() {
         ]
     })
 
+    const handleTheoryScoreChange = (event, index) => {
+        const updatedSubjects = [...data.subjects];
+        updatedSubjects[index].theoryScore = event.target.value;
+        setData({
+            ...data,
+            subjects: updatedSubjects
+        });
+    }
+    const handlePracticeScoreChange = (event, index) => {
+        const updatedSubjects = [...data.subjects];
+        updatedSubjects[index].practiceScore = event.target.value;
+        setData({
+            ...data,
+            subjects: updatedSubjects
+        });
+    }
+    const handleAttitudeScoreChange = (event, index) => {
+        const updatedSubjects = [...data.subjects];
+        updatedSubjects[index].attitudeScore = event.target.value;
+        setData({
+            ...data,
+            subjects: updatedSubjects
+        });
+    }
+
+    function findTotal(theory, practice, attitude) {
+        theory = parseInt(theory);
+        practice = parseInt(practice);
+        attitude = parseInt(attitude);
+        if (isNaN(theory)) {
+            theory = 0;
+        }
+        if (isNaN(practice)) {
+            practice = 0;
+        }
+        if (isNaN(attitude)) {
+            attitude = 0;
+        }
+        const result = (theory + practice * 2 + attitude * 2) / 5
+        if (result > 7){
+            return (<> {result} <i className="bi bi-check"></i></>)
+        } else {
+            return (<> {result} <i className="bi bi-x"></i></>)
+        }
+
+    }
+
+    useEffect(() => {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
+        axios.get("http://localhost:8080/api/interns/?id=1").then(res => {
+            setData(res.data)
+        })
+    }, []);
+
     return (
         <>
-            <Button onClick={() => {
+            <Button key={1} onClick={() => {
                 setOpen(true)
             }}>Open</Button>
 
             <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
-                <DialogTitle sx={{padding: "16px 24px 8px 24px  "}}>Kết quả học tập</DialogTitle>
+                <DialogTitle key={2} sx={{padding: "16px 24px 8px 24px  "}}>Kết quả học tập</DialogTitle>
 
                 <DialogContent>
-                    <div className={"flex-col"}>
+                    <div key={3} className={"flex-col"}>
                         <h6>Họ tên: {data.name}</h6>
                         <div className={"flex-row"}>
                             <p>Ngày bắt đầu: {data.startDate}</p>
@@ -52,7 +109,7 @@ export function InternPage() {
                         </div>
                         <p>Ngày kết thúc: {data.endDate}</p>
                     </div>
-                    <div className={"table-score"}>
+                    <div key={5} className={"table-score"}>
                         <div className={"flex flex-row justify-content-between"}>
                             <p>Môn học</p>
                             <p>Lý thuyết</p>
@@ -60,20 +117,39 @@ export function InternPage() {
                             <p>Thái độ</p>
                             <p>Tổng</p>
                         </div>
-                        {data.subjects.map((subject) => {
+                        {data.subjects.map((subject, index) => {
+
                             return (
                                 <div className={"flex flex-row justify-content-between"}>
-                                    <p className={"tl"}>{subject.name}</p>
+                                    <p className={"table-score__item tl"}>{subject.name}</p>
                                     <div className={"table-score__item"}>
-                                        <input value={subject.theoryScore} className={"input-score"}/>
+                                        <input
+                                            value={subject.theoryScore}
+                                            onChange={(e) => {
+                                                handleTheoryScoreChange(e, index)
+                                            }}
+                                            className={"input-score"}/>
                                     </div>
                                     <div className={"table-score__item"}>
-                                        <input value={subject.practiceScore} className={"input-score"}/>
+                                        <input
+                                            value={subject.practiceScore}
+                                            onChange={(e) => {
+                                                handlePracticeScoreChange(e, index)
+                                            }}
+                                            className={"input-score"}/>
                                     </div>
                                     <div className={"table-score__item"}>
-                                        <input value={subject.attitudeScore} className={"input-score"}/>
+                                        <input
+                                            value={subject.attitudeScore}
+                                            onChange={(e => handleAttitudeScoreChange(e, index))}
+                                            className={"input-score"}/>
                                     </div>
-                                    <p className={"table-score__item"}>7</p>
+                                    <p className={"table-score__item"}>{
+                                        findTotal(
+                                            subject.theoryScore,
+                                            subject.practiceScore,
+                                            subject.attitudeScore)}
+                                    </p>
                                 </div>
                             )
                         })}
@@ -95,14 +171,13 @@ export function InternPage() {
                         <div className={"flex flex-row justify-content-between"}>
                             <FormControl sx={{width: '30%'}}>
                                 <NativeSelect
-                                    defaultValue={10}
+                                    defaultValue={"Đang"}
                                     inputProps={{
-                                        name: 'age',
+                                        name: 'trainingState',
                                         id: 'uncontrolled-native',
                                     }}>
-                                    <option value={10}>Đang thực tập</option>
-                                    <option value={10}>Đang thực tập</option>
-                                    <option value={20}>Đã thực tập</option>
+                                    <option value={"1"}>Đang thực tập</option>
+                                    <option value={"Đang"}>Đã thực tập</option>
                                 </NativeSelect>
                             </FormControl>
                         </div>
