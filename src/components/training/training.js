@@ -18,7 +18,6 @@ import './training.css';
 
 export default function Training() {
     const location = useLocation();
-    console.log(location);
 
     const [open, setOpen] = useState(false);
 
