@@ -11,7 +11,7 @@ import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
-export default function DialogRecruitmentPlanFormCreate({id}) {
+export default function DialogRecruitmentPlanFormCreate({ id }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
@@ -101,39 +101,39 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
       //   setSubmitting(false);
       //   return;
       // } else {
-        // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-        values.planDetails = [...tech];
-        values.idUser = 1;
-        console.log(values)
-        try {
-          await axios
-            .post("http://localhost:8080/api/plans", values)
-            .then((res) => {
-              swal("Thêm kế hoạch tuyển dụng thành công", {
-                icon: "success",
-                buttons: false,
-                timer: 2000,
-              }).then(() => {
-                window.location.href = "/recruitment/recruitmentPlan";
-              });
+      // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
+      values.planDetails = [...tech];
+      values.idUser = 1;
+      console.log(values)
+      try {
+        await axios
+          .post("http://localhost:8080/api/plans", values)
+          .then((res) => {
+            swal("Thêm kế hoạch tuyển dụng thành công", {
+              icon: "success",
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              window.location.href = "/recruitment/recruitmentPlan";
             });
-        } catch (error) {
-          swal("Thêm kế hoạch tuyển dụng thất bại", {
-            icon: "error",
-            buttons: false,
-            timer: 2000,
           });
-        }
+      } catch (error) {
+        swal("Thêm kế hoạch tuyển dụng thất bại", {
+          icon: "error",
+          buttons: false,
+          timer: 2000,
+        });
       }
-    });
+    }
+  });
   // Call api
   const [recuitments, setRecuitment] = useState([]);
   useEffect(() => {
-      axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-        setRecuitment(res.data);
-      });
-    
-    }, []);
+    axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
+      setRecuitment(res.data);
+    });
+
+  }, []);
 
 
 
@@ -183,11 +183,11 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);
-    
+
     const handleClickCountPlus = () => {
       if (number < 20 || countOf < 20) {
         setCountOf(parseInt(countOf) + 1);
-        numberOfOutputPersonnel( (parseInt(number) + 1), idx);
+        numberOfOutputPersonnel((parseInt(number) + 1), idx);
       }
     };
     const handleInputChange = (e) => {
@@ -199,7 +199,7 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
     const handleClickCountMinus = () => {
       if (!countOf <= 0) {
         setCountOf(countOf - 1);
-        numberOfOutputPersonnel( (parseInt(number) - 1), idx);
+        numberOfOutputPersonnel((parseInt(number) - 1), idx);
 
       }
     };
@@ -240,16 +240,16 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
     }
     const [countOf, setCountOf] = useState(number);
     const handleClickCountPlus = () => {
-      if (number < 40 || countOf <40) {
+      if (number < 40 || countOf < 40) {
         setCountOf(countOf + 1);
         handleQuantityOffPersonal(parseInt(number) + 1, idx);
       }
     };
     const handleInputChange = (e) => {
       if (e.target.value <= 40) {
-      const newCount = parseInt(e.target.value);
-      setCountOf(newCount);
-    }
+        const newCount = parseInt(e.target.value);
+        setCountOf(newCount);
+      }
     };
     const handleClickCountMinus = () => {
       if (!countOf <= 0) {
@@ -289,38 +289,55 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
   }
 
   function TimeRecruitment() {
-    // const timeNow = new Date();
-    // const year = timeNow.getFullYear();
-    // const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-    // const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-    // const timeNowValue = `${year}-${month}-${day}`;
-    // console.log(timeNowValue);
+    const timeNow = new Date();
+    const year = timeNow.getFullYear();
+    const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+    const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+    const timeNowValue = `${year}-${month}-${day}`;
+    console.log(timeNowValue);
+
+    const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
+    const [handoverDeadline, setHandoverDeadline] = useState(timeNowValue);
+    const handleDateChange = (event) =>{
+      const {name, value} = event.target;
+      if(name === 'recruitmentPlan.dateRecruitmentEnd'){
+        setRecuitmentDateEnd(value);
+      } else if( name === 'recruitmentPlan.handoverDeadline'){
+        setHandoverDeadline(value);
+      }
+      formData.handleChange(event);
+    }
+
 
     return (
       <>
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
-            onChange={formData.handleChange}
+            onChange={handleDateChange}
+            // value={timeNowValue}
             onBlur={formData.handleBlur}
+            value={formData.handleChange}
             className={`form-control text-center grey-text`}
-            // value={timeRecruitment}
-            id="recruitmentRequest.dateEnd"
-            name="recruitmentRequest.dateEnd"
-          // min={timeNowValue}
+            id="recruitmentPlan.dateRecruitmentEnd"
+            name="recruitmentPlan.dateRecruitmentEnd"
           />
         </div>
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
             onChange={formData.handleChange}
+            value={formData.handleChange}
             onBlur={formData.handleBlur}
             className={`form-control text-center grey-text`}
-            id="recruitmentRequest.dateEnd"
-            name="recruitmentRequest.dateEnd"
-            defaultValue={'2021-01-03'}
+            id="recruitmentPlan.handoverDeadline"
+            name="recruitmentPlan.handoverDeadline"
           />
-          {dateErr && <p className="err-valid ">Thời hạn bàn giao phải tối thiểu 75 ngày</p>}
+          {dateErr && (
+            <p className="err-valid ">
+              Thời hạn bàn giao phải tối thiểu 75 ngày
+            </p>
+          )}
         </div>
       </>
     )
@@ -362,19 +379,19 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
                 Từ nhu cầu nhân sự
               </label>
               <select
-  className="form-select grey-text"
-  aria-label="Default select example"
-  onChange={formData.handleChange}
-  name="recruitmentPlan.recruitmentRequest.id"
-  id="recruitmentPlan.recruitmentRequest.id"
->
-  <option value="default">Chọn nhu cầu nhân sự</option>
-  {recuitments.map((item) => (
-    <option key={item.id} value={item.id}>
-      {item.name}
-    </option>
-  ))}
-</select>
+                className="form-select grey-text"
+                aria-label="Default select example"
+                onChange={formData.handleChange}
+                name="recruitmentPlan.recruitmentRequest.id"
+                id="recruitmentPlan.recruitmentRequest.id"
+              >
+                <option value="default">Chọn nhu cầu nhân sự</option>
+                {recuitments.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="col-md-12">
               <label htmlFor="name" className="form-label grey-text">
@@ -471,32 +488,33 @@ export default function DialogRecruitmentPlanFormCreate({id}) {
                 <label className="form-label"></label>
               </div>
             </div>
-            <div className="col-md-4 mt-0 mb-2 child">
-              <input
-                type="date"
-                onChange={formData.handleChange}
-                onBlur={formData.handleBlur}
-                className={`form-control text-center grey-text`}
-                id="recruitmentPlan.dateRecruitmentEnd"
-                name="recruitmentPlan.dateRecruitmentEnd"
-              />
-            </div>
-            <div className="col-md-4 mt-0 mb-2 child">
-              <input
-                type="date"
-                onChange={formData.handleChange}
-                onBlur={formData.handleBlur}
-                className={`form-control text-center grey-text`}
-                id="recruitmentPlan.handoverDeadline"
-                name="recruitmentPlan.handoverDeadline"
-              />
-              {dateErr && (
-                <p className="err-valid ">
-                  Thời hạn bàn giao phải tối thiểu 75 ngày
-                </p>
-              )}
-            </div>
-
+            <TimeRecruitment />
+            {/* <div className="col-md-4 mt-0 mb-2 child">
+          <input
+            type="date"
+            onChange={formData.handleChange}
+            // value={timeNowValue}
+            onBlur={formData.handleBlur}
+            className={`form-control text-center grey-text`}
+            id="recruitmentPlan.dateRecruitmentEnd"
+            name="recruitmentPlan.dateRecruitmentEnd"
+          />
+        </div>
+        <div className="col-md-4 mt-0 mb-2 child">
+          <input
+            type="date"
+            onChange={formData.handleChange}
+            onBlur={formData.handleBlur}
+            className={`form-control text-center grey-text`}
+            id="recruitmentPlan.handoverDeadline"
+            name="recruitmentPlan.handoverDeadline"
+          />
+          {dateErr && (
+            <p className="err-valid ">
+              Thời hạn bàn giao phải tối thiểu 75 ngày
+            </p>
+          )}
+        </div> */}
             <div className="col-md-4 mb-2 mt-0">
               <div className="send text-right mt-0">
                 <div className="send-child position-relative">

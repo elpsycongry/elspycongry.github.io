@@ -100,26 +100,27 @@ numberOfOutputPersonnel: "",
           // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
           values.planDetails = [...tech];
           values.idUser = 1;
+          values.recruitmentPlan.recruitmentRequest = recruitment;
           console.log(values)
-        //   try {
-        //     await axios
-        //       .post("http://localhost:8080/api/plans", values)
-        //       .then((res) => {
-        //         swal("Thêm kế hoạch tuyển dụng thành công", {
-        //           icon: "success",
-        //           buttons: false,
-        //           timer: 2000,
-        //         }).then(() => {
-        //           window.location.href = "/recruitment/recruitmentPlan";
-        //         });
-        //       });
-        //   } catch (error) {
-        //     swal("Thêm kế hoạch tuyển dụng thất bại", {
-        //       icon: "error",
-        //       buttons: false,
-        //       timer: 2000,
-        //     });
-        //   }
+          try {
+            await axios
+              .post("http://localhost:8080/api/plans", values)
+              .then((res) => {
+                swal("Thêm kế hoạch tuyển dụng thành công", {
+                  icon: "success",
+                  buttons: false,
+                  timer: 2000,
+                }).then(() => {
+                  window.location.href = "/recruitment/recruitmentPlan";
+                });
+              });
+          } catch (error) {
+            swal("Thêm kế hoạch tuyển dụng thất bại", {
+              icon: "error",
+              buttons: false,
+              timer: 2000,
+            });
+          }
         }
       },
     );
@@ -135,7 +136,7 @@ const [recruitment,setRecuitment] = useState();
         .then((res) => {
           setRecuitmentName(res.data.recruitmentRequest.name);
           setRecuitment(res.data.recruitmentRequest);
-          setRecuitmentDateEnd(res.data.dateEnd);
+          setRecuitmentDateEnd(res.data.recruitmentRequest.dateEnd);
           const detail = res.data.details;
           setTech(
             detail.map((item) => ({
