@@ -29,18 +29,15 @@ import DialogUpdateUserForm from "./updateUser";
 
 export default function Users() {
 
-
     const location = useLocation();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-
     const handleClickPracticeOpen = () => {
         setOpen(true);
     }
     const handleClickPracticeClose = () => {
         setOpen(false);
     }
-
     const [status, setStatus] = useState('');
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
@@ -52,7 +49,6 @@ export default function Users() {
         size: 10,
         totalElements: 0,
     });
-
     const [paginationFilter, setPaginationFilter] = useState({
         page: 0,
         size: 10,
@@ -87,12 +83,6 @@ export default function Users() {
         }
     };
 
-
-
-
-
-
-
     const handleSearch = async (event) => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
 
@@ -108,7 +98,6 @@ export default function Users() {
             }
         }
     };
-
 
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -145,17 +134,17 @@ export default function Users() {
     const fetchListUser = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
 
-        
+
 
         if (user != null) {
-            
+
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/admin/users/filterWithFields?page=0&size=10&keyword=&role_id=").then((res) => {
                 setListUser(res.data.content);
                 console.log(res.data.content);
             });
 
-            
+
         }
     };
 
@@ -163,7 +152,7 @@ export default function Users() {
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
-        
+
 
             if (selectedRole !== previousRoleRef.current) {
                 newPagination = paginationFilter;
@@ -183,7 +172,7 @@ export default function Users() {
         }
     };
 
-    
+
     return (
         <>
             <Header />
@@ -288,6 +277,7 @@ export default function Users() {
                                     <th className="user-id">STT</th>
                                     <th>Tên</th>
                                     <th>Email</th>
+                                    <th>Số điện thoại</th>
                                     <th>Vai trò</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -298,13 +288,17 @@ export default function Users() {
                                         <td className="user-id">{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
+                                        <td>{item.phone}</td>
                                         <td>
-                                            {item.roles.map((role, index) => (
-                                                <label key={role.id} style={{ paddingRight: '5px' }}>
-                                                    {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
-                                                </label>
-                                            ))}
-
+                                            {item.roles && item.roles.length > 0 ? (
+                                                item.roles.map((role, index) => (
+                                                    <label key={role.id} style={{ paddingRight: '5px' }}>
+                                                        {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
+                                                    </label>
+                                                ))
+                                            ) : (
+                                                'Hiện tại chưa có vai trò'
+                                            )}
                                         </td>
                                         <td>
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
@@ -314,7 +308,7 @@ export default function Users() {
                             </tbody>
 
                         </table>
-                        <Stack spacing={1} style={{ alignItems: 'center' }}>
+                        <Stack spacing={1} style={{ alignItems: 'center', marginTop: '30px' }}>
                             <Pagination
                                 count={Math.ceil(pagination.totalElements / pagination.size)}
                                 page={pagination.page + 1}

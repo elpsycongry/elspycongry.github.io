@@ -18,6 +18,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Link } from 'react-router-dom';
+import GroupIcon from '@mui/icons-material/Group';
 
 
 const drawerWidth = 240;
@@ -121,9 +122,10 @@ export default function Navbar() {
 
 
     const listItems = [
-        { id: 1, text: "Đào tạo", IconText: Book, linkTo: `/training` },
+        { id: 1, text: "Người dùng", IconText: GroupIcon, linkTo: `/users` },
+        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training` },
         {
-            id: 2, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: [
+            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: [
                 {
                     id: 1,
                     name: "Nhu cầu",
@@ -141,7 +143,7 @@ export default function Navbar() {
                 }
             ]
         },
-        { id: 3, text: "Thống kê", IconText: SignalCellularAltIcon }
+        { id: 4, text: "Thống kê", IconText: SignalCellularAltIcon }
     ]
     const [openChil, setOpenChil] = useState({});
     const handleClick = (id) => {
