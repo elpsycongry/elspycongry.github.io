@@ -10,11 +10,12 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CreateIcon from '@mui/icons-material/Create';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Icon } from '@iconify/react';
 // import {faEnvelop} from ''
 import './training.css';
+import axios from "axios";
 
 export default function Training() {
     const location = useLocation();
@@ -29,9 +30,62 @@ export default function Training() {
     }
 
     const [status, setStatus] = useState('');
+    const [listSubjectSelect, setListSubjectSelect] = useState([]);
+    const [listInter, setListIntern] = useState([])
+    const [pagination, setPagination] = useState({
+        page: 0,
+        size: 10,
+        totalElements: 0,
+    });
+
+    useEffect(() => {
+        fetchListSubjectSelect();
+        fetchListInternSelect(pagination);
+    }, []);
+
     const handleChange = (e) => {
         setStatus(e.target.value);
         console.log(e.target.value)
+    };
+
+    const handlePageChange = (event, value) => {
+        setPagination(prev => {
+            const newPagination = { ...prev, page: value - 1 };
+            fetchListInternSelect(newPagination);
+            return newPagination;
+        });
+
+    };
+
+
+
+    //API danh sách môn học
+    const fetchListSubjectSelect = async () => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get("http://localhost:8080/api/interns/subject").then((res) => {
+                setListSubjectSelect(res.data);
+            });
+        }
+    };
+    //API danh sách thực tập sinh
+    const fetchListInternSelect = async (newPagination = pagination) => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            console.log(newPagination.page);
+            console.log(newPagination.size);
+
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get(`http://localhost:8080/api/interns/findIntern?page=${newPagination.page}&size=${newPagination.size}`).then((res) => {
+                setListIntern(res.data.content);
+                console.log(res.data.content);
+                setPagination({
+                    ...newPagination,
+                    totalElements: res.data.totalElements,
+                });
+            });
+        }
     };
 
     // Dữ liệu fake
@@ -40,15 +94,6 @@ export default function Training() {
         { id: 2, text: "Đã hoàn tất" },
         { id: 3, text: "Tất cả" },
         { id: 4, text: "Đã dừng quá trình thực tập" }
-    ]
-    const userList = [
-        { id: 1, name: 'Nguyen Van A', startDay: '11/11/2019', totalDays: '25', summary: '100', evaluationOnTeam: '100', subject1: '9', subject2: '9', subject3: '9', subject4: '9', subject5: '9', subject6: '9', subject7: '9' },
-        { id: 2, name: 'Nguyen Van A', startDay: '11/11/2019', totalDays: '25', summary: '100', evaluationOnTeam: '100', subject1: '9', subject2: '9', subject3: '9', subject4: '9', subject5: '9', subject6: '9', subject7: '9' },
-        { id: 3, name: 'Nguyen Van A', startDay: '11/11/2019', totalDays: '25', summary: '100', evaluationOnTeam: '100', subject1: '9', subject2: '9', subject3: '9', subject4: '9', subject5: '9', subject6: '9', subject7: '9' },
-        { id: 4, name: 'Nguyen Van A', startDay: '11/11/2019', totalDays: '25', summary: '100', evaluationOnTeam: '100', subject1: '9', subject2: '9', subject3: '9', subject4: '9', subject5: '9', subject6: '9', subject7: '9' },
-        { id: 5, name: 'Nguyen Van A', startDay: '11/11/2019', totalDays: '25', summary: '100', evaluationOnTeam: '100', subject1: '9', subject2: '9', subject3: '9', subject4: '9', subject5: '9', subject6: '9', subject7: '9' },
-        { id: 6, name: 'Nguyen Van A', startDay: '11/11/2019', totalDays: '25', summary: '100', evaluationOnTeam: '100', subject1: '9', subject2: '9', subject3: '9', subject4: '9', subject5: '9', subject6: '9', subject7: '9' },
-        { id: 7, name: 'Nguyen Van A', startDay: '11/11/2019', totalDays: '25', summary: '100', evaluationOnTeam: '100', subject1: '9', subject2: '9', subject3: '9', subject4: '9', subject5: '9', subject6: '9', subject7: '9' }
     ]
 
     return (
@@ -91,12 +136,12 @@ export default function Training() {
                         <div className="d-flex pl-15">
                             <div className="search-input position-relative ">
                                 <input type="text" className="w-px position-relative input-intern"
-                                    placeholder="Tìm kiếm..." />
+                                    placeholder="Tìm kiếm theo tên" />
                                 <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
                             </div>
                             <FormControl className="h-px" sx={{ minWidth: '300px' }}>
                                 <InputLabel className="top-left" id="demo-simple-small-label">Trạng thái thực tập...</InputLabel>
-                                <Select
+                                <Select 
                                     sx={{
                                         height: '30px',
                                         paddingTop: '0px', paddingBottom: '0px', backgroundColor: 'white'
@@ -124,40 +169,28 @@ export default function Training() {
                                     <th className="training-id">STT</th>
                                     <th>Tên</th>
                                     <th>Bắt đầu</th>
-                                    <th style={{ width: '200px' }}>Số ngày TT</th>
+                                    <th>Số ngày thực tập</th>
                                 </tr>
-                                {userList.map(item => (
+                                {listInter.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="training-id">{item.id}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.startDay}</td>
-                                        <td>{item.totalDays}</td>
-                                        {/* <td className=" text-center">
-                                        <RemoveRedEyeIcon className="color-blue white-div font-size-large" />
-                                        <CreateIcon className="color-orange pencil-btn font-size-medium" />
-                                    </td> */}
+                                        <td className="training-id">{index + 1}</td>
+                                        <td>{item.userName}</td>
+                                        <td>{item.startDate}</td>
+                                        <td>{item.numberDate}</td>
                                     </tr>
                                 ))}
                             </div>
                             <div className="wrapper">
                                 <tr className="header-tr grey-text">
-                                    <th>Môn 1</th>
-                                    <th>Môn 2</th>
-                                    <th>Môn 3</th>
-                                    <th>Môn 4</th>
-                                    <th>Môn 5</th>
-                                    <th>Môn 6</th>
-                                    <th>Môn 7</th>
+                                    {listSubjectSelect.map(item => (
+                                        <th value={item.name} key={item.id}>{item.name}</th>
+                                    ))}
                                 </tr>
-                                {userList.map(item => (
-                                    <tr className="grey-text count-tr">
-                                        <td>{item.subject1}</td>
-                                        <td>{item.subject2}</td>
-                                        <td>{item.subject3}</td>
-                                        <td>{item.subject4}</td>
-                                        <td>{item.subject5}</td>
-                                        <td>{item.subject6}</td>
-                                        <td>{item.subject7}</td>
+                                {listInter.map((item) => (
+                                    <tr className="grey-text count-tr" key={item.id}>
+                                        {item.internScoreDTOList.map((score) => (
+                                            <td key={score.id}>{score.totalScore}</td>
+                                        ))}
                                     </tr>
                                 ))}
                             </div>
@@ -167,10 +200,10 @@ export default function Training() {
                                     <th>Đánh giá trên team</th>
                                     <th className=" text-center">Hành động</th>
                                 </tr>
-                                {userList.map(item => (
+                                {listInter.map(item => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td>{item.summary}</td>
-                                        <td>{item.evaluationOnTeam}</td>
+                                        <td>{item.finalScore}</td>
+                                        <td>{item.scoreInTeam}</td>
                                         <td>
                                             <RemoveRedEyeIcon style={{ width: '24px', height: '24px', marginRight: '5px' }} className="color-blue white-div font-size-large" />
                                             <CreateIcon style={{ width: '24px', height: '24px' }} className="color-orange pencil-btn font-size-medium" />
@@ -180,12 +213,19 @@ export default function Training() {
                             </div>
                         </table>
                     </div>
-                    <Stack spacing={2} style={{ marginTop: '50px', alignItems: 'center' }}>
-                        <Pagination count={10} shape="rounded" />
+                    <Stack spacing={1} style={{ marginTop: '40px', alignItems: 'center' }}>
+                        <Pagination
+                            count={Math.ceil(pagination.totalElements / pagination.size)}
+                            page={pagination.page + 1}
+                            shape="rounded"
+                            onChange={handlePageChange}
+                        />
+                        
                     </Stack>
+                    
                 </div>
             </Box>
-            {/* <Footer /> */}
+            <Footer />
         </>
     )
 }
