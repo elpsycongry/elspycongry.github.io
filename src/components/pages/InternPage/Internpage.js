@@ -1,16 +1,21 @@
-import {Dialog, DialogContent, DialogTitle, FormControl, InputLabel, NativeSelect, Select} from "@mui/material";
-import {useEffect, useState} from "react";
+import {Dialog, DialogContent, DialogTitle, FormControl, NativeSelect} from "@mui/material";
+import {useEffect, useRef, useState} from "react";
 import Button from "@mui/material/Button";
 import "./internpage.scss"
-import MenuItem from "@mui/material/MenuItem";
-import FormGroup from "@mui/material/FormGroup";
 import DialogActions from "@mui/material/DialogActions";
 import axios from "axios";
+import {useParams} from "react-router-dom";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faCheck, faX} from "@fortawesome/free-solid-svg-icons";
 
 export function InternPage() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+    const [open, setOpen] = useState(true)
 
-    const [open, setOpen] = useState(true);
+    const finalScore = useRef()
+    const passed = useRef()
+    const [finalScoreValue, setFinalScoreValue] = useState();
+    const [finalResultPass, setFinalResultPass] = useState();
     const handleClose = () => {
         setOpen(false)
     };
@@ -20,76 +25,111 @@ export function InternPage() {
     };
 
     const [data, setData] = useState({
-        name: 'Vũ Thanh Tùng',
-        startDate: "2024-05-14",
-        endDate: "2024-05-17",
-        trainingState: 'Đang thực tập',
-        isPass: false,
+        name: '',
+        startDate: "",
+        endDate: "",
+        trainingState: '',
+        isPass: null,
+        scoreInTeam: null,
 
         subjects: [
-            {name: "Môn 1", theoryScore: 7, practiceScore: 8, attitudeScore: 6},
-            {name: "Môn 2", theoryScore: 7, practiceScore: 8, attitudeScore: 6},
-            {name: "Môn 3", theoryScore: 7, practiceScore: 8, attitudeScore: 6},
-            {name: "Môn 4", theoryScore: 7, practiceScore: 8, attitudeScore: 6},
-            {name: "Môn 5", theoryScore: 7, practiceScore: 8, attitudeScore: 6},
-            {name: "Môn 6", theoryScore: 7, practiceScore: 8, attitudeScore: 6},
-            {name: "Môn 7", theoryScore: 7, practiceScore: 8, attitudeScore: 6},
-        ]
-    })
+            {name: "Môn 1", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Môn 2", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Môn 3", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Môn 4", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Môn 5", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Môn 6", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Môn 7", theoryScore: '', practiceScore: '', attitudeScore: ''},
+        ],
 
+        scores: []
+    })
+    const inputRegex = /^(10|[0-9]|)$/;
     const handleTheoryScoreChange = (event, index) => {
-        const updatedSubjects = [...data.subjects];
-        updatedSubjects[index].theoryScore = event.target.value;
-        setData({
-            ...data,
-            subjects: updatedSubjects
-        });
+        if (event.target.value.match(inputRegex)) {
+            const updatedSubjects = [...data.subjects];
+            updatedSubjects[index].theoryScore = event.target.value;
+            setData({
+                ...data,
+                subjects: updatedSubjects
+            });
+        }
     }
     const handlePracticeScoreChange = (event, index) => {
+        if (event.target.value.match(inputRegex)) {
         const updatedSubjects = [...data.subjects];
         updatedSubjects[index].practiceScore = event.target.value;
         setData({
             ...data,
             subjects: updatedSubjects
-        });
+        });}
     }
     const handleAttitudeScoreChange = (event, index) => {
+        if (event.target.value.match(inputRegex)) {
         const updatedSubjects = [...data.subjects];
         updatedSubjects[index].attitudeScore = event.target.value;
         setData({
             ...data,
             subjects: updatedSubjects
-        });
+        });}
+    }
+    const handleScoreInTeamChange = (event) => {
+        if (event.target.value.match(inputRegex)) {
+        setData({
+            ...data,
+            scoreInTeam: event.target.value
+        });}
     }
 
+
+    finalScore.current = []
+    passed.current = true
     function findTotal(theory, practice, attitude) {
-        theory = parseInt(theory);
-        practice = parseInt(practice);
-        attitude = parseInt(attitude);
-        if (isNaN(theory)) {
-            theory = 0;
-        }
-        if (isNaN(practice)) {
-            practice = 0;
-        }
-        if (isNaN(attitude)) {
-            attitude = 0;
-        }
-        const result = (theory + practice * 2 + attitude * 2) / 5
-        if (result > 7){
-            return (<> {result} <i className="bi bi-check"></i></>)
-        } else {
-            return (<> {result} <i className="bi bi-x"></i></>)
+        theory = parseFloat(theory);
+        practice = parseFloat(practice);
+        attitude = parseFloat(attitude);
+        if (isNaN(theory) || isNaN(practice)  || isNaN(attitude)) {
+            passed.current = false
+            return (<div className={"result"}>NA</div>)
         }
 
+        let result = (theory + practice * 2 + attitude * 2) / 5
+        result = parseFloat(result.toFixed(2)); // Làm tròn đến 2 chữ số sau dấu thập phân
+
+        finalScore.current.push(result)
+
+        if (result > 7) {
+            return (<div className={"result"}> {result}
+                <div className={"result-icon success"}><FontAwesomeIcon icon={faCheck}/></div>
+            </div>)
+        } else {
+            return (<div className={"result"}> {result}
+                <div className={"result-icon fail"}><FontAwesomeIcon icon={faX}/></div>
+            </div>)
+        }
+    }
+    const param = useParams();
+
+    const fetchFinalResultPass = (finalScore, inTeamScore, isValid) => {
+        console.log((parseFloat(finalScore)+parseFloat(inTeamScore))/2)
+        if (!isValid){
+            setFinalResultPass(null)
+        }
     }
 
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
-        axios.get("http://localhost:8080/api/interns/?id=1").then(res => {
+        axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
             setData(res.data)
         })
     }, []);
+
+    useEffect(() => {
+        setFinalScoreValue(parseFloat(finalScore.current.reduce((a,b) => a + b,0)/finalScore.current.length)
+            .toFixed(2))
+        fetchFinalResultPass(finalScoreValue, data.scoreInTeam, false)
+    }, [data]);
+
 
     return (
         <>
@@ -111,8 +151,8 @@ export function InternPage() {
                     </div>
                     <div key={5} className={"table-score"}>
                         <div className={"flex flex-row justify-content-between"}>
-                            <p>Môn học</p>
-                            <p>Lý thuyết</p>
+                            <p className={"l"}>Môn học</p>
+                            <p id={"theory"}>Lý thuyết</p>
                             <p>Thực hành</p>
                             <p>Thái độ</p>
                             <p>Tổng</p>
@@ -124,6 +164,8 @@ export function InternPage() {
                                     <p className={"table-score__item tl"}>{subject.name}</p>
                                     <div className={"table-score__item"}>
                                         <input
+                                            pattern="[0-9]|10"
+                                            type={"number"}
                                             value={subject.theoryScore}
                                             onChange={(e) => {
                                                 handleTheoryScoreChange(e, index)
@@ -132,6 +174,8 @@ export function InternPage() {
                                     </div>
                                     <div className={"table-score__item"}>
                                         <input
+                                            pattern="[0-9]|10"
+                                            type={"number"}
                                             value={subject.practiceScore}
                                             onChange={(e) => {
                                                 handlePracticeScoreChange(e, index)
@@ -140,32 +184,42 @@ export function InternPage() {
                                     </div>
                                     <div className={"table-score__item"}>
                                         <input
+                                            pattern="[0-9]|10"
+                                            type={"number"}
                                             value={subject.attitudeScore}
                                             onChange={(e => handleAttitudeScoreChange(e, index))}
                                             className={"input-score"}/>
                                     </div>
-                                    <p className={"table-score__item"}>{
+                                    <div className={"table-score__item"} style={{position: "relative"}}>{
                                         findTotal(
                                             subject.theoryScore,
                                             subject.practiceScore,
                                             subject.attitudeScore)}
-                                    </p>
+                                    </div>
                                 </div>
                             )
                         })}
 
                         <div className={"flex flex-row justify-content-between"}>
-                            <p className={"tb"}>Tổng kết</p>
-                            <p className={"table-score__item"}>7</p>
+                            <p className={"tb l"}>Tổng kết</p>
+                            <p className={"table-score__item"}>
+                                { finalScoreValue }
+                            </p>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
                             <p className={"tb "}>Kết quả thực tập</p>
-                            <p className={"table-score__item"}>NA</p>
+                            <p className={"table-score__item"}>
+                                {data.isPass}
+                            </p>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
                             <p className={"tl"}>Đánh giá trên team</p>
                             <div className={"table-score__item "}>
-                                <input value={7} className={"input-score"}/>
+                                <input
+                                    onChange={(e) => {handleScoreInTeamChange(e)}}
+                                    type={"number"}
+                                    value={data.scoreInTeam}
+                                    className={"input-score"}/>
                             </div>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
