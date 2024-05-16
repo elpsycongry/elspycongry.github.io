@@ -11,7 +11,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import DialogPersonalFormCreate from "./dialogPersonalFormCreate";
 import DialogRecruitmentPlanFormCreate from "../dialogRecruitmentPlan/dialogRecruitmentPlanFormCreate";
-import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess"
+import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess";
 
 export default function DialogPersonalFormWatch({ id }) {
     const [tenhnology, setTenhnology] = useState([]);
