@@ -206,7 +206,7 @@ export default function DialogPersonalFormWatch({ id }) {
                                     value={formData.values.recruitmentRequest.reason}
                                 ></textarea>
                             </div>
-                        ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" ? ("") :
+                        ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" || formData.values.recruitmentRequest.status === "Đang tuyển dụng" ? ("") :
                             (formData.values.recruitmentRequest.status === "Bị từ chối bởi DECAN" ? (
                                 <div className="col-md-12 mt-2 d-flex ">
                                     <label

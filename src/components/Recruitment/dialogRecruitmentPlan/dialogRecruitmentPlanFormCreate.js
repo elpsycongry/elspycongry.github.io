@@ -24,9 +24,12 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
     // 
+    var hasErrPersonalNeeds;
     if (personalneed === "" || personalneed === null || personalneed === "default") {
+      hasErrPersonalNeeds = true;
       setErrIdPersonalNeed(true);
     } else {
+      hasErrPersonalNeeds = false;
       setErrIdPersonalNeed(false);
     }
     // 
@@ -60,11 +63,15 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     const hasErrNumberOutput = errNumberOutput.some(item => item === true);
     setErrNumberOfOutput(hasErrNumberOutput);
 
+    var hasErrRecruitmentPlan;
     if (nameRecruitmentPlan == "") {
+      hasErrRecruitmentPlan = true;
       setErrNameRecruitmentPlan(true);
     } else {
+      hasErrRecruitmentPlan = false;
       setErrNameRecruitmentPlan(false);
     }
+
 
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
@@ -73,7 +80,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || errNameRecruitmentPlan || errIdPersonalNeed) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds) {
       return false;
     } else {
       return true;
@@ -416,7 +423,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
                   <p className="err-valid ws-nowrap ">
-                    Nhu cầu không được để rỗng
+                    Nhu cầu không được để trống
                   </p>
                 )}
               </div>

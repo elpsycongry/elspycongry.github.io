@@ -263,8 +263,8 @@ export default function PersonalNeeds() {
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogPersonalFormWatch id={item.id} />
-                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" || item.status.toLowerCase() === "Đang tuyển dụng"  || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogPersonalFormUpdate id={item.id} check={true} />
+                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" || item.status === "Đang tuyển dụng"  || item.status === "Bị từ chối bởi DECAN" ? (
+                                            <DialogPersonalFormUpdate id={item.id} check={true}  />
                                         ) : (
                                             <DialogPersonalFormUpdate id={item.id} />
                                         )}

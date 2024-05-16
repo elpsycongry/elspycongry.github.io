@@ -15,62 +15,73 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
+  const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
+  const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
+  const [chooseRecruitmentNeeds, setChooseRecruitmentNeeds] = useState('');
+
+
   // Xử lý số lượng nhân sự
-  const checkValid = (dateSet, techArr, dateCreate) => {
+  const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
-
-    const errTech = techArr.map((item) => {
+    // 
+    var hasErrPersonalNeeds;
+    if (personalneed === "" || personalneed === null || personalneed === "default") {
+      hasErrPersonalNeeds = true;
+      setErrIdPersonalNeed(true);
+    } else {
+      hasErrPersonalNeeds = false;
+      setErrIdPersonalNeed(false);
+    }
+    // 
+    const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
         return true;
       } else {
         return false;
       }
-    });
-    const hasErrTech = errTech.some((item) => item === true);
+    })
+    const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
-    //
-    const errNumberPersonal = techArr.map((item) => {
-      if (
-        item.numberOfPersonnelNeeded == 0 ||
-        item.numberOfPersonnelNeeded === "" ||
-        item.numberOfPersonnelNeeded < 0
-      ) {
+    // 
+    const errNumberPersonal = techArr.map(item => {
+      if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
         return true;
       } else {
         return false;
       }
-    });
-
-    const hasErrOfPersonal = errNumberPersonal.some((item) => item === true);
+    })
+    const hasErrOfPersonal = errNumberPersonal.some(item => item === true);
     setErrNumberOfPersonal(hasErrOfPersonal);
-    //
-    const errNumberOutput = techArr.map((item) => {
-      if (
-        item.numberOfOutputPersonnel == 0 ||
-        item.numberOfOutputPersonnel === "" ||
-        item.numberOfOutputPersonnel < 0
-      ) {
+    // 
+    const errNumberOutput = techArr.map(item => {
+      if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
         return true;
       } else {
         return false;
       }
-    });
-    const hasErrNumberOutput = errNumberOutput.some((item) => item === true);
+    })
+    const hasErrNumberOutput = errNumberOutput.some(item => item === true);
     setErrNumberOfOutput(hasErrNumberOutput);
+
+    var hasErrRecruitmentPlan;
+    if (nameRecruitmentPlan == "") {
+      hasErrRecruitmentPlan = true;
+      setErrNameRecruitmentPlan(true);
+    } else {
+      hasErrRecruitmentPlan = false;
+      setErrNameRecruitmentPlan(false);
+    }
+
+
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
-    if (
-      dateSet < futureDate ||
-      dateSet == "Invalid Date" ||
-      hasErrTech ||
-      hasErrNumberOutput ||
-      hasErrOfPersonal
-    ) {
+
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds) {
       return false;
     } else {
       return true;
@@ -112,6 +123,9 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
+      console.log(values.recruitmentPlan.recruitmentRequest.id);
+      const personalneed = values.recruitmentPlan.recruitmentRequest.id;
+      const nameRecruitmentPlan = values.recruitmentPlan.name;
       if (values.recruitmentPlan.dateRecruitmentEnd == '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
@@ -120,7 +134,9 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
       const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
-      if (!checkValid(date, tech, dateCreate)) {
+   
+
+      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan,personalneed)) {
         setSubmitting(false);
         return;
       } else if (!checkValidInput(values.recruitmentPlan.name)) {
@@ -159,6 +175,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
       formData.setValues(res.data);
       setHandoverDeadline(res.data.recruitmentPlan.handoverDeadline);
+      setChooseRecruitmentNeeds(res.data.recruitmentPlan.recruitmentRequest.id);
       const detail = res.data.planDetails;
       setTech(
         detail.map((item) => ({
@@ -169,7 +186,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       );
     });
   }, []);
+  const [recuitments, setRecuitment] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
+      setRecuitment(res.data);
+      // setChooseRecruitmentNeeds(res.data.)
+    });
 
+  }, []);
   // Xử lý mở form
   const listTechnology = [
     { id: 1, text: "PHP" },
@@ -316,15 +340,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     updatedTech[index].numberOfPersonnelNeeded = countOf;
     setTech(updatedTech);
   };
-  // const handoverDeadlineStr = formData.values.recruitmentPlan.handoverDeadline;
-  // console.log(handoverDeadlineStr)
-  // const timeHandOver = new Date(handoverDeadlineStr);
-  // console.log(timeHandOver)
-  // const yearH = timeHandOver.getFullYear();
-  // const monthH = String(timeHandOver.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-  // const dayH = String(timeHandOver.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-  // const timeHandOverValue = `${yearH}-${monthH}-${dayH}`;
-  // console.log(timeHandOverValue);
+
   const [handoverDeadline, setHandoverDeadline] = useState("");
 
   const timeNow = new Date();
@@ -384,6 +400,11 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       );
     }
   };
+
+  const handleChangeRecruitmentNeeds = (event) =>{
+    setChooseRecruitmentNeeds(event.target.value);
+    formData.handleChange(event);
+  }
   return (
     <>
       {check ? (
@@ -424,12 +445,28 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
               <label htmlFor="name" className="form-label grey-text">
                 Từ nhu cầu nhân sự
               </label>
-              <input
-                type="text"
-                className='form-control grey-text'
-                value={formData.values.recruitmentPlan.recruitmentRequest.name}
-                readOnly
-              />
+              <select
+                className="form-select grey-text"
+                aria-label="Default select example"
+                onChange={(event) =>handleChangeRecruitmentNeeds(event)}
+                value={chooseRecruitmentNeeds}
+                name="recruitmentPlan.recruitmentRequest.id"
+                id="recruitmentPlan.recruitmentRequest.id"
+              >
+                <option value="default">Chọn nhu cầu nhân sự</option>
+                {recuitments.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+              <div className="col-md-8  mt-0">
+                {errIdPersonalNeed && (
+                  <p className="err-valid ws-nowrap ">
+                    Nhu cầu không được để rỗng
+                  </p>
+                )}
+              </div>
             </div>
             <div className="col-md-12">
               <label htmlFor="name" className="form-label grey-text">
@@ -447,17 +484,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                 name="recruitmentPlan.name"
               />
             </div>
-            {!checkValidInput(formData.values.recruitmentPlan.name) && (
-              <div>
-                {/* Hiển thị thông báo lỗi */}
-                <p
-                  style={{ whiteSpace: "nowrap" }}
-                  className="err-valid col-md-6"
-                >
-                  Độ dài tối đa là 60 ký tự.
+            <div className="col-md-8  mt-0">
+              {errNameRecruitmentPlan && (
+                <p className="err-valid ws-nowrap ">
+                  Tên kế hoạch không được để trống
                 </p>
-              </div>
-            )}
+              )}
+            </div>
+
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
                 <label className="form-label grey-text">

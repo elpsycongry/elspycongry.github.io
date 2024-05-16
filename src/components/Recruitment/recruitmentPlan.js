@@ -310,9 +310,6 @@ export default function RecruitmentPlan() {
                         <div className=' position-absolute bottom-0  w-100 start-0' style={{marginBottom: "20px"}}>
                             <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
                         </div>
-                        {/* <button onClick={() => getAll(page - 1)} disabled={page === 0} className='me-2 btn btn-light'>Previous</button>
-                        <span>{page + 1} of {totalPages}</span>
-                        <button onClick={() => getAll(page + 1)} disabled={page === totalPages - 1} className='ms-2 btn btn-light'>Next</button> */}
                     </div>
                 </div>
             </Box>

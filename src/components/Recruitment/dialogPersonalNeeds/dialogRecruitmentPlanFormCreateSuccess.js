@@ -18,7 +18,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
-    console.log(techArr)
+    console.log(nameRecruitmentPlan);
+    
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
     const errTech = techArr.map(item => {
@@ -28,12 +29,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         return false;
       }
     })
-    if (nameRecruitmentPlan == "") {
-      setErrNameRecruitmentPlan(true);
-    } else {
-      setErrNameRecruitmentPlan(false);
-    }
-
+    
     const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
     // 
@@ -44,6 +40,16 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         return false;
       }
     })
+    
+    var hasErrRecruitmentPlan;
+    if (nameRecruitmentPlan == "") {
+      hasErrRecruitmentPlan = true;
+      setErrNameRecruitmentPlan(true);
+    } else {
+      hasErrRecruitmentPlan = false;
+      setErrNameRecruitmentPlan(false);
+    }
+
     const hasErrOfPersonal = errNumberPersonal.some(item => item === true);
     setErrNumberOfPersonal(hasErrOfPersonal);
     // 
@@ -64,9 +70,9 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     } else {
       setDateErr(false);
     }
+    console.log(hasErrRecruitmentPlan)
 
-
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || errNameRecruitmentPlan) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan) {
       return false;
     } else {
       return true;
@@ -101,9 +107,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-      const nameRecruitmentPlan = values.recruitmentPlan.name;
       values.recruitmentPlan.recruitmentRequest.id = idRecruitment;
-      console.log(values);
+      const nameRecruitmentPlan = values.recruitmentPlan.name;
       // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
       if (values.recruitmentPlan.dateRecruitmentEnd == '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
@@ -113,6 +118,9 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
       const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
+      // checkValid(date, tech, dateCreate, nameRecruitmentPlan);
+      // setSubmitting(false);
+      // return;
       if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan)) {
         setSubmitting(false);
         return;
@@ -419,7 +427,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
               <div className="col-md-8  mt-0">
                 {errNameRecruitmentPlan && (
                   <p className="err-valid ws-nowrap ">
-                    Tên kế hoạch không được để rỗng
+                    Tên kế hoạch không được để trống
                   </p>
                 )}
               </div>
