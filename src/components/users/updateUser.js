@@ -1,165 +1,172 @@
-import * as React from 'react';
-import { Dialog, DialogTitle, IconButton, Typography } from "@mui/material";
-import CreateIcon from "@mui/icons-material/Create";
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import React, { useState, useEffect } from 'react';
+import {
+    Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography,
+    TextField, FormGroup, FormControlLabel, Checkbox, Button
+} from '@mui/material';
+import CreateIcon from '@mui/icons-material/Create';
+import { useSnackbar } from 'notistack';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import './updateUser.css';
 import '../../assets/css/cssRecruitment/recruitment.css';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { useFormik } from 'formik';
-import { SnackbarProvider, useSnackbar } from 'notistack';
 
 export default function DialogUpdateUserForm({ userId, onUpdate }) {
-
-    const [open, setOpen] = React.useState(false);
-    const [roles, setRoles] = React.useState([]);
+    const [open, setOpen] = useState(false);
+    const [roles, setRoles] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
 
-    // Sử dụng useFormik để quản lý form
-    const formData = useFormik({
+    // Formik initialization
+    const formik = useFormik({
         initialValues: {
             id: null,
             name: "",
             email: "",
-            phone:"",
-            roles: [] // Danh sách roles ban đầu
+            phone: "",
+            roles: []
+        },
+        validationSchema: Yup.object({
+            name: Yup.string().max(30, 'Không quá 30 ký tự').required('Tên không được bỏ trống'),
+            email: Yup.string().email('Email không đúng định dạng').required('Email không được bỏ trống'),
+            phone: Yup.string().matches(/^(0[3|5|7|8|9])+([0-9]{8})$/, 'Số điện thoại không hợp lệ')
+        }),
+        validate: async (values) => {
+            const errors = {};
+            if (values.phone) {
+                try {
+                    const response = await axios.get(`http://localhost:8080/admin/users/check-phone/${values.phone}`);
+                    if (response.data.exists) {
+                        errors.phone = "Số điện thoại đã tồn tại";
+                    }
+                } catch (error) {
+                    errors.phone = "Lỗi khi kiểm tra số điện thoại";
+                }
+            }
+            return errors;
         },
         onSubmit: async (values) => {
             try {
                 await axios.put(`http://localhost:8080/admin/users/update/${userId}`, values);
-                enqueueSnackbar('Cập nhật thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                // window.location.href = "/users";
+                enqueueSnackbar('Cập nhật thành công!', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 onUpdate();
                 setOpen(false);
             } catch (error) {
-                setOpen(false);
                 enqueueSnackbar("Cập nhật thất bại!", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
             }
-        }
+        },
     });
 
-    React.useEffect(() => {
+    // Fetch user data
+    useEffect(() => {
         axios.get(`http://localhost:8080/admin/users/view/${userId}`)
             .then((res) => {
                 setRoles(res.data.roles);
-                formData.setValues(res.data);
+                formik.setValues(res.data);
             });
     }, [userId]);
 
-    // Hàm xử lý thay đổi checkbox
+    // Handle checkbox change
     const handleCheckboxChange = (roleId) => (event) => {
-        const isChecked = event.target.checked;
-        const updatedRoles = [...formData.values.roles];
-        console.log(updatedRoles);
+        const updatedRoles = formik.values.roles.slice();
         const roleIndex = updatedRoles.findIndex(role => role.id === roleId);
-        if (isChecked && roleIndex === -1) {
-            // Nếu checkbox được chọn và roleId không tồn tại trong mảng roles, thêm mới roleId vào mảng
+
+        if (event.target.checked && roleIndex === -1) {
             updatedRoles.push({ id: roleId });
-        } else if (!isChecked && roleIndex !== -1) {
-            // Nếu checkbox không được chọn và roleId tồn tại trong mảng roles, loại bỏ roleId khỏi mảng
+        } else if (!event.target.checked && roleIndex !== -1) {
             updatedRoles.splice(roleIndex, 1);
         }
-        // Cập nhật trạng thái của mảng roles trong form
-        formData.setFieldValue('roles', updatedRoles);
+        formik.setFieldValue('roles', updatedRoles);
     };
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    function FormTest({ userId }) {
-        const hasTeamLeadRole = roles.some(role => role.name === 'ROLE_TEAMLEAD');
-        const hasHRRoles = roles.some(role => role.name === 'ROLE_HR');
-        const hasQCRoles = roles.some(role => role.name === 'ROLE_QC');
-        const hasTrainingManagerRole = roles.some(role => role.name === 'ROLE_TM');
-
-        // Tạo trạng thái để quản lý trạng thái của checkbox
-        const [isTeamLeadChecked, setTeamLeadChecked] = React.useState(hasTeamLeadRole);
-        const [isHRChecked, setHRChecked] = React.useState(hasHRRoles);
-        const [isQCChecked, setQCChecked] = React.useState(hasQCRoles);
-        const [isTrainingManagerChecked, setTrainingManagerChecked] = React.useState(hasTrainingManagerRole);
-
-        React.useEffect(() => {
-            setTeamLeadChecked(hasTeamLeadRole);
-            setHRChecked(hasHRRoles);
-            setQCChecked(hasQCRoles);
-            setTrainingManagerChecked(hasTrainingManagerRole);
-        }, []);
-
-        return (
-            <FormGroup>
+    // Render roles checkboxes
+    const RolesCheckboxes = () => (
+        <FormGroup>
+            {[
+                { id: 2, label: "Trưởng bộ phận/nhóm" },
+                { id: 3, label: "Nhân sự" },
+                { id: 4, label: "Kiểm soát chất lượng" },
+                { id: 5, label: "Quản lý đào tạo" }
+            ].map(role => (
                 <FormControlLabel
-                    control={<Checkbox checked={formData.values.roles.some(role => role.id === 2)} onChange={handleCheckboxChange(2)} />}
-                    label={<span className="form-label grey-text information-user">Trưởng bộ phận/nhóm</span>}
+                    key={role.id}
+                    control={<Checkbox checked={formik.values.roles.some(r => r.id === role.id)} onChange={handleCheckboxChange(role.id)} />}
+                    label={<span className="form-label grey-text information-user">{role.label}</span>}
                 />
-                <FormControlLabel
-                    control={<Checkbox checked={formData.values.roles.some(role => role.id === 3)} onChange={handleCheckboxChange(3)} />}
-                    label={<span className="form-label grey-text information-user">Nhân sự</span>}
-                />
-                <FormControlLabel
-                    control={<Checkbox checked={formData.values.roles.some(role => role.id === 4)} onChange={handleCheckboxChange(4)} />}
-                    label={<span className="form-label grey-text information-user">Kiểm soát chất lượng</span>}
-                />
-                <FormControlLabel
-                    control={<Checkbox checked={formData.values.roles.some(role => role.id === 5)} onChange={handleCheckboxChange(5)} />}
-                    label={<span className="form-label grey-text information-user">Quản lý đào tạo</span>}
-                />
-            </FormGroup>
-        );
-    }
+            ))}
+        </FormGroup>
+    );
 
     return (
         <>
-            <CreateIcon className="color-orange pencil-btn font-size-medium cursor" onClick={(id) => handleClickOpen(id)} />
+            <CreateIcon className="color-orange pencil-btn font-size-medium cursor" onClick={() => setOpen(true)} />
+
             <Dialog
-                className='wrapper-update row g-3'
                 open={open}
-                onClose={handleClose}
-                PaperProps={{
-                    fontSize: '16px',
-                    component: 'form',
-                    onSubmit: formData.handleSubmit,
-                }}
+                onClose={() => setOpen(false)}
+                PaperProps={{ component: 'form', onSubmit: formik.handleSubmit }}
             >
-                <div style={{ padding: '33px' }}>
-                    <DialogTitle className="col-md-12 grey-text" style={{ paddingBottom: 3 }}><h2 style={{ fontWeight: '700' }}>Cập nhật thông tin</h2></DialogTitle>
-                    <DialogContent className="col-md-12" >
-                        <DialogContentText>
-                            <div className="form-label grey-text information-user">Họ tên: <span className='information-user'>{formData.values.name}</span></div>
-                            <div className="form-label grey-text information-user">Email: <span>{formData.values.email}</span></div>
-                            <div className="form-label grey-text information-user">Số điện thoại: <span>{formData.values.phone}</span></div>
-                            {/* <div className="form-label grey-text information-user">Trạng thái tài khoản: <span>Đang chờ duyệt</span></div> */}
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <div className="form-label grey-text information-user">Vai trò:</div>
-                                <div style={{ paddingLeft: '20px' }}>
-                                    <FormTest />
-                                </div>
+                <div className='form-update-user'>
+                    <DialogTitle><span style={{ fontWeight: '700', fontSize: '32px', paddingTop: '12px' }}>Cập nhật thông tin</span></DialogTitle>
+                    <DialogContent>
+                        <div className='form-label-input'>
+                            <div className="form-label grey-text information-user">Họ tên: 
+                            <span style={{color: 'red'}}> *</span>
                             </div>
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <div className="send text-right">
-                            <div className="send-child position-relative">
-                                <button type="submit" className="btn send-btn btn-success text-center">
-                                    Lưu
-                                </button>
+                            <TextField
+                                name='name'
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                error={formik.touched.name && Boolean(formik.errors.name)}
+                                helperText={formik.touched.name && formik.errors.name}
+                            />
+                        </div>
+                        <div className='form-label-input'>
+                        <div className="form-label grey-text information-user">Email: 
+                            <span style={{color: 'red'}}> *</span>
+                            </div>
+                            <TextField
+                                name='email'
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                helperText={formik.touched.email && formik.errors.email}
+                            />
+                        </div>
+                        <div className='form-label-input'>
+                            <div className="form-label grey-text information-user">Số điện thoại:</div>
+                            <TextField
+                                name='phone'
+                                value={formik.values.phone}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                error={formik.touched.phone && Boolean(formik.errors.phone)}
+                                helperText={formik.touched.phone && formik.errors.phone}
+                            />
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div className="form-label grey-text information-user">Vai trò:</div>
+                            <div style={{ paddingLeft: '20px' }}>
+                                <RolesCheckboxes />
                             </div>
                         </div>
-                    </DialogActions>
+                    </DialogContent>
+                    <div className='btn-container-user'>
+                        <Button 
+                        type="submit" 
+                        disabled={!formik.isValid} 
+                        variant="contained"
+                        className='send-btn'
+                        style={{backgroundColor: 'green'}}>
+                            Cập nhật
+                        </Button>
+                    </div>
                 </div>
-
             </Dialog>
         </>
-    )
+    );
 }

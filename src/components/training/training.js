@@ -16,6 +16,19 @@ import { Icon } from '@iconify/react';
 // import {faEnvelop} from ''
 import './training.css';
 
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="/public">
+                Quản lý đào tạo
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
 export default function Training() {
     const location = useLocation();
 
@@ -56,7 +69,7 @@ export default function Training() {
             <Header />
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
-                <Box m={2} style={{ display: 'flex' }}>
+                <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '14px' }}>
                     <Icon style={{ width: 23, height: 23, color: 'rgba(0, 0, 0, 0.60)' }} icon="ion:book-sharp" />
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Đào tạo</p>
                 </Box>
@@ -116,7 +129,7 @@ export default function Training() {
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment" style={{borderRadius: '10px'}}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
                         <table className="table_training" style={{ display: 'flex' }}>
                             <div className="no-scrolling">
@@ -180,9 +193,14 @@ export default function Training() {
                             </div>
                         </table>
                     </div>
-                    <Stack spacing={2} style={{ marginTop: '50px', alignItems: 'center' }}>
-                        <Pagination count={10} shape="rounded" />
-                    </Stack>
+
+                    <div className=" bottom-0 position-absolute w-100 left-0" style={{ marginBottom: '20px' }}>
+                        <Pagination className="d-flex justify-content-center" />
+                    </div>
+
+                </div>
+                <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
             </Box>
             {/* <Footer /> */}

@@ -172,13 +172,25 @@ export default function Users() {
         }
     };
 
+    function Copyright(props) {
+        return (
+            <Typography variant="body2" color="text.secondary" align="center" {...props}>
+                {'Copyright © '}
+                <Link color="inherit" href="/public">
+                    Quản lý đào tạo
+                </Link>{' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
+        );
+    }
 
     return (
         <>
             <Header />
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
-                <Box m={2} style={{ display: 'flex' }}>
+                <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '14px' }}>
                     {/* <Breadcrumbs
                         aria-label='breadcrumb'
                         separator={<NavigateNextIcon fontSize="small" />}>
@@ -252,9 +264,9 @@ export default function Users() {
                                 <Select
                                     sx={{
                                         height: '30px',
-                                        paddingTop: '0px', 
-                                        paddingBottom: '0px', 
-                                        backgroundColor: 'white' ,
+                                        paddingTop: '0px',
+                                        paddingBottom: '0px',
+                                        backgroundColor: 'white',
                                         width: '300px'
                                     }}
                                     labelId="demo-simple-small-label"
@@ -274,7 +286,7 @@ export default function Users() {
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment" style={{ borderRadius: '10px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
                         <table className=" table-user ">
 
@@ -312,19 +324,23 @@ export default function Users() {
                                     </tr>
                                 ))}
                             </tbody>
-
                         </table>
-                        <Stack spacing={1} style={{ alignItems: 'center', marginTop: '50px' }}>
-                            <Pagination
-                                count={Math.ceil(pagination.totalElements / pagination.size)}
-                                page={pagination.page + 1}
-                                shape="rounded"
-                                onChange={handlePageChange}
-                            />
-                        </Stack>
                     </div>
+
+                    <div className=" bottom-0 position-absolute w-100 left-0" style={{ marginBottom: '20px' }}>
+                        <Pagination
+                            className="d-flex justify-content-center"
+                            count={Math.ceil(pagination.totalElements / pagination.size)}
+                            page={pagination.page + 1}
+                            onChange={handlePageChange}
+                        />
+                    </div>
+                    
                 </div>
-            </Box>
+                <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
+                </div>
+            </Box >
             {/* <Footer /> */}
         </>
     );
