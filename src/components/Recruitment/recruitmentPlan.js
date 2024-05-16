@@ -135,7 +135,7 @@ export default function RecruitmentPlan() {
         { id: "Đã hủy", text: "Đã hủy" },
         { id: "Đã xác nhận", text: "Đã xác nhận" },
         { id: "Bị từ chối", text: "Bị từ chối" },
-        { id: "Đang chờ", text: "Đã gửi" },
+        { id: "Đã gửi", text: "Đã gửi" },
         { id: "Hoàn thành", text: "Hoàn thành" },
     ]
 
