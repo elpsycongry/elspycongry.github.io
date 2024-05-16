@@ -1,16 +1,14 @@
-import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import SendIcon from "@mui/icons-material/Send";
 import RemoveIcon from "@mui/icons-material/Remove";
-import BackspaceIcon from "@mui/icons-material/Backspace";
+import SendIcon from "@mui/icons-material/Send";
+import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
 
-import axios from "axios";
-import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
 import CreateIcon from "@mui/icons-material/Create";
+import axios from "axios";
+import { useFormik } from "formik";
+import swal from "sweetalert";
 
 export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [dateErr, setDateErr] = useState(false);
@@ -160,6 +158,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
 
     axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
       formData.setValues(res.data);
+      setHandoverDeadline(res.data.recruitmentPlan.handoverDeadline);
       const detail = res.data.planDetails;
       setTech(
         detail.map((item) => ({
@@ -317,21 +316,22 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     updatedTech[index].numberOfPersonnelNeeded = countOf;
     setTech(updatedTech);
   };
-  const handoverDeadlineStr = formData.values.recruitmentPlan.handoverDeadline;
-  const timeHandOver = new Date(handoverDeadlineStr);
-  const yearH = timeHandOver.getFullYear();
-  const monthH = String(timeHandOver.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-  const dayH = String(timeHandOver.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-  const timeHandOverValue = `${yearH}-${monthH}-${dayH}`;
-  const [handoverDeadline, setHandoverDeadline] = useState(timeHandOverValue);
+  // const handoverDeadlineStr = formData.values.recruitmentPlan.handoverDeadline;
+  // console.log(handoverDeadlineStr)
+  // const timeHandOver = new Date(handoverDeadlineStr);
+  // console.log(timeHandOver)
+  // const yearH = timeHandOver.getFullYear();
+  // const monthH = String(timeHandOver.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+  // const dayH = String(timeHandOver.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  // const timeHandOverValue = `${yearH}-${monthH}-${dayH}`;
+  // console.log(timeHandOverValue);
+  const [handoverDeadline, setHandoverDeadline] = useState("");
 
   const timeNow = new Date();
   const year = timeNow.getFullYear();
   const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
   const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
   const timeNowValue = `${year}-${month}-${day}`;
-  const dateDeadline = new Date(timeNow);
-  dateDeadline.setDate(timeNow.getDate() + 75);
   const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
 
   const handleDateChange = (event) => {
@@ -344,8 +344,6 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   }
 
   function TimeRecruitment() {
-
-
     return (
       <>
         <div className="col-md-4 mt-0 mb-2 child">
@@ -554,9 +552,8 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
             <div className="col-md-4 mb-2 mt-0">
               <div className="send text-right mt-0">
                 <div className="send-child position-relative">
-                  <button type="submit" className="btn send-btn btn-success ">
-                    Gửi
-                    <SendIcon className="iconSend position-absolute" />
+                  <button type="submit" className="btn send-btn btn-success text-center">
+                    Lưu
                   </button>
                 </div>
               </div>

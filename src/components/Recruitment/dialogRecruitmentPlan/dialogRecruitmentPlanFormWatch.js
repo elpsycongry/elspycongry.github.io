@@ -6,8 +6,9 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DialogRecruitmentPlanFormReason from "./dialogRecruitmentPlanFormReason";
 import axios from "axios";
 import { useFormik } from "formik";
+import Swal from 'sweetalert2';
 
-export default function DialogRecruitmentPlanFormWatch({ id }) {
+export default function DialogRecruitmentPlanFormWatch({ id, check }) {
   const [tenhnology, setTenhnology] = useState([]);
   // Dữ liệu fake
   const formData = useFormik({
@@ -37,6 +38,39 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
       ],
     },
   });
+  // Call api
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showCancelButton: false,
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+  const approve = async () => {
+    try {
+      const res = await axios.put(`http://localhost:8080/api/plans/${id}/users/1`);
+      setOpenForm(false);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Phê duyệt thành công",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        window.location.href = "/recruitment/recruitmentPlan";
+      });
+
+      console.log('Response:', res.data); // You can log the response or handle it accordingly
+    } catch (error) {
+      console.error('Error fetching approval:', error);
+      // You can handle the error here, e.g., show a message to the user
+    }
+  };
   useEffect(() => {
     axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
       formData.setValues(res.data);
@@ -232,7 +266,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                 </tbody>
               </table>
             </div>
-            
+
             {formData.values.recruitmentPlan.status === "Bị từ chối bởi DET" ? (
               <div className="col-md-12  d-flex ">
                 <label
@@ -249,7 +283,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                   value={formData.values.recruitmentPlan.reason}
                 ></textarea>
               </div>
-            ) : (
+            ) : (check ? (
               <div className="col-md-12 mt-0 d-flex">
                 <div className="col-md-6 mt-2">
                   <button
@@ -261,11 +295,13 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                   </button>
                 </div>
                 <div className="col-md-6 mt-2 ms-2">
-                  <button className=" btn-edit btn btn-success w-98    bg-clr-success">
+                  <button type="button" onClick={approve} className=" btn-edit btn btn-success w-98    bg-clr-success">
                     Phê duyệt
                   </button>
                 </div>
-              </div>
+              </div>) 
+              :
+              ("")
             )}
           </form>
         </DialogTitle>

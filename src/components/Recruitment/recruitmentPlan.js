@@ -163,7 +163,7 @@ export default function RecruitmentPlan() {
             <Header />
             <Navbar />
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
-                <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Kế hoạch tuyển dụng" icon={<BusinessCenterIcon sx={{ marginBottom: '5px',marginRight: '2px'}}/>} />
+                <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Kế hoạch tuyển dụng" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
                 <div className="content-recruiment">
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
@@ -208,7 +208,7 @@ export default function RecruitmentPlan() {
                                         <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
                                     </form>
                                 </div>
-                                <FormControl className="ml-10 select-form"  sx={{ minWidth: 300 }}>
+                                <FormControl className="ml-10 select-form" sx={{ minWidth: 300 }}>
                                     <InputLabel htmlFor="grouped-select">Trạng thái</InputLabel>
                                     <Select defaultValue=""
                                         id="grouped-select"
@@ -251,7 +251,11 @@ export default function RecruitmentPlan() {
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
-                                        <DialogRecruitmentPlanFormWatch id={item.id} />
+                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
+                                        ) : (
+                                            <DialogRecruitmentPlanFormWatch id={item.id} />
+                                        )}
                                         {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
                                             <DialogRecruitmentPlanFormUpdate id={item.id} check={true} />
                                         ) : (
