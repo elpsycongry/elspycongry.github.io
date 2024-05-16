@@ -12,7 +12,6 @@ import swal from "sweetalert";
 
 
 export default function DialogPersonalFormReason({ idUser, open, onClose }) {
-
     const [reason, setReason] = useState('');
 
     const handleSubmit = async (e) => {

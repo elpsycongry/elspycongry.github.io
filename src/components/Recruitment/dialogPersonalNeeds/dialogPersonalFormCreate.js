@@ -201,7 +201,7 @@ export default function DialogPersonalFormCreate() {
 
   return (
     <>
-      <div className=" min-width position-relative " onClick={handleClickFormOpen}>
+      <div className=" min-width position-relative cursor-pointer" onClick={handleClickFormOpen}>
         <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline">Thêm nhu cầu nhân sự</button>
         <AddIcon className=" position-absolute plus-icon clr-white" />
       </div>
@@ -285,14 +285,12 @@ export default function DialogPersonalFormCreate() {
                 </div>
               </>
             ))}
-            <div className=" col-md-12 d-flex justify-content-between mt-0">
-              <div>
-                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid col-md-6">Công nghệ không được để rỗng</p>}
+              <div className="col-md-6 mt-0">
+                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để rỗng</p>}
               </div>
-              <div>
-                {quantityErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid justify-content-end col-md-6">Số lượng phải bé hơn 0</p>}
+              <div className="col-md-6 text-center mt-0">
+                {quantityErr && <p style={{ whiteSpace: 'nowrap', padding:'0px 16px 0px 8px' }} className="err-valid">Số lượng phải bé hơn 0</p>}
               </div>
-            </div>
 
 
             <div className="col-md-12 mt-2" onClick={addTech}>

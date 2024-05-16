@@ -47,57 +47,57 @@ export default function RecruitmentPlan() {
     };
 
 
-    const listPersonal = [
-        {
-            id: 1,
-            name: "DECEN- Nhu cầu nhân sự quý 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 2,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 3,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 4,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 5,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 6,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 7,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-    ];
+    // const listPersonal = [
+    //     {
+    //         id: 1,
+    //         name: "DECEN- Nhu cầu nhân sự quý 3",
+    //         time: "14:19 11/11/2019",
+    //         status: "Đã gửi",
+    //         man: "KongDT",
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "DECEN- Nhu cầu 3",
+    //         time: "14:19 11/11/2019",
+    //         status: "Đã gửi",
+    //         man: "KongDT",
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "DECEN- Nhu cầu 3",
+    //         time: "14:19 11/11/2019",
+    //         status: "Đã gửi",
+    //         man: "KongDT",
+    //     },
+    //     {
+    //         id: 4,
+    //         name: "DECEN- Nhu cầu 3",
+    //         time: "14:19 11/11/2019",
+    //         status: "Đã gửi",
+    //         man: "KongDT",
+    //     },
+    //     {
+    //         id: 5,
+    //         name: "DECEN- Nhu cầu 3",
+    //         time: "14:19 11/11/2019",
+    //         status: "Đã gửi",
+    //         man: "KongDT",
+    //     },
+    //     {
+    //         id: 6,
+    //         name: "DECEN- Nhu cầu 3",
+    //         time: "14:19 11/11/2019",
+    //         status: "Đã gửi",
+    //         man: "KongDT",
+    //     },
+    //     {
+    //         id: 7,
+    //         name: "DECEN- Nhu cầu 3",
+    //         time: "14:19 11/11/2019",
+    //         status: "Đã gửi",
+    //         man: "KongDT",
+    //     },
+    // ];
 
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
@@ -109,7 +109,7 @@ export default function RecruitmentPlan() {
         event.preventDefault();
         try {
             const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}`);
-            setRecuitment(response.data);
+            setRecuitmentPlan(response.data);
             if (response.data.length === 0) {
                 setShowError(true);
             } else {
@@ -149,12 +149,14 @@ export default function RecruitmentPlan() {
     // };
 
 
-    const [recuitments, setRecuitment] = useState([]);
+    const [RecruitmentPlan, setRecuitmentPlan] = useState([]);
     useEffect(() => {
-        axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-            setRecuitment(res.data);
+        axios.get("http://localhost:8080/api/plans?page=0").then((res) => {
+            console.log(res.data)
+            setRecuitmentPlan(res.data.content);
         });
     }, []);
+
 
     return (
         <>
@@ -240,12 +242,12 @@ export default function RecruitmentPlan() {
                                 <th className="w-130 text-center">Người gửi</th>
                                 <th className="w-130 text-right">Hành động</th>
                             </tr>
-                            {recuitments.map((item) => (
+                            {RecruitmentPlan.map((item) => (
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td className="count-td pl-20"></td>
 
                                     <td>{item.name}</td>
-                                    <td className="text-center">{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
+                                    <td className="text-center">{moment(item.dateCreatePlan).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
