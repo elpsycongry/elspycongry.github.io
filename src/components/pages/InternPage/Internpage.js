@@ -3,11 +3,11 @@ import {useEffect, useRef, useState} from "react";
 import Button from "@mui/material/Button";
 import "./internpage.scss"
 import DialogActions from "@mui/material/DialogActions";
-import axios from "axios";
+import axios, {options} from "axios";
 import {useParams} from "react-router-dom";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCheck, faX} from "@fortawesome/free-solid-svg-icons";
-
+import _ from 'lodash'
 export function InternPage() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(true)
@@ -15,7 +15,10 @@ export function InternPage() {
     const finalScore = useRef()
     const passed = useRef()
     const [finalScoreValue, setFinalScoreValue] = useState();
-    const [finalResultPass, setFinalResultPass] = useState();
+    const [finalResultPass, setFinalResultPass] = useState(null);
+    const [inValidSave, setInValidSave] = useState(false);
+
+
     const handleClose = () => {
         setOpen(false)
     };
@@ -41,12 +44,11 @@ export function InternPage() {
             {name: "Môn 6", theoryScore: '', practiceScore: '', attitudeScore: ''},
             {name: "Môn 7", theoryScore: '', practiceScore: '', attitudeScore: ''},
         ],
-
-        scores: []
     })
     const inputRegex = /^(10|[0-9]|)$/;
     const handleTheoryScoreChange = (event, index) => {
         if (event.target.value.match(inputRegex)) {
+            // setInValidSave(false)
             const updatedSubjects = [...data.subjects];
             updatedSubjects[index].theoryScore = event.target.value;
             setData({
@@ -81,7 +83,6 @@ export function InternPage() {
         });}
     }
 
-
     finalScore.current = []
     passed.current = true
     function findTotal(theory, practice, attitude) {
@@ -110,9 +111,17 @@ export function InternPage() {
     }
     const param = useParams();
 
-    const fetchFinalResultPass = (finalScore, inTeamScore, isValid) => {
-        console.log((parseFloat(finalScore)+parseFloat(inTeamScore))/2)
-        if (!isValid){
+    const fetchFinalResultPass = (finalScore, inTeamScore) => {
+        if (passed.current) {
+            finalScore = parseFloat(finalScore);
+            inTeamScore = parseFloat(inTeamScore);
+            if ( !isNaN(finalScore) && !isNaN(inTeamScore) ) {
+                let isPass = parseFloat(((finalScore + inTeamScore)/2).toFixed(2));
+                setFinalResultPass(isPass > 5)
+            } else  {
+                setFinalResultPass(null)
+            }
+        } else {
             setFinalResultPass(null)
         }
     }
@@ -122,15 +131,72 @@ export function InternPage() {
         axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
             setData(res.data)
         })
+
     }, []);
 
     useEffect(() => {
-        setFinalScoreValue(parseFloat(finalScore.current.reduce((a,b) => a + b,0)/finalScore.current.length)
+        // axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
+        // axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
+        //     // compareObjects(res.data,data);
+        // })
+        setFinalScoreValue(
+            parseFloat(
+                finalScore.current.reduce((a,b) => a + b,0) /finalScore.current.length)
             .toFixed(2))
-        fetchFinalResultPass(finalScoreValue, data.scoreInTeam, false)
+        fetchFinalResultPass(
+            parseFloat(
+                finalScore.current.reduce((a,b) => a + b,0) /finalScore.current.length)
+                .toFixed(2)
+            , data.scoreInTeam,  false)
     }, [data]);
 
+    // Handle submit
+    const handleSubmit = () => {
+        if (finalResultPass!== null){
+            const currentDate = new Date().toISOString().split('T')[0];
+            setData({...data, endDate: currentDate})
+        }
+    }
+    // Hàm lấy ra ngày thực tập
+    const getBusinessDay = (dateFrom,dateTo) =>{
+        let day = 0;
+        for (var currentDate = new Date(dateFrom); currentDate <= dateTo; currentDate.setDate(currentDate.getDate() + 1)) {
+            if(
+                currentDate.toLocaleDateString('en-US',{weekday: "short"}) !== 'Sun'
+                &&
+                currentDate.toLocaleDateString('en-US',{weekday: "short"}) !== 'Sat'
+            ) {
+                day++;
+            }
+        }
+        return day
+    }
 
+    function compareObjects(obj1, obj2) {
+        // Kiểm tra các thuộc tính của object
+        for (var key in obj1) {
+            console.log(key)
+            if (obj1[key] !== obj2[key]) {
+                // console.log(obj1[key])
+            }
+        }
+
+        // Kiểm tra mảng subjects
+        if (obj1.subjects.length !== obj2.subjects.length) {
+            // console.log("Mảng subjects có số lượng phần tử khác nhau.");
+        } else {
+            for (var i = 0; i < obj1.subjects.length; i++) {
+                var subject1 = obj1.subjects[i];
+                var subject2 = obj2.subjects[i];
+                for (var prop in subject1) {
+                    if (subject1[prop] !== subject2[prop]) {
+
+                        // console.log("Phần tử " + (i + 1) + " trong mảng subjects có sự thay đổi ở thuộc tính " + prop);
+                    }
+                }
+            }
+        }
+    }
     return (
         <>
             <Button key={1} onClick={() => {
@@ -145,7 +211,9 @@ export function InternPage() {
                         <h6>Họ tên: {data.name}</h6>
                         <div className={"flex-row"}>
                             <p>Ngày bắt đầu: {data.startDate}</p>
-                            <p style={{paddingRight: '8px'}}>Số ngày thực tập: 35</p>
+                            <p style={{paddingRight: '8px'}}>
+                                Số ngày thực tập: {getBusinessDay(new Date(data.startDate),new Date(data.endDate))}
+                            </p>
                         </div>
                         <p>Ngày kết thúc: {data.endDate}</p>
                     </div>
@@ -209,7 +277,7 @@ export function InternPage() {
                         <div className={"flex flex-row justify-content-between"}>
                             <p className={"tb "}>Kết quả thực tập</p>
                             <p className={"table-score__item"}>
-                                {data.isPass}
+                                {finalResultPass===null ? "NA" :(finalResultPass ? "Pass" : "Fail" )}
                             </p>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
@@ -238,7 +306,7 @@ export function InternPage() {
                     </div>
                 </DialogContent>
                 <DialogActions sx={{display: "flex"}}>
-                    <button className={"save-btn"}>
+                    <button disabled={inValidSave} onClick={() => {handleSubmit()}} className={"save-btn"}>
                         SAVE
                     </button>
                 </DialogActions>
