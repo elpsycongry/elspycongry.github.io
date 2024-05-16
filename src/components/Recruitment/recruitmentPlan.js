@@ -120,6 +120,8 @@ export default function RecruitmentPlan() {
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
             if (response.data.content.length === 0) {
+                setPage(0);
+                setTotalPages(1)
                 setShowError(true);
             } else {
                 setShowError(false);
