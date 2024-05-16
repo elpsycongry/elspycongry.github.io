@@ -1,3 +1,4 @@
+
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ClearIcon from "@mui/icons-material/Clear";
 import {
@@ -190,6 +191,11 @@ export default function RecruitmentPlan() {
     useEffect(() => {
         getAll(page);
     }, [page]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const handlePagination = (event, value) =>{
+        setCurrentPage (value);
+        getAll(value-1);
+    }
 
     return (
         <>
@@ -301,12 +307,12 @@ export default function RecruitmentPlan() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
-                        {/* <div className=' position-absolute bottom-0  w-100 start-0' style={{marginBottom: "20px"}}>
-                            <Pagination count={10} className=' d-flex justify-content-center ' />
-                        </div> */}
-                        <button onClick={() => getAll(page - 1)} disabled={page === 0} className='me-2 btn btn-light'>Previous</button>
+                        <div className=' position-absolute bottom-0  w-100 start-0' style={{marginBottom: "20px"}}>
+                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
+                        </div>
+                        {/* <button onClick={() => getAll(page - 1)} disabled={page === 0} className='me-2 btn btn-light'>Previous</button>
                         <span>{page + 1} of {totalPages}</span>
-                        <button onClick={() => getAll(page + 1)} disabled={page === totalPages - 1} className='ms-2 btn btn-light'>Next</button>
+                        <button onClick={() => getAll(page + 1)} disabled={page === totalPages - 1} className='ms-2 btn btn-light'>Next</button> */}
                     </div>
                 </div>
             </Box>

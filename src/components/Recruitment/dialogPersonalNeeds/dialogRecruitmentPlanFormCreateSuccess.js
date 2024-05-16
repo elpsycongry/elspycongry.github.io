@@ -102,9 +102,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     },
     onSubmit: async (values, { setSubmitting }) => {
       const nameRecruitmentPlan = values.recruitmentPlan.name;
-      values.planDetails = [...tech];
-      values.idUser = 1;
-      values.recruitmentPlan.recruitmentRequest = recruitment;
+
       // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
       if (values.recruitmentPlan.dateRecruitmentEnd == '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
@@ -118,6 +116,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         setSubmitting(false);
         return;
       } else {
+        values.planDetails = [...tech];
+        values.idUser = 1;
         try {
           await axios
             .post("http://localhost:8080/api/plans", values)
