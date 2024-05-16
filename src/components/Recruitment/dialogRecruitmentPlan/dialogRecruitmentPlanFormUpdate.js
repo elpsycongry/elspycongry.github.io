@@ -112,9 +112,6 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(false);
-      values.planDetails = [...tech];
-      values.idUser = 1;
       if (values.recruitmentPlan.dateRecruitmentEnd == '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
@@ -132,6 +129,9 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       } else {
         // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
         try {
+          values.planDetails = [...tech];
+          values.idUser = 1;
+          setSubmitting(true);
           await axios
             .put("http://localhost:8080/api/plans/" + id, values)
             .then((res) => {

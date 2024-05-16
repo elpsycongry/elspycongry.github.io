@@ -21,7 +21,6 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
 
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
-    console.log(personalneed)
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
     // 
@@ -112,8 +111,6 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       // console.log(values); 
       const personalneed = values.recruitmentPlan.recruitmentRequest.id;
       const nameRecruitmentPlan = values.recruitmentPlan.name;
-      // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-      setSubmitting(false);
       values.planDetails = [...tech];
       values.idUser = 1;
       if (values.recruitmentPlan.dateRecruitmentEnd == '') {
@@ -128,7 +125,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
         setSubmitting(false);
         return;
       } else {
-
+        setSubmitting(true);
         try {
           await axios
             .post("http://localhost:8080/api/plans", values)

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import swal from "sweetalert";
 
 
-export default function DialogRecruitmentPlanFormReason({ idReason, open, onClose }) {
+export default function DialogRecruitmentPlanFormReason({ idPlan, open, onClose }) {
 
     const [reason, setReason] = useState('');
 
@@ -14,7 +14,7 @@ export default function DialogRecruitmentPlanFormReason({ idReason, open, onClos
         e.preventDefault();
         try {
              axios.post(
-                'http://localhost:8080/api/plans/' + idReason + '/users/2',
+                'http://localhost:8080/api/plans/' + idPlan + '/users/1',
                 { reason }
             ).then(() => {
                 swal("Cập nhật lý do thành công", {

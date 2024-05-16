@@ -122,6 +122,15 @@ export default function DialogPersonalFormWatch({ id }) {
                                                 {formData.values.recruitmentRequest.name}
                                             </p>
                                         </th>
+                                        <th style={{ width: '55.05px' }}>
+                                            <label
+                                                htmlFor="name"
+                                                style={{ color: "#6F6F6F" }}
+                                                className="form-label fw-500 mr-15 fs-20"
+                                            >
+
+                                            </label>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -163,6 +172,7 @@ export default function DialogPersonalFormWatch({ id }) {
                                                 </tbody>
                                             </table>
                                         </td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -196,27 +206,45 @@ export default function DialogPersonalFormWatch({ id }) {
                                     value={formData.values.recruitmentRequest.reason}
                                 ></textarea>
                             </div>
-                        ) : (
-                            <div className="col-md-12 mt-0 d-flex">
-                                <div className="col-md-3 mt-2">
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
-                                        onClick={handleCloseWatchOpenReason}
+                        ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" ? ("") :
+                            (formData.values.recruitmentRequest.status === "Bị từ chối bởi DECAN" ? (
+                                <div className="col-md-12 mt-2 d-flex ">
+                                    <label
+                                        htmlFor="time"
+                                        style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                                        className="form-label fs-20 me-2"
                                     >
-                                        Từ chối
-                                    </button>
+                                        Lý do:
+                                    </label>
+                                    <textarea
+                                        readOnly
+                                        className="form-control resize pt-2 "
+                                        style={{ color: "#838383" }}
+                                        value={formData.values.recruitmentRequest.reason}
+                                    ></textarea>
                                 </div>
-                                <div className="col-md-9 mt-2 ms-2">
-                                    <button
-                                        type="button"
-                                        className=" btn-edit btn btn-success w-98   bg-clr-success"
-                                        onClick={handleCloseWatchOpenCreate}
-                                    >
-                                        Khởi tạo kế hoạch tuyển dụng
-                                    </button>
+                            ) : (
+                                <div className="col-md-12 mt-0 d-flex">
+                                    <div className="col-md-3 mt-2">
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
+                                            onClick={handleCloseWatchOpenReason}
+                                        >
+                                            Từ chối
+                                        </button>
+                                    </div>
+                                    <div className="col-md-9 mt-2 ms-2">
+                                        <button
+                                            type="button"
+                                            className=" btn-edit btn btn-success w-98   bg-clr-success"
+                                            onClick={handleCloseWatchOpenCreate}
+                                        >
+                                            Khởi tạo kế hoạch tuyển dụng
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            ))
                         )}
                     </form>
                 </DialogTitle>
@@ -226,7 +254,7 @@ export default function DialogPersonalFormWatch({ id }) {
                 open={openFormReason}
                 onClose={() => setOpenFormReason(false)}
             />
-            <DialogRecruitmentPlanFormCreateSuccess id={formData.values.recruitmentRequest.id} open={openFormCreateSuccess} onClose={() => setOpenFormCreateSuccess(false)}/>
+            <DialogRecruitmentPlanFormCreateSuccess id={formData.values.recruitmentRequest.id} open={openFormCreateSuccess} onClose={() => setOpenFormCreateSuccess(false)} />
 
         </>
     );

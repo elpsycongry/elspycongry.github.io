@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import Swal from 'sweetalert2';
 
 export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
-   console.log(reasonItem);
+  console.log(reasonItem);
   const [tenhnology, setTenhnology] = useState([]);
   // Dữ liệu fake
   const formData = useFormik({
@@ -249,7 +249,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                       <label
                         htmlFor="time"
                         style={{ color: "#6F6F6F" }}
-                        className="form-label fs-20 "
+                        className="form-label fs-20 mb-0 "
                       >
                         Thời hạn bàn giao:{" "}
                       </label>
@@ -263,6 +263,28 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                       </p>
                     </td>
                   </tr>
+                  {statusItem === "Đã xác nhận" ? (
+                    <tr>
+                      <td>
+                        <label
+                          htmlFor="time"
+                          style={{ color: "#6F6F6F" }}
+                          className="form-label fs-20 mb-0"
+                        >
+                          Trạng thái:{" "}
+                        </label>
+                      </td>
+                      <td>
+                        <p
+                          className=" namePersonal mb-0"
+                          style={{ color: "#838383" }}
+                        >
+                          {statusItem}
+                        </p>
+                      </td>
+                    </tr>
+                  ) : ("")
+                  }
                 </tbody>
               </table>
             </div>
@@ -301,29 +323,51 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                 </div>
               </div>)
               : statusItem === "Bị từ chối bởi DECAN" ? (
-            <div className="col-md-12 mt-2 d-flex ">
-              <label
-                htmlFor="time"
-                style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
-                className="form-label fs-20 me-2"
-              >
-                Lý do:
-              </label>
-              <textarea
-                readOnly
-                className="form-control resize pt-2 "
-                style={{ color: "#838383" }}
-                value={reasonItem}
-              ></textarea>
-            </div>
-            ) : ("")
-              // ()
+                <div className="col-md-12 mt-2 d-flex ">
+                  <label
+                    htmlFor="time"
+                    style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                    className="form-label fs-20 me-2"
+                  >
+                    Lý do:
+                  </label>
+                  <textarea
+                    readOnly
+                    className="form-control resize pt-2 "
+                    style={{ color: "#838383" }}
+                    value={reasonItem}
+                  ></textarea>
+                </div>
+              ) : (
+                <div className="col-md-12 mt-0 d-flex mt-2">
+                  <div className="col-md-6 mt-2">
+                    <button
+                      type="button"
+                      style={{ height: '42px' }}
+                      className="btn btn-primary w-100 bg-clr-primary btn-edit stop"
+                      onClick={handleCloseWatchOpenReason}
+                    >
+                      Xem kết quả tuyển dụng
+                    </button>
+                  </div>
+                  <div className="col-md-6 mt-2 ms-2">
+                    <button
+                      type="button"
+                      onClick={approve}
+                      style={{ height: '42px' }}
+                      className=" btn-edit btn btn-success w-98    bg-clr-successV1">
+                      Xem kết quả đào tạo
+                    </button>
+                  </div>
+                </div>
+              )
+
             )}
           </form>
         </DialogTitle>
       </Dialog>
       <DialogRecruitmentPlanFormReason
-        idReason={id}
+        idPlan={id}
         open={openFormReason}
         onClose={() => setOpenFormReason(false)}
       />
