@@ -356,6 +356,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /*Có thể tái sử dụng */
+
 .table-edit th,
 .table-edit td {
     border: 2px solid;

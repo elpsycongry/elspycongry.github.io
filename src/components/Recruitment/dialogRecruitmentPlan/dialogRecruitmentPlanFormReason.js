@@ -6,15 +6,15 @@ import { useNavigate } from 'react-router-dom'
 import swal from "sweetalert";
 
 
-export default function DialogRecruitmentPlanFormReason({ idUser, open, onClose }) {
+export default function DialogRecruitmentPlanFormReason({ idReason, open, onClose }) {
 
     const [reason, setReason] = useState('');
 
-    const handleSubmit = async (e) => {
+    const handleSubmit =  (e) => {
         e.preventDefault();
         try {
-            await axios.post(
-                'http://localhost:8080/api/recruitmentRequests/' + idUser + '/users/2',
+             axios.post(
+                'http://localhost:8080/api/plans/' + idReason + '/users/2',
                 { reason }
             ).then(() => {
                 swal("Cập nhật lý do thành công", {
@@ -22,7 +22,7 @@ export default function DialogRecruitmentPlanFormReason({ idUser, open, onClose 
                     buttons: false,
                     timer: 2000
                 }).then(() => {
-                    window.location.href = "/recruitment/personalNeeds";
+                    window.location.href = "/recruitment/recruitmentPlan";
                 });
             });
         } catch (error) {

@@ -436,10 +436,15 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                 Tên kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
               <input
-                type="text"
-                className='form-control grey-text'
                 value={formData.values.recruitmentPlan.name}
-                readOnly
+                maxLength={60}
+                type="text"
+                placeholder="Ví dụ: DECEN - Kế hoạch tuyển dụng quý 3/2021"
+                onChange={formData.handleChange}
+                onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
+                className='form-control grey-text'
+                id="recruitmentPlan.name"
+                name="recruitmentPlan.name"
               />
             </div>
             {!checkValidInput(formData.values.recruitmentPlan.name) && (

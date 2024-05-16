@@ -8,7 +8,8 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Swal from 'sweetalert2';
 
-export default function DialogRecruitmentPlanFormWatch({ id, check }) {
+export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
+   console.log(reasonItem);
   const [tenhnology, setTenhnology] = useState([]);
   // Dữ liệu fake
   const formData = useFormik({
@@ -51,21 +52,20 @@ export default function DialogRecruitmentPlanFormWatch({ id, check }) {
       toast.onmouseleave = Swal.resumeTimer;
     }
   });
-  const approve = async () => {
+  const approve = () => {
     try {
-      const res = await axios.put(`http://localhost:8080/api/plans/${id}/users/1`);
-      setOpenForm(false);
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Phê duyệt thành công",
-        showConfirmButton: false,
-        timer: 1500
-      }).then(() => {
-        window.location.href = "/recruitment/recruitmentPlan";
-      });
-
-      console.log('Response:', res.data); // You can log the response or handle it accordingly
+      axios.put(`http://localhost:8080/api/plans/${id}/users/1`).then(() => {
+        setOpenForm(false);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Phê duyệt thành công",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          window.location.href = "/recruitment/recruitmentPlan";
+        });
+      })
     } catch (error) {
       console.error('Error fetching approval:', error);
       // You can handle the error here, e.g., show a message to the user
@@ -299,15 +299,31 @@ export default function DialogRecruitmentPlanFormWatch({ id, check }) {
                     Phê duyệt
                   </button>
                 </div>
-              </div>) 
-              :
-              ("")
+              </div>)
+              : statusItem === "Bị từ chối bởi DECAN" ? (
+            <div className="col-md-12 mt-2 d-flex ">
+              <label
+                htmlFor="time"
+                style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                className="form-label fs-20 me-2"
+              >
+                Lý do:
+              </label>
+              <textarea
+                readOnly
+                className="form-control resize pt-2 "
+                style={{ color: "#838383" }}
+                value={reasonItem}
+              ></textarea>
+            </div>
+            ) : ("")
+              // ()
             )}
           </form>
         </DialogTitle>
       </Dialog>
       <DialogRecruitmentPlanFormReason
-        idUser={id}
+        idReason={id}
         open={openFormReason}
         onClose={() => setOpenFormReason(false)}
       />

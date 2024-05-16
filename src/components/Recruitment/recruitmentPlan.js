@@ -22,6 +22,8 @@ import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
 import DialogRecruitmentPlanFormCreate from "./dialogRecruitmentPlan/dialogRecruitmentPlanFormCreate";
+import Pagination from '@mui/material/Pagination';
+// import Stack from '@mui/material/Stack';
 
 import DialogRecruitmentPlanFormWatch from './dialogRecruitmentPlan/dialogRecruitmentPlanFormWatch';
 import DialogRecruitmentPlanFormUpdate from './dialogRecruitmentPlan/dialogRecruitmentPlanFormUpdate';
@@ -40,77 +42,88 @@ export default function RecruitmentPlan() {
         setCheck(false);
     };
 
-    const [status, setStatus] = useState("");
-    const handleChange = (e) => {
-        setStatus(e.target.value);
-        console.log(e.target.value);
-    };
 
-
-    // const listPersonal = [
-    //     {
-    //         id: 1,
-    //         name: "DECEN- Nhu cầu nhân sự quý 3",
-    //         time: "14:19 11/11/2019",
-    //         status: "Đã gửi",
-    //         man: "KongDT",
-    //     },
-    //     {
-    //         id: 2,
-    //         name: "DECEN- Nhu cầu 3",
-    //         time: "14:19 11/11/2019",
-    //         status: "Đã gửi",
-    //         man: "KongDT",
-    //     },
-    //     {
-    //         id: 3,
-    //         name: "DECEN- Nhu cầu 3",
-    //         time: "14:19 11/11/2019",
-    //         status: "Đã gửi",
-    //         man: "KongDT",
-    //     },
-    //     {
-    //         id: 4,
-    //         name: "DECEN- Nhu cầu 3",
-    //         time: "14:19 11/11/2019",
-    //         status: "Đã gửi",
-    //         man: "KongDT",
-    //     },
-    //     {
-    //         id: 5,
-    //         name: "DECEN- Nhu cầu 3",
-    //         time: "14:19 11/11/2019",
-    //         status: "Đã gửi",
-    //         man: "KongDT",
-    //     },
-    //     {
-    //         id: 6,
-    //         name: "DECEN- Nhu cầu 3",
-    //         time: "14:19 11/11/2019",
-    //         status: "Đã gửi",
-    //         man: "KongDT",
-    //     },
-    //     {
-    //         id: 7,
-    //         name: "DECEN- Nhu cầu 3",
-    //         time: "14:19 11/11/2019",
-    //         status: "Đã gửi",
-    //         man: "KongDT",
-    //     },
-    // ];
+    const listPersonal = [
+        {
+            id: 1,
+            name: "DECEN- Nhu cầu nhân sự quý 3",
+            time: "14:19 11/11/2019",
+            status: "Đã gửi",
+            man: "KongDT",
+        },
+        {
+            id: 2,
+            name: "DECEN- Nhu cầu 3",
+            time: "14:19 11/11/2019",
+            status: "Đã gửi",
+            man: "KongDT",
+        },
+        {
+            id: 3,
+            name: "DECEN- Nhu cầu 3",
+            time: "14:19 11/11/2019",
+            status: "Đã gửi",
+            man: "KongDT",
+        },
+        {
+            id: 4,
+            name: "DECEN- Nhu cầu 3",
+            time: "14:19 11/11/2019",
+            status: "Đã gửi",
+            man: "KongDT",
+        },
+        {
+            id: 5,
+            name: "DECEN- Nhu cầu 3",
+            time: "14:19 11/11/2019",
+            status: "Đã gửi",
+            man: "KongDT",
+        },
+        {
+            id: 6,
+            name: "DECEN- Nhu cầu 3",
+            time: "14:19 11/11/2019",
+            status: "Đã gửi",
+            man: "KongDT",
+        },
+        {
+            id: 7,
+            name: "DECEN- Nhu cầu 3",
+            time: "14:19 11/11/2019",
+            status: "Đã gửi",
+            man: "KongDT",
+        },
+    ];
 
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
+    const [recuitments, setRecuitment] = useState([]);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedValue, setSelectedValue] = useState('');
+
     const handleSearch = (event) => {
         setSearchName(event.target.value);
+        if (event.key === "Enter") {
+            handleSubmitSearch(event, page);
+        } else {
+            setTimeout(() => {
+                handleSubmitSearch(event, page);
+            }, 3000)
+        }
     };
 
-    const handleSubmitSearch = async (event) => {
+    const handleSubmitSearch = async (event, pageNumber) => {
         event.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}`);
-            setRecuitmentPlan(response.data);
-            if (response.data.length === 0) {
+            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
+            setRecuitment(response.data.content);
+            setPage(response.data.pageable.pageNumber);
+            setTotalPages(response.data.totalPages);
+            if (response.data.content.length === 0) {
+                setPage(0);
+                setTotalPages(1)
                 setShowError(true);
             } else {
                 setShowError(false);
@@ -119,44 +132,64 @@ export default function RecruitmentPlan() {
             console.error('Error search results:', error);
         }
     };
+
     const listTestSelect = [
+        { id: " ", text: "Trạng thái" },
         { id: "Đã hủy", text: "Đã hủy" },
         { id: "Đã xác nhận", text: "Đã xác nhận" },
-        { id: "Đang chờ", text: "Đang chờ" },
-        { id: "Bị từ chối bởi DET", text: "Bị từ chối bởi DET" },
-        { id: "Bị từ chối bởi DCAN", text: "Bị từ chối bởi DCAN" },
-        { id: "Đang tuyển dụng", text: "Đang tuyển dụng" },
-        { id: "Đã bàn giao", text: "Đã bàn giao" },
+        { id: "Bị từ chối bởi DECAN", text: "Bị từ chối bởi DECAN" },
+        { id: "Đã gửi", text: "Đã gửi" },
+        { id: "Hoàn thành", text: "Hoàn thành" },
     ]
-    const [selectedStatus, setSelectedStatus] = useState('');
+
+
+
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
-        // handleSubmitSelect(event.target.value);
+        handleSubmitSelect(event.target.value, page);
     };
 
-    // const handleSubmitSelect = async (selectedValue) => {
-    //     try {
-    //         const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/filter?status=${selectedValue}`);
-    //         setRecuitment(response.data);
-    //         if (response.data.length === 0) {
-    //             setShowError(true);
-    //         } else {
-    //             setShowError(false);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error searching by status:', error);
-    //     }
-    // };
+    const handleSubmitSelect = async (selectedStatus, pageNumber) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+            setRecuitment(response.data.content);
+            setPage(response.data.pageable.pageNumber);
+            setTotalPages(response.data.totalPages);
 
+            if (response.data.content.length === 0) {
+                setPage(0);
+                setTotalPages(1)
+                setShowError(true);
+            } else {
+                setShowError(false);
+            }
+        } catch (error) {
+            console.error('Error searching by status:', error);
+        }
+    };
 
-    const [RecruitmentPlan, setRecuitmentPlan] = useState([]);
+    async function getAll(pageNumber) {
+        console.log(pageNumber)
+        try {
+            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+            console.log(response.data.totalPages)
+            console.log(response.data.pageable.pageNumber);
+            setRecuitment(response.data.content);
+            setPage(response.data.pageable.pageNumber);
+            setTotalPages(response.data.totalPages);
+            if (response.data.content.length === 0) {
+                setShowError(true);
+            } else {
+                setShowError(false);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
     useEffect(() => {
-        axios.get("http://localhost:8080/api/plans?page=0").then((res) => {
-            console.log(res.data)
-            setRecuitmentPlan(res.data.content);
-        });
-    }, []);
-
+        getAll(page);
+    }, [page]);
 
     return (
         <>
@@ -164,7 +197,7 @@ export default function RecruitmentPlan() {
             <Navbar />
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Kế hoạch tuyển dụng" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
-                <div className="content-recruiment">
+                <div className="content-recruiment position-relative">
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
                             Kế hoạch tuyển dụng
@@ -204,7 +237,9 @@ export default function RecruitmentPlan() {
                             <div className="d-flex">
                                 <div className="search-input position-relative">
                                     <form onSubmit={handleSubmitSearch}>
-                                        <input type="text" className="border-clr-grey w-px position-relative" name="name" value={valueRecuitments} onChange={handleSearch} placeholder="Tìm kiếm với tên..." />
+                                        <input type="text" className="border-clr-grey w-px position-relative" name="name"
+                                            value={valueRecuitments} onChange={handleSearch} onKeyPress={handleSearch}
+                                            placeholder="Tìm kiếm với tên..." />
                                         <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
                                     </form>
                                 </div>
@@ -219,7 +254,7 @@ export default function RecruitmentPlan() {
                                     >
                                         {
                                             listTestSelect.map(item => (
-                                                <MenuItem value={item.id} key="{item.status}">{item.text}</MenuItem>
+                                                <MenuItem value={item.id} key="{item.status}" >{item.text}</MenuItem>
                                             ))}
                                     </Select>
                                 </FormControl>
@@ -242,21 +277,21 @@ export default function RecruitmentPlan() {
                                 <th className="w-130 text-center">Người gửi</th>
                                 <th className="w-130 text-right">Hành động</th>
                             </tr>
-                            {RecruitmentPlan.map((item) => (
+                            {recuitments.map((item) => (
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td className="count-td pl-20"></td>
-
                                     <td>{item.name}</td>
-                                    <td className="text-center">{moment(item.dateCreatePlan).format("HH:mm YYYY-MM-DD")}</td>
+                                    <td className="text-center">{moment(item.recruitmentRequest.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
-                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
+                                        {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false}  statusItem={item.status} reasonItem ={item.reason}/>
                                         ) : (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} />
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
                                         )}
-                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
+                                        {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
+
                                             <DialogRecruitmentPlanFormUpdate id={item.id} check={true} />
                                         ) : (
                                             <DialogRecruitmentPlanFormUpdate id={item.id} />
@@ -266,6 +301,12 @@ export default function RecruitmentPlan() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
+                        {/* <div className=' position-absolute bottom-0  w-100 start-0' style={{marginBottom: "20px"}}>
+                            <Pagination count={10} className=' d-flex justify-content-center ' />
+                        </div> */}
+                        <button onClick={() => getAll(page - 1)} disabled={page === 0} className='me-2 btn btn-light'>Previous</button>
+                        <span>{page + 1} of {totalPages}</span>
+                        <button onClick={() => getAll(page + 1)} disabled={page === totalPages - 1} className='ms-2 btn btn-light'>Next</button>
                     </div>
                 </div>
             </Box>
