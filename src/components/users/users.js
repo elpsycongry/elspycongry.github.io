@@ -114,8 +114,9 @@ export default function Users() {
             console.log(newPagination.size);
             console.log(previousRoleRef.current);
 
-            if (selectedRole !== previousRoleRef.current) {
+            if (selectedRole !== previousRoleRef.current && setSearchTerm("")) {
                 newPagination = paginationFilter;
+
             }
 
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
@@ -263,7 +264,7 @@ export default function Users() {
                             </tbody>
 
                         </table>
-                        <Stack spacing={1} style={{ alignItems: 'center' }}>
+                        <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
                             <Pagination
                                 count={Math.ceil(pagination.totalElements / pagination.size)}
                                 page={pagination.page + 1}
