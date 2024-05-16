@@ -104,18 +104,18 @@ export default function RecruitmentPlan() {
     const handleSearch = (event) => {
         setSearchName(event.target.value);
         if (event.key === "Enter") {
-            handleSubmitSearch(event, selectedValue, page);
+            handleSubmitSearch(event, page);
         } else {
             setTimeout(() => {
-                handleSubmitSearch(event, selectedValue, page);
+                handleSubmitSearch(event, page);
             }, 3000)
         }
     };
 
-    const handleSubmitSearch = async (event, selectedValue, pageNumber) => {
+    const handleSubmitSearch = async (event, pageNumber) => {
         event.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${event.target.value}&status=${selectedValue}&page=${pageNumber}`);
+            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -129,7 +129,6 @@ export default function RecruitmentPlan() {
         }
     };
 
-
     const listTestSelect = [
         { id: " ", text: "Trạng thái" },
         { id: "Đã hủy", text: "Đã hủy" },
@@ -141,16 +140,18 @@ export default function RecruitmentPlan() {
 
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
-        handleSubmitSelect(event.target.value);
+        handleSubmitSelect(event.target.value,page);
     };
 
-    const handleSubmitSelect = async (selectedStatus) => {
+    const handleSubmitSelect = async (selectedStatus, pageNumber) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${page}`);
+            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
             if (response.data.content.length === 0) {
+                setPage(0);
+                setTotalPages(1)
                 setShowError(true);
             } else {
                 setShowError(false);
