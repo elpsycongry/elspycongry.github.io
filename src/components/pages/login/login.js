@@ -44,7 +44,7 @@ const EndAdorment = ({ visible, setVisible }) => {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Login() {
+function Login() {
 
 
 
@@ -66,7 +66,7 @@ export default function Login() {
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    navigate("/")
+                    navigate("/users")
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
@@ -226,3 +226,5 @@ export default function Login() {
         </ThemeProvider>
     )
 }
+
+export default Login;

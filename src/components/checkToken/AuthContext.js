@@ -4,6 +4,7 @@ import {Navigate} from "react-router-dom";
 
 // Check Token
 function AuthContext({children}) {
+
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
     if (currentUser === null) {
@@ -11,9 +12,27 @@ function AuthContext({children}) {
             return <Navigate to="/login"/>
         }
     } else {
+        let roles = []
+        currentUser.roles.forEach(element => {
+            roles = [...roles, element.authority]
+        });
+        const isAdmin = roles.find((role) => role === 'ROLE_ADMIN') 
+        const isManager = roles.find((role) => role === 'ROLE_TM') 
+        if (pathName === '/users'){
+            if (!isAdmin) {
+                return <Navigate to={"/"}/>
+            } 
+        }
+        if (pathName === "/training") {
+            if (!isAdmin && !isManager) {
+                return <Navigate to={"/"}/>
+            } 
+        }
+        {isAdmin && <div></div>}
         if (pathName === "/login") {
             return <Navigate to="/"/>
         }
+
     }
     if (children === undefined) {
         return <Navigate to="/notFound"/>

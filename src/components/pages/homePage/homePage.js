@@ -9,6 +9,7 @@ import {useNavigate} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import logoImage from '../../../assets/image/logoCodeGym.png'
 import {doLogout} from "../../checkToken/AuthContext";
+import Navbar from '../../fragment/navbar/navbar';
 
 const HomePage = () => {
     const navigate = useNavigate()
@@ -24,13 +25,14 @@ const HomePage = () => {
                         Quản lý đào tạo
                     </Typography>
                     <Button onClick={() => {doLogout(navigate)}} color="inherit">
-                        Đăng xuất
+                        Logout
                     </Button>
                 </Toolbar>
             </AppBar>
+            <Navbar></Navbar>
             <React.Fragment>
                     <Box>
-                        <Typography variant="h4">Nâng cao kỹ năng - Nâng tầm giá trị</Typography>
+                        <Typography variant="h4" style={{textAlign: "center"}}>Nâng cao kỹ năng - Nâng tầm giá trị</Typography>
                     </Box>
             </React.Fragment>
         </div>
