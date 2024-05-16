@@ -74,7 +74,12 @@ export default function DialogPersonalFormCreate() {
       },
     },
     onSubmit: async (values, { setSubmitting }) => {
-      const date = new Date(values.recruitmentRequest.dateEnd);
+      var date = values.recruitmentRequest.dateEnd;
+      if(date == ""){
+        date = new Date(timeNowValue);
+      } else{
+        date = new Date(values.recruitmentRequest.dateEnd);
+      }
       if (!checkValid(date, tech)) {
         setSubmitting(false);
         return;
@@ -102,6 +107,18 @@ export default function DialogPersonalFormCreate() {
       }
     }
   });
+  const timeNow = new Date();
+  timeNow.setDate(timeNow.getDate()+75)
+  const year = timeNow.getFullYear();
+  const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+  const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const timeNowValue = `${year}-${month}-${day}`;
+  const [dateN, setDateN] = useState(timeNowValue);
+  const handleChangeDate = (event) =>{
+    setDateN(event.target.value);
+    formData.handleChange(event);
+  }
+
 
 
   function PersonalQuantity({ number, idx }) {
@@ -303,7 +320,8 @@ export default function DialogPersonalFormCreate() {
                 </label>
                 <input
                   type="date"
-                  onChange={formData.handleChange}
+                  onChange={handleChangeDate}
+                  value={dateN}
                   onBlur={formData.handleBlur}
                   className={`form-control text-center grey-text`}
                   id="recruitmentRequest.dateEnd"

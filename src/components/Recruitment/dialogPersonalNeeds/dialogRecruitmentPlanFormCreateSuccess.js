@@ -16,10 +16,12 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
+  const [errNumber, setErrNumber] = useState(true);
+
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
     console.log(nameRecruitmentPlan);
-    
+
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
     const errTech = techArr.map(item => {
@@ -29,7 +31,17 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         return false;
       }
     })
-    
+    const errNumberR = techArr.map(item => {
+      if (item.numberOfPersonnelNeeded > item.numberOfOutputPersonnel) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    const hasErrNumber = errNumberR.every(item => item === true);
+    setErrNumber(hasErrNumber)
+    // 
+
     const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
     // 
@@ -40,7 +52,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         return false;
       }
     })
-    
+
     var hasErrRecruitmentPlan;
     if (nameRecruitmentPlan == "") {
       hasErrRecruitmentPlan = true;
@@ -72,7 +84,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     }
     console.log(hasErrRecruitmentPlan)
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || !hasErrNumber) {
       return false;
     } else {
       return true;
@@ -118,6 +130,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
       const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
+      console.log('handoverDL' + date)
+      console.log('DateRC' + dateCreate)
       // checkValid(date, tech, dateCreate, nameRecruitmentPlan);
       // setSubmitting(false);
       // return;
@@ -327,21 +341,46 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
   const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
   const timeNowValue = `${year}-${month}-${day}`;
-  const dateDeadline = new Date(timeNow);
-  dateDeadline.setDate(timeNow.getDate() + 75);
+
   const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
   const handleDateChange = (event) => {
     if (event.target.name === 'recruitmentPlan.dateRecruitmentEnd') {
       setRecuitmentDateEnd(event.target.value);
+
+
     } else if (event.target.name === 'recruitmentPlan.handoverDeadline') {
       setHandoverDeadline(event.target.value);
+      // 
+      const timeChange = new Date(event.target.value);
+      timeChange.setDate(timeChange.getDate() - 75);
+      const yearChange = timeChange.getFullYear();
+      const monthChange = String(timeChange.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+      const dayChange = String(timeChange.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+      const timeChangeValue = `${yearChange}-${monthChange}-${dayChange}`;
+      // 
+      if (timeChange < timeNow) {
+        setRecuitmentDateEnd(timeNowValue);
+        formData.handleChange({
+          target: {
+            name: 'recruitmentPlan.dateRecruitmentEnd',
+            value: timeNowValue
+          }
+        });
+      } else {
+
+        setRecuitmentDateEnd(timeChangeValue);
+        formData.handleChange({
+          target: {
+            name: 'recruitmentPlan.dateRecruitmentEnd',
+            value: timeChangeValue
+          }
+        });
+      }
+
     }
     formData.handleChange(event);
   }
-
   function TimeRecruitment() {
-
-
     return (
       <>
         <div className="col-md-4 mt-0 mb-2 child">
@@ -359,8 +398,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
-            onChange={handleDateChange}
             value={handoverDeadline}
+            onChange={handleDateChange}
             onBlur={formData.handleBlur}
             className={`form-control text-center grey-text`}
             id="recruitmentPlan.handoverDeadline"
@@ -488,6 +527,14 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
             <div className="col-md-4 mt-0">
               {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để rỗng</p>}
             </div>
+            {!errNumber && (
+              <div className="col-md-8  mt-0 text-center">
+
+                <p className="err-valid ws-nowrap ">
+                  Số lượng cần tuyển phải lớn hơn số lượng đầu ra
+                </p>
+              </div>
+            )}
             <div className="col-md-4 mt-0 text-center">
               {errNumberOfPersonal && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
             </div>

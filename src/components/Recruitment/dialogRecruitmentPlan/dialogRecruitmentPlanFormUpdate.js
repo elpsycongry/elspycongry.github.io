@@ -9,6 +9,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import axios from "axios";
 import { useFormik } from "formik";
 import swal from "sweetalert";
+import { number } from "yup";
 
 export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [dateErr, setDateErr] = useState(false);
@@ -18,6 +19,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
   const [chooseRecruitmentNeeds, setChooseRecruitmentNeeds] = useState('');
+  const [errNumber, setErrNumber] = useState(true);
 
 
   // Xử lý số lượng nhân sự
@@ -33,6 +35,17 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       hasErrPersonalNeeds = false;
       setErrIdPersonalNeed(false);
     }
+    console.log("ád")
+    // 
+    const errNumberR = techArr.map(item => {
+      if (item.numberOfPersonnelNeeded > item.numberOfOutputPersonnel) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    const hasErrNumber = errNumberR.every(item => item === true);
+    setErrNumber(hasErrNumber)
     // 
     const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
@@ -81,7 +94,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || !hasErrNumber) {
       return false;
     } else {
       return true;
@@ -134,9 +147,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
       const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
-   
-
-      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan,personalneed)) {
+      // checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)
+      // setSubmitting(false);
+      // return;
+      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)) {
         setSubmitting(false);
         return;
       } else if (!checkValidInput(values.recruitmentPlan.name)) {
@@ -355,6 +369,32 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       setRecuitmentDateEnd(event.target.value);
     } else if (event.target.name === 'recruitmentPlan.handoverDeadline') {
       setHandoverDeadline(event.target.value);
+      // 
+      const timeChange = new Date(event.target.value);
+      timeChange.setDate(timeChange.getDate() - 75);
+      const yearChange = timeChange.getFullYear();
+      const monthChange = String(timeChange.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+      const dayChange = String(timeChange.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+      const timeChangeValue = `${yearChange}-${monthChange}-${dayChange}`;
+      // 
+      if (timeChange < timeNow) {
+        setRecuitmentDateEnd(timeNowValue);
+        formData.handleChange({
+          target: {
+            name: 'recruitmentPlan.dateRecruitmentEnd',
+            value: timeNowValue
+          }
+        });
+      } else {
+
+        setRecuitmentDateEnd(timeChangeValue);
+        formData.handleChange({
+          target: {
+            name: 'recruitmentPlan.dateRecruitmentEnd',
+            value: timeChangeValue
+          }
+        });
+      }
     }
     formData.handleChange(event);
   }
@@ -401,7 +441,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     }
   };
 
-  const handleChangeRecruitmentNeeds = (event) =>{
+  const handleChangeRecruitmentNeeds = (event) => {
     setChooseRecruitmentNeeds(event.target.value);
     formData.handleChange(event);
   }
@@ -448,7 +488,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
               <select
                 className="form-select grey-text"
                 aria-label="Default select example"
-                onChange={(event) =>handleChangeRecruitmentNeeds(event)}
+                onChange={(event) => handleChangeRecruitmentNeeds(event)}
                 value={chooseRecruitmentNeeds}
                 name="recruitmentPlan.recruitmentRequest.id"
                 id="recruitmentPlan.recruitmentRequest.id"
@@ -554,6 +594,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                 </p>
               )}
             </div>
+            {!errNumber && (
+              <div className="col-md-8  mt-0 text-center">
+
+                <p className="err-valid ws-nowrap ">
+                  Số lượng cần tuyển phải lớn hơn số lượng đầu ra
+                </p>
+              </div>
+            )}
             <div className="col-md-4 mt-0 text-center">
               {errNumberOfPersonal && (
                 <p style={{ whiteSpace: "nowrap" }} className="err-valid">
