@@ -40,13 +40,6 @@ export default function PersonalNeeds() {
         setCheck(false);
     };
 
-    const [status, setStatus] = useState("");
-    const handleChange = (e) => {
-        setStatus(e.target.value);
-        console.log(e.target.value);
-    };
-
-
     const listPersonal = [
         {
             id: 1,
@@ -109,10 +102,10 @@ export default function PersonalNeeds() {
     const handleSearch = (event) => {
         setSearchName(event.target.value);
         if (event.key === 'Enter') {
-            handleSubmitSearch(event);
+            handleSubmitSearch(event,page);
         } else {
             setTimeout(() => {
-                handleSubmitSearch(event);
+                handleSubmitSearch(event,page);
             }, 3000);
         }
     };
@@ -124,7 +117,7 @@ export default function PersonalNeeds() {
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
-            if (response.data.length === 0) {
+            if (response.data.content.length === 0) {
                 setPage(0);
                 setTotalPages(1)
                 setShowError(true);
@@ -156,7 +149,7 @@ export default function PersonalNeeds() {
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
-            if (response.data.length === 0) {
+            if (response.data.content.length === 0) {
                 setPage(0);
                 setTotalPages(1)
                 setShowError(true);
@@ -199,7 +192,7 @@ export default function PersonalNeeds() {
             <Navbar />
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Nhu cầu nhân sự" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
-                <div className="content-recruiment">
+                <div className="content-recruiment position-relative">
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
                             Nhu cầu nhân sự
