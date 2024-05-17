@@ -102,10 +102,10 @@ export default function PersonalNeeds() {
     const handleSearch = (event) => {
         setSearchName(event.target.value);
         if (event.key === 'Enter') {
-            handleSubmitSearch(event,page);
+            handleSubmitSearch(event, page);
         } else {
             setTimeout(() => {
-                handleSubmitSearch(event,page);
+                handleSubmitSearch(event, page);
             }, 3000);
         }
     };
@@ -168,6 +168,8 @@ export default function PersonalNeeds() {
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
             if (response.data.content.length === 0) {
+                setPage(0);
+                setTotalPages(1)
                 setShowError(true);
             } else {
                 setShowError(false);
@@ -272,10 +274,11 @@ export default function PersonalNeeds() {
                                 <th className="w-130 text-center">Người gửi</th>
                                 <th className="w-130 text-right">Hành động</th>
                             </tr>
-                            {recuitments.map((item) => (
+                            {recuitments.map((item, index) => (
                                 <tr className="grey-text count-tr" key={item.id}>
-                                    <td className="count-td pl-20"></td>
-
+                                    <td style={{ paddingLeft: "15px" }}>
+                                        {index + 1 + page * 10}
+                                    </td>
                                     <td>{item.name}</td>
                                     <td className="text-center">{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>

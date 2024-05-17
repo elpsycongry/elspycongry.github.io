@@ -130,17 +130,6 @@
 }
 
 
-body {
-    counter-reset: rowNumber;
-}
-
-.count-tr {
-    counter-increment: rowNumber;
-}
-
-.count-tr td:first-child::before {
-    content: counter(rowNumber);
-}
 
 .count-tr {
     height: 40px;
