@@ -330,7 +330,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
               {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để trống</p>}
             </div>
             <div className="col-md-6 text-center mt-0">
-              {quantityErr && <p style={{ whiteSpace: 'nowrap', padding: '0px 16px 0px 8px' }} className="err-valid">Số lượng phải bé hơn 0</p>}
+              {quantityErr && <p style={{ whiteSpace: 'nowrap', padding: '0px 16px 0px 8px' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
             </div>
 
             <div className="col-md-12 mt-2 w-160" onClick={addTech}>

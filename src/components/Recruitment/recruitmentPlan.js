@@ -28,6 +28,7 @@ import Pagination from '@mui/material/Pagination';
 
 import DialogRecruitmentPlanFormWatch from './dialogRecruitmentPlan/dialogRecruitmentPlanFormWatch';
 import DialogRecruitmentPlanFormUpdate from './dialogRecruitmentPlan/dialogRecruitmentPlanFormUpdate';
+import { Padding } from '@mui/icons-material';
 
 
 export default function RecruitmentPlan() {
@@ -102,7 +103,6 @@ export default function RecruitmentPlan() {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [selectedStatus, setSelectedStatus] = useState('');
-    const [selectedValue, setSelectedValue] = useState('');
 
     const handleSearch = (event) => {
         setSearchName(event.target.value);
@@ -175,10 +175,13 @@ export default function RecruitmentPlan() {
             const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
             console.log(response.data.totalPages)
             console.log(response.data.pageable.pageNumber);
+            console.log(currentPage);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
             if (response.data.content.length === 0) {
+                setPage(0);
+                setTotalPages(1)
                 setShowError(true);
             } else {
                 setShowError(false);
@@ -192,9 +195,12 @@ export default function RecruitmentPlan() {
         getAll(page);
     }, [page]);
     const [currentPage, setCurrentPage] = useState(1);
-    const handlePagination = (event, value) =>{
-        setCurrentPage (value);
-        getAll(value-1);
+
+
+    // const totalPages = Math.ceil(recuitments.length / 10);
+    const handlePagination = (event, value) => {
+        setCurrentPage(value);
+        getAll(value - 1);
     }
 
     return (
@@ -283,16 +289,18 @@ export default function RecruitmentPlan() {
                                 <th className="w-130 text-center">Người gửi</th>
                                 <th className="w-130 text-right">Hành động</th>
                             </tr>
-                            {recuitments.map((item) => (
+                            {recuitments.map((item, index) => (
                                 <tr className="grey-text count-tr" key={item.id}>
-                                    <td className="count-td pl-20"></td>
+                                    <td style={{ paddingLeft:  "15px" }}>
+                                        {index + 1 + page *10}
+                                    </td>
                                     <td>{item.name}</td>
                                     <td className="text-center">{moment(item.recruitmentRequest.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false}  statusItem={item.status} reasonItem ={item.reason}/>
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} />
                                         ) : (
                                             <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
                                         )}
@@ -307,9 +315,10 @@ export default function RecruitmentPlan() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
-                        <div className=' position-absolute bottom-0  w-100 start-0' style={{marginBottom: "20px"}}>
+                        <div className=' position-absolute bottom-0  w-100 start-0' style={{ marginBottom: "20px" }}>
                             <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
                         </div>
+
                     </div>
                 </div>
             </Box>
