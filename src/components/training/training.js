@@ -45,12 +45,24 @@ export default function Training() {
         fetchListInternSelect(pagination);
     }, [selectedTrainingState]);
 
+    // Dữ liệu 
+    const listTestSelect = [
+        { id: 1, text: "Đang thực tập" },
+        { id: 2, text: "Đã hoàn tất" },
+        { id: 3, text: "Đã dừng thực tập"}
+    ]
+
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
+        if (selectedTrainingState != "") {
+            setPagination.page = 0;
+        } 
     };
 
     const handleTrainingStateChange = (event) => {
         setSelectedTrainingState(event.target.value);
+        pagination.page = 0;
+        fetchListInternSelect(pagination);
     };
 
     const handlePageChange = (event, value) => {
@@ -61,21 +73,6 @@ export default function Training() {
         });
 
     };
-
-    // Ref để lưu giá trị trước của selectedRole
-    const previousTrainingStateRef = useRef(selectedTrainingState);
-
-    // Cập nhật previousRoleRef mỗi khi selectedRole thay đổi
-    useEffect(() => {
-        previousTrainingStateRef.current = selectedTrainingState;
-    }, [selectedTrainingState]);
-
-
-    const handleChange = (e) => {
-        setStatus(e.target.value);
-        console.log(e.target.value)
-    };
-
 
 
     //API danh sách môn học
@@ -88,26 +85,12 @@ export default function Training() {
             });
         }
     };
+
     //API danh sách thực tập sinh
     const fetchListInternSelect = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
-
-            if (selectedTrainingState !== previousTrainingStateRef.current && setSearchTerm("")) {
-                newPagination = {
-                    page: 0,
-                    size: 10,
-                    totalElements: 0,
-                };
-
-            }
-            console.log("Hiển thị ra: ");
-            console.log(searchTerm);
-            console.log(selectedTrainingState);
-            console.log(newPagination.page);
-            console.log(newPagination.size);
-            
-
+            try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get(`http://localhost:8080/api/interns/search?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}`).then((res) => {
                 setListIntern(res.data.content);
@@ -116,15 +99,13 @@ export default function Training() {
                     totalElements: res.data.totalElements,
                 });
             });
+        } catch (error) {
+            console.log(error);
+        }
         }
     };
 
-    // Dữ liệu fake
-    const listTestSelect = [
-        { id: 1, text: "Đang thực tập" },
-        { id: 2, text: "Đã hoàn tất" },
-        { id: 3, text: "Đã dừng thực tập" }
-    ]
+    
 
     return (
         <>
@@ -174,8 +155,6 @@ export default function Training() {
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
                                             fetchListInternSelect(); // Gọi hàm ngay lập tức
-                                        } else {
-                                            clearTimeout(fetchListInternSelect(), 1000);
                                         }
                                     }}
                                     />

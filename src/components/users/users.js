@@ -51,33 +51,24 @@ export default function Users() {
         totalElements: 0,
     });
 
+    
     useEffect(() => {
         handleFilterWithFields(pagination);
-    }, []);
-
-    useEffect(() => {
         fetchListRoleSelect();
-    }, [])
+    }, [selectedRole])
 
 
     // const fetchListRoleSelect = async () => {
-
-
     const fetchListRoleSelect = async () => {
-        const user = JSON.parse(localStorage.getItem("currentUser"));
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        setToken(user.accessToken)
         if (user != null) {
-            try {
-                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                axios.get(`http://localhost:8080/admin/users/role`)
-                    .then((res) => {
-                        setListRoleSelect(res.data);
-                    });
-            } catch (error) {
-                console.log(error);
-            }
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get("http://localhost:8080/admin/users/role").then((res) => {
+                setListRoleSelect(res.data);
+            });
         }
     };
-
 
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -87,11 +78,11 @@ export default function Users() {
     };
 
     const handleRoleChange = (event) => {
-        setSelectedRole(event.target.vlue);
+        setSelectedRole(event.target.value);
         pagination.page = 0;
+        handleFilterWithFields(pagination);
+
     };
-
-
 
     const handlePageChange = (event, value) => {
         setPagination(prev => {
@@ -103,18 +94,9 @@ export default function Users() {
     };
 
 
-
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
-
-            console.log("Hiển thị ra: ");
-            console.log(searchTerm);
-            console.log(selectedRole);
-            console.log(newPagination.page);
-            console.log(newPagination.size);
-            console.log(pagination);
-
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
@@ -129,7 +111,6 @@ export default function Users() {
             } catch (error) {
                 console.log(error);
             }
-
         }
     };
 
@@ -250,7 +231,7 @@ export default function Users() {
                             <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="user-id">{index + 1}</td>
+                                        <td className="user-id">{index + 1 + pagination.page*pagination.size}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>{item.phone}</td>
