@@ -16,8 +16,9 @@ export default function DialogPersonalFormCreate() {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [quantityErr, setQuantityErr] = useState(false);
+  const [nameErr, setNameErr] = useState(false);
   // Xử lý số lượng nhân sự
-  const checkValid = (dateSet, techArr) => {
+  const checkValid = (dateSet, techArr, name) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const futureDate = new Date(today);
@@ -40,8 +41,15 @@ export default function DialogPersonalFormCreate() {
     })
     const hasErrQuantity = errQuantity.some(item => item === true);
     setQuantityErr(hasErrQuantity);
-
-
+    //
+    var hasErrName;
+    if (name == "" || name == undefined) {
+      hasErrName = true;
+    } else {
+      hasErrName = false;
+    }
+    setNameErr(hasErrName);
+    // 
 
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
@@ -50,7 +58,7 @@ export default function DialogPersonalFormCreate() {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrQuantity) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrQuantity || hasErrName) {
       return false;
     } else {
       return true;
@@ -74,8 +82,19 @@ export default function DialogPersonalFormCreate() {
       },
     },
     onSubmit: async (values, { setSubmitting }) => {
-      const date = new Date(values.recruitmentRequest.dateEnd);
-      if (!checkValid(date, tech)) {
+      var date = values.recruitmentRequest.dateEnd;
+      if (date == "") {
+        date = new Date(timeNowValue);
+        values.recruitmentRequest.dateEnd = timeNowValue;
+      } else {
+        date = new Date(values.recruitmentRequest.dateEnd);
+      }
+      const name = values.recruitmentRequest.name;
+      console.log(values.recruitmentRequest.dateEnd);
+      // checkValid(date, tech, name);
+      // setSubmitting(false);
+      // return;
+      if (!checkValid(date, tech, name)) {
         setSubmitting(false);
         return;
       } else {
@@ -102,6 +121,23 @@ export default function DialogPersonalFormCreate() {
       }
     }
   });
+  const timeNow = new Date();
+  const yearN = timeNow.getFullYear();
+  const monthN = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+  const dayN = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const timeNowValueN = `${yearN}-${monthN}-${dayN}`;
+
+  timeNow.setDate(timeNow.getDate() + 75)
+  const year = timeNow.getFullYear();
+  const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+  const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const timeNowValue = `${year}-${month}-${day}`;
+  const [dateN, setDateN] = useState(timeNowValue);
+  const handleChangeDate = (event) => {
+    setDateN(event.target.value);
+    formData.handleChange(event);
+  }
+
 
 
   function PersonalQuantity({ number, idx }) {
@@ -111,7 +147,7 @@ export default function DialogPersonalFormCreate() {
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
       setCount(count + 1);
-      handleQuantityChange(number+1, idx)
+      handleQuantityChange(number + 1, idx)
 
     };
     const handleInputChange = (e) => {
@@ -122,7 +158,7 @@ export default function DialogPersonalFormCreate() {
     const handleClickCountMinus = () => {
       if (!count <= 0) {
         setCount(count - 1);
-      handleQuantityChange(number-1, idx)
+        handleQuantityChange(number - 1, idx)
 
       }
     };
@@ -242,6 +278,9 @@ export default function DialogPersonalFormCreate() {
                 name="recruitmentRequest.name"
               />
             </div>
+            <div className="col-md-6 mt-0">
+              {nameErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Tên không được để trống</p>}
+            </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-6 mb-0">
                 <label className="form-label grey-text">
@@ -285,15 +324,15 @@ export default function DialogPersonalFormCreate() {
                 </div>
               </>
             ))}
-              <div className="col-md-6 mt-0">
-                {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để rỗng</p>}
-              </div>
-              <div className="col-md-6 text-center mt-0">
-                {quantityErr && <p style={{ whiteSpace: 'nowrap', padding:'0px 16px 0px 8px' }} className="err-valid">Số lượng phải bé hơn 0</p>}
-              </div>
+            <div className="col-md-6 mt-0">
+              {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để trống</p>}
+            </div>
+            <div className="col-md-6 text-center mt-0">
+              {quantityErr && <p style={{ whiteSpace: 'nowrap', padding: '0px 16px 0px 8px' }} className="err-valid">Số lượng phải bé hơn 0</p>}
+            </div>
 
 
-            <div className="col-md-12 mt-2" onClick={addTech}>
+            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12 d-flex">
@@ -303,7 +342,9 @@ export default function DialogPersonalFormCreate() {
                 </label>
                 <input
                   type="date"
-                  onChange={formData.handleChange}
+                  min={timeNowValueN}
+                  onChange={handleChangeDate}
+                  value={dateN}
                   onBlur={formData.handleBlur}
                   className={`form-control text-center grey-text`}
                   id="recruitmentRequest.dateEnd"

@@ -11,7 +11,7 @@
 .content-recruiment {
     margin-top: 20px;
     margin-bottom: 15px;
-    min-height: 800px;
+    min-height: 760px;
     padding: 20px;
     width: 100%;
     min-width: 1000px;
@@ -113,7 +113,7 @@
 }
 
 #formWatch .MuiPaper-root {
-    width: 40%;
+    width: 45%;
     overflow: hidden;
 }
 
@@ -188,6 +188,9 @@ body {
 
 
 /*Có thể tái sử dụng */
+.w-160{
+    width: 160px;
+}
 .ws-nowrap {
     white-space: nowrap;
 }
@@ -356,6 +359,13 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /*Có thể tái sử dụng */
+.bg-clr-primary{
+    background-color: #398CC4;
+}
+.bg-clr-successV1{
+    background-color: #419A00;
+}
+
 .table-edit th,
 .table-edit td {
     border: 2px solid;

@@ -1,78 +1,115 @@
-import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import SendIcon from "@mui/icons-material/Send";
 import RemoveIcon from "@mui/icons-material/Remove";
-import BackspaceIcon from "@mui/icons-material/Backspace";
+import SendIcon from "@mui/icons-material/Send";
+import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
 
-import axios from "axios";
-import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
 import CreateIcon from "@mui/icons-material/Create";
+import axios from "axios";
+import { useFormik } from "formik";
+import swal from "sweetalert";
+import { number } from "yup";
 
 export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
+  const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
+  const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
+  const [chooseRecruitmentNeeds, setChooseRecruitmentNeeds] = useState('');
+  const [errNumber, setErrNumber] = useState(false);
+
+
   // Xử lý số lượng nhân sự
-  const checkValid = (dateSet, techArr, dateCreate) => {
+  const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
+    // 
+    var hasErrPersonalNeeds;
+    if (personalneed === "" || personalneed === null || personalneed === "default") {
+      hasErrPersonalNeeds = true;
+      setErrIdPersonalNeed(true);
+    } else {
+      hasErrPersonalNeeds = false;
+      setErrIdPersonalNeed(false);
+    }
 
-    const errTech = techArr.map((item) => {
+    // 
+    const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
         return true;
       } else {
         return false;
       }
-    });
-    const hasErrTech = errTech.some((item) => item === true);
+    })
+    const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
-    //
-    const errNumberPersonal = techArr.map((item) => {
-      if (
-        item.numberOfPersonnelNeeded == 0 ||
-        item.numberOfPersonnelNeeded === "" ||
-        item.numberOfPersonnelNeeded < 0
-      ) {
-        return true;
+    // 
+    const errNumberR = techArr.map(item => {
+      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
       }
-    });
+    })
+    console.log(errNumberR);
+    const hasErrNumber = errNumberR.some(item => item === true);
+    console.log(hasErrNumber);
+    setErrNumber(hasErrNumber)
+    //
+    var hasErrOfPersonal;
+    if (!hasErrNumber) {
+      const errNumberPersonal = techArr.map(item => {
+        if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      hasErrOfPersonal = errNumberPersonal.some(item => item === true);
+      setErrNumberOfPersonal(hasErrOfPersonal);
+    } else {
+      hasErrOfPersonal = false;
+      setErrNumberOfPersonal(false);
+    }
+    // 
+    var hasErrNumberOutput;
+    if (!hasErrNumber) {
+      const errNumberOutput = techArr.map(item => {
+        if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      hasErrNumberOutput = errNumberOutput.some(item => item === true)
+      setErrNumberOfOutput(hasErrNumberOutput);
+    } else {
+      hasErrNumberOutput = false;
+      setErrNumberOfOutput(false);
+    }
+    //  
 
-    const hasErrOfPersonal = errNumberPersonal.some((item) => item === true);
-    setErrNumberOfPersonal(hasErrOfPersonal);
-    //
-    const errNumberOutput = techArr.map((item) => {
-      if (
-        item.numberOfOutputPersonnel == 0 ||
-        item.numberOfOutputPersonnel === "" ||
-        item.numberOfOutputPersonnel < 0
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    const hasErrNumberOutput = errNumberOutput.some((item) => item === true);
-    setErrNumberOfOutput(hasErrNumberOutput);
+    var hasErrRecruitmentPlan;
+    if (nameRecruitmentPlan == "") {
+      hasErrRecruitmentPlan = true;
+      setErrNameRecruitmentPlan(true);
+    } else {
+      hasErrRecruitmentPlan = false;
+      setErrNameRecruitmentPlan(false);
+    }
+
+
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
-    if (
-      dateSet < futureDate ||
-      dateSet == "Invalid Date" ||
-      hasErrTech ||
-      hasErrNumberOutput ||
-      hasErrOfPersonal
-    ) {
+
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
       return false;
     } else {
       return true;
@@ -114,9 +151,9 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(false);
-      values.planDetails = [...tech];
-      values.idUser = 1;
+      console.log(values.recruitmentPlan.recruitmentRequest.id);
+      const personalneed = values.recruitmentPlan.recruitmentRequest.id;
+      const nameRecruitmentPlan = values.recruitmentPlan.name;
       if (values.recruitmentPlan.dateRecruitmentEnd == '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
@@ -125,7 +162,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
       const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
-      if (!checkValid(date, tech, dateCreate)) {
+      // checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)
+      // setSubmitting(false);
+      // return;
+      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)) {
         setSubmitting(false);
         return;
       } else if (!checkValidInput(values.recruitmentPlan.name)) {
@@ -134,6 +174,9 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       } else {
         // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
         try {
+          values.planDetails = [...tech];
+          values.idUser = 1;
+          setSubmitting(true);
           await axios
             .put("http://localhost:8080/api/plans/" + id, values)
             .then((res) => {
@@ -160,6 +203,8 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
 
     axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
       formData.setValues(res.data);
+      setHandoverDeadline(res.data.recruitmentPlan.handoverDeadline);
+      setChooseRecruitmentNeeds(res.data.recruitmentPlan.recruitmentRequest.id);
       const detail = res.data.planDetails;
       setTech(
         detail.map((item) => ({
@@ -170,7 +215,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       );
     });
   }, []);
+  const [recuitments, setRecuitment] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
+      setRecuitment(res.data);
+      // setChooseRecruitmentNeeds(res.data.)
+    });
 
+  }, []);
   // Xử lý mở form
   const listTechnology = [
     { id: 1, text: "PHP" },
@@ -317,21 +369,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     updatedTech[index].numberOfPersonnelNeeded = countOf;
     setTech(updatedTech);
   };
-  const handoverDeadlineStr = formData.values.recruitmentPlan.handoverDeadline;
-  const timeHandOver = new Date(handoverDeadlineStr);
-  const yearH = timeHandOver.getFullYear();
-  const monthH = String(timeHandOver.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-  const dayH = String(timeHandOver.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-  const timeHandOverValue = `${yearH}-${monthH}-${dayH}`;
-  const [handoverDeadline, setHandoverDeadline] = useState(timeHandOverValue);
+
+  const [handoverDeadline, setHandoverDeadline] = useState("");
 
   const timeNow = new Date();
   const year = timeNow.getFullYear();
   const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
   const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
   const timeNowValue = `${year}-${month}-${day}`;
-  const dateDeadline = new Date(timeNow);
-  dateDeadline.setDate(timeNow.getDate() + 75);
   const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
 
   const handleDateChange = (event) => {
@@ -339,13 +384,37 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       setRecuitmentDateEnd(event.target.value);
     } else if (event.target.name === 'recruitmentPlan.handoverDeadline') {
       setHandoverDeadline(event.target.value);
+      // 
+      const timeChange = new Date(event.target.value);
+      timeChange.setDate(timeChange.getDate() - 75);
+      const yearChange = timeChange.getFullYear();
+      const monthChange = String(timeChange.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
+      const dayChange = String(timeChange.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+      const timeChangeValue = `${yearChange}-${monthChange}-${dayChange}`;
+      // 
+      if (timeChange < timeNow) {
+        setRecuitmentDateEnd(timeNowValue);
+        formData.handleChange({
+          target: {
+            name: 'recruitmentPlan.dateRecruitmentEnd',
+            value: timeNowValue
+          }
+        });
+      } else {
+
+        setRecuitmentDateEnd(timeChangeValue);
+        formData.handleChange({
+          target: {
+            name: 'recruitmentPlan.dateRecruitmentEnd',
+            value: timeChangeValue
+          }
+        });
+      }
     }
     formData.handleChange(event);
   }
 
   function TimeRecruitment() {
-
-
     return (
       <>
         <div className="col-md-4 mt-0 mb-2 child">
@@ -363,6 +432,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
+            min={timeNowValue}
             onChange={handleDateChange}
             value={handoverDeadline}
             onBlur={formData.handleBlur}
@@ -386,6 +456,11 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       );
     }
   };
+
+  const handleChangeRecruitmentNeeds = (event) => {
+    setChooseRecruitmentNeeds(event.target.value);
+    formData.handleChange(event);
+  }
   return (
     <>
       {check ? (
@@ -426,35 +501,53 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
               <label htmlFor="name" className="form-label grey-text">
                 Từ nhu cầu nhân sự
               </label>
-              <input
-                type="text"
-                className='form-control grey-text'
-                value={formData.values.recruitmentPlan.recruitmentRequest.name}
-                readOnly
-              />
+              <select
+                className="form-select grey-text"
+                aria-label="Default select example"
+                onChange={(event) => handleChangeRecruitmentNeeds(event)}
+                value={chooseRecruitmentNeeds}
+                name="recruitmentPlan.recruitmentRequest.id"
+                id="recruitmentPlan.recruitmentRequest.id"
+              >
+                <option value="default">Chọn nhu cầu nhân sự</option>
+                {recuitments.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+              <div className="col-md-8  mt-0">
+                {errIdPersonalNeed && (
+                  <p className="err-valid ws-nowrap ">
+                    Nhu cầu không được để trống
+                  </p>
+                )}
+              </div>
             </div>
             <div className="col-md-12">
               <label htmlFor="name" className="form-label grey-text">
                 Tên kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
               <input
-                type="text"
-                className='form-control grey-text'
                 value={formData.values.recruitmentPlan.name}
-                readOnly
+                maxLength={60}
+                type="text"
+                placeholder="Ví dụ: DECEN - Kế hoạch tuyển dụng quý 3/2021"
+                onChange={formData.handleChange}
+                onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
+                className='form-control grey-text'
+                id="recruitmentPlan.name"
+                name="recruitmentPlan.name"
               />
             </div>
-            {!checkValidInput(formData.values.recruitmentPlan.name) && (
-              <div>
-                {/* Hiển thị thông báo lỗi */}
-                <p
-                  style={{ whiteSpace: "nowrap" }}
-                  className="err-valid col-md-6"
-                >
-                  Độ dài tối đa là 60 ký tự.
+            <div className="col-md-8  mt-0">
+              {errNameRecruitmentPlan && (
+                <p className="err-valid ws-nowrap ">
+                  Tên kế hoạch không được để trống
                 </p>
-              </div>
-            )}
+              )}
+            </div>
+
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
                 <label className="form-label grey-text">
@@ -513,10 +606,18 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
             <div className="col-md-4 mt-0">
               {techErr && (
                 <p style={{ whiteSpace: "nowrap" }} className="err-valid">
-                  Công nghệ không được để rỗng
+                  Công nghệ không được để trống
                 </p>
               )}
             </div>
+            {errNumber && (
+              <div className="col-md-8  mt-0 text-center">
+
+                <p className="err-valid ws-nowrap ">
+                  Số lượng cần tuyển phải lớn hơn số lượng đầu ra
+                </p>
+              </div>
+            )}
             <div className="col-md-4 mt-0 text-center">
               {errNumberOfPersonal && (
                 <p style={{ whiteSpace: "nowrap" }} className="err-valid">
@@ -532,7 +633,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
               )}
             </div>
 
-            <div className="col-md-12 mt-2" onClick={addTech}>
+            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12  d-flex">
@@ -554,9 +655,8 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
             <div className="col-md-4 mb-2 mt-0">
               <div className="send text-right mt-0">
                 <div className="send-child position-relative">
-                  <button type="submit" className="btn send-btn btn-success ">
-                    Gửi
-                    <SendIcon className="iconSend position-absolute" />
+                  <button type="submit" className="btn send-btn btn-success text-center">
+                    Lưu
                   </button>
                 </div>
               </div>

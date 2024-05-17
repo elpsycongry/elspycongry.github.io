@@ -1,3 +1,4 @@
+
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ClearIcon from "@mui/icons-material/Clear";
 import {
@@ -22,6 +23,8 @@ import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
 import DialogRecruitmentPlanFormCreate from "./dialogRecruitmentPlan/dialogRecruitmentPlanFormCreate";
+import Pagination from '@mui/material/Pagination';
+// import Stack from '@mui/material/Stack';
 
 import DialogRecruitmentPlanFormWatch from './dialogRecruitmentPlan/dialogRecruitmentPlanFormWatch';
 import DialogRecruitmentPlanFormUpdate from './dialogRecruitmentPlan/dialogRecruitmentPlanFormUpdate';
@@ -135,14 +138,16 @@ export default function RecruitmentPlan() {
         { id: " ", text: "Trạng thái" },
         { id: "Đã hủy", text: "Đã hủy" },
         { id: "Đã xác nhận", text: "Đã xác nhận" },
-        { id: "Bị từ chối", text: "Bị từ chối" },
+        { id: "Bị từ chối bởi DECAN", text: "Bị từ chối bởi DECAN" },
         { id: "Đã gửi", text: "Đã gửi" },
         { id: "Hoàn thành", text: "Hoàn thành" },
     ]
 
+
+
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
-        handleSubmitSelect(event.target.value,page);
+        handleSubmitSelect(event.target.value, page);
     };
 
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
@@ -151,6 +156,7 @@ export default function RecruitmentPlan() {
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
+
             if (response.data.content.length === 0) {
                 setPage(0);
                 setTotalPages(1)
@@ -167,6 +173,8 @@ export default function RecruitmentPlan() {
         console.log(pageNumber)
         try {
             const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+            console.log(response.data.totalPages)
+            console.log(response.data.pageable.pageNumber);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -183,6 +191,11 @@ export default function RecruitmentPlan() {
     useEffect(() => {
         getAll(page);
     }, [page]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const handlePagination = (event, value) =>{
+        setCurrentPage (value);
+        getAll(value-1);
+    }
 
     return (
         <>
@@ -190,7 +203,7 @@ export default function RecruitmentPlan() {
             <Navbar />
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Kế hoạch tuyển dụng" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
-                <div className="content-recruiment">
+                <div className="content-recruiment position-relative">
                     <div className=" d-flex align-items-centent justify-content-between">
                         <p className="title text-center mb-0">
                             Kế hoạch tuyển dụng
@@ -273,14 +286,18 @@ export default function RecruitmentPlan() {
                             {recuitments.map((item) => (
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td className="count-td pl-20"></td>
-
                                     <td>{item.name}</td>
-                                    <td className="text-center">{moment(item.dateStart).format("HH:mm YYYY-MM-DD")}</td>
+                                    <td className="text-center">{moment(item.recruitmentRequest.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
-                                        <DialogRecruitmentPlanFormWatch id={item.id} />
-                                        {item.status === "Bị từ chối" || item.status.toLowerCase() === "Đã xác nhận" ? (
+                                        {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false}  statusItem={item.status} reasonItem ={item.reason}/>
+                                        ) : (
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
+                                        )}
+                                        {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
+
                                             <DialogRecruitmentPlanFormUpdate id={item.id} check={true} />
                                         ) : (
                                             <DialogRecruitmentPlanFormUpdate id={item.id} />
@@ -290,9 +307,9 @@ export default function RecruitmentPlan() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
-                        <button onClick={() => getAll(page - 1)} disabled={page === 0} className='me-2 btn btn-light'>Previous</button>
-                        <span>{page + 1} of {totalPages}</span>
-                        <button onClick={() => getAll(page + 1)} disabled={page === totalPages - 1} className='ms-2 btn btn-light'>Next</button>
+                        <div className=' position-absolute bottom-0  w-100 start-0' style={{marginBottom: "20px"}}>
+                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
+                        </div>
                     </div>
                 </div>
             </Box>

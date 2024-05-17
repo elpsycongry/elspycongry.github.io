@@ -6,8 +6,10 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DialogRecruitmentPlanFormReason from "./dialogRecruitmentPlanFormReason";
 import axios from "axios";
 import { useFormik } from "formik";
+import Swal from 'sweetalert2';
 
-export default function DialogRecruitmentPlanFormWatch({ id }) {
+export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
+  console.log(reasonItem);
   const [tenhnology, setTenhnology] = useState([]);
   // Dữ liệu fake
   const formData = useFormik({
@@ -37,6 +39,38 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
       ],
     },
   });
+  // Call api
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showCancelButton: false,
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+  const approve = () => {
+    try {
+      axios.put(`http://localhost:8080/api/plans/${id}/users/1`).then(() => {
+        setOpenForm(false);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Phê duyệt thành công",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          window.location.href = "/recruitment/recruitmentPlan";
+        });
+      })
+    } catch (error) {
+      console.error('Error fetching approval:', error);
+      // You can handle the error here, e.g., show a message to the user
+    }
+  };
   useEffect(() => {
     axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
       formData.setValues(res.data);
@@ -215,7 +249,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                       <label
                         htmlFor="time"
                         style={{ color: "#6F6F6F" }}
-                        className="form-label fs-20 "
+                        className="form-label fs-20 mb-0 "
                       >
                         Thời hạn bàn giao:{" "}
                       </label>
@@ -229,10 +263,32 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                       </p>
                     </td>
                   </tr>
+                  {statusItem === "Đã xác nhận" ? (
+                    <tr>
+                      <td>
+                        <label
+                          htmlFor="time"
+                          style={{ color: "#6F6F6F" }}
+                          className="form-label fs-20 mb-0"
+                        >
+                          Trạng thái:{" "}
+                        </label>
+                      </td>
+                      <td>
+                        <p
+                          className=" namePersonal mb-0"
+                          style={{ color: "#838383" }}
+                        >
+                          {statusItem}
+                        </p>
+                      </td>
+                    </tr>
+                  ) : ("")
+                  }
                 </tbody>
               </table>
             </div>
-            
+
             {formData.values.recruitmentPlan.status === "Bị từ chối bởi DET" ? (
               <div className="col-md-12  d-flex ">
                 <label
@@ -249,7 +305,7 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                   value={formData.values.recruitmentPlan.reason}
                 ></textarea>
               </div>
-            ) : (
+            ) : (check ? (
               <div className="col-md-12 mt-0 d-flex">
                 <div className="col-md-6 mt-2">
                   <button
@@ -261,17 +317,57 @@ export default function DialogRecruitmentPlanFormWatch({ id }) {
                   </button>
                 </div>
                 <div className="col-md-6 mt-2 ms-2">
-                  <button className=" btn-edit btn btn-success w-98    bg-clr-success">
+                  <button type="button" onClick={approve} className=" btn-edit btn btn-success w-98    bg-clr-success">
                     Phê duyệt
                   </button>
                 </div>
-              </div>
+              </div>)
+              : statusItem === "Bị từ chối bởi DECAN" ? (
+                <div className="col-md-12 mt-2 d-flex ">
+                  <label
+                    htmlFor="time"
+                    style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                    className="form-label fs-20 me-2"
+                  >
+                    Lý do:
+                  </label>
+                  <textarea
+                    readOnly
+                    className="form-control resize pt-2 "
+                    style={{ color: "#838383" }}
+                    value={reasonItem}
+                  ></textarea>
+                </div>
+              ) : (
+                <div className="col-md-12 mt-0 d-flex mt-2">
+                  <div className="col-md-6 mt-2">
+                    <button
+                      type="button"
+                      style={{ height: '42px' }}
+                      className="btn btn-primary w-100 bg-clr-primary btn-edit stop"
+                      onClick={handleCloseWatchOpenReason}
+                    >
+                      Xem kết quả tuyển dụng
+                    </button>
+                  </div>
+                  <div className="col-md-6 mt-2 ms-2">
+                    <button
+                      type="button"
+                      onClick={approve}
+                      style={{ height: '42px' }}
+                      className=" btn-edit btn btn-success w-98    bg-clr-successV1">
+                      Xem kết quả đào tạo
+                    </button>
+                  </div>
+                </div>
+              )
+
             )}
           </form>
         </DialogTitle>
       </Dialog>
       <DialogRecruitmentPlanFormReason
-        idUser={id}
+        idPlan={id}
         open={openFormReason}
         onClose={() => setOpenFormReason(false)}
       />
