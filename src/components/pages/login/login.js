@@ -45,9 +45,6 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function Login() {
-
-
-
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
@@ -146,8 +143,8 @@ function Login() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
-                        <img src={logoImage} style={{ width: '30px', height: '30px' }} />
+                    <Avatar style={{width: '100px', height: '100px'}} sx={{ m: 1, bgcolor: '#282781' }}>
+                        <img src={logoImage} style={{ width: '80px', height: '80px' }} />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in

@@ -17,6 +17,19 @@ import { Icon } from '@iconify/react';
 import './training.css';
 import axios from "axios";
 
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="/public">
+                Quản lý đào tạo
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
 export default function Training() {
     const location = useLocation();
 
@@ -94,6 +107,7 @@ export default function Training() {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get(`http://localhost:8080/api/interns/search?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}`).then((res) => {
                 setListIntern(res.data.content);
+                console.log(res.data.content);
                 setPagination({
                     ...newPagination,
                     totalElements: res.data.totalElements,
@@ -112,7 +126,7 @@ export default function Training() {
             <Header />
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
-                <Box m={2} style={{ display: 'flex' }}>
+                <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '14px' }}>
                     <Icon style={{ width: 23, height: 23, color: 'rgba(0, 0, 0, 0.60)' }} icon="ion:book-sharp" />
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Đào tạo</p>
                 </Box>
@@ -162,7 +176,7 @@ export default function Training() {
                             </div>
                             <FormControl className="h-px" sx={{ minWidth: '300px' }}>
                                 <InputLabel className="top-left" id="demo-simple-small-label">Trạng thái thực tập...</InputLabel>
-                                <Select
+                                <Select 
                                     sx={{
                                         height: '30px',
                                         paddingTop: '0px', 
@@ -186,9 +200,9 @@ export default function Training() {
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment" style={{borderRadius: '10px'}}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
-                        <table className="table_training" style={{ display: 'flex' }}>
+                        <table className="table_training" style={{ display: 'flex' , alignItems: 'center'}}>
                             <div className="no-scrolling">
                                 <tr className="header-tr grey-text">
                                     <th className="training-id">STT</th>
@@ -238,15 +252,26 @@ export default function Training() {
                             </div>
                         </table>
                     </div>
-                    <Stack spacing={1} style={{ marginTop: '190px', alignItems: 'center' }}>
-                        <Pagination
+                    <Stack spacing={1} style={{ marginTop: '40px', alignItems: 'center' }}>
+                    <Pagination
+                            className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
                             page={pagination.page + 1}
                             shape="rounded"
                             onChange={handlePageChange}
                         />
+                        
                     </Stack>
+                    
+
+                    {/* <div className=" bottom-0 position-absolute w-100 left-0" style={{ marginBottom: '20px' }}>
+                        <Pagination className="d-flex justify-content-center" />
+                    </div> */}
+
                 </div>
+                {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
+                </div> */}
             </Box>
             {/* <Footer /> */}
         </>

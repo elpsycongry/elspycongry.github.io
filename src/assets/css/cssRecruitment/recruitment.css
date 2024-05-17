@@ -11,7 +11,7 @@
 .content-recruiment {
     margin-top: 20px;
     margin-bottom: 15px;
-    min-height: 40px;
+    min-height: 652px;
     padding: 20px;
     width: 100%;
     background-color: #fdfdfd;
@@ -115,6 +115,9 @@
 
 .clr-white {
     color: #f3f3f3;
+}
+.w-100{
+    width: 100%;
 }
 
 .font-w-1 {
