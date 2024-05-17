@@ -332,7 +332,7 @@ export default function DialogPersonalFormCreate() {
             </div>
 
 
-            <div className="col-md-12 mt-2" onClick={addTech}>
+            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12 d-flex">

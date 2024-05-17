@@ -333,7 +333,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
               {quantityErr && <p style={{ whiteSpace: 'nowrap', padding: '0px 16px 0px 8px' }} className="err-valid">Số lượng phải bé hơn 0</p>}
             </div>
 
-            <div className="col-md-12 mt-2" onClick={addTech}>
+            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12">

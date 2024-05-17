@@ -188,6 +188,9 @@ body {
 
 
 /*Có thể tái sử dụng */
+.w-160{
+    width: 160px;
+}
 .ws-nowrap {
     white-space: nowrap;
 }

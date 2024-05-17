@@ -553,7 +553,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
             <div className="col-md-4 mt-0 text-center">
               {errNumberofOutput && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
             </div>
-            <div className="col-md-12 mt-2" onClick={addTech}>
+            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
               <p className="grey-text plusTech w-125 mb-0 cursor-pointer">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12  d-flex">
