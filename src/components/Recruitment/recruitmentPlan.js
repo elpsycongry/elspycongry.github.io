@@ -102,7 +102,6 @@ export default function RecruitmentPlan() {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [selectedStatus, setSelectedStatus] = useState('');
-    const [selectedValue, setSelectedValue] = useState('');
 
     const handleSearch = (event) => {
         setSearchName(event.target.value);
@@ -192,9 +191,9 @@ export default function RecruitmentPlan() {
         getAll(page);
     }, [page]);
     const [currentPage, setCurrentPage] = useState(1);
-    const handlePagination = (event, value) =>{
-        setCurrentPage (value);
-        getAll(value-1);
+    const handlePagination = (event, value) => {
+        setCurrentPage(value);
+        getAll(value - 1);
     }
 
     return (
@@ -292,7 +291,7 @@ export default function RecruitmentPlan() {
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false}  statusItem={item.status} reasonItem ={item.reason}/>
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} />
                                         ) : (
                                             <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
                                         )}
@@ -307,9 +306,12 @@ export default function RecruitmentPlan() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
-                        <div className=' position-absolute bottom-0  w-100 start-0' style={{marginBottom: "20px"}}>
+                        <div className=' position-absolute bottom-0  w-100 start-0' style={{ marginBottom: "20px" }}>
                             <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
                         </div>
+                        {/* <button onClick={() => getAll(page - 1)} disabled={page === 0} className='me-2 btn btn-light'>Previous</button>
+                        <span>{page + 1} of {totalPages}</span>
+                        <button onClick={() => getAll(page + 1)} disabled={page === totalPages - 1} className='ms-2 btn btn-light'>Next</button> */}
                     </div>
                 </div>
             </Box>

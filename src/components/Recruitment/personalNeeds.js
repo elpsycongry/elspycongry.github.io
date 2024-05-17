@@ -21,6 +21,7 @@ import BreadCrumbs from "../fragment/breadcrumbs/breadcrumbs";
 import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
+import Pagination from '@mui/material/Pagination';
 import DialogPersonalFormCreate from "./dialogPersonalNeeds/dialogPersonalFormCreate";
 import DialogPersonalFormUpdate from "./dialogPersonalNeeds/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialogPersonalNeeds/dialogPersonalFormWatch";
@@ -101,26 +102,31 @@ export default function PersonalNeeds() {
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState('');
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [recuitments, setRecuitment] = useState([]);
 
     const handleSearch = (event) => {
         setSearchName(event.target.value);
         if (event.key === 'Enter') {
             handleSubmitSearch(event);
         } else {
-            // clearTimeout(search);
             setTimeout(() => {
                 handleSubmitSearch(event);
             }, 3000);
         }
     };
 
-    const handleSubmitSearch = async (event) => {
-        console.log(event.target.value);
+    const handleSubmitSearch = async (event, pageNumber) => {
         event.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${event.target.value}&status=${selectedStatus}`);
-            setRecuitment(response.data);
+            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
+            setRecuitment(response.data.content);
+            setPage(response.data.pageable.pageNumber);
+            setTotalPages(response.data.totalPages);
             if (response.data.length === 0) {
+                setPage(0);
+                setTotalPages(1)
                 setShowError(true);
             } else {
                 setShowError(false);
@@ -140,16 +146,19 @@ export default function PersonalNeeds() {
         { id: "Đã bàn giao", text: "Đã bàn giao" },
     ]
     const handleStatusChange = (event) => {
-        console.log(event.target.value);
         setSelectedStatus(event.target.value);
-        handleSubmitSelect(event.target.value);
+        handleSubmitSelect(event.target.value, page);
     };
 
-    const handleSubmitSelect = async (selectedValue) => {
+    const handleSubmitSelect = async (selectedStatus, pageNumber) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedValue}`);
-            setRecuitment(response.data);
+            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+            setRecuitment(response.data.content);
+            setPage(response.data.pageable.pageNumber);
+            setTotalPages(response.data.totalPages);
             if (response.data.length === 0) {
+                setPage(0);
+                setTotalPages(1)
                 setShowError(true);
             } else {
                 setShowError(false);
@@ -159,13 +168,30 @@ export default function PersonalNeeds() {
         }
     };
 
+    async function getAll(pageNumber) {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+            setRecuitment(response.data.content);
+            setPage(response.data.pageable.pageNumber);
+            setTotalPages(response.data.totalPages);
+            if (response.data.content.length === 0) {
+                setShowError(true);
+            } else {
+                setShowError(false);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
-    const [recuitments, setRecuitment] = useState([]);
     useEffect(() => {
-        axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-            setRecuitment(res.data);
-        });
-    }, []);
+        getAll(page);
+    }, [page]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const handlePagination = (event, value) => {
+        setCurrentPage(value);
+        getAll(value - 1);
+    }
 
     return (
         <>
@@ -263,8 +289,8 @@ export default function PersonalNeeds() {
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogPersonalFormWatch id={item.id} />
-                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" || item.status === "Đang tuyển dụng"  || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogPersonalFormUpdate id={item.id} check={true}  />
+                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" || item.status === "Đang tuyển dụng" || item.status === "Bị từ chối bởi DECAN" ? (
+                                            <DialogPersonalFormUpdate id={item.id} check={true} />
                                         ) : (
                                             <DialogPersonalFormUpdate id={item.id} />
                                         )}
@@ -273,6 +299,9 @@ export default function PersonalNeeds() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
+                        <div className=' position-absolute bottom-0  w-100 start-0' style={{ marginBottom: "20px" }}>
+                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
+                        </div>
                     </div>
                 </div>
             </Box>
