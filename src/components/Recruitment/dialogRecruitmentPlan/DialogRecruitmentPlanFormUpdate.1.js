@@ -1,15 +1,13 @@
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import RemoveIcon from "@mui/icons-material/Remove";
-import SendIcon from "@mui/icons-material/Send";
-import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
-
 import CreateIcon from "@mui/icons-material/Create";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import { useFormik } from "formik";
+import { useEffect, useState } from "react";
 import swal from "sweetalert";
-import { number } from "yup";
+
 
 export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [dateErr, setDateErr] = useState(false);
@@ -43,55 +41,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       } else {
         return false;
       }
-    })
+    });
     const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
     // 
-    const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
-        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
-      } else {
-        return false;
-      }
-    })
-    console.log(errNumberR);
-    const hasErrNumber = errNumberR.some(item => item === true);
-    console.log(hasErrNumber);
-    setErrNumber(hasErrNumber)
-    //
-    var hasErrOfPersonal;
-    if (!hasErrNumber) {
-      const errNumberPersonal = techArr.map(item => {
-        if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      hasErrOfPersonal = errNumberPersonal.some(item => item === true);
-      setErrNumberOfPersonal(hasErrOfPersonal);
-    } else {
-      hasErrOfPersonal = false;
-      setErrNumberOfPersonal(false);
-    }
-    // 
-    var hasErrNumberOutput;
-    if (!hasErrNumber) {
-      const errNumberOutput = techArr.map(item => {
-        if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      hasErrNumberOutput = errNumberOutput.some(item => item === true)
-      setErrNumberOfOutput(hasErrNumberOutput);
-    } else {
-      hasErrNumberOutput = false;
-      setErrNumberOfOutput(false);
-    }
-    //  
-
     var hasErrRecruitmentPlan;
     if (nameRecruitmentPlan == "") {
       hasErrRecruitmentPlan = true;
@@ -303,8 +256,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           onChange={handleInputChange}
-          onBlur={handleBlur}
-        />
+          onBlur={handleBlur} />
         <AddIcon
           onClick={handleClickCountPlus}
           className="ms-1" />
@@ -358,8 +310,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           onChange={handleInputChange}
-          onBlur={handleBlur}
-        />
+          onBlur={handleBlur} />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
     );
@@ -412,7 +363,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       }
     }
     formData.handleChange(event);
-  }
+  };
 
   function TimeRecruitment() {
     return (
@@ -426,8 +377,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
             value={dateRecruitmentEnd}
             className={`form-control text-center grey-text`}
             id="recruitmentPlan.dateRecruitmentEnd"
-            name="recruitmentPlan.dateRecruitmentEnd"
-          />
+            name="recruitmentPlan.dateRecruitmentEnd" />
         </div>
         <div className="col-md-4 mt-0 mb-2 child">
           <input
@@ -438,12 +388,11 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
             onBlur={formData.handleBlur}
             className={`form-control text-center grey-text`}
             id="recruitmentPlan.handoverDeadline"
-            name="recruitmentPlan.handoverDeadline"
-          />
+            name="recruitmentPlan.handoverDeadline" />
         </div>
 
       </>
-    )
+    );
   }
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
@@ -451,8 +400,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
         <ClearIcon
           className="position-absolute oc-08 clr-danger hover-danger"
           sx={{ right: "55px", top: "6px" }}
-          onClick={() => removeTech(index)}
-        />
+          onClick={() => removeTech(index)} />
       );
     }
   };
@@ -460,7 +408,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const handleChangeRecruitmentNeeds = (event) => {
     setChooseRecruitmentNeeds(event.target.value);
     formData.handleChange(event);
-  }
+  };
   return (
     <>
       {check ? (
@@ -469,8 +417,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
         <Tooltip title="Chỉnh sửa chi tiết">
           <CreateIcon
             className="color-orange pencil-btn font-size-medium hover-warning cursor-pointer"
-            onClick={handleClickFormOpen}
-          />
+            onClick={handleClickFormOpen} />
         </Tooltip>
       )}
       <Dialog
@@ -537,8 +484,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
                 className='form-control grey-text'
                 id="recruitmentPlan.name"
-                name="recruitmentPlan.name"
-              />
+                name="recruitmentPlan.name" />
             </div>
             <div className="col-md-8  mt-0">
               {errNameRecruitmentPlan && (
@@ -589,15 +535,13 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                   <NumberOfPersonnelNeeded
                     number={tech.numberOfPersonnelNeeded}
                     key={tech.numberOfPersonnelNeeded}
-                    idx={index}
-                  />
+                    idx={index} />
                 </div>
                 <div className="col-md-4 text-center mt-0 mb-2  position-relative align-item-center">
                   <NumberOfOutputPersonnel
                     number={tech.numberOfOutputPersonnel}
                     key={tech.numberOfOutputPersonnel}
-                    idx={index}
-                  />
+                    idx={index} />
                   <Dlt index={index} />
                 </div>
               </>

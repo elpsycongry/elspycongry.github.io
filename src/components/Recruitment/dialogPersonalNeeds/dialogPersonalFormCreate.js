@@ -85,11 +85,12 @@ export default function DialogPersonalFormCreate() {
       var date = values.recruitmentRequest.dateEnd;
       if (date == "") {
         date = new Date(timeNowValue);
+        values.recruitmentRequest.dateEnd = timeNowValue;
       } else {
         date = new Date(values.recruitmentRequest.dateEnd);
       }
       const name = values.recruitmentRequest.name;
-      console.log(name);
+      console.log(values.recruitmentRequest.dateEnd);
       // checkValid(date, tech, name);
       // setSubmitting(false);
       // return;

@@ -34,17 +34,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       hasErrPersonalNeeds = false;
       setErrIdPersonalNeed(false);
     }
-    // 
-    const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
-        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
-      } else {
-        return false;
-      }
-    })
-    const hasErrNumber = errNumberR.every(item => item === true);
-    setErrNumber(hasErrNumber)
-    // 
+   
     const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
         return true;
@@ -54,27 +44,53 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     })
     const hasErrTech = errTech.some(item => item === true);
     setTechErr(hasErrTech);
-    // 
-    const errNumberPersonal = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
-        return true;
-      } else {
-        return false;
-      }
-    })
-    const hasErrOfPersonal = errNumberPersonal.some(item => item === true);
-    setErrNumberOfPersonal(hasErrOfPersonal);
-    // 
-    const errNumberOutput = techArr.map(item => {
-      if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
-        return true;
-      } else {
-        return false;
-      }
-    })
-    const hasErrNumberOutput = errNumberOutput.some(item => item === true);
-    setErrNumberOfOutput(hasErrNumberOutput);
 
+
+     // 
+     const errNumberR = techArr.map(item => {
+      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
+      } else {
+        return false;
+      }
+    })
+    console.log(errNumberR);
+    const hasErrNumber = errNumberR.some(item => item === true);
+    console.log(hasErrNumber);
+    setErrNumber(hasErrNumber)
+    //
+    var hasErrOfPersonal;
+    if (!hasErrNumber) {
+      const errNumberPersonal = techArr.map(item => {
+        if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      hasErrOfPersonal = errNumberPersonal.some(item => item === true);
+      setErrNumberOfPersonal(hasErrOfPersonal);
+    } else{
+      hasErrOfPersonal = false;
+      setErrNumberOfPersonal(false);
+    }
+    // 
+    var hasErrNumberOutput;
+    if (!hasErrNumber) {
+      const errNumberOutput = techArr.map(item => {
+        if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      hasErrNumberOutput = errNumberOutput.some(item => item === true)
+      setErrNumberOfOutput(hasErrNumberOutput);
+    }else{
+      hasErrNumberOutput = false;
+      setErrNumberOfOutput(false);
+    }
+    // 
     var hasErrRecruitmentPlan;
     if (nameRecruitmentPlan == "") {
       hasErrRecruitmentPlan = true;
