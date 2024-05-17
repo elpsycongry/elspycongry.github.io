@@ -77,6 +77,8 @@ export default function TrainingStats() {
             setActive2(false)
             setActive3(false)
             setActive4(true)
+
+            
             setTraningStats({
                 internsEnrolled: "500 TTS",
                 graduatingInterns: "129 TTS",
