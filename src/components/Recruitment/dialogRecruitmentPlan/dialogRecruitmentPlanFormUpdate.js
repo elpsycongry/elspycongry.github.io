@@ -19,7 +19,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
   const [chooseRecruitmentNeeds, setChooseRecruitmentNeeds] = useState('');
-  const [errNumber, setErrNumber] = useState(true);
+  const [errNumber, setErrNumber] = useState(false);
 
 
   // Xử lý số lượng nhân sự
@@ -35,11 +35,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       hasErrPersonalNeeds = false;
       setErrIdPersonalNeed(false);
     }
-    console.log("ád")
     // 
     const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded > item.numberOfOutputPersonnel) {
-        return true;
+      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
       }
@@ -94,7 +93,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || !hasErrNumber) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
       return false;
     } else {
       return true;
@@ -417,6 +416,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
+            min={timeNowValue}
             onChange={handleDateChange}
             value={handoverDeadline}
             onBlur={formData.handleBlur}
@@ -503,7 +503,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
                   <p className="err-valid ws-nowrap ">
-                    Nhu cầu không được để rỗng
+                    Nhu cầu không được để trống
                   </p>
                 )}
               </div>
@@ -590,11 +590,11 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
             <div className="col-md-4 mt-0">
               {techErr && (
                 <p style={{ whiteSpace: "nowrap" }} className="err-valid">
-                  Công nghệ không được để rỗng
+                  Công nghệ không được để trống
                 </p>
               )}
             </div>
-            {!errNumber && (
+            {errNumber && (
               <div className="col-md-8  mt-0 text-center">
 
                 <p className="err-valid ws-nowrap ">

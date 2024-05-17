@@ -16,7 +16,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
-  const [errNumber, setErrNumber] = useState(true);
+  const [errNumber, setErrNumber] = useState(false);
 
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
@@ -32,8 +32,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
       }
     })
     const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded > item.numberOfOutputPersonnel) {
-        return true;
+      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
       }
@@ -84,7 +84,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     }
     console.log(hasErrRecruitmentPlan)
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || !hasErrNumber) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrNumber) {
       return false;
     } else {
       return true;
@@ -398,6 +398,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
+            min={timeNowValue}
             value={handoverDeadline}
             onChange={handleDateChange}
             onBlur={formData.handleBlur}
@@ -525,9 +526,9 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
               </>
             ))}
             <div className="col-md-4 mt-0">
-              {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để rỗng</p>}
+              {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để trống</p>}
             </div>
-            {!errNumber && (
+            {errNumber && (
               <div className="col-md-8  mt-0 text-center">
 
                 <p className="err-valid ws-nowrap ">

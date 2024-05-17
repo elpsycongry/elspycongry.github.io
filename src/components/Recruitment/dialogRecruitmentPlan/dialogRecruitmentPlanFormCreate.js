@@ -18,7 +18,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
-  const [errNumber, setErrNumber] = useState(true);
+  const [errNumber, setErrNumber] = useState(false);
 
 
   // Xử lý số lượng nhân sự
@@ -36,12 +36,12 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     }
     // 
     const errNumberR = techArr.map(item => {
-      if(item.numberOfPersonnelNeeded > item.numberOfOutputPersonnel){
-        return true;
-      }else {
+      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
+      } else {
         return false;
       }
-    }) 
+    })
     const hasErrNumber = errNumberR.every(item => item === true);
     setErrNumber(hasErrNumber)
     // 
@@ -140,9 +140,9 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
       const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
-      checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed);
-      setSubmitting(false);
-      return;
+      // checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed);
+      // setSubmitting(false);
+      // return;
       if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)) {
         setSubmitting(false);
         return;
@@ -399,6 +399,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
         <div className="col-md-4 mt-0 mb-2 child">
           <input
             type="date"
+            min={timeNowValue}
             onChange={handleDateChange}
             value={handoverDeadline}
             onBlur={formData.handleBlur}
@@ -487,7 +488,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
             <div className="col-md-8  mt-0">
               {errNameRecruitmentPlan && (
                 <p className="err-valid ws-nowrap ">
-                  Tên kế hoạch không được để rỗng
+                  Tên kế hoạch không được để trống
                 </p>
               )}
             </div>
@@ -544,11 +545,11 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 </div>
               </>
             ))}
-         
+
             <div className="col-md-4 mt-0">
-              {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để rỗng</p>}
+              {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để trống</p>}
             </div>
-            {!errNumber && (
+            {errNumber && (
               <div className="col-md-8  mt-0 text-center">
 
                 <p className="err-valid ws-nowrap ">
