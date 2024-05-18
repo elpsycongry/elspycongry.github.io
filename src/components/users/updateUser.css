@@ -8,11 +8,16 @@
 }
 
 .send-btn {
-    width: 80px;
+    width: 160px;
+    height: 40px;
     text-align: left;
     background-color: #388738;
     color: #fdfdfd;
     border-radius: 3px;
+}
+
+.send-btn:hover{
+    background-color: #0dab0d;
 }
 
 .css-ahj2mt-MuiTypography-root{
@@ -21,4 +26,19 @@
 
 .cursor:hover {
     cursor: pointer;
+}
+
+.form-update-user{
+    width: 600px;
+    padding: 33px;
+}
+
+.form-label-input{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-container-user{
+    display: flex;
+    justify-content: end;
 }

@@ -7,7 +7,7 @@ export default function Footer() {
         className="text-center p-4 pb-1"
       >
         © 2024 Copyright 
-        <a className="text-reset fw-bold">
+        <a>
           : Hệ thống quản lý đào tạo
         </a>
       </footer>

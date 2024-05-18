@@ -125,11 +125,18 @@ function Navbar() {
         )
     }
 
+    const HomeIcon = () => {
+        return (
+            <Icon icon="fa:home" width="25" height="25" />
+        )
+    }
+
     const listItems = [
-        { id: 1, text: "Người dùng", IconText: GroupIcon, linkTo: `/users`, roles: ['ROLE_ADMIN'] },
-        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
+        { id: 1, text: "Trang chủ", IconText: HomeIcon, linkTo: `/`, roles: [] },
+        { id: 2, text: "Người dùng", IconText: GroupIcon, linkTo: `/users`, roles: ['ROLE_ADMIN'] },
+        { id: 3, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
         {
-            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_HR'], children: [
+            id: 4, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_HR'], children: [
                 {
                     id: 1,
                     name: "Nhu cầu",
@@ -148,7 +155,7 @@ function Navbar() {
             ]
         },
         {
-            id: 4, text: "Thống kê", IconText: SignalCellularAltIcon, roles: ['ROLE_ADMIN'], children: [
+            id: 5, text: "Thống kê", IconText: SignalCellularAltIcon, roles: ['ROLE_ADMIN'], children: [
                 {
                     id: 1,
                     name: "Kết quả đào tạo",

@@ -127,12 +127,11 @@ export function InternPage() {
     }
 
     useEffect(() => {
-        console.log("effect")
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
+            console.log(res.data)
             setData(res.data)
         })
-
     }, []);
 
     useEffect(() => {
@@ -302,14 +301,13 @@ export function InternPage() {
                         <div className={"flex flex-row justify-content-between"}>
                             <FormControl sx={{width: '30%'}}>
                                 <NativeSelect
-
-                                    defaultValue={"training"}
+                                    defaultValue={data.trainingState}
                                     inputProps={{
                                         name: 'trainingState',
                                         id: 'uncontrolled-native',
                                     }}>
                                     <option value={"training"}>Đang thực tập</option>
-                                    <option value={"trained"}>Đã thực tập</option>
+                                    <option value={"trained"}>Đã kết thúc</option>
                                 </NativeSelect>
                             </FormControl>
                         </div>
