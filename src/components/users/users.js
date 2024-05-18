@@ -29,9 +29,6 @@ import DialogUpdateUserForm from "./updateUser";
 
 export default function Users() {
 
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-    axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-
     const location = useLocation();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -42,6 +39,7 @@ export default function Users() {
         setOpen(false);
     }
     const [status, setStatus] = useState('');
+    const [token, setToken] = useState("")
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -52,28 +50,15 @@ export default function Users() {
         size: 10,
         totalElements: 0,
     });
-    const [paginationFilter, setPaginationFilter] = useState({
-        page: 0,
-        size: 10,
-        totalElements: 0,
-    });
+
 
     useEffect(() => {
         handleFilterWithFields(pagination);
         fetchListRoleSelect();
-    }, [selectedRole]);
-
-    // Ref để lưu giá trị trước của selectedRole
-    const previousRoleRef = useRef(selectedRole);
-
-    // Cập nhật previousRoleRef mỗi khi selectedRole thay đổi
-    useEffect(() => {
-        previousRoleRef.current = selectedRole;
-    }, [selectedRole]);
+    }, [selectedRole])
 
 
     // const fetchListRoleSelect = async () => {
-    const [token, setToken] = useState("")
     const fetchListRoleSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         setToken(user.accessToken)
@@ -85,41 +70,18 @@ export default function Users() {
         }
     };
 
-    const handleSearch = async (event) => {
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-
-        if (user != null && event.key === 'Enter') {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            try {
-                axios.get(`http://localhost:8080/admin/users/search?keyword=${searchTerm}`).then((res) => {
-                    setListUser(res.data);
-                    setSearchTerm('');
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };
-
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
+        if (selectedRole != "") {
+            setPagination.page = 0;
+        }
     };
 
     const handleRoleChange = (event) => {
         setSelectedRole(event.target.value);
-    };
+        pagination.page = 0;
+        handleFilterWithFields(pagination);
 
-    const handleFilterRole = async () => {
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-        if (user != null) {
-            if (selectedRole === '') {
-                return fetchListUser(); // Không có lọc nếu không có role được chọn
-            }
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/admin/users/filter?role_id=${selectedRole}`).then((res) => {
-                setListUser(res.data);
-            });
-        }
     };
 
     const handlePageChange = (event, value) => {
@@ -128,35 +90,27 @@ export default function Users() {
             handleFilterWithFields(newPagination);
             return newPagination;
         });
+
     };
 
-    const fetchListUser = async () => {
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-        if (user != null) {
-
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/admin/users/filterWithFields?page=0&size=10&keyword=&role_id=").then((res) => {
-                setListUser(res.data.content);
-                console.log(res.data.content);
-            });
-        }
-    };
 
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
-            if (selectedRole !== previousRoleRef.current && setSearchTerm("")) {
-                newPagination = paginationFilter;
-            }
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
-                .then((res) => {
-                    setListUser(res.data.content);
-                    setPagination({
-                        ...newPagination,
-                        totalElements: res.data.totalElements,
+            try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
+                    .then((res) => {
+                        setListUser(res.data.content);
+                        setPagination({
+                            ...newPagination,
+                            totalElements: res.data.totalElements,
+                        });
                     });
-                });
+
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
@@ -232,10 +186,8 @@ export default function Users() {
                                     value={searchTerm}
                                     onChange={handleChangeSearch}
                                     onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            handleFilterWithFields(); // Gọi hàm ngay lập tức
-                                        } else {
-                                            clearTimeout(handleFilterWithFields(), 1000);
+                                        if (e.key === "Enter") {
+                                            handleFilterWithFields();
                                         }
                                     }}
                                     placeholder="Tìm kiếm với tên hoặc email..."
@@ -291,7 +243,7 @@ export default function Users() {
                             <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="user-id">{index + 1}</td>
+                                        <td className="user-id">{index + 1 + pagination.page*pagination.size}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>{item.phone}</td>
@@ -308,7 +260,7 @@ export default function Users() {
                                         </td>
                                         <td>
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={fetchListUser} />                                        </td>
+                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -329,12 +281,14 @@ export default function Users() {
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
                             page={pagination.page + 1}
+                            shape="rounded"
+
                             onChange={handlePageChange}
                         />
                     </div>
                 </div>
             </Box>
-            <Footer />
+            {/* <Footer /> */}
                 {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div> */}

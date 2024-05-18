@@ -8,9 +8,13 @@ import {useParams} from "react-router-dom";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCheck, faX} from "@fortawesome/free-solid-svg-icons";
 import _ from 'lodash'
+import {sortedUniq} from "lodash/array";
+import target from "lodash/seq";
+import {useSnackbar} from "notistack";
 export function InternPage() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(true)
+    const { enqueueSnackbar } = useSnackbar();
 
     const finalScore = useRef()
     const passed = useRef()
@@ -22,7 +26,6 @@ export function InternPage() {
     const handleClose = () => {
         setOpen(false)
     };
-
     const handleListItemClick = (value) => {
         setOpen(false)
     };
@@ -45,7 +48,15 @@ export function InternPage() {
             {name: "Môn 7", theoryScore: '', practiceScore: '', attitudeScore: ''},
         ],
     })
-    const inputRegex = /^(10|[0-9]|)$/;
+    const handleTrainingStateChange = (event) => {
+        if (event.target.value === 'trained'){
+            const currentDate = new Date().toISOString().split('T')[0];
+            setData({ ...data, trainingState: event.target.value,  endDate: currentDate});
+        } else {
+            setData({ ...data, trainingState: event.target.value });
+        }
+    };
+    const inputRegex = /^(10(\.0+)?|[0-9](\.[0-9])?|)$/;
     const handleTheoryScoreChange = (event, index) => {
         if (event.target.value.match(inputRegex)) {
             // setInValidSave(false)
@@ -58,6 +69,7 @@ export function InternPage() {
         }
     }
     const handlePracticeScoreChange = (event, index) => {
+        console.log(target.value)
         if (event.target.value.match(inputRegex)) {
         const updatedSubjects = [...data.subjects];
         updatedSubjects[index].practiceScore = event.target.value;
@@ -67,6 +79,7 @@ export function InternPage() {
         });}
     }
     const handleAttitudeScoreChange = (event, index) => {
+        console.log(target.value)
         if (event.target.value.match(inputRegex)) {
         const updatedSubjects = [...data.subjects];
         updatedSubjects[index].attitudeScore = event.target.value;
@@ -129,7 +142,6 @@ export function InternPage() {
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
-            console.log(res.data)
             setData(res.data)
         })
     }, []);
@@ -163,12 +175,18 @@ export function InternPage() {
         }
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         axios.put('http://localhost:8080/api/interns',sendData).then(res => {
-            console.log(res)}).catch(e => {
-            console.log(e)})
+            enqueueSnackbar("Lưu thành công ! :D", { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" }});
+        }).catch(e => {
+            enqueueSnackbar("Không thể lưu vui lòng thử lại sau! :((", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+          })
     }
     // Hàm lấy ra ngày thực tập
     const getBusinessDay = (dateFrom,dateTo) =>{
         let day = 0;
+        if (new Date(null).toDateString() === dateTo.toDateString()) {
+            dateTo = new Date()
+        }
+
         for (var currentDate = new Date(dateFrom); currentDate <= dateTo; currentDate.setDate(currentDate.getDate() + 1)) {
             if(
                 currentDate.toLocaleDateString('en-US',{weekday: "short"}) !== 'Sun'
@@ -178,33 +196,15 @@ export function InternPage() {
                 day++;
             }
         }
-        return day
+        return (
+            day >= 50 ?
+                <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
+                :
+                <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>
+        )
     }
 
-    function compareObjects(obj1, obj2) {
-        // Kiểm tra các thuộc tính của object
-        for (var key in obj1) {
-            if (obj1[key] !== obj2[key]) {
-                // console.log(obj1[key])
-            }
-        }
 
-        // Kiểm tra mảng subjects
-        if (obj1.subjects.length !== obj2.subjects.length) {
-            // console.log("Mảng subjects có số lượng phần tử khác nhau.");
-        } else {
-            for (var i = 0; i < obj1.subjects.length; i++) {
-                var subject1 = obj1.subjects[i];
-                var subject2 = obj2.subjects[i];
-                for (var prop in subject1) {
-                    if (subject1[prop] !== subject2[prop]) {
-
-                        // console.log("Phần tử " + (i + 1) + " trong mảng subjects có sự thay đổi ở thuộc tính " + prop);
-                    }
-                }
-            }
-        }
-    }
     return (
         <>
             <Button key={1} onClick={() => {
@@ -240,8 +240,8 @@ export function InternPage() {
                                     <p className={"table-score__item tl"}>{subject.name}</p>
                                     <div className={"table-score__item"}>
                                         <input
-                                            pattern="[0-9]|10"
                                             type={"number"}
+                                            onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
                                             value={subject.theoryScore}
                                             onChange={(e) => {
                                                 handleTheoryScoreChange(e, index)
@@ -250,7 +250,7 @@ export function InternPage() {
                                     </div>
                                     <div className={"table-score__item"}>
                                         <input
-                                            pattern="[0-9]|10"
+                                            onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
                                             type={"number"}
                                             value={subject.practiceScore}
                                             onChange={(e) => {
@@ -260,7 +260,7 @@ export function InternPage() {
                                     </div>
                                     <div className={"table-score__item"}>
                                         <input
-                                            pattern="[0-9]|10"
+                                            onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
                                             type={"number"}
                                             value={subject.attitudeScore}
                                             onChange={(e => handleAttitudeScoreChange(e, index))}
@@ -299,15 +299,16 @@ export function InternPage() {
                             </div>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
-                            <FormControl sx={{width: '30%'}}>
+                            <FormControl sx={{ width: '30%' }}>
                                 <NativeSelect
-                                    defaultValue={data.trainingState}
+                                    value={data.trainingState}
+                                    onChange={handleTrainingStateChange}
                                     inputProps={{
                                         name: 'trainingState',
                                         id: 'uncontrolled-native',
                                     }}>
-                                    <option value={"training"}>Đang thực tập</option>
-                                    <option value={"trained"}>Đã kết thúc</option>
+                                    <option value={'training'}>Đang thực tập</option>
+                                    <option value={'trained'}>Đã kết thúc</option>
                                 </NativeSelect>
                             </FormControl>
                         </div>
@@ -315,7 +316,7 @@ export function InternPage() {
                 </DialogContent>
                 <DialogActions sx={{display: "flex"}}>
                     <button disabled={inValidSave} onClick={() => {handleSubmit()}} className={"save-btn"}>
-                        SAVE
+                        LƯU
                     </button>
                 </DialogActions>
             </Dialog>

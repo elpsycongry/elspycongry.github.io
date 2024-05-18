@@ -56,7 +56,6 @@ function Login() {
         formData.forEach((value, key) => data[key] = value);
         axios.post("http://localhost:8080/login", data).then(
             res => {
-
                 if (res.data.code === "401") {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
