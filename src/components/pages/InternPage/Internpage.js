@@ -16,7 +16,7 @@ export function InternPage() {
     const passed = useRef()
     const [finalScoreValue, setFinalScoreValue] = useState();
     const [finalResultPass, setFinalResultPass] = useState(null);
-    const [inValidSave, setInValidSave] = useState(false);
+    const [inValidSave, setInV21alidSave] = useState(false);
 
 
     const handleClose = () => {
@@ -26,7 +26,7 @@ export function InternPage() {
     const handleListItemClick = (value) => {
         setOpen(false)
     };
-
+    const [defaultData, setDefaultData] = useState();
     const [data, setData] = useState({
         name: '',
         startDate: "",
@@ -127,6 +127,7 @@ export function InternPage() {
     }
 
     useEffect(() => {
+        console.log("effect")
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
             setData(res.data)
@@ -135,6 +136,7 @@ export function InternPage() {
     }, []);
 
     useEffect(() => {
+
         // axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         // axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
         //     // compareObjects(res.data,data);
@@ -152,10 +154,18 @@ export function InternPage() {
 
     // Handle submit
     const handleSubmit = () => {
+
+        let sendData;
         if (finalResultPass!== null){
             const currentDate = new Date().toISOString().split('T')[0];
-            setData({...data, endDate: currentDate})
+             sendData = {...data, endDate: currentDate, isPass: finalResultPass};
+        } else {
+            sendData = {...data}
         }
+        axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
+        axios.put('http://localhost:8080/api/interns',sendData).then(res => {
+            console.log(res)}).catch(e => {
+            console.log(e)})
     }
     // Hàm lấy ra ngày thực tập
     const getBusinessDay = (dateFrom,dateTo) =>{
@@ -175,7 +185,6 @@ export function InternPage() {
     function compareObjects(obj1, obj2) {
         // Kiểm tra các thuộc tính của object
         for (var key in obj1) {
-            console.log(key)
             if (obj1[key] !== obj2[key]) {
                 // console.log(obj1[key])
             }
@@ -215,7 +224,7 @@ export function InternPage() {
                                 Số ngày thực tập: {getBusinessDay(new Date(data.startDate),new Date(data.endDate))}
                             </p>
                         </div>
-                        <p>Ngày kết thúc: {data.endDate}</p>
+                        <p>Ngày kết thúc: {data.endDate? data.endDate : "Chưa kết thúc" }</p>
                     </div>
                     <div key={5} className={"table-score"}>
                         <div className={"flex flex-row justify-content-between"}>
@@ -293,13 +302,14 @@ export function InternPage() {
                         <div className={"flex flex-row justify-content-between"}>
                             <FormControl sx={{width: '30%'}}>
                                 <NativeSelect
-                                    defaultValue={"Đang"}
+
+                                    defaultValue={"training"}
                                     inputProps={{
                                         name: 'trainingState',
                                         id: 'uncontrolled-native',
                                     }}>
-                                    <option value={"1"}>Đang thực tập</option>
-                                    <option value={"Đang"}>Đã thực tập</option>
+                                    <option value={"training"}>Đang thực tập</option>
+                                    <option value={"trained"}>Đã thực tập</option>
                                 </NativeSelect>
                             </FormControl>
                         </div>
