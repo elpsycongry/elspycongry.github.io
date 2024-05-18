@@ -60,9 +60,9 @@ export default function Training() {
 
     // Dữ liệu 
     const listTestSelect = [
-        { id: 1, text: "Đang thực tập" },
-        { id: 2, text: "Đã hoàn tất" },
-        { id: 3, text: "Đã dừng thực tập"}
+         
+        { id: 1, text: "Đang thực tập", name: "training" },
+        { id: 2, text: "Đã kết thúc", name: "trained" }
     ]
 
     const handleChangeSearch = (event) => {
@@ -212,7 +212,7 @@ export default function Training() {
                                 </tr>
                                 {listInter.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="training-id">{index + 1}</td>
+                                        <td className="training-id">{index + 1 + pagination.page*pagination.size}</td>
                                         <td>{item.userName}</td>
                                         <td>{item.startDate}</td>
                                         <td>{item.numberDate}</td>
