@@ -10,7 +10,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CreateIcon from '@mui/icons-material/Create';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Icon } from '@iconify/react';
 // import {faEnvelop} from ''
@@ -44,7 +44,9 @@ export default function Training() {
 
     const [status, setStatus] = useState('');
     const [listSubjectSelect, setListSubjectSelect] = useState([]);
-    const [listInter, setListIntern] = useState([])
+    const [listInter, setListIntern] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedTrainingState, setSelectedTrainingState] = useState('');
     const [pagination, setPagination] = useState({
         page: 0,
         size: 10,
@@ -54,11 +56,26 @@ export default function Training() {
     useEffect(() => {
         fetchListSubjectSelect();
         fetchListInternSelect(pagination);
-    }, []);
+    }, [selectedTrainingState]);
 
-    const handleChange = (e) => {
-        setStatus(e.target.value);
-        console.log(e.target.value)
+    // Dữ liệu 
+    const listTestSelect = [
+         
+        { id: 1, text: "Đang thực tập", name: "training" },
+        { id: 2, text: "Đã kết thúc", name: "trained" }
+    ]
+
+    const handleChangeSearch = (event) => {
+        setSearchTerm(event.target.value);
+        if (selectedTrainingState != "") {
+            setPagination.page = 0;
+        } 
+    };
+
+    const handleTrainingStateChange = (event) => {
+        setSelectedTrainingState(event.target.value);
+        pagination.page = 0;
+        fetchListInternSelect(pagination);
     };
 
     const handlePageChange = (event, value) => {
@@ -71,7 +88,6 @@ export default function Training() {
     };
 
 
-
     //API danh sách môn học
     const fetchListSubjectSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
@@ -82,15 +98,14 @@ export default function Training() {
             });
         }
     };
+
     //API danh sách thực tập sinh
     const fetchListInternSelect = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
-            console.log(newPagination.page);
-            console.log(newPagination.size);
-
+            try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/api/interns/findIntern?page=${newPagination.page}&size=${newPagination.size}`).then((res) => {
+            axios.get(`http://localhost:8080/api/interns/search?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}`).then((res) => {
                 setListIntern(res.data.content);
                 console.log(res.data.content);
                 setPagination({
@@ -98,16 +113,13 @@ export default function Training() {
                     totalElements: res.data.totalElements,
                 });
             });
+        } catch (error) {
+            console.log(error);
+        }
         }
     };
 
-    // Dữ liệu fake
-    const listTestSelect = [
-        { id: 1, text: "Đang thực tập" },
-        { id: 2, text: "Đã hoàn tất" },
-        { id: 3, text: "Tất cả" },
-        { id: 4, text: "Đã dừng quá trình thực tập" }
-    ]
+    
 
     return (
         <>
@@ -148,8 +160,18 @@ export default function Training() {
                     <div className="d-flex justify-content-between">
                         <div className="d-flex pl-15">
                             <div className="search-input position-relative ">
-                                <input type="text" className="w-px position-relative input-intern"
-                                    placeholder="Tìm kiếm theo tên" />
+                                <input 
+                                    type="text" 
+                                    className="w-px position-relative input-intern"
+                                    placeholder="Tìm kiếm theo tên..." 
+                                    value={searchTerm}
+                                    onChange={handleChangeSearch}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            fetchListInternSelect(); // Gọi hàm ngay lập tức
+                                        }
+                                    }}
+                                    />
                                 <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
                             </div>
                             <FormControl className="h-px" sx={{ minWidth: '300px' }}>
@@ -157,17 +179,21 @@ export default function Training() {
                                 <Select 
                                     sx={{
                                         height: '30px',
-                                        paddingTop: '0px', paddingBottom: '0px', backgroundColor: 'white'
+                                        paddingTop: '0px', 
+                                        paddingBottom: '0px', 
+                                        backgroundColor: 'white'
                                     }}
                                     labelId="demo-simple-small-label"
                                     className="h-px"
                                     id="demo-simple-select"
                                     label="Status"
-                                    value={status}
-                                    onChange={handleChange}
+                                    value={selectedTrainingState}
+                                    onChange={handleTrainingStateChange}
                                 >
+                                
+                                    <MenuItem value={""} >Tất cả</MenuItem>
                                     {listTestSelect.map(item => (
-                                        <MenuItem value={item.id} key={item.id}>{item.text}</MenuItem>
+                                        <MenuItem value={item.text} key={item.id}>{item.text}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -186,7 +212,7 @@ export default function Training() {
                                 </tr>
                                 {listInter.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="training-id">{index + 1}</td>
+                                        <td className="training-id">{index + 1 + pagination.page*pagination.size}</td>
                                         <td>{item.userName}</td>
                                         <td>{item.startDate}</td>
                                         <td>{item.numberDate}</td>
@@ -227,7 +253,8 @@ export default function Training() {
                         </table>
                     </div>
                     <Stack spacing={1} style={{ marginTop: '40px', alignItems: 'center' }}>
-                        <Pagination
+                    <Pagination
+                            className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
                             page={pagination.page + 1}
                             shape="rounded"
@@ -246,7 +273,7 @@ export default function Training() {
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div> */}
             </Box>
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }
