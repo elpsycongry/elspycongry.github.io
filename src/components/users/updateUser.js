@@ -109,7 +109,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                     <DialogTitle><span style={{ fontWeight: '700', fontSize: '32px', paddingTop: '12px' }}>Cập nhật thông tin</span></DialogTitle>
                     <DialogContent>
                         <div className='form-label-input'>
-                            <div className="form-label grey-text information-user">Họ tên: 
+                            <div className="form-label grey-text information-user">Họ tên:
                             <span style={{color: 'red'}}> *</span>
                             </div>
                             <TextField
@@ -123,7 +123,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                             />
                         </div>
                         <div className='form-label-input'>
-                        <div className="form-label grey-text information-user">Email: 
+                        <div className="form-label grey-text information-user">Email:
                             <span style={{color: 'red'}}> *</span>
                             </div>
                             <TextField
@@ -140,7 +140,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                             <div className="form-label grey-text information-user">Số điện thoại:
                             <span style={{color: 'red'}}> *</span>
                             </div>
-                            
+
                             <TextField
                                 name='phone'
                                 value={formik.values.phone}
@@ -162,17 +162,17 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                     </DialogContent>
                     <div className='btn-container-user'>
                         {formik.isValid ? (
-                             <Button 
-                             type="submit" 
-                             
+                             <Button
+                             type="submit"
+
                              variant="contained"
                              className='send-btn'
                              style={{backgroundColor: 'green'}}>
                                  Cập nhật
                              </Button>
-                        ): 
-                        <Button 
-                        type="submit" 
+                        ):
+                        <Button
+                        type="submit"
                         disabled
                         variant="contained"
                         className='send-btn'

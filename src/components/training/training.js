@@ -1,4 +1,16 @@
-import { Box, Dialog, DialogContent, IconButton, FormControl, InputLabel, MenuItem, Select, Typography, Link } from "@mui/material";
+import {
+    Box,
+    Dialog,
+    DialogContent,
+    IconButton,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Typography,
+    Link,
+    ModalRoot
+} from "@mui/material";
 import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
@@ -245,7 +257,8 @@ export default function Training() {
                                         <td>{item.scoreInTeam}</td>
                                         <td>
                                             <RemoveRedEyeIcon style={{ width: '24px', height: '24px', marginRight: '5px' }} className="color-blue white-div font-size-large" />
-                                            <CreateIcon style={{ width: '24px', height: '24px' }} className="color-orange pencil-btn font-size-medium" />
+
+                                                <CreateIcon style={{ width: '24px', height: '24px' }} className="color-orange pencil-btn font-size-medium" />
                                         </td>
                                     </tr>
                                 ))}

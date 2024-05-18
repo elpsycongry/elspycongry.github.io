@@ -19,7 +19,7 @@ function App() {
                 <Route path={"/users"} element={
                     <AuthContext><Users /></AuthContext>
                 } />
-                <Route path={"/intern"} element={
+                <Route path={"/intern/:id"} element={
                     <AuthContext><InternPage /></AuthContext>
                 } />
                 <Route path={"/login"} element={

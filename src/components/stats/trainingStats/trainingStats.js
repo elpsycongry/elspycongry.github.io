@@ -107,7 +107,7 @@ export default function TrainingStats() {
                         <button type="button" class="btn btn-outline-warning">Biểu đồ</button>
                         <button type="button" class="btn btn-outline-warning">Thống kê tăng trưởng</button>
                     </div>
-                    <h4 style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Kết quả đào tạo tháng 4</h4>
+                    <h4 style={{ marginLeft: '10px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Kết quả đào tạo tháng 4</h4>
                     <div style={{ width: '50%', marginBottom: '25px' }} class="btn-group" role="group" aria-label="Basic outlined example">
                         {active1 ? (
                             <button type="button" value="1" onClick={handleClick} class="btn btn-outline-warning active">Theo tháng</button>
