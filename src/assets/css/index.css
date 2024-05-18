@@ -29,6 +29,7 @@ body {
 
 footer {
     position: absolute;
+    margin-bottom: 25px;
     width: 100%;
     bottom: 0;
 }

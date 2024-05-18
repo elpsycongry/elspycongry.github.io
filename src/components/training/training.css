@@ -38,7 +38,6 @@
 } */
 
 .wrapper {
-    width: 330px;
     /* background-color: white; */
     display: flex;
     overflow-x: auto;
@@ -76,4 +75,8 @@
     padding-inline: 2px;
     height: 30px;
     width: 300px;
+}
+
+.pl-15{
+    padding-left: 15px;
 }

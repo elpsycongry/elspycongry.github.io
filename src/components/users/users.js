@@ -29,21 +29,17 @@ import DialogUpdateUserForm from "./updateUser";
 
 export default function Users() {
 
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-    axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-
     const location = useLocation();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-
     const handleClickPracticeOpen = () => {
         setOpen(true);
     }
     const handleClickPracticeClose = () => {
         setOpen(false);
     }
-
     const [status, setStatus] = useState('');
+    const [token, setToken] = useState("")
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
@@ -55,28 +51,14 @@ export default function Users() {
         totalElements: 0,
     });
 
-    const [paginationFilter, setPaginationFilter] = useState({
-        page: 0,
-        size: 10,
-        totalElements: 0,
-    });
 
     useEffect(() => {
         handleFilterWithFields(pagination);
         fetchListRoleSelect();
-    }, [selectedRole]);
-
-    // Ref để lưu giá trị trước của selectedRole
-    const previousRoleRef = useRef(selectedRole);
-
-    // Cập nhật previousRoleRef mỗi khi selectedRole thay đổi
-    useEffect(() => {
-        previousRoleRef.current = selectedRole;
-    }, [selectedRole]);
+    }, [selectedRole])
 
 
     // const fetchListRoleSelect = async () => {
-    const [token, setToken] = useState("")
     const fetchListRoleSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         setToken(user.accessToken)
@@ -88,51 +70,19 @@ export default function Users() {
         }
     };
 
-
-
-
-
-
-
-    const handleSearch = async (event) => {
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-
-        if (user != null && event.key === 'Enter') {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            try {
-                axios.get(`http://localhost:8080/admin/users/search?keyword=${searchTerm}`).then((res) => {
-                    setListUser(res.data);
-                    setSearchTerm('');
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };
-
-
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
+        if (selectedRole != "") {
+            setPagination.page = 0;
+        }
     };
 
     const handleRoleChange = (event) => {
         setSelectedRole(event.target.value);
+        pagination.page = 0;
+        handleFilterWithFields(pagination);
+
     };
-
-    const handleFilterRole = async () => {
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-
-        if (user != null) {
-            if (selectedRole === '') {
-                return fetchListUser(); // Không có lọc nếu không có role được chọn
-            }
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/admin/users/filter?role_id=${selectedRole}`).then((res) => {
-                setListUser(res.data);
-            });
-        }
-    };
-
 
     const handlePageChange = (event, value) => {
         setPagination(prev => {
@@ -143,54 +93,46 @@ export default function Users() {
 
     };
 
-    const fetchListUser = async () => {
-        const user = JSON.parse(localStorage.getItem("currentUser"))
-
-        
-
-        if (user != null) {
-            
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/admin/users/filterWithFields?page=0&size=10&keyword=&role_id=").then((res) => {
-                setListUser(res.data.content);
-                console.log(res.data.content);
-            });
-
-            
-        }
-    };
-
 
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
-        
-
-            if (selectedRole !== previousRoleRef.current) {
-                newPagination = paginationFilter;
-            }
-
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
-                .then((res) => {
-                    setListUser(res.data.content);
-                    setPagination({
-                        ...newPagination,
-                        totalElements: res.data.totalElements,
+            try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
+                    .then((res) => {
+                        setListUser(res.data.content);
+                        setPagination({
+                            ...newPagination,
+                            totalElements: res.data.totalElements,
+                        });
                     });
-                });
 
-
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
-    
+    function Copyright(props) {
+        return (
+            <Typography variant="body2" color="text.secondary" align="center" {...props}>
+                {'Copyright © '}
+                <Link color="inherit" href="/public">
+                    Quản lý đào tạo
+                </Link>{' '}
+                {new Date().getFullYear()}
+                {'.'}
+            </Typography>
+        );
+    }
+
     return (
         <>
             <Header />
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
-                <Box m={2} style={{ display: 'flex' }}>
+                <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '14px' }}>
                     {/* <Breadcrumbs
                         aria-label='breadcrumb'
                         separator={<NavigateNextIcon fontSize="small" />}>
@@ -205,82 +147,86 @@ export default function Users() {
                         marginLeft: '10px',
                         marginBottom: '0px',
                         fontFamily: 'sans-serif',
-                        fontWeight: '550'
+                        fontWeight: '550',
                     }}>Quản lý người dùng</p>
                 </Box>
-                <div className="content-recruiment">
-                    <div className=" d-flex align-items-centent justify-content-between">
-                        <p className="title text-center mb-0">
-                            Quản lý người dùng
-                        </p>
-                    </div>
-                    <Dialog
-                        open={open}
-                        onClose={handleClickPracticeClose}
-                    >
-                        <DialogContent sx={{
-                            p: 0,
-                            position: 'relative'
-                        }}>
-                            <IconButton
-                                sx={{
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0
-                                }}
-                                onClick={handleClickPracticeClose}
-                            >
-                                <ClearIcon />
-                            </IconButton>
-                        </DialogContent>
-                    </Dialog>
-                    <div className=" mt-3">
-                        <div className="d-flex justify-content-between">
-                            <div className="d-flex">
-                                <div className="search-input position-relative">
-                                    <input
-                                        type="text"
-                                        className="w-px position-relative"
-                                        style={{ width: '300px' }}
-                                        value={searchTerm}
-                                        onChange={handleChangeSearch}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                handleFilterWithFields(); // Gọi hàm ngay lập tức
-                                            } else {
-                                                clearTimeout(handleFilterWithFields(), 1000);
-                                            }
-                                        }}
-                                        placeholder="Tìm kiếm với tên hoặc email..."
-                                    />
-                                    <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg"
-                                        width="16" height="16" viewBox="0 0 24 24">
-                                        <path fill="rgb(131 125 125 / 87%)"
-                                            d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
-                                    </svg>
-                                </div>
-                                <FormControl className="h-px" sx={{ minWidth: '250px' }}>
-                                    <InputLabel className="top-left" id="demo-simple-small-label">Vai
-                                        trò...</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-small-label"
-                                        className="h-px"
-                                        id="demo-simple-select"
-                                        label="Status"
-                                        value={selectedRole}
-                                        onChange={handleRoleChange}
-                                    // onClick={handleFilterRole}
-                                    >
-                                        <MenuItem value={""} >Tất cả</MenuItem>
-                                        {listRoleSelect.map(item => (
-                                            <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                <div className=" d-flex align-items-centent justify-content-between pl-15">
+                    <p className="title text-center mb-0">
+                        Quản lý người dùng
+                    </p>
+                </div>
+                <Dialog
+                    open={open}
+                    onClose={handleClickPracticeClose}
+                >
+                    <DialogContent sx={{
+                        p: 0,
+                        position: 'relative'
+                    }}>
+                        <IconButton
+                            sx={{
+                                position: 'absolute',
+                                right: 0,
+                                top: 0
+                            }}
+                            onClick={handleClickPracticeClose}
+                        >
+                            <ClearIcon />
+                        </IconButton>
+                    </DialogContent>
+                </Dialog>
+                <div className=" mt-3">
+                    <div className="d-flex justify-content-between">
+                        <div className="d-flex">
+                            <div className="search-input position-relative">
+                                <input
+                                    type="text"
+                                    className="w-px position-relative input-username-email"
+                                    style={{ width: '300px' }}
+                                    value={searchTerm}
+                                    onChange={handleChangeSearch}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleFilterWithFields();
+                                        }
+                                    }}
+                                    placeholder="Tìm kiếm với tên hoặc email..."
+                                />
+                                <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="rgb(131 125 125 / 87%)"
+                                        d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
+                                </svg>
                             </div>
+                            <FormControl className="h-px" sx={{ minWidth: '250px' }}>
+                                <InputLabel className="top-left" id="demo-simple-small-label">
+                                    Vai trò...</InputLabel>
+                                <Select
+                                    sx={{
+                                        height: '30px',
+                                        paddingTop: '0px',
+                                        paddingBottom: '0px',
+                                        backgroundColor: 'white',
+                                        width: '300px'
+                                    }}
+                                    labelId="demo-simple-small-label"
+                                    className="h-px"
+                                    id="demo-simple-select"
+                                    label="Status"
+                                    value={selectedRole}
+                                    onChange={handleRoleChange}
+                                // onClick={handleFilterRole}
+                                >
+                                    <MenuItem value={""} >Tất cả</MenuItem>
+                                    {listRoleSelect.map(item => (
+                                        <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </div>
                     </div>
-
+                </div>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
                         <table className=" table-user ">
 
@@ -289,6 +235,7 @@ export default function Users() {
                                     <th className="user-id">STT</th>
                                     <th>Tên</th>
                                     <th>Email</th>
+                                    <th>Số điện thoại</th>
                                     <th>Vai trò</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -296,36 +243,56 @@ export default function Users() {
                             <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="user-id">{index + 1}</td>
+                                        <td className="user-id">{index + 1 + pagination.page*pagination.size}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
+                                        <td>{item.phone}</td>
                                         <td>
-                                            {item.roles.map((role, index) => (
-                                                <label key={role.id} style={{ paddingRight: '5px' }}>
-                                                    {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
-                                                </label>
-                                            ))}
-
+                                            {item.roles && item.roles.length > 0 ? (
+                                                item.roles.map((role, index) => (
+                                                    <label key={role.id} style={{ paddingRight: '5px' }}>
+                                                        {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
+                                                    </label>
+                                                ))
+                                            ) : (
+                                                'Hiện tại chưa có vai trò'
+                                            )}
                                         </td>
                                         <td>
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={fetchListUser} />                                        </td>
+                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
-
                         </table>
-                        <Stack spacing={1} style={{ alignItems: 'center' }}>
+
+                        {/* <Stack spacing={1} style={{marginTop: '190px', alignItems: 'center', alignItems: 'center', marginTop: '50px' }}>
                             <Pagination
                                 count={Math.ceil(pagination.totalElements / pagination.size)}
                                 page={pagination.page + 1}
                                 shape="rounded"
                                 onChange={handlePageChange}
                             />
-                        </Stack>
+                        </Stack> */}
+                    </div>
+
+                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0  }}>
+                        <Pagination
+                            className="d-flex justify-content-center"
+                            count={Math.ceil(pagination.totalElements / pagination.size)}
+                            page={pagination.page + 1}
+                            shape="rounded"
+
+                            onChange={handlePageChange}
+                        />
                     </div>
                 </div>
             </Box>
+            {/* <Footer /> */}
+                {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
+                </div> */}
+            {/* </Box > */}
             {/* <Footer /> */}
         </>
     );

@@ -44,10 +44,7 @@ const EndAdorment = ({ visible, setVisible }) => {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Login() {
-
-
-
+function Login() {
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
@@ -146,8 +143,8 @@ export default function Login() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
-                        <img src={logoImage} style={{ width: '30px', height: '30px' }} />
+                    <Avatar style={{width: '100px', height: '100px'}} sx={{ m: 1, bgcolor: '#282781' }}>
+                        <img src={logoImage} style={{ width: '80px', height: '80px' }} />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
@@ -226,3 +223,5 @@ export default function Login() {
         </ThemeProvider>
     )
 }
+
+export default Login;
