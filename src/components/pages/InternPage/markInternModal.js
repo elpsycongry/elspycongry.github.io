@@ -14,7 +14,7 @@ import {useSnackbar} from "notistack";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import CreateIcon from "@mui/icons-material/Create";
 
-export function MarkInternModal({userID}) {
+export function MarkInternModal({userID, updateFuction}) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(false)
     const {enqueueSnackbar} = useSnackbar();
@@ -26,6 +26,7 @@ export function MarkInternModal({userID}) {
     const [inValidSave, setInV21alidSave] = useState(false);
 
     const handleClose = () => {
+        updateFuction()
         setOpen(false)
     };
     const handleListItemClick = (value) => {

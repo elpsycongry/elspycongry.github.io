@@ -258,7 +258,7 @@ export default function Training() {
                                         <td>{item.finalScore}</td>
                                         <td>{item.scoreInTeam}</td>
                                         <td>
-                                           <MarkInternModal userID={item.id} />
+                                           <MarkInternModal updateFuction={() => {fetchListSubjectSelect()} } userID={item.id} />
                                         </td>
                                     </tr>
                                 ))}
