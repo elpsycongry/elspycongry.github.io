@@ -6,7 +6,7 @@ import AuthContext from "./components/checkToken/AuthContext";
 import NotFoundPage from "./components/pages/NotFoundPage/notFoundPage";
 import Training from './components/training/training';
 import HomePage from "./components/pages/homePage/homePage";
-import {InternPage} from "./components/pages/InternPage/Internpage";
+import {MarkInternModal} from "./components/pages/InternPage/markInternModal";
 import './assets/css/index.css'
 import TrainingStats from './components/stats/trainingStats/trainingStats';
 function App() {
@@ -19,8 +19,8 @@ function App() {
                 <Route path={"/users"} element={
                     <AuthContext><Users /></AuthContext>
                 } />
-                <Route path={"/intern/:id"} element={
-                    <AuthContext><InternPage /></AuthContext>
+                <Route path={"/intern"} element={
+                    <AuthContext><MarkInternModal userID={1} /></AuthContext>
                 } />
                 <Route path={"/login"} element={
                     <AuthContext> <Login /></AuthContext>

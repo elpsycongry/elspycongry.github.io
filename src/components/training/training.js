@@ -28,6 +28,7 @@ import { Icon } from '@iconify/react';
 // import {faEnvelop} from ''
 import './training.css';
 import axios from "axios";
+import {MarkInternModal} from "../pages/InternPage/markInternModal";
 
 function Copyright(props) {
     return (
@@ -256,9 +257,7 @@ export default function Training() {
                                         <td>{item.finalScore}</td>
                                         <td>{item.scoreInTeam}</td>
                                         <td>
-                                            <RemoveRedEyeIcon style={{ width: '24px', height: '24px', marginRight: '5px' }} className="color-blue white-div font-size-large" />
-
-                                                <CreateIcon style={{ width: '24px', height: '24px' }} className="color-orange pencil-btn font-size-medium" />
+                                           <MarkInternModal userID={item.id} />
                                         </td>
                                     </tr>
                                 ))}
