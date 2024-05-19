@@ -107,6 +107,7 @@ export default function Training() {
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/api/interns/subject").then((res) => {
+                console.log(res.data)
                 setListSubjectSelect(res.data);
             });
         }
