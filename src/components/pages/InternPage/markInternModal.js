@@ -345,7 +345,6 @@ export function MarkInternModal({userID}) {
                                 ) ?
                                     <div>Đang thực tập</div> :
                                     <div>Đẫ kết thúc</div>
-
                                 :
                                 <FormControl sx={{width: '30%'}}>
                                     <NativeSelect
