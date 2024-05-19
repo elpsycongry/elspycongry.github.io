@@ -206,7 +206,7 @@ export default function Training() {
                                 
                                     <MenuItem value={""} >Tất cả</MenuItem>
                                     {listTestSelect.map(item => (
-                                        <MenuItem value={item.text} key={item.id}>{item.text}</MenuItem>
+                                        <MenuItem value={item.name} key={item.id}>{item.text}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -256,7 +256,7 @@ export default function Training() {
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td>{item.finalScore}</td>
                                         <td>{item.scoreInTeam}</td>
-                                        <td>
+                                        <td style={{cursor: 'pointer'}}>
                                            <MarkInternModal userID={item.id} />
                                         </td>
                                     </tr>
