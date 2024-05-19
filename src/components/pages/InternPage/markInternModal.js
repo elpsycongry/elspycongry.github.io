@@ -137,7 +137,7 @@ export function MarkInternModal({userID}) {
             inTeamScore = parseFloat(inTeamScore);
             if (!isNaN(finalScore) && !isNaN(inTeamScore)) {
                 let isPass = parseFloat(((finalScore + inTeamScore) / 2).toFixed(2));
-                setFinalResultPass(isPass > 5)
+                setFinalResultPass(isPass > 7)
             } else {
                 setFinalResultPass(null)
             }
@@ -185,7 +185,9 @@ export function MarkInternModal({userID}) {
             enqueueSnackbar("Lưu thành công ! :D", {
                 variant: "success",
                 anchorOrigin: {horizontal: "right", vertical: "top"}
-            });
+            })
+            setOpen(false)
+            ;
         }).catch(e => {
             enqueueSnackbar("Không thể lưu vui lòng thử lại sau! :((", {
                 variant: "error",
@@ -221,15 +223,17 @@ export function MarkInternModal({userID}) {
 
     return (
         <>
-            <RemoveRedEyeIcon onClick={() => {
-                setOpen(true);
-                setReadOnly(true)
-            }} style={{width: '24px', height: '24px', marginRight: '5px'}}
-                              className="color-blue white-div font-size-large"/>
+            <RemoveRedEyeIcon
+                onClick={() => {
+                    setOpen(true);
+                    setReadOnly(true)
+                }}
+                style={{width: '24px', height: '24px', marginRight: '5px'}}
+                className="color-blue white-div font-size-large hov"/>
             <CreateIcon onClick={() => {
                 setOpen(true);
                 setReadOnly(false)
-            }} style={{width: '24px', height: '24px'}} className="color-orange pencil-btn font-size-medium"/>
+            }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
             <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
                 <DialogTitle key={2} sx={{padding: "16px 24px 8px 24px  "}}>Kết quả học tập</DialogTitle>
 
@@ -244,6 +248,7 @@ export function MarkInternModal({userID}) {
                         </div>
                         <p>Ngày kết thúc: {data.endDate ? data.endDate : "Chưa kết thúc"}</p>
                     </div>
+                    {/*Modal body*/}
                     <div key={5} className={"table-score"}>
                         <div className={"flex flex-row justify-content-between"}>
                             <p className={"l"}>Môn học</p>
@@ -253,7 +258,6 @@ export function MarkInternModal({userID}) {
                             <p>Tổng</p>
                         </div>
                         {data.subjects.map((subject, index) => {
-
                             return (
                                 <div className={"flex flex-row justify-content-between"}>
                                     <p className={"table-score__item tl"}>{subject.name}</p>
@@ -316,7 +320,9 @@ export function MarkInternModal({userID}) {
                         <div className={"flex flex-row justify-content-between"}>
                             <p className={"tb "}>Kết quả thực tập</p>
                             <p className={"table-score__item"}>
-                                {finalResultPass === null ? "NA" : (finalResultPass ? "Pass" : "Fail")}
+                                {finalResultPass === null ? "NA" : (finalResultPass ?
+                                    <span style={{color: "green"}}>Pass</span> :
+                                    <span style={{color: "red"}}>Fail</span>)}
                             </p>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
