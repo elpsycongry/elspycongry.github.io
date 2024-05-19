@@ -65,7 +65,10 @@ export default function Training() {
         size: 10,
         totalElements: 0,
     });
-
+    let update = () => {
+        fetchListSubjectSelect();
+        fetchListInternSelect(pagination);
+    }
     useEffect(() => {
         fetchListSubjectSelect();
         fetchListInternSelect(pagination);
@@ -104,10 +107,10 @@ export default function Training() {
     //API danh sách môn học
     const fetchListSubjectSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        console.log("handled")
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/api/interns/subject").then((res) => {
-                console.log(res.data)
                 setListSubjectSelect(res.data);
             });
         }
@@ -258,7 +261,7 @@ export default function Training() {
                                         <td>{item.finalScore}</td>
                                         <td>{item.scoreInTeam}</td>
                                         <td>
-                                           <MarkInternModal updateFuction={() => {fetchListSubjectSelect()} } userID={item.id} />
+                                           <MarkInternModal updateFunction={update} userID={item.id} />
                                         </td>
                                     </tr>
                                 ))}
