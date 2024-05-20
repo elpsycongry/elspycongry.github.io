@@ -65,7 +65,10 @@ export default function Training() {
         size: 10,
         totalElements: 0,
     });
-
+    let update = () => {
+        fetchListSubjectSelect();
+        fetchListInternSelect(pagination);
+    }
     useEffect(() => {
         fetchListSubjectSelect();
         fetchListInternSelect(pagination);
@@ -104,10 +107,10 @@ export default function Training() {
     //API danh sách môn học
     const fetchListSubjectSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        console.log("handled")
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/api/interns/subject").then((res) => {
-                console.log(res.data)
                 setListSubjectSelect(res.data);
             });
         }
@@ -144,7 +147,7 @@ export default function Training() {
                     <Icon style={{ width: 23, height: 23, color: 'rgba(0, 0, 0, 0.60)' }} icon="ion:book-sharp" />
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Đào tạo</p>
                 </Box>
-                <div className=" d-flex align-items-centent justify-content-between pl-15">
+                <div style={{marginTop: '-5px'}} className=" d-flex align-items-centent justify-content-between pl-15">
                     <p className="title text-center mb-0">
                         Quản lý đào tạo
                     </p>
@@ -172,7 +175,7 @@ export default function Training() {
                 </Dialog>
                 <div className=" mt-3">
                     <div className="d-flex justify-content-between">
-                        <div className="d-flex pl-15">
+                        <div style={{marginTop: '-7px'}} className="d-flex pl-15">
                             <div className="search-input position-relative ">
                                 <input 
                                     type="text" 
@@ -215,10 +218,10 @@ export default function Training() {
                     </div>
                 </div>
                 <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
-                    <div className="table-container">
+                    <div style={{marginTop: '-38px'}} className="table-container">
                         <table className="table_training" style={{ display: 'flex' , alignItems: 'center'}}>
                             <div className="no-scrolling">
-                                <tr className="header-tr grey-text">
+                                <tr style={{alignItems: 'center'}} className="header-tr grey-text">
                                     <th className="training-id">STT</th>
                                     <th>Tên</th>
                                     <th>Bắt đầu</th>
@@ -234,7 +237,7 @@ export default function Training() {
                                 ))}
                             </div>
                             <div className="wrapper">
-                                <tr className="header-tr grey-text">
+                                <tr style={{alignItems: 'center'}} className="header-tr grey-text">
                                     {listSubjectSelect.map(item => (
                                         <th value={item.name} key={item.id}>{item.name}</th>
                                     ))}
@@ -248,7 +251,7 @@ export default function Training() {
                                 ))}
                             </div>
                             <div className="no-scrolling">
-                                <tr className="header-tr grey-text">
+                                <tr style={{alignItems: 'center'}} className="header-tr grey-text">
                                     <th>Tổng kết</th>
                                     <th>Đánh giá trên team</th>
                                     <th className=" text-center">Hành động</th>
@@ -258,14 +261,14 @@ export default function Training() {
                                         <td>{item.finalScore}</td>
                                         <td>{item.scoreInTeam}</td>
                                         <td style={{cursor: 'pointer'}}>
-                                           <MarkInternModal userID={item.id} />
+                                           <MarkInternModal updateFunction={update} userID={item.id} />
                                         </td>
                                     </tr>
                                 ))}
                             </div>
                         </table>
                     </div>
-                    <Stack spacing={1} style={{ marginTop: '40px', alignItems: 'center' }}>
+                    <Stack spacing={1} style={{ marginTop: '10px', alignItems: 'center' }}>
                     <Pagination
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
@@ -282,9 +285,9 @@ export default function Training() {
                     </div> */}
 
                 </div>
-                {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
-                </div> */}
+                </div>
             </Box>
             {/* <Footer /> */}
         </>
