@@ -10,10 +10,29 @@ export default function DialogRecruitmentPlanFormReason({ idPlan, open, onClose 
 
     const [reason, setReason] = useState('');
 
-    const handleSubmit =  (e) => {
+    // const handleSubmit =  (e) => {
+    //     e.preventDefault();
+    //     try {
+    //          axios.post(
+    //             'http://localhost:8080/api/plans/' + idPlan + '/users/1',
+    //             { reason }
+    //         ).then(() => {
+    //             swal("Cập nhật lý do thành công", {
+    //                 icon: "success",
+    //                 buttons: false,
+    //                 timer: 2000
+    //             }).then(() => {
+    //                 window.location.href = "/recruitment/recruitmentPlan";
+    //             });
+    //         });
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // }
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-             axios.post(
+            await axios.post(
                 'http://localhost:8080/api/plans/' + idPlan + '/users/1',
                 { reason }
             ).then(() => {
@@ -22,7 +41,7 @@ export default function DialogRecruitmentPlanFormReason({ idPlan, open, onClose 
                     buttons: false,
                     timer: 2000
                 }).then(() => {
-                    window.location.href = "/recruitment/recruitmentPlan";
+                    window.location.href = "/recruitment/personalNeeds";
                 });
             });
         } catch (error) {

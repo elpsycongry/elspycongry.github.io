@@ -129,13 +129,16 @@ export default function DialogPersonalFormUpdate({ id, check }) {
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
-      setCount(count + 1);
-      handleQuantityChange(number + 1, idx)
-
+      if (number < 20 || count < 20) {
+        setCount(count + 1);
+        handleQuantityChange(number + 1, idx)
+      }
     };
     const handleInputChange = (e) => {
-      const newCount = parseInt(e.target.value);
-      setCount(newCount);
+      if (e.target.value <= 20) {
+        const newCount = parseInt(e.target.value);
+        setCount(newCount);
+      }
     };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
@@ -274,6 +277,7 @@ export default function DialogPersonalFormUpdate({ id, check }) {
                 Tên <span className="color-red">*</span>
               </label>
               <input
+                maxLength={60}
                 type="text"
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ

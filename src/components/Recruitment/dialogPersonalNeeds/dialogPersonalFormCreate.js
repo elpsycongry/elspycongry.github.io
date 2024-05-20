@@ -146,14 +146,16 @@ export default function DialogPersonalFormCreate() {
     }
     const [count, setCount] = useState(number);
     const handleClickCountPlus = () => {
-      setCount(count + 1);
-      handleQuantityChange(number + 1, idx)
-
+      if (number < 20 || count < 20) {
+        setCount(count + 1);
+        handleQuantityChange(number + 1, idx)
+      }
     };
     const handleInputChange = (e) => {
-      const newCount = parseInt(e.target.value);
-      setCount(newCount);
-
+      if (e.target.value <= 20) {
+        const newCount = parseInt(e.target.value);
+        setCount(newCount);
+      }
     };
     const handleClickCountMinus = () => {
       if (!count <= 0) {
@@ -270,6 +272,7 @@ export default function DialogPersonalFormCreate() {
               </label>
               <input
                 type="text"
+                maxLength={60}
                 placeholder="Nhập tên nhu cầu..."
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
@@ -332,7 +335,7 @@ export default function DialogPersonalFormCreate() {
             </div>
 
 
-            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
+            <div className="col-md-12 mt-2 w-310" onClick={addTech}>
               <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
             </div>
             <div className="col-md-12 d-flex">

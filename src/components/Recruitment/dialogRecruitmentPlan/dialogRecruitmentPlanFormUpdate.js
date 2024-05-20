@@ -316,8 +316,8 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     updatedTech[index].numberOfOutputPersonnel = countOf;
     setTech(updatedTech);
     const count = countOf * 3;
-    if (count > 40) {
-      handleQuantityOffPersonal(40, index);
+    if (count > 60) {
+      handleQuantityOffPersonal(60, index);
     } else {
       handleQuantityOffPersonal(count, index);
     }
@@ -329,13 +329,13 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     }
     const [countOf, setCountOf] = useState(number);
     const handleClickCountPlus = () => {
-      if (number < 40 || countOf < 40) {
+      if (number < 60 || countOf < 60) {
         setCountOf(countOf + 1);
         handleQuantityOffPersonal(parseInt(number) + 1, idx);
       }
     };
     const handleInputChange = (e) => {
-      if (e.target.value <= 40) {
+      if (e.target.value <= 60) {
         const newCount = parseInt(e.target.value);
         setCountOf(newCount);
       }
@@ -501,7 +501,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
               <label htmlFor="name" className="form-label grey-text">
                 Từ nhu cầu nhân sự
               </label>
-              <select
+              {/* <select
                 className="form-select grey-text"
                 aria-label="Default select example"
                 onChange={(event) => handleChangeRecruitmentNeeds(event)}
@@ -510,12 +510,18 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                 id="recruitmentPlan.recruitmentRequest.id"
               >
                 <option value="default">Chọn nhu cầu nhân sự</option>
-                {recuitments.map((item) => (
+                {recuitments.filter(item => item.status != "Bị từ chối bởi DET").map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
                 ))}
-              </select>
+              </select> */}
+              <input
+                readOnly
+                value={formData.values.recruitmentPlan.recruitmentRequest.name}
+                type="text"
+                className='form-control grey-text'
+              />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
                   <p className="err-valid ws-nowrap ">
@@ -618,23 +624,19 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
                 </p>
               </div>
             )}
-            <div className="col-md-4 mt-0 text-center">
-              {errNumberOfPersonal && (
-                <p style={{ whiteSpace: "nowrap" }} className="err-valid">
-                  Số lượng phải lớn hơn 0
-                </p>
-              )}
-            </div>
-            <div className="col-md-4 mt-0 text-center">
-              {errNumberofOutput && (
-                <p style={{ whiteSpace: "nowrap" }} className="err-valid">
-                  Số lượng phải lớn hơn 0
-                </p>
-              )}
-            </div>
+            {errNumberOfPersonal &&
+              <div className="col-md-4 mt-0 text-center">
+                <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>
+              </div>
+            }
+            {errNumberofOutput &&
+              <div className="col-md-4 mt-0 text-center">
+                <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>
+              </div>
+            }
 
-            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
-              <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
+            <div className="col-md-12 mt-2 " >
+              <p className="grey-text plusTech mb-0 w-160 cursor-pointer" onClick={addTech}>Thêm công nghệ +</p>
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">

@@ -345,7 +345,6 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                       type="button"
                       style={{ height: '42px' }}
                       className="btn btn-primary w-100 bg-clr-primary btn-edit stop"
-                      onClick={handleCloseWatchOpenReason}
                     >
                       Xem kết quả tuyển dụng
                     </button>
@@ -353,7 +352,6 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                   <div className="col-md-6 mt-2 ms-2">
                     <button
                       type="button"
-                      onClick={approve}
                       style={{ height: '42px' }}
                       className=" btn-edit btn btn-success w-98    bg-clr-successV1">
                       Xem kết quả đào tạo
