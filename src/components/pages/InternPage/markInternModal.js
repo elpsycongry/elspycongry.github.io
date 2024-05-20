@@ -232,7 +232,7 @@ export function MarkInternModal({userID, updateFunction}) {
                     setOpen(true);
                     setReadOnly(true)
                 }}
-                style={{width: '24px', height: '24px', marginRight: '5px'}}
+                style={{width: '27px', height: '27px', marginRight: '7px'}}
                 className="color-blue white-div font-size-large hov"/>
             <CreateIcon onClick={() => {
                 setOpen(true);

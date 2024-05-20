@@ -236,8 +236,8 @@ export default function Users() {
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
-                                    <th>Vai trò</th>
-                                    <th>Hành động</th>
+                                    <th className="user-roles">Vai trò</th>
+                                    <th className="user-actions">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -247,7 +247,7 @@ export default function Users() {
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>{item.phone}</td>
-                                        <td>
+                                        <td className="user-roles">
                                             {item.roles && item.roles.length > 0 ? (
                                                 item.roles.map((role, index) => (
                                                     <label key={role.id} style={{ paddingRight: '5px' }}>
@@ -258,7 +258,7 @@ export default function Users() {
                                                 'Hiện tại chưa có vai trò'
                                             )}
                                         </td>
-                                        <td>
+                                        <td className="user-actions">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
                                             <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />                                        </td>
                                     </tr>
