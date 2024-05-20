@@ -206,7 +206,7 @@ export default function Training() {
                                 
                                     <MenuItem value={""} >Tất cả</MenuItem>
                                     {listTestSelect.map(item => (
-                                        <MenuItem value={item.text} key={item.id}>{item.text}</MenuItem>
+                                        <MenuItem value={item.name} key={item.id}>{item.text}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -240,7 +240,7 @@ export default function Training() {
                                 </tr>
                                 {listInter.map((item) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        {item.internScoreDTOList.map((score) => (
+                                        {item.internSubjectDTOList.map((score) => (
                                             <td key={score.id}>{score.totalScore}</td>
                                         ))}
                                     </tr>
