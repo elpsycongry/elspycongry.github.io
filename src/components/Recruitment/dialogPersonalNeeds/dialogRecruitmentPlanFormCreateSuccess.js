@@ -20,10 +20,9 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
 
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
-    console.log(nameRecruitmentPlan);
-
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
+    // 
     const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
         return true;
@@ -141,8 +140,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
       const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
-      console.log('handoverDL' + date)
-      console.log('DateRC' + dateCreate)
+
       // checkValid(date, tech, dateCreate, nameRecruitmentPlan);
       // setSubmitting(false);
       // return;
@@ -286,8 +284,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     updatedTech[index].numberOfOutputPersonnel = countOf;
     setTech(updatedTech);
     const count = countOf * 3;
-    if (count > 40) {
-      handleQuantityOffPersonal(40, index);
+    if (count > 60) {
+      handleQuantityOffPersonal(60, index);
     } else {
       handleQuantityOffPersonal(count, index);
     }
@@ -300,13 +298,13 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     }
     const [countOf, setCountOf] = useState(number);
     const handleClickCountPlus = () => {
-      if (number < 40 || countOf < 40) {
+      if (number < 60 || countOf < 60) {
         setCountOf(countOf + 1);
         handleQuantityOffPersonal(parseInt(number) + 1, idx);
       }
     };
     const handleInputChange = (e) => {
-      if (e.target.value <= 40) {
+      if (e.target.value <= 60) {
         const newCount = parseInt(e.target.value);
         setCountOf(newCount);
       }
@@ -553,8 +551,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
             <div className="col-md-4 mt-0 text-center">
               {errNumberofOutput && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
             </div>
-            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
-              <p className="grey-text plusTech w-125 mb-0 cursor-pointer">Thêm công nghệ +</p>
+            <div className="col-md-12 mt-2 " >
+              <p className="grey-text plusTech mb-0 w-160 cursor-pointer" onClick={addTech}>Thêm công nghệ +</p>
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">

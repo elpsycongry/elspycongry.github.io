@@ -281,7 +281,7 @@ export default function RecruitmentPlan() {
                         <table className="table responsive-table">
                             <tr className="header-tr grey-text">
                                 <th style={{ width: 48 }}>STT</th>
-                                <th style={{ width: 144 }}>Tên nhu cầu</th>
+                                <th style={{ width: 200 }}>Tên nhu cầu</th>
                                 <th style={{ width: 130 }} className=" text-center">
                                     Thời gian khởi tạo
                                 </th>
@@ -294,7 +294,7 @@ export default function RecruitmentPlan() {
                                     <td style={{ paddingLeft:  "15px" }}>
                                         {index + 1 + page *10}
                                     </td>
-                                    <td>{item.name}</td>
+                                    <td className=''>{item.name}</td>
                                     <td className="text-center">{moment(item.recruitmentRequest.dateStart).format("HH:mm YYYY-MM-DD")}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>

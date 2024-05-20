@@ -34,7 +34,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       hasErrPersonalNeeds = false;
       setErrIdPersonalNeed(false);
     }
-   
+
     const errTech = techArr.map(item => {
       if (item.type === "" || item.type === "default") {
         return true;
@@ -46,17 +46,15 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     setTechErr(hasErrTech);
 
 
-     // 
-     const errNumberR = techArr.map(item => {
+    // 
+    const errNumberR = techArr.map(item => {
       if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
         return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
       }
     })
-    console.log(errNumberR);
     const hasErrNumber = errNumberR.some(item => item === true);
-    console.log(hasErrNumber);
     setErrNumber(hasErrNumber)
     //
     var hasErrOfPersonal;
@@ -70,7 +68,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       })
       hasErrOfPersonal = errNumberPersonal.some(item => item === true);
       setErrNumberOfPersonal(hasErrOfPersonal);
-    } else{
+    } else {
       hasErrOfPersonal = false;
       setErrNumberOfPersonal(false);
     }
@@ -86,11 +84,11 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       })
       hasErrNumberOutput = errNumberOutput.some(item => item === true)
       setErrNumberOfOutput(hasErrNumberOutput);
-    }else{
+    } else {
       hasErrNumberOutput = false;
       setErrNumberOfOutput(false);
     }
-    // 
+    //  
     var hasErrRecruitmentPlan;
     if (nameRecruitmentPlan == "") {
       hasErrRecruitmentPlan = true;
@@ -108,7 +106,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || !hasErrNumber) {
+    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
       return false;
     } else {
       return true;
@@ -472,7 +470,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 id="recruitmentPlan.recruitmentRequest.id"
               >
                 <option value="default">Chọn nhu cầu nhân sự</option>
-                {recuitments.map((item) => (
+                {recuitments.filter(item => item.status == "Đã gửi").map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
@@ -579,8 +577,8 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
             <div className="col-md-4 mt-0 text-center">
               {errNumberofOutput && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
             </div>
-            <div className="col-md-12 mt-2 w-160" onClick={addTech}>
-              <p className="grey-text plusTech mb-0">Thêm công nghệ +</p>
+            <div className="col-md-12 mt-2 " >
+              <p className="grey-text plusTech mb-0 w-160 cursor-pointer" onClick={addTech}>Thêm công nghệ +</p>
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
