@@ -259,7 +259,9 @@ export default function Training() {
                                 {listInter.map(item => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td>{item.finalScore}</td>
-                                        <td>{item.scoreInTeam}</td>
+                                        <td>
+                                            {item.scoreInTeam != null ? item.scoreInTeam : "NA"}
+                                        </td>
                                         <td style={{cursor: 'pointer'}}>
                                            <MarkInternModal updateFunction={update} userID={item.id} />
                                         </td>
