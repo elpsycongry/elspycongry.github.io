@@ -14,7 +14,7 @@ import {useSnackbar} from "notistack";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import CreateIcon from "@mui/icons-material/Create";
 
-export function MarkInternModal({userID}) {
+export function MarkInternModal({userID, updateFunction}) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(false)
     const {enqueueSnackbar} = useSnackbar();
@@ -26,6 +26,7 @@ export function MarkInternModal({userID}) {
     const [inValidSave, setInV21alidSave] = useState(false);
 
     const handleClose = () => {
+        updateFunction()
         setOpen(false)
     };
     const handleListItemClick = (value) => {
@@ -115,9 +116,11 @@ export function MarkInternModal({userID}) {
 
         let result = (theory + practice * 2 + attitude * 2) / 5
         result = parseFloat(result.toFixed(2)); // Làm tròn đến 2 chữ số sau dấu thập phân
-
+       
         finalScore.current.push(result)
-
+        if (result % 1 === 0) {
+            result = result.toFixed(1)
+        }
         if (result > 7) {
             return (<div className={"result"}> {result}
                 <div className={"result-icon success"}><FontAwesomeIcon icon={faCheck}/></div>
@@ -137,7 +140,7 @@ export function MarkInternModal({userID}) {
             inTeamScore = parseFloat(inTeamScore);
             if (!isNaN(finalScore) && !isNaN(inTeamScore)) {
                 let isPass = parseFloat(((finalScore + inTeamScore) / 2).toFixed(2));
-                setFinalResultPass(isPass > 5)
+                setFinalResultPass(isPass > 7)
             } else {
                 setFinalResultPass(null)
             }
@@ -185,7 +188,10 @@ export function MarkInternModal({userID}) {
             enqueueSnackbar("Lưu thành công ! :D", {
                 variant: "success",
                 anchorOrigin: {horizontal: "right", vertical: "top"}
-            });
+            })
+            updateFunction()
+            setOpen(false)
+            ;
         }).catch(e => {
             enqueueSnackbar("Không thể lưu vui lòng thử lại sau! :((", {
                 variant: "error",
@@ -221,17 +227,19 @@ export function MarkInternModal({userID}) {
 
     return (
         <>
-            <RemoveRedEyeIcon onClick={() => {
-                setOpen(true);
-                setReadOnly(true)
-            }} style={{width: '24px', height: '24px', marginRight: '5px'}}
-                              className="color-blue white-div font-size-large"/>
+            <RemoveRedEyeIcon
+                onClick={() => {
+                    setOpen(true);
+                    setReadOnly(true)
+                }}
+                style={{width: '27px', height: '27px', marginRight: '7px'}}
+                className="color-blue white-div font-size-large hov"/>
             <CreateIcon onClick={() => {
                 setOpen(true);
                 setReadOnly(false)
-            }} style={{width: '24px', height: '24px'}} className="color-orange pencil-btn font-size-medium"/>
+            }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
             <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
-                <DialogTitle key={2} sx={{padding: "16px 24px 8px 24px  "}}>Kết quả học tập</DialogTitle>
+                <DialogTitle key={2} sx={{padding: "16px 24px 8px 29px", fontSize: '1.5rem'}}>Kết quả học tập</DialogTitle>
 
                 <DialogContent>
                     <div key={3} className={"flex-col"}>
@@ -244,6 +252,7 @@ export function MarkInternModal({userID}) {
                         </div>
                         <p>Ngày kết thúc: {data.endDate ? data.endDate : "Chưa kết thúc"}</p>
                     </div>
+                    {/*Modal body*/}
                     <div key={5} className={"table-score"}>
                         <div className={"flex flex-row justify-content-between"}>
                             <p className={"l"}>Môn học</p>
@@ -253,7 +262,6 @@ export function MarkInternModal({userID}) {
                             <p>Tổng</p>
                         </div>
                         {data.subjects.map((subject, index) => {
-
                             return (
                                 <div className={"flex flex-row justify-content-between"}>
                                     <p className={"table-score__item tl"}>{subject.name}</p>
@@ -316,7 +324,9 @@ export function MarkInternModal({userID}) {
                         <div className={"flex flex-row justify-content-between"}>
                             <p className={"tb "}>Kết quả thực tập</p>
                             <p className={"table-score__item"}>
-                                {finalResultPass === null ? "NA" : (finalResultPass ? "Pass" : "Fail")}
+                                {finalResultPass === null ? "NA" : (finalResultPass ?
+                                    <span style={{color: "green"}}>Pass</span> :
+                                    <span style={{color: "red"}}>Fail</span>)}
                             </p>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
@@ -344,7 +354,7 @@ export function MarkInternModal({userID}) {
                                     data.trainingState === ""
                                 ) ?
                                     <div>Đang thực tập</div> :
-                                    <div>Đẫ kết thúc</div>
+                                    <div>Đã hoàn thành</div>
                                 :
                                 <FormControl sx={{width: '30%'}}>
                                     <NativeSelect
@@ -356,7 +366,7 @@ export function MarkInternModal({userID}) {
                                             id: 'uncontrolled-native',
                                         }}>
                                         <option value={'training'}>Đang thực tập</option>
-                                        <option value={'trained'}>Đã kết thúc</option>
+                                        <option value={'trained'}>Đã hoàn thành</option>
                                     </NativeSelect>
                                 </FormControl>
                             }

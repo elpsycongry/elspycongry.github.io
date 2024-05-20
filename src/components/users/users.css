@@ -13,8 +13,8 @@
     display: flex;
 }
 
-.table-user td,
-.table-user th {
+.table-user td:not(.user-roles, user-actions),
+.table-user th:not(.user-roles, user-actions) {
     text-align: center;
     min-width: 120px;
     flex: 1;
@@ -56,4 +56,16 @@
 
 .pl-15{
     padding-left: 15px;
+}
+
+.user-roles{
+    width: 500px;
+    text-align: center;
+    padding: 8px;
+}
+
+.user-actions{
+    width: 150px;
+    text-align: center;
+    padding: 8px;
 }

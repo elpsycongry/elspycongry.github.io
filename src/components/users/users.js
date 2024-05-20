@@ -150,7 +150,7 @@ export default function Users() {
                         fontWeight: '550',
                     }}>Quản lý người dùng</p>
                 </Box>
-                <div className=" d-flex align-items-centent justify-content-between pl-15">
+                <div style={{marginTop: '-5px'}} className=" d-flex align-items-centent justify-content-between pl-15">
                     <p className="title text-center mb-0">
                         Quản lý người dùng
                     </p>
@@ -177,7 +177,7 @@ export default function Users() {
                 </Dialog>
                 <div className=" mt-3">
                     <div className="d-flex justify-content-between">
-                        <div className="d-flex">
+                        <div style={{marginTop: '-10px'}} className="d-flex">
                             <div className="search-input position-relative">
                                 <input
                                     type="text"
@@ -230,14 +230,14 @@ export default function Users() {
                     <div className="table-container">
                         <table className=" table-user ">
 
-                            <thead>
+                            <thead style={{marginBottom: '-35px'}}>
                                 <tr className="header-tr grey-text">
                                     <th className="user-id">STT</th>
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
-                                    <th>Vai trò</th>
-                                    <th>Hành động</th>
+                                    <th className="user-roles">Vai trò</th>
+                                    <th className="user-actions">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -247,7 +247,7 @@ export default function Users() {
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>{item.phone}</td>
-                                        <td>
+                                        <td className="user-roles">
                                             {item.roles && item.roles.length > 0 ? (
                                                 item.roles.map((role, index) => (
                                                     <label key={role.id} style={{ paddingRight: '5px' }}>
@@ -258,7 +258,7 @@ export default function Users() {
                                                 'Hiện tại chưa có vai trò'
                                             )}
                                         </td>
-                                        <td>
+                                        <td className="user-actions">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
                                             <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />                                        </td>
                                     </tr>
@@ -276,7 +276,7 @@ export default function Users() {
                         </Stack> */}
                     </div>
 
-                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0  }}>
+                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0 , marginTop: '2   0px'}}>
                         <Pagination
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
@@ -288,6 +288,9 @@ export default function Users() {
                     </div>
                 </div>
             </Box>
+            <div style={{ paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
+                </div>
             {/* <Footer /> */}
                 {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
