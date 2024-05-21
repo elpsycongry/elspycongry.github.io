@@ -9,26 +9,6 @@ import swal from "sweetalert";
 export default function DialogRecruitmentPlanFormReason({ idPlan, open, onClose }) {
 
     const [reason, setReason] = useState('');
-
-    // const handleSubmit =  (e) => {
-    //     e.preventDefault();
-    //     try {
-    //          axios.post(
-    //             'http://localhost:8080/api/plans/' + idPlan + '/users/1',
-    //             { reason }
-    //         ).then(() => {
-    //             swal("Cập nhật lý do thành công", {
-    //                 icon: "success",
-    //                 buttons: false,
-    //                 timer: 2000
-    //             }).then(() => {
-    //                 window.location.href = "/recruitment/recruitmentPlan";
-    //             });
-    //         });
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // }
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -60,7 +40,7 @@ export default function DialogRecruitmentPlanFormReason({ idPlan, open, onClose 
                 <DialogTitle >
                     <form className=" row g-3" onSubmit={handleSubmit}>
                         <div className=" col-md-12">
-                            <h2 className="grey-text text-center">Lý do</h2>
+                            <h2 className="grey-text text-center">Lý do từ chối</h2>
                             <IconButton
                                 sx={{
                                     position: 'absolute',

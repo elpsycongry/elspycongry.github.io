@@ -45,7 +45,7 @@ export default function DialogPersonalFormReason({ idUser, open, onClose }) {
                 <DialogTitle >
                     <form className=" row g-3" onSubmit={handleSubmit}>
                         <div className=" col-md-12">
-                            <h2 className="grey-text text-center">Lý do</h2>
+                            <h2 className="grey-text text-center">Lý do từ chối</h2>
                             <IconButton
                                 sx={{
                                     position: 'absolute',

@@ -201,7 +201,7 @@ export default function DialogPersonalFormWatch({ id }) {
                                 </label>
                                 <textarea
                                     readOnly
-                                    className="form-control resize pt-2 "
+                                    className="form-control resize pt-2 w-372"
                                     style={{ color: "#838383" }}
                                     value={formData.values.recruitmentRequest.reason}
                                 ></textarea>

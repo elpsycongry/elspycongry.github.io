@@ -73,7 +73,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export default function Navbar() {
+export default function Navbar({ breadCrumb , nameList }) {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -118,7 +118,7 @@ export default function Navbar() {
             <Icon icon="ion:book-sharp" width="24" height="24" />
         )
     }
-   
+
 
     const listItems = [
         { id: 1, text: "Đào tạo", IconText: Book },
@@ -126,7 +126,7 @@ export default function Navbar() {
             id: 2, text: "Tuyển dụng", IconText: BusinessCenterIcon, children: [
                 {
                     id: 1,
-                    name: "Nhu cầu",
+                    name: "Nhu cầu nhân sự",
                     linkTo: "/recruitment/personalNeeds",
                 },
                 {
@@ -196,9 +196,15 @@ export default function Navbar() {
                                     <List className='listChild' component="div" disablePadding>
                                         {Object.keys(children).map((subItem, index) => (
                                             <ListItem button key={subItem} sx={{ pl: 4 }}>
-                                                <Link className='linkChild' to={children[subItem].linkTo}>
-                                                    <ListItemText className='child' primary={children[subItem].name} />
-                                                </Link>
+                                                {children[subItem].name === breadCrumb ?
+                                                    <Link className='linkChild select-navbar' to={children[subItem].linkTo}>
+                                                        <ListItemText className='child ' primary={children[subItem].name} />
+                                                    </Link> :
+                                                    <Link className='linkChild' to={children[subItem].linkTo}>
+                                                        <ListItemText className='child' primary={children[subItem].name} />
+                                                    </Link>
+                                                }
+
                                             </ListItem>
                                         ))}
                                     </List>

@@ -188,13 +188,13 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                               style={{ color: "#6F6F6F" }}
                               className="text-center p-2 w-250 fw-500"
                             >
-                              Số lượng nhân sự
+                              Số lượng nhân sự đầu vào
                             </th>
                             <th
                               style={{ color: "#6F6F6F" }}
                               className="text-center p-2 w-250 fw-500"
                             >
-                              Số lượng nhân sự
+                              Số lượng nhân sự đầu ra
                             </th>
                           </thead>
                           <tbody>
@@ -300,7 +300,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                 </label>
                 <textarea
                   readOnly
-                  className="form-control resize pt-2 "
+                  className="form-control resize pt-2 w-618"
                   style={{ color: "#838383" }}
                   value={formData.values.recruitmentPlan.reason}
                 ></textarea>

@@ -206,7 +206,7 @@ export default function RecruitmentPlan() {
     return (
         <>
             <Header />
-            <Navbar />
+            <Navbar breadCrumb={"Kế hoạch tuyển dụng"}  nameList={"Tuyển dụng"}/>
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Kế hoạch tuyển dụng" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
                 <div className="content-recruiment position-relative">

@@ -191,7 +191,7 @@ export default function PersonalNeeds() {
     return (
         <>
             <Header />
-            <Navbar />
+            <Navbar breadCrumb={"Nhu cầu nhân sự"} nameList={"Tuyển dụng"}/>
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Nhu cầu nhân sự" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
                 <div className="content-recruiment position-relative">

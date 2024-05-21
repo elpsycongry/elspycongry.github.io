@@ -103,6 +103,11 @@
 #formCreateRecruitmentPlan .MuiPaper-root {
     max-width: 960px;
 }
+
+#formCandidateCreate .MuiPaper-root {
+    max-width: 812px;
+}
+
 #formWatchRecruitmentPlan .MuiPaper-root {
     max-width: 800px;
 }
@@ -175,14 +180,52 @@
     color: #fdfdfd;
 }
 
+.hr-infor {
+    border: 3px solid orange;
+    margin: 1px;
+    opacity: 1;
+    border-radius: 4px;
+    width: 35%;
+}
 
 /*Có thể tái sử dụng */
-.w-310{
+.listChild>div {
+    padding-left: 0;
+}
+
+.select-navbar+span {
+    z-index: -1;
+    background-color: #ffac14;
+}
+
+.linkChild {
+    width: 238px;
+    padding-left: 80px;
+}
+
+
+.select-navbar+span:hover {
+    /* --bs-link-color-rgb: var(--bs-link-hover-color-rgb); */
+    background-color: #005B9F;
+}
+
+
+.w-618 {
+    width: 618px;
+}
+
+.w-372 {
+    width: 372px;
+}
+
+.w-310 {
     width: 310px;
 }
-.w-160{
+
+.w-160 {
     width: 160px;
 }
+
 .ws-nowrap {
     white-space: nowrap;
 }
@@ -214,8 +257,9 @@
 .non-outline {
     outline: none;
 }
-.transformTooltip{
-    inset: 0 10px 10px 10px !important; 
+
+.transformTooltip {
+    inset: 0 10px 10px 10px !important;
 }
 
 .grey-text {
@@ -269,12 +313,15 @@ input[type="number"]::-webkit-outer-spin-button {
 .w-130 {
     width: 130px;
 }
+
 .w-1 {
     width: 1px;
 }
-.w-600{
+
+.w-600 {
     width: 600px;
 }
+
 .w-250 {
     width: 220px;
 }
@@ -286,6 +333,10 @@ input[type="number"]::-webkit-outer-spin-button {
 .align-item-center {
     align-items: center !important;
 }
+.align-item-flex-end {
+    align-items: flex-end !important;
+}
+
 
 .fs-edit {
     font-size: 45px !important;
@@ -318,10 +369,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .bg-clr-success {
     background-color: #419A00 !important;
 }
-.clr-danger{
+
+.clr-danger {
     color: #FF4A4A !important;
 }
-.oc-08{
+
+.oc-08 {
     opacity: 0.8;
 }
 
@@ -337,7 +390,8 @@ input[type="number"]::-webkit-outer-spin-button {
     overflow: hidden;
     resize: none;
 }
-.text-area{
+
+.text-area {
     height: 200px;
     padding-top: 32px !important;
 }
@@ -350,11 +404,55 @@ input[type="number"]::-webkit-outer-spin-button {
     padding-left: 20px;
 }
 
+.time-set {
+    width: 70px;
+}
+
+.time-set div {
+    height: 38px;
+}
+
+.time-set div input {
+    text-align: center;
+    color: #687168;
+
+}
+
+#time .css-v0pjtz-MuiStack-root {
+    padding: 0;
+    overflow: hidden;
+}
+
+.date-set div {
+    text-align: center;
+    width: 205px;
+    margin-left: 5px;
+    height: 38px;
+
+}
+
+.date-set div div {
+    width: 18px;
+    justify-content: flex-end;
+}
+.date-set div input {
+    text-align: center;
+    color: #687168;
+}
+
+.text-area-field .MuiFormControl-root {
+    width: 100%;
+    padding:10px;
+    padding-left: 0;
+}
+
+
 /*Có thể tái sử dụng */
-.bg-clr-primary{
+.bg-clr-primary {
     background-color: #398CC4;
 }
-.bg-clr-successV1{
+
+.bg-clr-successV1 {
     background-color: #419A00;
 }
 
@@ -383,29 +481,33 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 20px;
     padding: 3px 6px;
 }
-.hover-danger:hover{
+
+.hover-danger:hover {
     color: #FF4A4A !important;
     opacity: 1;
     transition: 0.2s ease-in-out;
 }
-.hover-danger{
+
+.hover-danger {
     transition: 0.2s ease-in-out;
 }
 
-.hover-warning:hover{
+.hover-warning:hover {
     background-color: #fab11f !important;
     opacity: 1;
     transition: 0.2s ease-in-out;
 }
-.hover-warning{
+
+.hover-warning {
     transition: 0.2s ease-in-out;
 }
 
-.hover-primary:hover{
+.hover-primary:hover {
     color: #3165f3 !important;
     opacity: 1;
     transition: 0.2s ease-in-out;
 }
-.hover-primary{
+
+.hover-primary {
     transition: 0.2s ease-in-out;
 }
