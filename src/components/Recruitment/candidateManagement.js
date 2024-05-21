@@ -21,8 +21,8 @@ import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
 import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandidateFromCreate";
-import DialogPersonalFormUpdate from "./dialogPersonalNeeds/dialogPersonalFormUpdate";
-import DialogPersonalFormWatch from './dialogPersonalNeeds/dialogPersonalFormWatch';
+import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
+import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
 export default function CandidateManagement() {
 
     const [open, setOpen] = useState(false);
@@ -73,7 +73,7 @@ export default function CandidateManagement() {
             status: "Chưa có kq",
         }
     ];
-
+    
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const handleSearch = (event) => {
@@ -84,7 +84,6 @@ export default function CandidateManagement() {
         event.preventDefault();
         try {
             const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}`);
-            setRecuitment(response.data);
             if (response.data.length === 0) {
                 setShowError(true);
             } else {
@@ -112,7 +111,7 @@ export default function CandidateManagement() {
     const handleSubmitSelect = async (selectedValue) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/filter?status=${selectedValue}`);
-            setRecuitment(response.data);
+          
             if (response.data.length === 0) {
                 setShowError(true);
             } else {
@@ -122,12 +121,14 @@ export default function CandidateManagement() {
             console.error('Error searching by status:', error);
         }
     };
-    const [recuitments, setRecuitment] = useState([]);
+    const [interns, setInterns] = useState([]);
     useEffect(() => {
-        axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-            setRecuitment(res.data);
-        });
+        axios.get("http://localhost:8080/api/interns").then(res =>{
+          setInterns(res.data.content)
+        }
+        );
     }, []);
+    
 
 
 
@@ -232,22 +233,21 @@ export default function CandidateManagement() {
                                 <th className="w-130 text-center">Trạng thái</th>
                                 <th className="w-130 text-right">Hành động</th>
                             </tr>
-                            {recuitments.map((item) => (
+                            {interns.map((item) => (
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td className="count-td pl-20"></td>
-
                                     <td className='ws-nowrap'>{item.name}</td>
                                     <td className="text-center">{item.email}</td>
-                                    <td className="text-center">{item.number}</td>
+                                    <td className="text-center">{item.phone}</td>
                                     <td className="text-center">{item.scoreTest}</td>
-                                    <td className="text-center">{item.scorePV}</td>
+                                    <td className="text-center">{item.scoreInterview}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-right p-tricklord">
-                                        <DialogPersonalFormWatch id={item.id} />
-                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
-                                            <DialogPersonalFormUpdate id={item.id} check={true} />
+                                        <DialogCandidateFromWatch id={item.id} />
+                                        {item.status.toLowerCase() === "Đã có kết quả" || item.status.toLowerCase() === "Đã gửi mail cảm ơn" || item.status.toLowerCase() === "Đã hẹn ngày thực tập" || item.status.toLowerCase() === "Không nhận việc" || item.status.toLowerCase() === "Đã nhận việc" ? (
+                                            <DialogCandidateFromUpdate id={item.id} check={true} />
                                         ) : (
-                                            <DialogPersonalFormUpdate id={item.id} />
+                                            <DialogCandidateFromUpdate id={item.id} />
                                         )}
                                     </td>
                                 </tr>

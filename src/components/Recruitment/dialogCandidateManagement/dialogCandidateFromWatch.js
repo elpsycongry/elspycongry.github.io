@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, IconButton, TextField } from "@mui/material";
+import { Dialog, DialogTitle, IconButton, TextField, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -9,6 +9,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+
 import dayjs from 'dayjs';
 
 import axios from "axios";
@@ -119,85 +121,36 @@ export default function DialogCandidateFormWatch({ id }) {
     }
   }
 
-  const formData = useFormik({
-    initialValues: {
-      idUser: null,
-      recruitmentPlan: {
-        recruitmentRequest: {
-          id: null,
-          dateStart: "",
-          dateEnd: "",
-          name: "",
-          reason: "",
-          division: null,
-          status: "",
-        },
-        name: "",
-        handoverDeadline: "",
-        dateRecruitmentEnd: "",
-        status: "",
+  const formData = useFormik ({
+    initialValues:{
+      id : "",
+      recruitmentPlan:{
+        id : "",
+        name :""
       },
-      planDetails: [
-        {
-          recruitmentPlan: null,
-          type: "",
-          numberOfPersonnelNeeded: "",
-          numberOfOutputPersonnel: "",
-        },
-      ],
+      name :"",
+      email :"",
+      phone : "",
+      linkCv :"",
+      interviewTime :"",
+      checkInterview:"",
+      comment:"",
+      note:"",
+      finalResult:"",
+      status:"",
+      scoreTest:"",
+      scoreInterview:"",
     },
-    onSubmit: async (values, { setSubmitting }) => {
-      // console.log(values); 
-      const personalneed = values.recruitmentPlan.recruitmentRequest.id;
-      const nameRecruitmentPlan = values.recruitmentPlan.name;
-      values.planDetails = [...tech];
-      values.idUser = 1;
-      if (values.recruitmentPlan.dateRecruitmentEnd == '') {
-        values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
-      }
-      if (values.recruitmentPlan.handoverDeadline == '') {
-        values.recruitmentPlan.handoverDeadline = handoverDeadline;
-      }
-      const date = new Date(values.recruitmentPlan.handoverDeadline);
-      const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
-      // checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed);
-      // setSubmitting(false);
-      // return;
-      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)) {
-        setSubmitting(false);
-        return;
-      } else {
-        setSubmitting(true);
-        try {
-          await axios
-            .post("http://localhost:8080/api/plans", values)
-            .then((res) => {
-              swal("Thêm kế hoạch tuyển dụng thành công", {
-                icon: "success",
-                buttons: false,
-                timer: 2000,
-              }).then(() => {
-                window.location.href = "/recruitment/recruitmentPlan";
-
-              });
-            });
-        } catch (error) {
-          swal("Thêm kế hoạch tuyển dụng thất bại", {
-            icon: "error",
-            buttons: false,
-            timer: 2000,
-          });
-        }
-      }
-    }
-  });
+ })
   // Call api
-  const [recuitments, setRecuitment] = useState([]);
+ 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-      setRecuitment(res.data);
-    });
-
+      axios.get("http://localhost:8080/api/interns/" + id).then((res) => {
+        formData.setValues(res.data);
+        const formatT= res.data.interviewTime;
+        const dateNow = dayjs(formatT);
+        setDate(dateNow)
+      });
   }, []);
 
 
@@ -205,19 +158,7 @@ export default function DialogCandidateFormWatch({ id }) {
 
 
   // Xử lý mở form
-  const listTechnology = [
-    { id: 1, text: "PHP" },
-    { id: 2, text: "Laravel" },
-    { id: 3, text: "React" },
-    { id: 4, text: "React Native" },
-    { id: 5, text: "Agular" },
-    { id: 6, text: "Python - Django" },
-    { id: 7, text: "VueJs" },
-    { id: 8, text: "Android" },
-    { id: 9, text: "IOS" },
-    { id: 10, text: "JAVA" },
-    { id: 11, text: ".NET" }
-  ]
+  
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
     setOpenForm(true);
@@ -334,7 +275,6 @@ export default function DialogCandidateFormWatch({ id }) {
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
-          onChange={handleInputChange}
           onBlur={handleBlur}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
@@ -405,9 +345,7 @@ export default function DialogCandidateFormWatch({ id }) {
 
   // Code mới của thg candidate
 
-  const dateNow = dayjs();
-
-  const [date, setDate] = useState(dateNow);
+  const [date, setDate] = useState('');
   const handleChangeDateTime = (e) => {
     setDate(e);
   }
@@ -415,7 +353,7 @@ export default function DialogCandidateFormWatch({ id }) {
 
   // const 
   function TestMarks() {
-    const [testMarks, setTestMarks] = useState(50);
+    const [testMarks, setTestMarks] = useState(formData.values.scoreTest);
     const handleClickCountPlus = () => {
       if (testMarks < 100) {
         setTestMarks(testMarks + 1);
@@ -435,21 +373,20 @@ export default function DialogCandidateFormWatch({ id }) {
 
     return (
       <div className="d-flex justify-content-center align-items-center">
-        <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
+       
         <input
           value={testMarks}
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
-          onChange={handleInputChange}
+         
         />
-        <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
     );
   }
 
   function Interview() {
-    const [interview, setInterview] = useState(1);
+    const [interview, setInterview] = useState(formData.values.scoreInterview);
     const handleClickCountPlus = () => {
       if (interview < 10) {
         setInterview(interview + 1);
@@ -469,21 +406,20 @@ export default function DialogCandidateFormWatch({ id }) {
 
     return (
       <div className="d-flex justify-content-center align-items-center">
-        <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
+       
         <input
           value={interview}
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
-          onChange={handleInputChange}
+        
         />
-        <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
     );
   }
 
 
-  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState('true');
+  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState(formData.values.isInterview ? "true" : "false");
 
   const handleChangePassFaild = (e) => {
     setSelectedValuePassFaild(e.target.value);
@@ -494,10 +430,16 @@ export default function DialogCandidateFormWatch({ id }) {
 
   return (
     <>
-      <div className=" position-relative " style={{ width: '75px', minWidth: '170px' }} onClick={handleClickFormOpen}>
-        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">Thêm ứng viên</button>
-        <AddIcon className=" position-absolute plus-icon clr-white" />
-      </div>
+     <Tooltip title="Xem chi tiết">
+                <RemoveRedEyeIcon
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Tooltip on top"
+                    className="color-blue white-div fs-edit hover-primary cursor-pointer"
+                    onClick={handleClickFormOpen}
+                />
+            </Tooltip>
+
       <Dialog
         id="formCandidateCreate"
         open={openForm}
@@ -535,8 +477,9 @@ export default function DialogCandidateFormWatch({ id }) {
               <input
                 maxLength={60}
                 type="text"
-                placeholder="Nhập họ và tên ứng viên..."
+                value={formData.values.name}
                 className='form-control grey-text'
+                disabled
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -553,8 +496,9 @@ export default function DialogCandidateFormWatch({ id }) {
               <input
                 maxLength={60}
                 type="text"
-                placeholder="Nhập email ứng viên..."
+                value={formData.values.email}
                 className='form-control grey-text'
+                disabled
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -571,8 +515,10 @@ export default function DialogCandidateFormWatch({ id }) {
               <input
                 maxLength={60}
                 type="text"
+                value={formData.values.phone}
                 placeholder="Nhập số điện thoại..."
                 className='form-control grey-text'
+                disabled
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -588,9 +534,10 @@ export default function DialogCandidateFormWatch({ id }) {
               </label>
               <input
                 maxLength={60}
-                type="text"
-                placeholder="Link CV..."
+                type="disable"
+                value={formData.values.linkCv}
                 className='form-control grey-text'
+                disabled
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -612,6 +559,7 @@ export default function DialogCandidateFormWatch({ id }) {
                     value={date}
                     onChange={handleChangeDateTime}
                     format="HH:mm"
+                    disabled
                   />
                   <DemoContainer components={['DateTimePicker']}>
                     <DemoItem >
@@ -620,6 +568,7 @@ export default function DialogCandidateFormWatch({ id }) {
                         value={date}
                         onChange={handleChangeDateTime}
                         format="YYYY/MM/DD"
+                        disabled
                       />
                     </DemoItem>
                   </DemoContainer>
@@ -630,20 +579,13 @@ export default function DialogCandidateFormWatch({ id }) {
               <label htmlFor="name" className="form-label grey-text mb-0 mt-2">
                 Kế hoạch tuyển dụng
               </label>
-              <select
+              <input
                 className="form-select grey-text"
                 aria-label="Default select example"
-                onChange={formData.handleChange}
-                name="recruitmentPlan.recruitmentRequest.id"
-                id="recruitmentPlan.recruitmentRequest.id"
-              >
-                <option value="default">Chọn nhu cầu nhân sự</option>
-                {recuitments.filter(item => item.status == "Đã gửi").map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+                value={formData.values.recruitmentPlan.name}
+                disabled
+               
+              />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
                   <p className="err-valid ws-nowrap ">
@@ -666,12 +608,11 @@ export default function DialogCandidateFormWatch({ id }) {
                     className="form-select grey-text"
                     style={{ width: '170px' }}
                     aria-label="Default select example"
-                    onChange={formData.handleChange}
-                    name="recruitmentPlan.recruitmentRequest.id"
-                    id="recruitmentPlan.recruitmentRequest.id"
+                    value={formData.values.checkInterview ? "true" : "false"}
+                    disabled
                   >
-                    <option value="default">Có</option>
-                    <option value="default">Không</option>
+                    <option value="true">Có</option>
+                    <option value="false">Không</option>
                   </select>
                 </div>
                 {/*  */}
@@ -695,10 +636,11 @@ export default function DialogCandidateFormWatch({ id }) {
                 </label>
                 <div className="col-md-12 text-area-field">
                   <TextField
-                    placeholder="Nhập nhận xét"
+                    value={formData.values.comment}
                     id="outlined-multiline-flexible form-control"
                     multiline
                     maxRows={4}
+                    disabled
                   />
                 </div>
               </div>
@@ -712,6 +654,7 @@ export default function DialogCandidateFormWatch({ id }) {
                   aria-label="Default select example"
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
+                  disabled
                 >
                   <option className="text-success" value="true">Pass</option>
                   <option className="text-danger" value="false">Faild</option>
@@ -721,6 +664,7 @@ export default function DialogCandidateFormWatch({ id }) {
                   aria-label="Default select example"
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
+                  disabled
                 >
                   <option className="text-success" value="true">Pass</option>
                   <option className="text-danger" value="false">Faild</option>
@@ -738,17 +682,12 @@ export default function DialogCandidateFormWatch({ id }) {
                   <label htmlFor="name" className="form-label grey-text mb-0 mt-2 ws-nowrap">
                     Cập nhật trạng thái
                   </label>
-                  <select
+                  <input
                     className="form-select grey-text"
                     aria-label="Default select example"
-                  >
-                    <option value="default">Chọn nhu cầu nhân sự</option>
-                    {recuitments.filter(item => item.status == "Đã gửi").map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
+                    value={formData.values.status}
+                    disabled
+                  />
                 </div>
                 <div className="col-md-7 ms-4">
                   <label htmlFor="name" className="form-label grey-text mb-0 mt-2 ws-nowrap">
@@ -756,17 +695,14 @@ export default function DialogCandidateFormWatch({ id }) {
                   </label>
                   <input
                 type="text"
-                placeholder="Nhập lưu ý nếu có..."
+                value={formData.values.note}
                 className='form-control grey-text'
+                disabled
               />
                 </div>
               </div>
               <div className=" text-right mt-0 d-flex align-item-flex-end">
-                <div className="send-child position-relative ">
-                  <button type="submit" className=" text-center align-item-center btn send-btn btn-success ">
-                    Lưu
-                  </button>
-                </div>
+                
               </div>
             </div>
           </form>
