@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { TimeField } from "@mui/x-date-pickers";
 
-export default function DialogCandidateFormCreate() {
+export default function DialogCandidateFormWatch({ id }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
