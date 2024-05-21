@@ -29,6 +29,7 @@ import { Icon } from '@iconify/react';
 import './training.css';
 import axios from "axios";
 import {MarkInternModal} from "../pages/InternPage/markInternModal";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 function Copyright(props) {
     return (
@@ -78,7 +79,8 @@ export default function Training() {
     const listTestSelect = [
          
         { id: 1, text: "Đang thực tập", name: "training" },
-        { id: 2, text: "Đã kết thúc", name: "trained" }
+        { id: 2, text: "Đã hoàn thành", name: "trained" },
+        {id: 3, text: "Đã dừng thực tập", name: "stop_training"}
     ]
 
     const handleChangeSearch = (event) => {

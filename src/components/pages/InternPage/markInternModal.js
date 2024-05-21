@@ -367,6 +367,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                         }}>
                                         <option value={'training'}>Đang thực tập</option>
                                         <option value={'trained'}>Đã hoàn thành</option>
+                                        <option value={'stop_training'}>Đã dừng thực tập</option>
                                     </NativeSelect>
                                 </FormControl>
                             }
