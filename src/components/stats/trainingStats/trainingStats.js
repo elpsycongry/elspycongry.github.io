@@ -249,7 +249,9 @@ export default function TrainingStats() {
                                             })}
                                         </select>
                                     </div>
-                                    <TrainingStatsChart />
+                                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                                        <TrainingStatsChart />
+                                    </div>
                                 </div>
                             </div>
                         )}
