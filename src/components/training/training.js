@@ -244,7 +244,7 @@ export default function Training() {
                                 </tr>
                                 {listInter.map((item) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        {item.internScoreDTOList.map((score) => (
+                                        {item.internSubjectDTOList.map((score) => (
                                             <td key={score.id}>{score.totalScore}</td>
                                         ))}
                                     </tr>
@@ -259,7 +259,10 @@ export default function Training() {
                                 {listInter.map(item => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td>{item.finalScore}</td>
-                                        <td>{item.scoreInTeam}</td>
+                                        <td>
+                                            {item.scoreInTeam == "" || item.scoreInTeam == null ?  "NA" : item.scoreInTeam}
+                                        
+                                            </td>
                                         <td style={{cursor: 'pointer'}}>
                                            <MarkInternModal updateFunction={update} userID={item.id} />
                                         </td>

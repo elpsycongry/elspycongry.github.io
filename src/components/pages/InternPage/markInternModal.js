@@ -217,7 +217,7 @@ export function MarkInternModal({userID, updateFunction}) {
             }
         }
         return (
-            day >= 50 ?
+            day > 50 ?
                 <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
                 :
                 <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>
@@ -240,7 +240,7 @@ export function MarkInternModal({userID, updateFunction}) {
             }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
             <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
                 <DialogTitle key={2} sx={{padding: "16px 24px 8px 29px", fontSize: '1.5rem'}}>Kết quả học tập</DialogTitle>
-
+                
                 <DialogContent>
                     <div key={3} className={"flex-col"}>
                         <h6>Họ tên: {data.name}</h6>
@@ -271,7 +271,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                             :
                                             (<input
                                                 type={"number"}
-                                                onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
+                                                // onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
                                                 value={subject.theoryScore}
                                                 onChange={(e) => {
                                                     handleTheoryScoreChange(e, index)

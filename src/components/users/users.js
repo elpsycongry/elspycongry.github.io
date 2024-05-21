@@ -150,7 +150,7 @@ export default function Users() {
                         fontWeight: '550',
                     }}>Quản lý người dùng</p>
                 </Box>
-                <div style={{marginTop: '-5px'}} className=" d-flex align-items-centent justify-content-between pl-15">
+                <div style={{ marginTop: '-5px' }} className=" d-flex align-items-centent justify-content-between pl-15">
                     <p className="title text-center mb-0">
                         Quản lý người dùng
                     </p>
@@ -177,7 +177,7 @@ export default function Users() {
                 </Dialog>
                 <div className=" mt-3">
                     <div className="d-flex justify-content-between">
-                        <div style={{marginTop: '-10px'}} className="d-flex">
+                        <div style={{ marginTop: '-10px' }} className="d-flex">
                             <div className="search-input position-relative">
                                 <input
                                     type="text"
@@ -230,7 +230,7 @@ export default function Users() {
                     <div className="table-container">
                         <table className=" table-user ">
 
-                            <thead style={{marginBottom: '-35px'}}>
+                            <thead style={{ marginBottom: '-35px' }}>
                                 <tr className="header-tr grey-text">
                                     <th className="user-id">STT</th>
                                     <th>Tên</th>
@@ -243,17 +243,21 @@ export default function Users() {
                             <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="user-id">{index + 1 + pagination.page*pagination.size}</td>
+                                        <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>{item.phone}</td>
                                         <td className="user-roles">
                                             {item.roles && item.roles.length > 0 ? (
-                                                item.roles.map((role, index) => (
-                                                    <label key={role.id} style={{ paddingRight: '5px' }}>
-                                                        {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
-                                                    </label>
-                                                ))
+                                                item.roles.length === 4 ? (
+                                                    'Tất cả quyền quản lý'
+                                                ) : (
+                                                    item.roles.map((role, index) => (
+                                                        <label key={role.id} style={{ paddingRight: '5px' }}>
+                                                            {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
+                                                        </label>
+                                                    ))
+                                                )
                                             ) : (
                                                 'Hiện tại chưa có vai trò'
                                             )}
@@ -276,7 +280,7 @@ export default function Users() {
                         </Stack> */}
                     </div>
 
-                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0 , marginTop: '2   0px'}}>
+                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0, marginTop: '2   0px' }}>
                         <Pagination
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
@@ -289,10 +293,10 @@ export default function Users() {
                 </div>
             </Box>
             <div style={{ paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                    <Copyright sx={{ maxWidth: '100%' }} />
-                </div>
+                <Copyright sx={{ maxWidth: '100%' }} />
+            </div>
             {/* <Footer /> */}
-                {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div> */}
             {/* </Box > */}
