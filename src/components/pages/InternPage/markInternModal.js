@@ -13,6 +13,12 @@ import target from "lodash/seq";
 import {useSnackbar} from "notistack";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import CreateIcon from "@mui/icons-material/Create";
+import {AddComment } from '@mui/icons-material';
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/dist/svg-arrow.css'
+import DialogContentText from "@mui/material/DialogContentText";
+import {SubjectCommentBox} from "./subjectCommentBox";
 
 export function MarkInternModal({userID, updateFunction}) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
@@ -20,19 +26,17 @@ export function MarkInternModal({userID, updateFunction}) {
     const {enqueueSnackbar} = useSnackbar();
     const [readOnly, setReadOnly] = useState(false)
     const finalScore = useRef()
-    const passed = useRef()
+    const passed = useRef({validScore: false, scorePassed: false})
     const [finalScoreValue, setFinalScoreValue] = useState();
     const [finalResultPass, setFinalResultPass] = useState(null);
     const [inValidSave, setInV21alidSave] = useState(false);
-
+    // alert
+    const [openAlert, setOpenAlert] = useState(false);
     const handleClose = () => {
         updateFunction()
         setOpen(false)
     };
-    const handleListItemClick = (value) => {
-        setOpen(false)
-    };
-    const [defaultData, setDefaultData] = useState();
+
     const [data, setData] = useState({
         name: '',
         startDate: "",
@@ -42,24 +46,33 @@ export function MarkInternModal({userID, updateFunction}) {
         scoreInTeam: null,
 
         subjects: [
-            {name: "Môn 1", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 2", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 3", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 4", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 5", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 6", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 7", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Git", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Cơ sở dữ liệu", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Scrum", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "React JS", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Spring boot", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Java", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "HTML", theoryScore: '', practiceScore: '', attitudeScore: ''},
         ],
     })
+
+    // Thay đổi trạng thái thực tập
     const handleTrainingStateChange = (event) => {
-        if (event.target.value === 'trained') {
-            const currentDate = new Date().toISOString().split('T')[0];
-            setData({...data, trainingState: event.target.value, endDate: currentDate});
-        } else {
-            setData({...data, trainingState: event.target.value});
+        switch (event.target.value){
+            case 'trained':
+                const currentDate = new Date().toISOString().split('T')[0];
+                setData({...data, trainingState: event.target.value, endDate: currentDate});
+                break
+            case 'stop_training':
+                setOpenAlert(true);
+                break
+            default:
+                setData({...data, trainingState: event.target.value});
         }
     };
+    // Thay đổi điểm
     const inputRegex = /^(10(\.0+)?|[0-9](\.[0-9])?|)$/;
+    // Lý thuyết
     const handleTheoryScoreChange = (event, index) => {
         if (event.target.value.match(inputRegex)) {
             // setInValidSave(false)
@@ -71,6 +84,7 @@ export function MarkInternModal({userID, updateFunction}) {
             });
         }
     }
+    // Thực hành
     const handlePracticeScoreChange = (event, index) => {
         console.log(target.value)
         if (event.target.value.match(inputRegex)) {
@@ -82,6 +96,7 @@ export function MarkInternModal({userID, updateFunction}) {
             });
         }
     }
+    // Thái độ
     const handleAttitudeScoreChange = (event, index) => {
         console.log(target.value)
         if (event.target.value.match(inputRegex)) {
@@ -93,6 +108,7 @@ export function MarkInternModal({userID, updateFunction}) {
             });
         }
     }
+    // Điểm trong team
     const handleScoreInTeamChange = (event) => {
         if (event.target.value.match(inputRegex)) {
             setData({
@@ -103,21 +119,21 @@ export function MarkInternModal({userID, updateFunction}) {
     }
 
     finalScore.current = []
-    passed.current = true
+    passed.current = {validScore: true, scorePassed: true}
 
     function findTotal(theory, practice, attitude) {
         theory = parseFloat(theory);
         practice = parseFloat(practice);
         attitude = parseFloat(attitude);
         if (isNaN(theory) || isNaN(practice) || isNaN(attitude)) {
-            passed.current = false
+            passed.current = {...passed.current, validScore: false}
             return (<div className={"result"}>NA</div>)
         }
 
         let result = (theory + practice * 2 + attitude * 2) / 5
         result = parseFloat(result.toFixed(2)); // Làm tròn đến 2 chữ số sau dấu thập phân
-       
-        finalScore.current.push(result)
+
+        finalScore.current.push(result) // Thêm kết quả vào mảng để tính tổng điểm cuối cùng
         if (result % 1 === 0) {
             result = result.toFixed(1)
         }
@@ -126,16 +142,25 @@ export function MarkInternModal({userID, updateFunction}) {
                 <div className={"result-icon success"}><FontAwesomeIcon icon={faCheck}/></div>
             </div>)
         } else {
+            passed.current = {...passed.current, scorePassed: false}
             return (<div className={"result"}> {result}
                 <div className={"result-icon fail"}><FontAwesomeIcon icon={faX}/></div>
             </div>)
         }
     }
-
-    const param = useParams();
-
+    // Tính kết quả thực tập theo điểm tổng kết và đánh giá team
     const fetchFinalResultPass = (finalScore, inTeamScore) => {
-        if (passed.current) {
+        // Set fail nếu training state là stop_training
+        if (data.trainingState === 'stop_training'){
+            setFinalResultPass(false)
+            return
+        }
+
+        if (passed.current.validScore) {
+            if (!passed.current.scorePassed){
+                setFinalResultPass(false)
+                return;
+            }
             finalScore = parseFloat(finalScore);
             inTeamScore = parseFloat(inTeamScore);
             if (!isNaN(finalScore) && !isNaN(inTeamScore)) {
@@ -154,14 +179,9 @@ export function MarkInternModal({userID, updateFunction}) {
         axios.get(`http://localhost:8080/api/interns/?id=${userID}`).then(res => {
             setData(res.data)
         })
-    }, []);
+    }, [open]);
 
     useEffect(() => {
-
-        // axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
-        // axios.get(`http://localhost:8080/api/interns/?id=${param.id}`).then(res => {
-        //     // compareObjects(res.data,data);
-        // })
         setFinalScoreValue(
             parseFloat(
                 finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length)
@@ -191,7 +211,6 @@ export function MarkInternModal({userID, updateFunction}) {
             })
             updateFunction()
             setOpen(false)
-            ;
         }).catch(e => {
             enqueueSnackbar("Không thể lưu vui lòng thử lại sau! :((", {
                 variant: "error",
@@ -218,10 +237,20 @@ export function MarkInternModal({userID, updateFunction}) {
         }
         return (
             day > 50 ?
-                <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
+                (<Tippy
+                       content={"Đã quá ngày thực tập"}
+                >
+                    <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
+                </Tippy>)
                 :
                 <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>
         )
+    }
+    // Handle click alert
+    const handleClickAgreeAlert = () => {
+        const currentDate = new Date().toISOString().split('T')[0];
+        setData({...data, trainingState: 'stop_training', endDate: currentDate});
+        setOpenAlert(false)
     }
 
 
@@ -236,17 +265,18 @@ export function MarkInternModal({userID, updateFunction}) {
                 className="color-blue white-div font-size-large hov"/>
             <CreateIcon onClick={() => {
                 setOpen(true);
+
                 setReadOnly(false)
             }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
-            <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
+            <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open} >
                 <DialogTitle key={2} sx={{padding: "16px 24px 8px 29px", fontSize: '1.5rem'}}>Kết quả học tập</DialogTitle>
-                
+
                 <DialogContent>
                     <div key={3} className={"flex-col"}>
                         <h6>Họ tên: {data.name}</h6>
                         <div className={"flex-row"}>
                             <p>Ngày bắt đầu: {data.startDate}</p>
-                            <p style={{paddingRight: '8px'}}>
+                            <p style={{paddingRight: '18px'}}>
                                 Số ngày thực tập: {getBusinessDay(new Date(data.startDate), new Date(data.endDate))}
                             </p>
                         </div>
@@ -255,7 +285,7 @@ export function MarkInternModal({userID, updateFunction}) {
                     {/*Modal body*/}
                     <div key={5} className={"table-score"}>
                         <div className={"flex flex-row justify-content-between"}>
-                            <p className={"l"}>Môn học</p>
+                            <p className={"w110 l"}>Môn học</p>
                             <p id={"theory"}>Lý thuyết</p>
                             <p>Thực hành</p>
                             <p>Thái độ</p>
@@ -264,7 +294,25 @@ export function MarkInternModal({userID, updateFunction}) {
                         {data.subjects.map((subject, index) => {
                             return (
                                 <div className={"flex flex-row justify-content-between"}>
-                                    <p className={"table-score__item tl"}>{subject.name}</p>
+
+                                    <div className={"table-score__item tl w110"}>
+                                        {subject.name}
+                                        <Tippy
+                                            offset={[0, 25]}
+                                            animation={false}
+                                            trigger={'click'}
+                                            render={() => (
+                                                <div
+                                                    className="comment-box"
+                                                    tabIndex="-1">
+                                                    {subject.name}
+                                                </div>
+                                            )}
+                                            placement={'left'}>
+                                            <AddComment className={"add_icon"} />
+                                        </Tippy>
+                                    </div>
+
                                     <div className={"table-score__item"}>
                                         {readOnly ?
                                             subject.theoryScore
@@ -367,6 +415,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                         }}>
                                         <option value={'training'}>Đang thực tập</option>
                                         <option value={'trained'}>Đã hoàn thành</option>
+                                        <option value={'stop_training'}>Dừng thực tập</option>
                                     </NativeSelect>
                                 </FormControl>
                             }
@@ -382,6 +431,26 @@ export function MarkInternModal({userID, updateFunction}) {
                             LƯU
                         </button>
                     }
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openAlert}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Bạn có chắc là muốn dừng thực tập intern này ?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Dừng thực tập đồng nghĩa với việc kết quả thực tập của người này sẽ là trượt
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {setOpenAlert(false)}}>Quay lại</Button>
+                    <Button className={"save-btn"} onClick={handleClickAgreeAlert} autoFocus>
+                        Đồng ý
+                    </Button>
                 </DialogActions>
             </Dialog>
         </>

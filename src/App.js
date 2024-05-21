@@ -25,7 +25,6 @@ function App() {
                 <Route path={"/login"} element={
                     <AuthContext> <Login /></AuthContext>
                 } />
-
                 <Route path={"/*"} element={
                     <AuthContext></AuthContext>
                 } />
@@ -37,9 +36,10 @@ function App() {
                 } />
                 <Route path={"/training/stats"} element={
                     <AuthContext><TrainingStats /></AuthContext>
-                }>
-
-                </Route>
+                } />
+                <Route path={"/dev/score"} element={
+                    <AuthContext><MarkInternModal  /></AuthContext>
+                } />
             </Routes>
         </>
     )
