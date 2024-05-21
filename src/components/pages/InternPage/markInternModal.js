@@ -19,11 +19,13 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/svg-arrow.css'
 import DialogContentText from "@mui/material/DialogContentText";
 import {SubjectCommentBox} from "./subjectCommentBox";
+import StyledEngineProvider from "@mui/material/StyledEngineProvider"
 
 export function MarkInternModal({userID, updateFunction}) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(false)
     const {enqueueSnackbar} = useSnackbar();
+
     const [readOnly, setReadOnly] = useState(false)
     const finalScore = useRef()
     const passed = useRef({validScore: false, scorePassed: false})
@@ -46,14 +48,16 @@ export function MarkInternModal({userID, updateFunction}) {
         scoreInTeam: null,
 
         subjects: [
-            {name: "Git", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Cơ sở dữ liệu", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Scrum", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "React JS", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Spring boot", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Java", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "HTML", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            {name: "Git", theoryScore: '', practiceScore: '', attitudeScore: '', comment: {id:1, value: 'Comment 1'}},
+            {name: "Cơ sở dữ liệu", theoryScore: '', practiceScore: '', attitudeScore: '', comment: {id:2, value: 'Comment 2'}},
+            {name: "Scrum", theoryScore: '', practiceScore: '', attitudeScore: '', comment: {id:3, value: 'Comment 3'}},
+            {name: "React JS", theoryScore: '', practiceScore: '', attitudeScore: '', comment: {id:4, value: 'Comment 4'}},
+            {name: "Spring boot", theoryScore: '', practiceScore: '', attitudeScore: '', comment: {id:5, value: 'Comment 5'}},
+            {name: "Java", theoryScore: '', practiceScore: '', attitudeScore: '', comment: {id:6, value: 'Comment 6'}},
+            {name: "HTML", theoryScore: '', practiceScore: '', attitudeScore: '', comment: {id:7, value: 'Comment 7'}},
         ],
+
+
     })
 
     // Thay đổi trạng thái thực tập
@@ -117,10 +121,15 @@ export function MarkInternModal({userID, updateFunction}) {
             });
         }
     }
-
+    // Khi thay đổi Comment
+    function handleCommentChange(e, index) {
+        const updatedSubjects = [...data.subjects];
+        updatedSubjects[index].comment = {...updatedSubjects[index].comment, value: e.target.value};
+        setData({...data, subjects: updatedSubjects});
+    }
     finalScore.current = []
-    passed.current = {validScore: true, scorePassed: true}
 
+    passed.current = {validScore: true, scorePassed: true}
     function findTotal(theory, practice, attitude) {
         theory = parseFloat(theory);
         practice = parseFloat(practice);
@@ -139,7 +148,9 @@ export function MarkInternModal({userID, updateFunction}) {
         }
         if (result > 7) {
             return (<div className={"result"}> {result}
-                <div className={"result-icon success"}><FontAwesomeIcon icon={faCheck}/></div>
+                <div className={"result-icon success"}>
+                    <FontAwesomeIcon icon={faCheck}/>
+                </div>
             </div>)
         } else {
             passed.current = {...passed.current, scorePassed: false}
@@ -173,10 +184,20 @@ export function MarkInternModal({userID, updateFunction}) {
             setFinalResultPass(null)
         }
     }
+    // Kiểm tra nếu comment là null thì thêm value rỗng vào
+
+    const checkCommentSubject = (data) => {
+        for (const subj of data.subjects) {
+            if (subj.comment === null) {
+                subj.comment = { value: null };
+            }
+        }
+    }
 
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         axios.get(`http://localhost:8080/api/interns/?id=${userID}`).then(res => {
+            checkCommentSubject(res.data)
             setData(res.data)
         })
     }, [open]);
@@ -192,7 +213,6 @@ export function MarkInternModal({userID, updateFunction}) {
                 .toFixed(2)
             , data.scoreInTeam, false)
     }, [data]);
-
     // Handle submit
     const handleSubmit = () => {
 
@@ -205,14 +225,14 @@ export function MarkInternModal({userID, updateFunction}) {
         }
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         axios.put('http://localhost:8080/api/interns', sendData).then(res => {
-            enqueueSnackbar("Lưu thành công ! :D", {
+            enqueueSnackbar("Lưu thành công !", {
                 variant: "success",
                 anchorOrigin: {horizontal: "right", vertical: "top"}
             })
             updateFunction()
             setOpen(false)
         }).catch(e => {
-            enqueueSnackbar("Không thể lưu vui lòng thử lại sau! :((", {
+            enqueueSnackbar("Không thể lưu vui lòng thử lại sau! ", {
                 variant: "error",
                 anchorOrigin: {horizontal: "right", vertical: "top"},
                 autoHideDuration: 3000
@@ -247,12 +267,13 @@ export function MarkInternModal({userID, updateFunction}) {
         )
     }
     // Handle click alert
+
+
     const handleClickAgreeAlert = () => {
         const currentDate = new Date().toISOString().split('T')[0];
         setData({...data, trainingState: 'stop_training', endDate: currentDate});
         setOpenAlert(false)
     }
-
 
     return (
         <>
@@ -268,10 +289,16 @@ export function MarkInternModal({userID, updateFunction}) {
 
                 setReadOnly(false)
             }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
-            <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open} >
+            <Dialog
+                sx={{
+                    '& .MuiPaper-root': {
+                    overflow: 'visible',
+                }
+                }}
+                fullWidth maxWidth={'sm'} onClose={handleClose} open={open} >
                 <DialogTitle key={2} sx={{padding: "16px 24px 8px 29px", fontSize: '1.5rem'}}>Kết quả học tập</DialogTitle>
 
-                <DialogContent>
+                <DialogContent style={{overflow: "visible"}}>
                     <div key={3} className={"flex-col"}>
                         <h6>Họ tên: {data.name}</h6>
                         <div className={"flex-row"}>
@@ -292,20 +319,25 @@ export function MarkInternModal({userID, updateFunction}) {
                             <p>Tổng</p>
                         </div>
                         {data.subjects.map((subject, index) => {
+
                             return (
                                 <div className={"flex flex-row justify-content-between"}>
-
                                     <div className={"table-score__item tl w110"}>
                                         {subject.name}
                                         <Tippy
+                                            interactive
                                             offset={[0, 25]}
                                             animation={false}
                                             trigger={'click'}
+                                            content={'test'}
                                             render={() => (
                                                 <div
-                                                    className="comment-box"
-                                                    tabIndex="-1">
-                                                    {subject.name}
+                                                    className="comment-box">
+                                                    <h5>Ghi chú môn {subject.name}</h5>
+                                                    <textarea
+                                                        onChange={(e) => {handleCommentChange(e, index)}}
+                                                        value={subject.comment.value}
+                                                    />
                                                 </div>
                                             )}
                                             placement={'left'}>
@@ -442,15 +474,17 @@ export function MarkInternModal({userID, updateFunction}) {
                     {"Bạn có chắc là muốn dừng thực tập intern này ?"}
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
+                    <DialogContentText style={{paddingRight: '26px', textAlign: 'justify'}} id="alert-dialog-description">
                         Dừng thực tập đồng nghĩa với việc kết quả thực tập của người này sẽ là trượt
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {setOpenAlert(false)}}>Quay lại</Button>
-                    <Button className={"save-btn"} onClick={handleClickAgreeAlert} autoFocus>
-                        Đồng ý
-                    </Button>
+                    <StyledEngineProvider injectFirst={true}>
+                        <Button className={"save-btn"} onClick={handleClickAgreeAlert} autoFocus>
+                            Đồng ý
+                        </Button>
+                    </StyledEngineProvider>
                 </DialogActions>
             </Dialog>
         </>
