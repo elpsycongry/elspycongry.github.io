@@ -78,7 +78,8 @@ export default function Training() {
     const listTestSelect = [
          
         { id: 1, text: "Đang thực tập", name: "training" },
-        { id: 2, text: "Đã kết thúc", name: "trained" }
+        { id: 2, text: "Đã kết thúc", name: "trained" },
+        { id: 3, text: "Dừng thực tập", name: "stop_training"}
     ]
 
     const handleChangeSearch = (event) => {
