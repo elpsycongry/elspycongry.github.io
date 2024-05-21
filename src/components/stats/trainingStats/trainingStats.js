@@ -160,7 +160,7 @@ export default function TrainingStats() {
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Thống kê {'>'} Kết quả đào tạo</p>
                 </Box>
 
-                <div style={{ height: '900px', borderRadius: '10px' }} className="content-recruiment">
+                <div style={{ minHeight: '900px', borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
                             <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-outline-warning active">Chỉ số</button>
@@ -249,7 +249,7 @@ export default function TrainingStats() {
                                             })}
                                         </select>
                                     </div>
-                                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                                         <TrainingStatsChart />
                                     </div>
                                 </div>
@@ -275,116 +275,118 @@ export default function TrainingStats() {
                                         <button type="button" value="3" onClick={handleClick} className="btn btn-outline-warning">Theo năm</button>
                                     }
                                 </div>
-                                <TableContainer component={Paper}>
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell sx={{ fontWeight: '700', minHeight: '50px', fontSize: '16px', width: '600px' }} align="left">
-                                                    Chi tiêu
-                                                    <IconButton
-                                                        aria-label="previous"
-                                                        size="small"
-                                                        sx={{
-                                                            width: '17px',
-                                                            height: '17px',
-                                                            backgroundColor: '#00000099',
-                                                            borderRadius: '50%',
-                                                            marginLeft: 5,
-                                                            marginRight: 1,
-                                                            marginBottom: '3px',
-                                                            '&:hover': {
-                                                                backgroundColor: 'darkgray',
-                                                            },
-                                                        }}
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
+                                    <TableContainer component={Paper} sx={{ width: '98%' }}>
+                                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell sx={{ fontWeight: '700', minHeight: '50px', fontSize: '16px', width: '600px' }} align="left">
+                                                        Chi tiêu
+                                                        <IconButton
+                                                            aria-label="previous"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '17px',
+                                                                height: '17px',
+                                                                backgroundColor: '#00000099',
+                                                                borderRadius: '50%',
+                                                                marginLeft: 5,
+                                                                marginRight: 1,
+                                                                marginBottom: '3px',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'darkgray',
+                                                                },
+                                                            }}
+                                                        >
+                                                            <ArrowBackIosNewIcon fontSize="inherit" sx={{ color: 'white', width: '15px', height: '15px' }} />
+                                                        </IconButton>
+                                                        <Typography sx={{ fontWeight: '700', display: 'inline', marginRight: '30px' }}>Trước</Typography>
+                                                        <Typography sx={{ fontWeight: '700', display: 'inline' }}>Sau</Typography>
+                                                        <IconButton
+                                                            aria-label="previous"
+                                                            size="small"
+                                                            sx={{
+                                                                width: '17px',
+                                                                height: '17px',
+                                                                backgroundColor: '#00000099',
+                                                                borderRadius: '50%',
+                                                                marginLeft: 1,
+                                                                marginRight: 1,
+                                                                marginBottom: '3px',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'darkgray',
+                                                                },
+                                                            }}
+                                                        >
+                                                            <ArrowForwardIosIcon fontSize="inherit" sx={{ color: 'white', width: '15px', height: '15px' }} />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                    <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Năm 2021</TableCell>
+                                                    <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Tăng trưởng</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {rows.map((row) => (
+                                                    <TableRow
+                                                        key={row.name}
+                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                     >
-                                                        <ArrowBackIosNewIcon fontSize="inherit" sx={{ color: 'white', width: '15px', height: '15px' }} />
-                                                    </IconButton>
-                                                    <Typography sx={{ fontWeight: '700', display: 'inline', marginRight: '30px' }}>Trước</Typography>
-                                                    <Typography sx={{ fontWeight: '700', display: 'inline' }}>Sau</Typography>
-                                                    <IconButton
-                                                        aria-label="previous"
-                                                        size="small"
-                                                        sx={{
-                                                            width: '17px',
-                                                            height: '17px',
-                                                            backgroundColor: '#00000099',
-                                                            borderRadius: '50%',
-                                                            marginLeft: 1,
-                                                            marginRight: 1,
-                                                            marginBottom: '3px',
-                                                            '&:hover': {
-                                                                backgroundColor: 'darkgray',
-                                                            },
-                                                        }}
-                                                    >
-                                                        <ArrowForwardIosIcon fontSize="inherit" sx={{ color: 'white', width: '15px', height: '15px' }} />
-                                                    </IconButton>
-                                                </TableCell>
-                                                <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Năm 2021</TableCell>
-                                                <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Tăng trưởng</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {rows.map((row) => (
+                                                        <TableCell align="left" component="th" scope="row">
+                                                            {row.name}
+                                                        </TableCell>
+                                                        <TableCell align="center">{row.quantity}</TableCell>
+                                                        <TableCell align="center">
+                                                            {/* {row.growth / maxGrowth} */}
+                                                            <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                                <Box
+                                                                    sx={{
+                                                                        width: 10,
+                                                                        height: `${(row.growth / maxGrowth) * 40}px`,
+                                                                        bgcolor: 'primary.main',
+                                                                    }}
+                                                                />
+                                                            </Box>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
                                                 <TableRow
-                                                    key={row.name}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
                                                     <TableCell align="left" component="th" scope="row">
-                                                        {row.name}
+                                                        Điểm trung bình môn
                                                     </TableCell>
-                                                    <TableCell align="center">{row.quantity}</TableCell>
-                                                    <TableCell align="center">
-                                                        {/* {row.growth / maxGrowth} */}
-                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
-                                                            <Box
-                                                                sx={{
-                                                                    width: 10,
-                                                                    height: `${(row.growth / maxGrowth) * 40}px`,
-                                                                    bgcolor: 'primary.main',
-                                                                }}
-                                                            />
-                                                        </Box>
-                                                    </TableCell>
+                                                    <TableCell align="center"></TableCell>
+                                                    <TableCell align="center"></TableCell>
                                                 </TableRow>
-                                            ))}
-                                            <TableRow
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell align="left" component="th" scope="row">
-                                                    Điểm trung bình môn
-                                                </TableCell>
-                                                <TableCell align="center"></TableCell>
-                                                <TableCell align="center"></TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                        <TableBody>
-                                            {subjects.map((subject) => (
-                                                <TableRow
-                                                    key={subject.name}
-                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                >
-                                                    <TableCell sx={{ fontWeight: '700' }} align="center" component="th" scope="row">
-                                                        {subject.name}
-                                                    </TableCell>
-                                                    <TableCell align="center">{subject.points}</TableCell>
-                                                    <TableCell align="center">
-                                                        {/* {subject.growth} */}
-                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
-                                                            <Box
-                                                                sx={{
-                                                                    width: 10,
-                                                                    height: `${(subject.growth / maxGrowthOfSubjects) * 40}px`,
-                                                                    bgcolor: 'primary.main',
-                                                                }}
-                                                            />
-                                                        </Box>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
+                                            </TableBody>
+                                            <TableBody>
+                                                {subjects.map((subject) => (
+                                                    <TableRow
+                                                        key={subject.name}
+                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                    >
+                                                        <TableCell sx={{ fontWeight: '700' }} align="center" component="th" scope="row">
+                                                            {subject.name}
+                                                        </TableCell>
+                                                        <TableCell align="center">{subject.points}</TableCell>
+                                                        <TableCell align="center">
+                                                            {/* {subject.growth} */}
+                                                            <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                                <Box
+                                                                    sx={{
+                                                                        width: 10,
+                                                                        height: `${(subject.growth / maxGrowthOfSubjects) * 40}px`,
+                                                                        bgcolor: 'primary.main',
+                                                                    }}
+                                                                />
+                                                            </Box>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </div>
                             </div>
                         )}
                     </div>
