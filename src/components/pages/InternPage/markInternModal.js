@@ -1,23 +1,24 @@
-import {Dialog, DialogContent, DialogTitle, FormControl, NativeSelect} from "@mui/material";
-import {useEffect, useRef, useState} from "react";
+import { Dialog, DialogContent, DialogTitle, FormControl, NativeSelect } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import "./internpage.scss"
 import DialogActions from "@mui/material/DialogActions";
-import axios, {options} from "axios";
-import {useParams} from "react-router-dom";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCheck, faX} from "@fortawesome/free-solid-svg-icons";
+import axios, { options } from "axios";
+import { useParams } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
 import _ from 'lodash'
-import {sortedUniq} from "lodash/array";
+import { sortedUniq } from "lodash/array";
 import target from "lodash/seq";
-import {useSnackbar} from "notistack";
+import { useSnackbar } from "notistack";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import CreateIcon from "@mui/icons-material/Create";
+import '../../training/training.css'
 
-export function MarkInternModal({userID, updateFunction}) {
+export function MarkInternModal({ userID, updateFunction }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(false)
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const [readOnly, setReadOnly] = useState(false)
     const finalScore = useRef()
     const passed = useRef()
@@ -42,21 +43,21 @@ export function MarkInternModal({userID, updateFunction}) {
         scoreInTeam: null,
 
         subjects: [
-            {name: "Môn 1", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 2", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 3", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 4", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 5", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 6", theoryScore: '', practiceScore: '', attitudeScore: ''},
-            {name: "Môn 7", theoryScore: '', practiceScore: '', attitudeScore: ''},
+            { name: "Môn 1", theoryScore: '', practiceScore: '', attitudeScore: '' },
+            { name: "Môn 2", theoryScore: '', practiceScore: '', attitudeScore: '' },
+            { name: "Môn 3", theoryScore: '', practiceScore: '', attitudeScore: '' },
+            { name: "Môn 4", theoryScore: '', practiceScore: '', attitudeScore: '' },
+            { name: "Môn 5", theoryScore: '', practiceScore: '', attitudeScore: '' },
+            { name: "Môn 6", theoryScore: '', practiceScore: '', attitudeScore: '' },
+            { name: "Môn 7", theoryScore: '', practiceScore: '', attitudeScore: '' },
         ],
     })
     const handleTrainingStateChange = (event) => {
         if (event.target.value === 'trained') {
             const currentDate = new Date().toISOString().split('T')[0];
-            setData({...data, trainingState: event.target.value, endDate: currentDate});
+            setData({ ...data, trainingState: event.target.value, endDate: currentDate });
         } else {
-            setData({...data, trainingState: event.target.value});
+            setData({ ...data, trainingState: event.target.value });
         }
     };
     const inputRegex = /^(10(\.0+)?|[0-9](\.[0-9])?|)$/;
@@ -121,11 +122,11 @@ export function MarkInternModal({userID, updateFunction}) {
 
         if (result > 7) {
             return (<div className={"result"}> {result}
-                <div className={"result-icon success"}><FontAwesomeIcon icon={faCheck}/></div>
+                <div className={"result-icon success"}><FontAwesomeIcon icon={faCheck} /></div>
             </div>)
         } else {
             return (<div className={"result"}> {result}
-                <div className={"result-icon fail"}><FontAwesomeIcon icon={faX}/></div>
+                <div className={"result-icon fail"}><FontAwesomeIcon icon={faX} /></div>
             </div>)
         }
     }
@@ -177,23 +178,23 @@ export function MarkInternModal({userID, updateFunction}) {
         let sendData;
         if (finalResultPass !== null) {
             const currentDate = new Date().toISOString().split('T')[0];
-            sendData = {...data, endDate: currentDate, isPass: finalResultPass};
+            sendData = { ...data, endDate: currentDate, isPass: finalResultPass };
         } else {
-            sendData = {...data}
+            sendData = { ...data }
         }
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
         axios.put('http://localhost:8080/api/interns', sendData).then(res => {
             enqueueSnackbar("Lưu thành công ! :D", {
                 variant: "success",
-                anchorOrigin: {horizontal: "right", vertical: "top"}
+                anchorOrigin: { horizontal: "right", vertical: "top" }
             })
             updateFunction()
             setOpen(false)
-            ;
+                ;
         }).catch(e => {
             enqueueSnackbar("Không thể lưu vui lòng thử lại sau! :((", {
                 variant: "error",
-                anchorOrigin: {horizontal: "right", vertical: "top"},
+                anchorOrigin: { horizontal: "right", vertical: "top" },
                 autoHideDuration: 3000
             });
         })
@@ -207,18 +208,18 @@ export function MarkInternModal({userID, updateFunction}) {
 
         for (var currentDate = new Date(dateFrom); currentDate <= dateTo; currentDate.setDate(currentDate.getDate() + 1)) {
             if (
-                currentDate.toLocaleDateString('en-US', {weekday: "short"}) !== 'Sun'
+                currentDate.toLocaleDateString('en-US', { weekday: "short" }) !== 'Sun'
                 &&
-                currentDate.toLocaleDateString('en-US', {weekday: "short"}) !== 'Sat'
+                currentDate.toLocaleDateString('en-US', { weekday: "short" }) !== 'Sat'
             ) {
                 day++;
             }
         }
         return (
             day >= 50 ?
-                <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
+                <span style={{ fontWeight: 600, color: "red", fontSize: '1.1rem' }}>{day}</span>
                 :
-                <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>
+                <span style={{ fontWeight: 600, fontSize: '1.1rem' }}>{day}</span>
         )
     }
 
@@ -230,21 +231,21 @@ export function MarkInternModal({userID, updateFunction}) {
                     setOpen(true);
                     setReadOnly(true)
                 }}
-                style={{width: '24px', height: '24px', marginRight: '5px'}}
-                className="color-blue white-div font-size-large hov"/>
+                style={{ width: '27px', height: '27px', marginRight: '7px' }}
+                className="color-blue white-div font-size-large hov" />
             <CreateIcon onClick={() => {
                 setOpen(true);
                 setReadOnly(false)
-            }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
+            }} style={{ width: '24px', height: '24px' }} className="hov color-orange pencil-btn font-size-medium" />
             <Dialog fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
-                <DialogTitle key={2} sx={{padding: "16px 24px 8px 24px  "}}>Kết quả học tập</DialogTitle>
+                <DialogTitle key={2} sx={{ padding: "16px 24px 8px 24px  " }}>Kết quả học tập</DialogTitle>
 
                 <DialogContent>
                     <div key={3} className={"flex-col"}>
                         <h6>Họ tên: {data.name}</h6>
                         <div className={"flex-row"}>
                             <p>Ngày bắt đầu: {data.startDate}</p>
-                            <p style={{paddingRight: '8px'}}>
+                            <p style={{ paddingRight: '8px' }}>
                                 Số ngày thực tập: {getBusinessDay(new Date(data.startDate), new Date(data.endDate))}
                             </p>
                         </div>
@@ -274,7 +275,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                                 onChange={(e) => {
                                                     handleTheoryScoreChange(e, index)
                                                 }}
-                                                className={"input-score "}/>)}
+                                                className={"input-score "} />)}
                                     </div>
                                     <div className={"table-score__item"}>
                                         {readOnly ?
@@ -288,7 +289,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                                 onChange={(e) => {
                                                     handlePracticeScoreChange(e, index)
                                                 }}
-                                                className={readOnly ? "input-score" : "input-score"}/>
+                                                className={readOnly ? "input-score" : "input-score"} />
                                         }
                                     </div>
                                     <div className={"table-score__item"}>
@@ -300,10 +301,10 @@ export function MarkInternModal({userID, updateFunction}) {
                                                 type={"number"}
                                                 value={subject.attitudeScore}
                                                 onChange={(e => handleAttitudeScoreChange(e, index))}
-                                                className={readOnly ? "input-score" : "input-score"}/>
+                                                className={readOnly ? "input-score" : "input-score"} />
                                         }
                                     </div>
-                                    <div className={"table-score__item"} style={{position: "relative"}}>{
+                                    <div className={"table-score__item"} style={{ position: "relative" }}>{
                                         findTotal(
                                             subject.theoryScore,
                                             subject.practiceScore,
@@ -323,8 +324,8 @@ export function MarkInternModal({userID, updateFunction}) {
                             <p className={"tb "}>Kết quả thực tập</p>
                             <p className={"table-score__item"}>
                                 {finalResultPass === null ? "NA" : (finalResultPass ?
-                                    <span style={{color: "green"}}>Pass</span> :
-                                    <span style={{color: "red"}}>Fail</span>)}
+                                    <span style={{ color: "green" }}>Pass</span> :
+                                    <span style={{ color: "red" }}>Fail</span>)}
                             </p>
                         </div>
                         <div className={"flex flex-row justify-content-between"}>
@@ -339,7 +340,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                         }}
                                         type={"number"}
                                         value={data.scoreInTeam}
-                                        className={"input-score"}/>
+                                        className={"input-score"} />
                                 }
                             </div>
                         </div>
@@ -354,7 +355,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                     <div>Đang thực tập</div> :
                                     <div>Đẫ kết thúc</div>
                                 :
-                                <FormControl sx={{width: '30%'}}>
+                                <FormControl sx={{ width: '30%' }}>
                                     <NativeSelect
                                         disabled={readOnly}
                                         value={data.trainingState}
@@ -371,7 +372,7 @@ export function MarkInternModal({userID, updateFunction}) {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions sx={{display: "flex"}}>
+                <DialogActions sx={{ display: "flex" }}>
                     {!readOnly
                         &&
                         <button disabled={inValidSave} onClick={() => {

@@ -243,17 +243,21 @@ export default function Users() {
                             <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="user-id">{index + 1 + pagination.page*pagination.size}</td>
+                                        <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>{item.phone}</td>
                                         <td>
                                             {item.roles && item.roles.length > 0 ? (
-                                                item.roles.map((role, index) => (
-                                                    <label key={role.id} style={{ paddingRight: '5px' }}>
-                                                        {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
-                                                    </label>
-                                                ))
+                                                item.roles.length === 4 ? (
+                                                    'Tất cả quyền quản lý'
+                                                ) : (
+                                                    item.roles.map((role, index) => (
+                                                        <label key={role.id} style={{ paddingRight: '5px' }}>
+                                                            {role.display_name}{index !== item.roles.length - 1 ? ', ' : ''}
+                                                        </label>
+                                                    ))
+                                                )
                                             ) : (
                                                 'Hiện tại chưa có vai trò'
                                             )}
@@ -276,7 +280,7 @@ export default function Users() {
                         </Stack> */}
                     </div>
 
-                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0  }}>
+                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0 }}>
                         <Pagination
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
@@ -289,7 +293,7 @@ export default function Users() {
                 </div>
             </Box>
             {/* <Footer /> */}
-                {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div> */}
             {/* </Box > */}

@@ -28,7 +28,7 @@ import { Icon } from '@iconify/react';
 // import {faEnvelop} from ''
 import './training.css';
 import axios from "axios";
-import {MarkInternModal} from "../pages/InternPage/markInternModal";
+import { MarkInternModal } from "../pages/InternPage/markInternModal";
 
 function Copyright(props) {
     return (
@@ -76,7 +76,7 @@ export default function Training() {
 
     // Dữ liệu 
     const listTestSelect = [
-         
+
         { id: 1, text: "Đang thực tập", name: "training" },
         { id: 2, text: "Đã kết thúc", name: "trained" }
     ]
@@ -85,7 +85,7 @@ export default function Training() {
         setSearchTerm(event.target.value);
         if (selectedTrainingState != "") {
             setPagination.page = 0;
-        } 
+        }
     };
 
     const handleTrainingStateChange = (event) => {
@@ -121,22 +121,22 @@ export default function Training() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             try {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/api/interns/search?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}`).then((res) => {
-                setListIntern(res.data.content);
-                console.log(res.data.content);
-                setPagination({
-                    ...newPagination,
-                    totalElements: res.data.totalElements,
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                axios.get(`http://localhost:8080/api/interns/search?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}`).then((res) => {
+                    setListIntern(res.data.content);
+                    console.log(res.data.content);
+                    setPagination({
+                        ...newPagination,
+                        totalElements: res.data.totalElements,
+                    });
                 });
-            });
-        } catch (error) {
-            console.log(error);
-        }
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
-    
+
 
     return (
         <>
@@ -177,10 +177,10 @@ export default function Training() {
                     <div className="d-flex justify-content-between">
                         <div className="d-flex pl-15">
                             <div className="search-input position-relative ">
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     className="w-px position-relative input-intern"
-                                    placeholder="Tìm kiếm theo tên..." 
+                                    placeholder="Tìm kiếm theo tên..."
                                     value={searchTerm}
                                     onChange={handleChangeSearch}
                                     onKeyDown={(e) => {
@@ -188,16 +188,16 @@ export default function Training() {
                                             fetchListInternSelect(); // Gọi hàm ngay lập tức
                                         }
                                     }}
-                                    />
+                                />
                                 <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
                             </div>
                             <FormControl className="h-px" sx={{ minWidth: '300px' }}>
                                 <InputLabel className="top-left" id="demo-simple-small-label">Trạng thái thực tập...</InputLabel>
-                                <Select 
+                                <Select
                                     sx={{
                                         height: '30px',
-                                        paddingTop: '0px', 
-                                        paddingBottom: '0px', 
+                                        paddingTop: '0px',
+                                        paddingBottom: '0px',
                                         backgroundColor: 'white'
                                     }}
                                     labelId="demo-simple-small-label"
@@ -207,7 +207,7 @@ export default function Training() {
                                     value={selectedTrainingState}
                                     onChange={handleTrainingStateChange}
                                 >
-                                
+
                                     <MenuItem value={""} >Tất cả</MenuItem>
                                     {listTestSelect.map(item => (
                                         <MenuItem value={item.text} key={item.id}>{item.text}</MenuItem>
@@ -219,7 +219,7 @@ export default function Training() {
                 </div>
                 <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
-                        <table className="table_training" style={{ display: 'flex' , alignItems: 'center'}}>
+                        <table className="table_training" style={{ display: 'flex', alignItems: 'center' }}>
                             <div className="no-scrolling">
                                 <tr className="header-tr grey-text">
                                     <th className="training-id">STT</th>
@@ -229,7 +229,7 @@ export default function Training() {
                                 </tr>
                                 {listInter.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="training-id">{index + 1 + pagination.page*pagination.size}</td>
+                                        <td className="training-id">{index + 1 + pagination.page * pagination.size}</td>
                                         <td>{item.userName}</td>
                                         <td>{item.startDate}</td>
                                         <td>{item.numberDate}</td>
@@ -261,7 +261,7 @@ export default function Training() {
                                         <td>{item.finalScore}</td>
                                         <td>{item.scoreInTeam}</td>
                                         <td>
-                                           <MarkInternModal updateFunction={update} userID={item.id} />
+                                            <MarkInternModal updateFunction={update} userID={item.id} />
                                         </td>
                                     </tr>
                                 ))}
@@ -269,16 +269,16 @@ export default function Training() {
                         </table>
                     </div>
                     <Stack spacing={1} style={{ marginTop: '40px', alignItems: 'center' }}>
-                    <Pagination
+                        <Pagination
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
                             page={pagination.page + 1}
                             shape="rounded"
                             onChange={handlePageChange}
                         />
-                        
+
                     </Stack>
-                    
+
 
                     {/* <div className=" bottom-0 position-absolute w-100 left-0" style={{ marginBottom: '20px' }}>
                         <Pagination className="d-flex justify-content-center" />
