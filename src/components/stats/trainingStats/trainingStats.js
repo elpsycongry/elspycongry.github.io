@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Dialog, DialogContent, IconButton, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup, Dialog, DialogContent, IconButton, Link, Typography } from "@mui/material";
 import Header from "../../fragment/header/header";
 import Navbar from "../../fragment/navbar/navbar";
 import './trainingStats.css';
@@ -17,6 +17,20 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Avatar from '@mui/material/Avatar';
 import { PaddingRounded } from "@mui/icons-material";
 import axios from "axios";
+
+
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="/public">
+                Quản lý đào tạo
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
 
 export default function TrainingStats() {
     const [trainingStats, setTrainingStats] = useState([]);
@@ -144,13 +158,13 @@ export default function TrainingStats() {
         <>
             <Header></Header>
             <Navbar></Navbar>
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', height: '1000px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', height: '700px' }}>
                 <Box m={2} style={{ display: 'flex' }}>
                     <svg style={{ width: 25, height: 25, color: 'rgba(0, 0, 0, 0.60)' }} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20v-6h3v6zm6 0V9h3v11zm6 0V4h3v16z" /></svg>
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Thống kê {'>'} Kết quả đào tạo</p>
                 </Box>
 
-                <div style={{ minHeight: '900px', borderRadius: '10px' }} className="content-recruiment">
+                <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
                             <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-outline-warning active">Chỉ số</button>
@@ -380,6 +394,9 @@ export default function TrainingStats() {
                             </div>
                         )}
                     </div>
+                </div>
+                <div style={{ paddingTop: '28px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}
             </Box>

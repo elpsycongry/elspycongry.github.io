@@ -264,7 +264,8 @@ export default function Training() {
                                         <td>
                                             {item.scoreInTeam == "" || item.scoreInTeam == null ?  "NA" : item.scoreInTeam}
                                         
-                                            </td>
+                                        </td>
+
                                         <td style={{cursor: 'pointer'}}>
                                            <MarkInternModal updateFunction={update} userID={item.id} />
                                         </td>

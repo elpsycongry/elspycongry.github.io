@@ -38,7 +38,6 @@ function App() {
                 <Route path={"/training/stats"} element={
                     <AuthContext><TrainingStats /></AuthContext>
                 }>
-
                 </Route>
             </Routes>
         </>
