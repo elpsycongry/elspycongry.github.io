@@ -280,7 +280,7 @@ export default function Users() {
                         </Stack> */}
                     </div>
 
-                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0, marginTop: '2   0px' }}>
+                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0 }}>
                         <Pagination
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}
