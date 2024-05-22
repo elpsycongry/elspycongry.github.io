@@ -22,6 +22,8 @@ import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
 import Pagination from '@mui/material/Pagination';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import DialogPersonalFormCreate from "./dialogPersonalNeeds/dialogPersonalFormCreate";
 import DialogPersonalFormUpdate from "./dialogPersonalNeeds/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialogPersonalNeeds/dialogPersonalFormWatch";
@@ -179,6 +181,12 @@ export default function PersonalNeeds() {
         }
     }
 
+    async function handleFristPage() {
+        handlePagination(null, 1);
+    }
+    async function handleLastPage() {
+        handlePagination(null, totalPages);
+    }
     useEffect(() => {
         getAll(page);
     }, [page]);
@@ -186,7 +194,7 @@ export default function PersonalNeeds() {
     const handlePagination = (event, value) => {
         setCurrentPage(value);
         getAll(value - 1);
-    }
+    }   
 
     return (
         <>
@@ -295,8 +303,14 @@ export default function PersonalNeeds() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
-                        <div className=' position-absolute bottom-0  w-100 start-0' style={{ marginBottom: "20px" }}>
-                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
+                        <div className=' position-absolute bottom-0  w-100 start-0 page align-item-center'>
+                            <button className='first-button position-relative hover-btn-page btn-page'onClick={handleFristPage} disabled={currentPage === 1}>
+                                <KeyboardDoubleArrowLeftIcon className='icon-page position-absolute'/>
+                                </button>
+                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination}  className=' d-flex justify-content-center ' />
+                            <button className='first-button position-relative hover-btn-page btn-page' onClick={handleLastPage} disabled={currentPage === totalPages}>
+                                <KeyboardDoubleArrowRightIcon className='icon-page position-absolute'/>
+                                </button>
                         </div>
                     </div>
                 </div>
