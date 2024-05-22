@@ -28,7 +28,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
         validationSchema: Yup.object({
             name: Yup.string().max(30, 'Không quá 30 ký tự').required('Tên không được bỏ trống'),
             email: Yup.string().email('Email không đúng định dạng').required('Email không được bỏ trống'),
-            phone: Yup.string().matches(/^(0[3|5|7|8|9])+([0-9]{8})$/, 'Số điện thoại không hợp lệ').required('So dien thoai không được bỏ trống')
+            phone: Yup.string().matches(/^(0[3|5|7|8|9])+([0-9]{8})$/, 'Số điện thoại không hợp lệ')
         }),
         validate: async (values) => {
             const errors = {};
@@ -106,7 +106,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                 PaperProps={{ component: 'form', onSubmit: formik.handleSubmit }}
             >
                 <div className='form-update-user'>
-                    <DialogTitle><span style={{ fontWeight: '700', fontSize: '32px', paddingTop: '12px' }}>Cập nhật thông tin</span></DialogTitle>
+                    <DialogTitle style={{padding: '0'}}><span style={{ fontWeight: '700', fontSize: '32px' }} className='update-title'>Cập nhật thông tin</span></DialogTitle>
                     <DialogContent>
                         <div className='form-label-input'>
                             <div className="form-label grey-text information-user">Họ tên:
@@ -138,7 +138,6 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                         </div>
                         <div className='form-label-input'>
                             <div className="form-label grey-text information-user">Số điện thoại:
-                            <span style={{color: 'red'}}> *</span>
                             </div>
 
                             <TextField
@@ -153,7 +152,6 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <div className="form-label grey-text information-user">Vai trò:
-                            <span style={{color: 'red'}}> *</span>
                             </div>
                             <div style={{ paddingLeft: '20px' }}>
                                 <RolesCheckboxes />

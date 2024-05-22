@@ -8,6 +8,7 @@
 }
 
 .send-btn {
+    margin-top: 10px;
     width: 160px;
     height: 40px;
     text-align: left;
@@ -29,8 +30,9 @@
 }
 
 .form-update-user{
-    width: 600px;
-    padding: 33px;
+    width: 550px;
+    padding: 25px;
+    min-height: 450px;
 }
 
 .form-label-input{
@@ -41,4 +43,10 @@
 .btn-container-user{
     display: flex;
     justify-content: end;
+}
+
+.update-title{
+    padding: 0;
+    padding-left: 30px;
+    padding-top: 10px;
 }
