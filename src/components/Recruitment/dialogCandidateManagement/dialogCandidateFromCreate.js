@@ -121,81 +121,77 @@ export default function DialogCandidateFormCreate() {
 
   const formData = useFormik({
     initialValues: {
-      idUser: null,
+      id: "",
       recruitmentPlan: {
-        recruitmentRequest: {
-          id: null,
-          dateStart: "",
-          dateEnd: "",
-          name: "",
-          reason: "",
-          division: null,
-          status: "",
-        },
+        id: null,
         name: "",
-        handoverDeadline: "",
-        dateRecruitmentEnd: "",
-        status: "",
       },
-      planDetails: [
-        {
-          recruitmentPlan: null,
-          type: "",
-          numberOfPersonnelNeeded: "",
-          numberOfOutputPersonnel: "",
-        },
-      ],
+      name: "",
+      email: "",
+      phone: "",
+      linkCv: "",
+      interviewTime: "",
+      checkInterview: "",
+      comment: "",
+      note: "",
+      finalResult: "",
+      status: "",
+      scoreTest: "",
+      scoreInterview: "",
     },
     onSubmit: async (values, { setSubmitting }) => {
       // console.log(values); 
-      const personalneed = values.recruitmentPlan.recruitmentRequest.id;
-      const nameRecruitmentPlan = values.recruitmentPlan.name;
-      values.planDetails = [...tech];
-      values.idUser = 1;
-      if (values.recruitmentPlan.dateRecruitmentEnd == '') {
-        values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
+      const inputDateTime = date.$d;
+      const dateObject = new Date(inputDateTime);
+
+      // Lấy các thành phần riêng lẻ
+      const year = dateObject.getFullYear();
+      const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObject.getDate()).padStart(2, "0");
+      const hours = String(dateObject.getHours()).padStart(2, "0");
+      const minutes = String(dateObject.getMinutes()).padStart(2, "0");
+      const seconds = String(dateObject.getSeconds()).padStart(2, "0");
+
+      // Tạo chuỗi thời gian trong định dạng ISO
+      const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+      values.interviewTime = formattedDateTime;
+      values.finalResult = selectedValuePassFaild;
+      if(values.scoreInterview === ''){
+        values.scoreInterview = 1;
       }
-      if (values.recruitmentPlan.handoverDeadline == '') {
-        values.recruitmentPlan.handoverDeadline = handoverDeadline;
+      if(values.scoreTest === ''){
+        values.scoreTest = 50;
       }
-      const date = new Date(values.recruitmentPlan.handoverDeadline);
-      const dateCreate = new Date(values.recruitmentPlan.dateRecruitmentEnd);
-      // checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed);
-      // setSubmitting(false);
-      // return;
-      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)) {
-        setSubmitting(false);
-        return;
-      } else {
+      console.log(values)
         setSubmitting(true);
         try {
           await axios
-            .post("http://localhost:8080/api/plans", values)
+            .post("http://localhost:8080/api/interns", values)
             .then((res) => {
-              swal("Thêm kế hoạch tuyển dụng thành công", {
+              swal("Thêm ứng viên thành công", {
                 icon: "success",
                 buttons: false,
-                timer: 2000,
+                timer: 1000,
               }).then(() => {
-                window.location.href = "/recruitment/recruitmentPlan";
+                window.location.href = "/recruitment/candidateManagement";
 
               });
             });
         } catch (error) {
-          swal("Thêm kế hoạch tuyển dụng thất bại", {
+          swal("Thêm ứng viên thất bại", {
             icon: "error",
             buttons: false,
-            timer: 2000,
+            timer: 1000,
           });
         }
-      }
+      
     }
   });
   // Call api
-  const [recuitments, setRecuitment] = useState([]);
+  const [plans, setPlans] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-      setRecuitment(res.data);
+    axios.get("http://localhost:8080/api/plans").then((res) => {
+      setPlans(res.data);
     });
 
   }, []);
@@ -205,19 +201,14 @@ export default function DialogCandidateFormCreate() {
 
 
   // Xử lý mở form
-  const listTechnology = [
-    { id: 1, text: "PHP" },
-    { id: 2, text: "Laravel" },
-    { id: 3, text: "React" },
-    { id: 4, text: "React Native" },
-    { id: 5, text: "Agular" },
-    { id: 6, text: "Python - Django" },
-    { id: 7, text: "VueJs" },
-    { id: 8, text: "Android" },
-    { id: 9, text: "IOS" },
-    { id: 10, text: "JAVA" },
-    { id: 11, text: ".NET" }
-  ]
+  const listTestSelect = [
+    { id: 1, text: "Chưa có kết quả" },
+    { id: 2, text: "Đã có kết quả" },
+    { id: 3, text: "Đã gửi email cảm ơn" },
+    { id: 4, text: "Đã hẹn ngày thực tập" },
+    { id: 5, text: "Không nhận việc" },
+    { id: 6, text: "Đã nhận việc" },
+  ];
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
     setOpenForm(true);
@@ -415,22 +406,37 @@ export default function DialogCandidateFormCreate() {
 
 
   // const 
-  function TestMarks() {
+  function TestMarks({ scoreTest, setScoreTest }) {
+
     const [testMarks, setTestMarks] = useState(50);
+   if(scoreTest === ''){
+    scoreTest = 50;
+   }
+    useEffect(() => {
+      setTestMarks(scoreTest);
+    }, [scoreTest]);
+
     const handleClickCountPlus = () => {
       if (testMarks < 100) {
-        setTestMarks(testMarks + 1);
+        const newTestMarks = testMarks + 1;
+        setTestMarks(newTestMarks);
+        setScoreTest(newTestMarks); // Update the formData value
       }
     };
+
     const handleInputChange = (e) => {
-      if (e.target.value <= 100) {
-        const newCount = parseInt(e.target.value);
+      const newCount = parseInt(e.target.value);
+      if (!isNaN(newCount) && newCount <= 100) {
         setTestMarks(newCount);
+        setScoreTest(newCount); // Update the formData value
       }
     };
+
     const handleClickCountMinus = () => {
-      if (!testMarks <= 0) {
-        setTestMarks(testMarks - 1);
+      if (testMarks > 0) {
+        const newTestMarks = testMarks - 1;
+        setTestMarks(newTestMarks);
+        setScoreTest(newTestMarks); // Update the formData value
       }
     };
 
@@ -442,29 +448,38 @@ export default function DialogCandidateFormCreate() {
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
+          id="scoreTest"
           onChange={handleInputChange}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
     );
   }
-
-  function Interview() {
+  function Interview({ scoreInterview, setScoreInterview }) {
+    if(scoreInterview === ''){
+      scoreInterview = 1;
+    }
+    useEffect(() => {
+      setInterview(scoreInterview);
+    }, [scoreInterview]);
     const [interview, setInterview] = useState(1);
     const handleClickCountPlus = () => {
       if (interview < 10) {
         setInterview(interview + 1);
+        setScoreInterview(interview + 1);
       }
     };
     const handleInputChange = (e) => {
       if (e.target.value <= 10) {
         const newCount = parseInt(e.target.value);
         setInterview(newCount);
+        setScoreInterview(newCount);
       }
     };
     const handleClickCountMinus = () => {
       if (!interview <= 0) {
         setInterview(interview - 1);
+        setScoreInterview(interview - 1);
       }
     };
 
@@ -476,6 +491,7 @@ export default function DialogCandidateFormCreate() {
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
+          id="scoreInterview"
           onChange={handleInputChange}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
@@ -534,10 +550,13 @@ export default function DialogCandidateFormCreate() {
                 Họ và tên ứng viên <span className="color-red">*</span>
               </label>
               <input
-                maxLength={60}
-                type="text"
-                placeholder="Nhập họ và tên ứng viên..."
-                className='form-control grey-text'
+                 maxLength={60}
+                 onChange={formData.handleChange}
+                 name="name"
+                 id="name"
+                 type="text"
+                 placeholder="Nhập họ và tên ứng viên..."
+                 className="form-control grey-text"
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -554,8 +573,11 @@ export default function DialogCandidateFormCreate() {
               <input
                 maxLength={60}
                 type="text"
+                name="email"
+                id="email"
+                onChange={formData.handleChange}
                 placeholder="Nhập email ứng viên..."
-                className='form-control grey-text'
+                className="form-control grey-text"
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -570,10 +592,13 @@ export default function DialogCandidateFormCreate() {
                 Số điện thoại <span className="color-red">*</span>
               </label>
               <input
-                maxLength={60}
-                type="text"
-                placeholder="Nhập số điện thoại..."
-                className='form-control grey-text'
+               maxLength={60}
+               type="text"
+               name="phone"
+               id="phone"
+               onChange={formData.handleChange}
+               placeholder="Nhập số điện thoại..."
+               className="form-control grey-text"
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -588,10 +613,12 @@ export default function DialogCandidateFormCreate() {
                 Link CV
               </label>
               <input
-                maxLength={60}
-                type="text"
-                placeholder="Link CV..."
-                className='form-control grey-text'
+              maxLength={60}
+              type="text"
+              id="linkCv"
+              name="linkCv"
+              onChange={formData.handleChange}
+              className="form-control grey-text"
               />
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -635,11 +662,11 @@ export default function DialogCandidateFormCreate() {
                 className="form-select grey-text"
                 aria-label="Default select example"
                 onChange={formData.handleChange}
-                name="recruitmentPlan.recruitmentRequest.id"
-                id="recruitmentPlan.recruitmentRequest.id"
+                name="recruitmentPlan.id"
+                id="recruitmentPlan.id"
               >
-                <option value="default">Chọn nhu cầu nhân sự</option>
-                {recuitments.filter(item => item.status == "Đã gửi").map((item) => (
+                <option value="default">Chọn kế hoạch tuyển dụng</option>
+                {plans.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
@@ -665,14 +692,14 @@ export default function DialogCandidateFormCreate() {
                   </label>
                   <select
                     className="form-select grey-text"
-                    style={{ width: '170px' }}
+                    style={{ width: "170px" }}
                     aria-label="Default select example"
                     onChange={formData.handleChange}
-                    name="recruitmentPlan.recruitmentRequest.id"
-                    id="recruitmentPlan.recruitmentRequest.id"
+                    name="checkInterview"
+                    id="checkInterview"
                   >
-                    <option value="default">Có</option>
-                    <option value="default">Không</option>
+                    <option value="true">Có</option>
+                    <option value="false">Không</option>
                   </select>
                 </div>
                 {/*  */}
@@ -680,13 +707,23 @@ export default function DialogCandidateFormCreate() {
                   <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                     Điểm kiểm tra (%)
                   </label>
-                  <TestMarks />
+                  <TestMarks
+                    scoreTest={formData.values.scoreTest}
+                    setScoreTest={(value) =>
+                      formData.setFieldValue("scoreTest", value)
+                    }
+                  />
                 </div>
                 <div className="col-md-4 text-center mt-0 mb-2">
                   <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                     Điểm phỏng vấn trực tiếp
                   </label>
-                  <Interview />
+                  <Interview
+                    scoreInterview={formData.values.scoreInterview}
+                    setScoreInterview={(value) =>
+                      formData.setFieldValue("scoreInterview", value)
+                    }
+                  />
                 </div>
               </div>
               {/*  */}
@@ -699,6 +736,8 @@ export default function DialogCandidateFormCreate() {
                     placeholder="Nhập nhận xét"
                     id="outlined-multiline-flexible form-control"
                     multiline
+                    onChange={formData.handleChange}
+                    name="comment"
                     maxRows={4}
                   />
                 </div>
@@ -740,13 +779,16 @@ export default function DialogCandidateFormCreate() {
                     Cập nhật trạng thái
                   </label>
                   <select
-                    className="form-select grey-text"
-                    aria-label="Default select example"
+                   className="form-select grey-text"
+                   aria-label="Default select example"
+                   onChange={formData.handleChange}
+                   id="status"
+                   name="status"
                   >
-                    <option value="default">Chọn nhu cầu nhân sự</option>
-                    {recuitments.filter(item => item.status == "Đã gửi").map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
+                    <option value="default">chọn trạng thái</option>
+                    {listTestSelect.map((item) => (
+                      <option key={item.id} value={item.text}>
+                        {item.text}
                       </option>
                     ))}
                   </select>
@@ -756,9 +798,12 @@ export default function DialogCandidateFormCreate() {
                     Lưu ý
                   </label>
                   <input
-                type="text"
-                placeholder="Nhập lưu ý nếu có..."
-                className='form-control grey-text'
+                   type="text"
+                   placeholder="Nhập lưu ý nếu có..."
+                   className="form-control grey-text"
+                   id="note"
+                   name="note"
+                   onChange={formData.handleChange}
               />
                 </div>
               </div>

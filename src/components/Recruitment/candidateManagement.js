@@ -244,7 +244,7 @@ export default function CandidateManagement() {
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogCandidateFromWatch id={item.id} />
-                                        {item.status.toLowerCase() === "Đã có kết quả" || item.status.toLowerCase() === "Đã gửi mail cảm ơn" || item.status.toLowerCase() === "Đã hẹn ngày thực tập" || item.status.toLowerCase() === "Không nhận việc" || item.status.toLowerCase() === "Đã nhận việc" ? (
+                                        {item.status === "Đã có kết quả" || item.status === "Đã gửi mail cảm ơn" || item.status === "Đã hẹn ngày thực tập" || item.status === "Không nhận việc" || item.status === "Đã nhận việc" ? (
                                             <DialogCandidateFromUpdate id={item.id} check={true} />
                                         ) : (
                                             <DialogCandidateFromUpdate id={item.id} />

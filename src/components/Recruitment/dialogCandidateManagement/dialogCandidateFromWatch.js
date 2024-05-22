@@ -150,6 +150,7 @@ export default function DialogCandidateFormWatch({ id }) {
         const formatT= res.data.interviewTime;
         const dateNow = dayjs(formatT);
         setDate(dateNow)
+        setSelectedValuePassFaild(res.data.finalResult)
       });
   }, []);
 
@@ -419,13 +420,10 @@ export default function DialogCandidateFormWatch({ id }) {
   }
 
 
-  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState(formData.values.isInterview ? "true" : "false");
-
+  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState();
   const handleChangePassFaild = (e) => {
     setSelectedValuePassFaild(e.target.value);
   };
-
-  console.log(selectedValuePassFaild)
 
 
   return (
@@ -648,7 +646,7 @@ export default function DialogCandidateFormWatch({ id }) {
                 <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === 'true' ? <select
+                {selectedValuePassFaild === "true" || selectedValuePassFaild === true ? <select
                   className="form-select text-success  ms-2"
                   style={{ width: '170px' }}
                   aria-label="Default select example"

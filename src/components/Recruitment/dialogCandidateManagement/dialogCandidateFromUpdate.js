@@ -33,7 +33,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
   const [errNumber, setErrNumber] = useState(false);
-  
+
   // Xử lý số lượng nhân sự
   const checkValid = (
     dateSet,
@@ -154,61 +154,85 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       return true;
     }
   };
-   const formData = useFormik ({
-      initialValues:{
-        id : "",
-        recruitmentPlan:{
-          id : null,
-          name :""
-        },
-        name :"",
-        email :"",
-        phone : "",
-        linkCv :"",
-        interviewTime :"",
-        checkInterview:"",
-        comment:"",
-        note:"",
-        finalResult:"",
-        status:"",
-        scoreTest:"",
-        scoreInterview:"",
+  const formData = useFormik({
+    initialValues: {
+      id: "",
+      recruitmentPlan: {
+        id: null,
+        name: "",
       },
-      onSubmit : async(values) =>{
-         const inputDateTime = date.$d;
-         const dateObject = new Date(inputDateTime);
+      name: "",
+      email: "",
+      phone: "",
+      linkCv: "",
+      interviewTime: "",
+      checkInterview: "",
+      comment: "",
+      note: "",
+      finalResult: "",
+      status: "",
+      scoreTest: "",
+      scoreInterview: "",
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      const inputDateTime = date.$d;
+      const dateObject = new Date(inputDateTime);
 
-         // Lấy các thành phần riêng lẻ
-         const year = dateObject.getFullYear();
-         const month = String(dateObject.getMonth() + 1).padStart(2, '0');
-         const day = String(dateObject.getDate()).padStart(2, '0');
-         const hours = String(dateObject.getHours()).padStart(2, '0');
-         const minutes = String(dateObject.getMinutes()).padStart(2, '0');
-         const seconds = String(dateObject.getSeconds()).padStart(2, '0');
-         
-         // Tạo chuỗi thời gian trong định dạng ISO
-         const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-         values.interviewTime = formattedDateTime;
-         values.finalResult = selectedValuePassFaild;
-         console.log(values)
+      // Lấy các thành phần riêng lẻ
+      const year = dateObject.getFullYear();
+      const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObject.getDate()).padStart(2, "0");
+      const hours = String(dateObject.getHours()).padStart(2, "0");
+      const minutes = String(dateObject.getMinutes()).padStart(2, "0");
+      const seconds = String(dateObject.getSeconds()).padStart(2, "0");
 
-        
+      // Tạo chuỗi thời gian trong định dạng ISO
+      const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+      values.interviewTime = formattedDateTime;
+      values.finalResult = finalResult;
+      if(values.finalResult === "true"){
+        values.finalResult = "true";
+      }else{
+        values.finalResult = "false";
       }
-   })
+      console.log(values);
+      try{
+        await axios.put("http://localhost:8080/api/interns/" + id,values).then(res =>{
+          swal(" cập nhật thông tin ứng viên thành công", {
+            icon: "success",
+            buttons: false,
+            timer: 1000
+          }).then(() => {
+            window.location.href = "/recruitment/candidateManagement";
+          });
+      })
+      }catch(error){
+        swal("cập nhật thông tin ứng viên thất bại", {
+          icon: "error",
+          buttons: false,
+          timer: 1000
+        });
+      }
+    
+    },
+  });
   // Call api
+  const [finalResult, setFinalResult] = useState();
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     axios.get("http://localhost:8080/api/plans").then((res) => {
       setPlans(res.data);
     });
-    axios.get("http://localhost:8080/api/interns/" + id).then(res =>{
-      formData.setValues(res.data)
-      const formatT= res.data.interviewTime;
+    axios.get("http://localhost:8080/api/interns/" + id).then((res) => {
+      formData.setValues(res.data);
+      const formatT = res.data.interviewTime;
       const dateNow = dayjs(formatT);
-      setDate(dateNow)
-    })
+      setDate(dateNow);
+      console.log(formData.values)
+      setFinalResult(res.data.finalResult);
+    });
   }, []);
-  
+
   // Xử lý mở form
   const listTestSelect = [
     { id: 1, text: "Chưa có kết quả" },
@@ -339,6 +363,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           onChange={handleInputChange}
+          name=""
           onBlur={handleBlur}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
@@ -411,70 +436,78 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
   // Code mới của thg candidate
 
-
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState("");
   const handleChangeDateTime = (e) => {
     setDate(e);
-  }
+  };
   // const
-    const [testMarksPoint, setTestMarksPoint] = useState(formData.values.scoreTest);
-function TestMarks({number}) {
-  const[testMarks,setTestMarks] = useState(number);
-  const handleClickCountPlus = () => {
-    if (testMarks < 100) {
-      const newTestMarks = testMarks + 1;
-      setTestMarks(newTestMarks);
-    }
-  };
 
-  const handleInputChange = (e) => {
-    const newCount = parseInt(e.target.value);
-    if (!isNaN(newCount) && newCount <= 100) {
-      setTestMarks(newCount);
-      
-    }
-  };
-  const handleClickCountMinus = () => {
-    if (testMarks > 0) {
-      const newTestMarks = testMarks - 1;
-      setTestMarks(newTestMarks);
-    }
-  };
- 
+  function TestMarks({ scoreTest, setScoreTest }) {
+    const [testMarks, setTestMarks] = useState(scoreTest);
+    scoreTest = parseInt(scoreTest);
+    useEffect(() => {
+      setTestMarks(scoreTest);
+    }, [scoreTest]);
 
+    const handleClickCountPlus = () => {
+      if (testMarks < 100) {
+        const newTestMarks = testMarks + 1;
+        setTestMarks(newTestMarks);
+        setScoreTest(newTestMarks); // Update the formData value
+      }
+    };
 
-  return (
-    <div className="d-flex justify-content-center align-items-center">
-      <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
-      <input
-        value={testMarks}
-        style={{ fontSize: "15px", height: "36px" }}
-        className="form-control w-25 border-clr-grey border text-center"
-        type="number"
-        name="scoreTest"
-        id="scoreTest"
-        onChange={handleInputChange}
-      />
-      <AddIcon onClick={handleClickCountPlus} className="ms-1" />
-    </div>
-  );
-}
-  function Interview() {
-    const [interview, setInterview] = useState(formData.values.scoreInterview);
+    const handleInputChange = (e) => {
+      const newCount = parseInt(e.target.value);
+      if (!isNaN(newCount) && newCount <= 100) {
+        setTestMarks(newCount);
+        setScoreTest(newCount); // Update the formData value
+      }
+    };
+
+    const handleClickCountMinus = () => {
+      if (testMarks > 0) {
+        const newTestMarks = testMarks - 1;
+        setTestMarks(newTestMarks);
+        setScoreTest(newTestMarks); // Update the formData value
+      }
+    };
+
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
+        <input
+          value={testMarks}
+          style={{ fontSize: "15px", height: "36px" }}
+          className="form-control w-25 border-clr-grey border text-center"
+          type="number"
+          id="scoreTest"
+          onChange={handleInputChange}
+        />
+        <AddIcon onClick={handleClickCountPlus} className="ms-1" />
+      </div>
+    );
+  }
+  function Interview({ scoreInterview, setScoreInterview }) {
+    scoreInterview = parseInt(scoreInterview);
+    const [interview, setInterview] = useState(scoreInterview);
     const handleClickCountPlus = () => {
       if (interview < 10) {
         setInterview(interview + 1);
+        setScoreInterview(interview + 1);
       }
     };
     const handleInputChange = (e) => {
       if (e.target.value <= 10) {
         const newCount = parseInt(e.target.value);
         setInterview(newCount);
+        setScoreInterview(newCount);
       }
     };
     const handleClickCountMinus = () => {
       if (!interview <= 0) {
         setInterview(interview - 1);
+        setScoreInterview(interview - 1);
       }
     };
 
@@ -486,18 +519,18 @@ function TestMarks({number}) {
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
+          id="scoreInterview"
           onChange={handleInputChange}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
     );
   }
-
-  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState(formData.values.isInterview ? "true" : "false");
+  const[change,setChange] = useState(finalResult ? true : false);
   const handleChangePassFaild = (e) => {
-    setSelectedValuePassFaild(e.target.value);
+    setFinalResult(e.target.value);
+    setChange(e.target.value)
   };
-
 
   return (
     <>
@@ -670,10 +703,10 @@ function TestMarks({number}) {
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
                 {plans.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
               </select>
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -717,7 +750,12 @@ function TestMarks({number}) {
                   >
                     Điểm kiểm tra (%)
                   </label>
-                  <TestMarks number={formData.values.scoreTest}/>
+                  <TestMarks
+                    scoreTest={formData.values.scoreTest}
+                    setScoreTest={(value) =>
+                      formData.setFieldValue("scoreTest", value)
+                    }
+                  />
                 </div>
                 <div className="col-md-4 text-center mt-0 mb-2">
                   <label
@@ -726,7 +764,12 @@ function TestMarks({number}) {
                   >
                     Điểm phỏng vấn trực tiếp
                   </label>
-                  <Interview />
+                  <Interview
+                    scoreInterview={formData.values.scoreInterview}
+                    setScoreInterview={(value) =>
+                      formData.setFieldValue("scoreInterview", value)
+                    }
+                  />
                 </div>
               </div>
               {/*  */}
@@ -756,12 +799,12 @@ function TestMarks({number}) {
                 >
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === "true" ? (
+                {finalResult === "true" || finalResult === true ? (
                   <select
                     className="form-select text-success  ms-2"
                     style={{ width: "170px" }}
                     aria-label="Default select example"
-                    value={selectedValuePassFaild}
+                    value={finalResult}
                     onChange={handleChangePassFaild}
                     id="finalResult"
                     name="finalResult"
@@ -778,7 +821,7 @@ function TestMarks({number}) {
                     className="form-select text-danger  ms-2"
                     style={{ width: "170px" }}
                     aria-label="Default select example"
-                    value={selectedValuePassFaild}
+                    value={finalResult}
                     onChange={handleChangePassFaild}
                     id="finalResult"
                     name="finalResult"
@@ -816,10 +859,10 @@ function TestMarks({number}) {
                     name="status"
                   >
                     {listTestSelect.map((item) => (
-                        <option key={item.id} value={item.text}>
-                          {item.text}
-                        </option>
-                      ))}
+                      <option key={item.id} value={item.text}>
+                        {item.text}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="col-md-7 ms-4">
