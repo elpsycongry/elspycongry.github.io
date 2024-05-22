@@ -4,7 +4,10 @@
   border: 0;
   box-sizing: border-box;
 }
-
+.tippy-tooltip.tomato-theme {
+  background-color: tomato;
+  color: yellow;
+}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -58,12 +61,18 @@ p {
     justify-content: center;
     align-items: center;
     position: relative;
-
     .add_icon {
       position: absolute;
       left: -21px;
       font-size: 1rem;
+      color: #9bc2ff;
+
+      &:hover {
+        cursor: pointer;
+        color: #0866ff;
+      }
     }
+
   }
 
   .w110 {
@@ -173,11 +182,19 @@ p {
   background-color: #fff;
   padding: 10px 10px 3px 10px;
   border-radius: 4px;
-  textarea {
+
+  .edit-comment {
     resize: none;
     width: 300px;
     height: 100px;
-    overflow: auto
+    overflow: auto;
+    outline: #adadff  auto 1px;
+    &:focus {
+      outline-color: #5c5cfb;
+    }
+    &:disabled {
+      outline: none;
+    }
   }
 }
 
