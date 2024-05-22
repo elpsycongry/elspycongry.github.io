@@ -7,7 +7,7 @@ import {
     MenuItem,
     Select,
     Typography,
-    Link
+    Link, Switch
 } from "@mui/material";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Footer from "../fragment/footer/footer";
@@ -26,6 +26,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
 import './users.css'
 import DialogUpdateUserForm from "./updateUser";
+import BlockUser from "./blockUser";
 
 export default function Users() {
 
@@ -92,7 +93,6 @@ export default function Users() {
         });
 
     };
-
 
     const handleFilterWithFields = async (newPagination = pagination) => {
         const user = JSON.parse(localStorage.getItem("currentUser"));
@@ -228,7 +228,7 @@ export default function Users() {
                 </div>
                 <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
-                        <table className=" table-user ">
+                        <table className="table-user " aria-label="simple table">
 
                             <thead style={{ marginBottom: '-35px' }}>
                                 <tr className="header-tr grey-text">
@@ -237,6 +237,7 @@ export default function Users() {
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
                                     <th className="user-roles">Vai trò</th>
+                                    <th className="user-actions">Trạng thái</th>
                                     <th className="user-actions">Hành động</th>
                                 </tr>
                             </thead>
@@ -262,9 +263,13 @@ export default function Users() {
                                                 'Hiện tại chưa có vai trò'
                                             )}
                                         </td>
+                                        <td>
+                                            <BlockUser inputProps={{ 'aria-label': 'controlled' }} token={token} userId={item.id} status={item.status} onUpdate={handleFilterWithFields}/>                                       
+                                        </td>
                                         <td className="user-actions">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />                                        </td>
+                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />  
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -280,7 +285,7 @@ export default function Users() {
                         </Stack> */}
                     </div>
 
-                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0, marginTop: '2   0px' }}>
+                    <div className=" bottom-0 position-absolute w-100" style={{ marginBottom: '20px', left: 0 }}>
                         <Pagination
                             className="d-flex justify-content-center"
                             count={Math.ceil(pagination.totalElements / pagination.size)}

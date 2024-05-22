@@ -64,6 +64,9 @@ function Login() {
                     enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                     navigate("/users")
                 }
+                if(res.data.code === "202"){
+                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
         ).catch(reason => {

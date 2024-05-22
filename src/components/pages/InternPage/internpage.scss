@@ -1,12 +1,8 @@
 * {
-  padding: 0;
-  margin: 0;
-  border: 0;
-  box-sizing: border-box;
-}
-.tippy-tooltip.tomato-theme {
-  background-color: tomato;
-  color: yellow;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -49,6 +45,9 @@ p {
   > div {
     margin-top: 10px;
   }
+    >div {
+        margin-top: 10px;
+    }
 
   p {
     min-width: 90px;

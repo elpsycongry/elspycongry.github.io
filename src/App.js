@@ -25,6 +25,7 @@ function App() {
                 <Route path={"/login"} element={
                     <AuthContext> <Login /></AuthContext>
                 } />
+
                 <Route path={"/*"} element={
                     <AuthContext></AuthContext>
                 } />

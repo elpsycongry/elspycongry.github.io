@@ -29,6 +29,11 @@ function AuthContext({children}) {
                 return <Navigate to={"/"}/>
             } 
         }
+        if (pathName === "/training/stats") {
+            if(!isAdmin){
+                return <Navigate to={"/"}/>
+            }
+        }
         {isAdmin && <div></div>}
         if (pathName === "/login") {
             return <Navigate to="/"/>
