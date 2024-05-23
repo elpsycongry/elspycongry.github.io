@@ -58,7 +58,7 @@ export default function RecruitmentStats() {
                     setTrainingStats(res.data)
                 })
         }
-    
+
     }, [])
 
     const handleClick = (event) => {
@@ -208,15 +208,15 @@ export default function RecruitmentStats() {
                                 </div>
                                 <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '20px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>
                                     <label>Số CV mới:</label>
-                                    <label style={{ marginLeft: '260px' }}>{trainingStats.internsEnrolled} TTS</label>
+                                    <label style={{ marginLeft: '260px' }}>{trainingStats.internsEnrolled} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số CV phỏng vấn:</label>
-                                    <label style={{ marginLeft: '195px' }}>{trainingStats.graduatingInterns} TTS</label>
+                                    <label style={{ marginLeft: '195px' }}>{trainingStats.graduatingInterns} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên đã phỏng vấn:</label>
-                                    <label style={{ marginLeft: '108px' }}>{trainingStats.internsFailed} TTS</label>
+                                    <label style={{ marginLeft: '108px' }}>{trainingStats.internsFailed} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên không đến phỏng vấn:</label>
@@ -224,11 +224,11 @@ export default function RecruitmentStats() {
                                     <br></br>
                                     <br></br>
                                     <label>Số PASS:</label>
-                                    <label style={{ marginLeft: '276px' }}>{trainingStats.internsCurrentlyPracticing} TTS</label>
+                                    <label style={{ marginLeft: '276px' }}>{trainingStats.internsCurrentlyPracticing}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số FAIL:</label>
-                                    <label style={{ marginLeft: '287px' }}>{trainingStats.internsQuitInternship} TTS</label>
+                                    <label style={{ marginLeft: '287px' }}>{trainingStats.internsQuitInternship}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên nhận việc:</label>
@@ -261,14 +261,14 @@ export default function RecruitmentStats() {
                                         </select>
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                        <RecruitmentStatsChart year={selectedYear}/>
+                                        <RecruitmentStatsChart year={selectedYear} />
                                     </div>
                                 </div>
 
                                 {/* column */}
                                 <h4 style={{ marginLeft: '10px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', marginTop: '35px', marginBottom: '30px' }}>Biểu đồ cột số lượng CV đã xử lý</h4>
-                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent:'center' }}>
-                                        <CVChart/>
+                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center' }}>
+                                    <CVChart />
                                 </div>
                             </div>
                         )}
