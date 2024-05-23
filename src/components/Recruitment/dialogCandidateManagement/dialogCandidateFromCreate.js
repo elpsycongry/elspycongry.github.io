@@ -2,117 +2,75 @@ import { Dialog, DialogTitle, IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
-import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
-import BackspaceIcon from '@mui/icons-material/Backspace';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-
 import axios from "axios";
 import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { TimeField } from "@mui/x-date-pickers";
+import { validFullName, validEmail, validPhone } from "../regex/regex";
 
 export default function DialogCandidateFormCreate() {
-  const [dateErr, setDateErr] = useState(false);
-  const [techErr, setTechErr] = useState(false);
-  const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
-  const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
-  const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
-  const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
-  const [errNumber, setErrNumber] = useState(false);
-
+  const [errName, setErrName] = useState(false);
+  const [errEmail, setErrEmail] = useState(false);
+  const [errPhoneNumber, setErrPhoneNumber] = useState(false);
+  const [errRecruitmentPlan, setErrRecruitmentPlan] = useState(false);
+  const [errStatus, setErrStatus] = useState(false);
 
   // Xử lý số lượng nhân sự
-  const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
-    const futureDate = new Date(dateCreate);
-    futureDate.setDate(dateCreate.getDate() + 75);
-    // 
-    var hasErrPersonalNeeds;
-    if (personalneed === "" || personalneed === null || personalneed === "default") {
-      hasErrPersonalNeeds = true;
-      setErrIdPersonalNeed(true);
+  const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status) => {
+    console.log(phoneNumber);
+    console.log(validPhone.test(phoneNumber));
+    if (!validFullName.test(fullName)) {
+      setErrName(true);
     } else {
-      hasErrPersonalNeeds = false;
-      setErrIdPersonalNeed(false);
+      setErrName(false);
+    }
+    var hasErrEmail;
+    if (!validEmail.test(email) ||  email === "") {
+      setErrEmail(true);
+      hasErrEmail = true;
+    } else {
+      setErrEmail(false);
+      hasErrEmail = false;
     }
 
-    const errTech = techArr.map(item => {
-      if (item.type === "" || item.type === "default") {
-        return true;
-      } else {
-        return false;
-      }
-    })
-    const hasErrTech = errTech.some(item => item === true);
-    setTechErr(hasErrTech);
 
+    var hasErrPhone;
+    if (!validPhone.test(phoneNumber) || phoneNumber === "") {
+      setErrPhoneNumber(true);
+      hasErrPhone = true;
+    } else {
+      setErrPhoneNumber(false);
+      hasErrPhone = false;
+    }
+    console.log(hasErrPhone)
 
-    // 
-    const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
-        return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
-      } else {
-        return false;
-      }
-    })
-    const hasErrNumber = errNumberR.some(item => item === true);
-    setErrNumber(hasErrNumber)
-    //
-    var hasErrOfPersonal;
-    if (!hasErrNumber) {
-      const errNumberPersonal = techArr.map(item => {
-        if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      hasErrOfPersonal = errNumberPersonal.some(item => item === true);
-      setErrNumberOfPersonal(hasErrOfPersonal);
-    } else {
-      hasErrOfPersonal = false;
-      setErrNumberOfPersonal(false);
-    }
-    // 
-    var hasErrNumberOutput;
-    if (!hasErrNumber) {
-      const errNumberOutput = techArr.map(item => {
-        if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      hasErrNumberOutput = errNumberOutput.some(item => item === true)
-      setErrNumberOfOutput(hasErrNumberOutput);
-    } else {
-      hasErrNumberOutput = false;
-      setErrNumberOfOutput(false);
-    }
-    //  
     var hasErrRecruitmentPlan;
-    if (nameRecruitmentPlan == "") {
+    if (recruitmentPlan === '' || recruitmentPlan === null || recruitmentPlan === 'default' || recruitmentPlan === 'undefined') {
+      setErrRecruitmentPlan(true);
       hasErrRecruitmentPlan = true;
-      setErrNameRecruitmentPlan(true);
     } else {
+      setErrRecruitmentPlan(false);
       hasErrRecruitmentPlan = false;
-      setErrNameRecruitmentPlan(false);
     }
 
-
-    if (dateSet < futureDate || dateSet == "Invalid Date") {
-      setDateErr(true);
+    var hasErrStatus;
+    if (status === '' || status === 'default') {
+      setErrStatus(true);
+      hasErrStatus = true;
     } else {
-      setDateErr(false);
+      setErrStatus(false);
+      hasErrStatus = false;
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
+
+    if (!validFullName.test(fullName) || !validEmail.test(email) || hasErrRecruitmentPlan || hasErrStatus || hasErrPhone || hasErrEmail) {
       return false;
     } else {
       return true;
@@ -156,14 +114,29 @@ export default function DialogCandidateFormCreate() {
       const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
       values.interviewTime = formattedDateTime;
       values.finalResult = selectedValuePassFaild;
-      if(values.scoreInterview === ''){
+      if (values.scoreInterview === '') {
         values.scoreInterview = 1;
       }
-      if(values.scoreTest === ''){
+      if (values.scoreTest === '') {
         values.scoreTest = 50;
       }
       console.log(values)
-        setSubmitting(true);
+
+      // Lấy dữ liệu check
+      const fullName = values.name;
+      const email = values.email;
+      const phoneNumber = values.phone;
+      const recruitmentPlan = values.recruitmentPlan.id;
+      const status = values.status;
+      // checkValid(fullName, email, phoneNumber, recruitmentPlan, status)
+
+
+      // setSubmitting(false);
+      // return;
+      if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status)) {
+        setSubmitting(false);
+        return;
+      } else {
         try {
           await axios
             .post("http://localhost:8080/api/interns", values)
@@ -184,7 +157,7 @@ export default function DialogCandidateFormCreate() {
             timer: 1000,
           });
         }
-      
+      }
     }
   });
   // Call api
@@ -195,10 +168,6 @@ export default function DialogCandidateFormCreate() {
     });
 
   }, []);
-
-
-
-
 
   // Xử lý mở form
   const listTestSelect = [
@@ -216,219 +185,42 @@ export default function DialogCandidateFormCreate() {
   const handleClickFormClose = () => {
     setOpenForm(false);
   }
-  // Xử lý thêm công nghệ
-  const [tech, setTech] = useState([{ type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" }]);
-  const addTech = () => {
-    setTech((prevTech) => [...prevTech, { type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" }]);
-  };
-
-  const removeTech = (index) => {
-    const updateTech = tech.filter((_, idx) => idx !== index);
-    setTech(updateTech);
-  };
-  const handleChangeSelect = (e, index) => {
-    const updateTech = [...tech];
-    updateTech[index] = { ...updateTech[index], type: e.target.value };
-    setTech(updateTech);
-  }
-  // NumberOfOutputPersonnel
-
-  // Hàm dữ liệu đầu ra
-  function NumberOfOutputPersonnel({ number, idx }) {
-
-    if (number === "" || number == 0) {
-      number = 0;
-    }
-    const [countOf, setCountOf] = useState(number);
-
-    const handleClickCountPlus = () => {
-      if (number < 20 || countOf < 20) {
-        setCountOf(parseInt(countOf) + 1);
-        numberOfOutputPersonnel((parseInt(number) + 1), idx);
-      }
-    };
-    const handleInputChange = (e) => {
-      if (e.target.value <= 20) {
-        const newCount = parseInt(e.target.value);
-        setCountOf(newCount);
-      }
-    };
-    const handleClickCountMinus = () => {
-      if (!countOf <= 0) {
-        setCountOf(countOf - 1);
-        numberOfOutputPersonnel((parseInt(number) - 1), idx);
-
-      }
-    };
-    const handleBlur = () => {
-      numberOfOutputPersonnel(countOf, idx);
-    };
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
-        <input
-          value={countOf}
-          style={{ fontSize: "15px", height: "36px" }}
-          className="form-control w-25 border-clr-grey border text-center"
-          type="number"
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-        />
-        <AddIcon onClick={handleClickCountPlus} className="ms-1" />
-      </div>
-    );
-  }
-  const numberOfOutputPersonnel = (countOf, index) => {
-    const updatedTech = [...tech];
-    updatedTech[index].numberOfOutputPersonnel = countOf;
-    setTech(updatedTech);
-    const count = countOf * 3;
-    if (count > 60) {
-      handleQuantityOffPersonal(60, index);
-    } else {
-      handleQuantityOffPersonal(count, index, countOf);
-    }
-  };
-  // Hàm dữ liệu cần tuyển
-  function NumberOfPersonnelNeeded({ number, idx, numberOutPut }) {
-    if (number === "" || number == 0) {
-      number = 0;
-    }
-    const [countOf, setCountOf] = useState(number);
-    const handleClickCountPlus = () => {
-      if (number < 60 || countOf < 60) {
-        setCountOf(countOf + 1);
-        handleQuantityOffPersonal(parseInt(number) + 1, idx);
-      }
-    };
-    const handleInputChange = (e) => {
-      if (e.target.value <= 60) {
-        const newCount = parseInt(e.target.value);
-        setCountOf(newCount);
-      }
-    };
-    const handleClickCountMinus = () => {
-      if (!countOf <= 0) {
-        setCountOf(countOf - 1);
-        handleQuantityOffPersonal(parseInt(number) - 1, idx);
-      }
-    };
-    const handleBlur = () => {
-      handleQuantityOffPersonal(countOf, idx);
-    };
-
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
-        <input
-          value={countOf}
-          style={{ fontSize: "15px", height: "36px" }}
-          className="form-control w-25 border-clr-grey border text-center"
-          type="number"
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-        />
-        <AddIcon onClick={handleClickCountPlus} className="ms-1" />
-      </div>
-    );
-  }
-  const handleQuantityOffPersonal = (countOf, index) => {
-    const updatedTech = [...tech];
-    updatedTech[index].numberOfPersonnelNeeded = countOf;
-    setTech(updatedTech);
-  };
-  const Dlt = ({ index }) => {
-    if (tech.length > 1) {
-      return (
-        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
-      )
-    }
-  }
-  const timeNow = new Date();
-  const year = timeNow.getFullYear();
-  const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-  const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-  const timeNowValue = `${year}-${month}-${day}`;
-
-  const dateDeadline = new Date(timeNow);
-  dateDeadline.setDate(timeNow.getDate() + 75);
-  const yearDL = dateDeadline.getFullYear();
-  const monthDL = String(dateDeadline.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-  const dayDL = String(dateDeadline.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-  const dateDeadlineValue = `${yearDL}-${monthDL}-${dayDL}`;
-  const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
-  const [handoverDeadline, setHandoverDeadline] = useState(dateDeadlineValue);
-  const handleDateChange = (event) => {
-    if (event.target.name === 'recruitmentPlan.dateRecruitmentEnd') {
-      setRecuitmentDateEnd(event.target.value);
-    } else if (event.target.name === 'recruitmentPlan.handoverDeadline') {
-      setHandoverDeadline(event.target.value);
-      // 
-      const timeChange = new Date(event.target.value);
-      timeChange.setDate(timeChange.getDate() - 75);
-      const yearChange = timeChange.getFullYear();
-      const monthChange = String(timeChange.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-      const dayChange = String(timeChange.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
-      const timeChangeValue = `${yearChange}-${monthChange}-${dayChange}`;
-      // 
-      if (timeChange < timeNow) {
-        setRecuitmentDateEnd(timeNowValue);
-        formData.handleChange({
-          target: {
-            name: 'recruitmentPlan.dateRecruitmentEnd',
-            value: timeNowValue
-          }
-        });
-      } else {
-
-        setRecuitmentDateEnd(timeChangeValue);
-        formData.handleChange({
-          target: {
-            name: 'recruitmentPlan.dateRecruitmentEnd',
-            value: timeChangeValue
-          }
-        });
-      }
-    }
-    formData.handleChange(event);
-  }
-
 
   // Code mới của thg candidate
 
   const dateNow = dayjs();
+  const newDate = dateNow.add(1,'hour');
+  console.log(newDate);
 
-  const [date, setDate] = useState(dateNow);
+  const [date, setDate] = useState(newDate);
   const handleChangeDateTime = (e) => {
     setDate(e);
   }
-  
+
 
 
   // const 
   function TestMarks({ scoreTest, setScoreTest }) {
-
-    const [testMarks, setTestMarks] = useState(50);
-   if(scoreTest === ''){
-    scoreTest = 50;
-   }
-    useEffect(() => {
-      setTestMarks(scoreTest);
-    }, [scoreTest]);
+    if (scoreTest === '' || scoreTest === 0) {
+      scoreTest = 50;
+    }
+    const [testMarks, setTestMarks] = useState(scoreTest);
+    // useEffect(() => {
+    //   setTestMarks(scoreTest);
+    // }, [scoreTest]);
 
     const handleClickCountPlus = () => {
       if (testMarks < 100) {
         const newTestMarks = testMarks + 1;
         setTestMarks(newTestMarks);
-        setScoreTest(newTestMarks); // Update the formData value
+        setScoreTest(newTestMarks);
       }
     };
 
     const handleInputChange = (e) => {
-      const newCount = parseInt(e.target.value);
-      if (!isNaN(newCount) && newCount <= 100) {
+      if (e.target.value <= 100) {
+        const newCount = parseInt(e.target.value);
         setTestMarks(newCount);
-        setScoreTest(newCount); // Update the formData value
       }
     };
 
@@ -436,9 +228,17 @@ export default function DialogCandidateFormCreate() {
       if (testMarks > 0) {
         const newTestMarks = testMarks - 1;
         setTestMarks(newTestMarks);
-        setScoreTest(newTestMarks); // Update the formData value
+        setScoreTest(newTestMarks);
       }
     };
+
+    const handleBlurTestMark = (e) => {
+      const newCount = parseInt(e.target.value);
+      if (!isNaN(newCount) && newCount <= 100) {
+        setTestMarks(newCount);
+        setScoreTest(newCount);
+      }
+    }
 
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -450,32 +250,30 @@ export default function DialogCandidateFormCreate() {
           type="number"
           id="scoreTest"
           onChange={handleInputChange}
+          onBlur={handleBlurTestMark}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
     );
   }
   function Interview({ scoreInterview, setScoreInterview }) {
-    if(scoreInterview === ''){
+    if (scoreInterview === '') {
       scoreInterview = 1;
     }
-    useEffect(() => {
-      setInterview(scoreInterview);
-    }, [scoreInterview]);
-    const [interview, setInterview] = useState(1);
+    const [interview, setInterview] = useState(scoreInterview);
     const handleClickCountPlus = () => {
       if (interview < 10) {
         setInterview(interview + 1);
-        setScoreInterview(interview + 1);
+        setScoreInterview(+interview + 1);
       }
     };
-    const handleInputChange = (e) => {
-      if (e.target.value <= 10) {
-        const newCount = parseInt(e.target.value);
-        setInterview(newCount);
-        setScoreInterview(newCount);
-      }
-    };
+    // const handleInputChange = (e) => {
+    //   if (e.target.value <= 10) {
+    //     const newCount = parseInt(e.target.value);
+    //     setInterview(newCount);
+    //     setScoreInterview(newCount);
+    //   }
+    // };
     const handleClickCountMinus = () => {
       if (!interview <= 0) {
         setInterview(interview - 1);
@@ -487,12 +285,13 @@ export default function DialogCandidateFormCreate() {
       <div className="d-flex justify-content-center align-items-center">
         <RemoveIcon onClick={handleClickCountMinus} className="me-1" />
         <input
+          readOnly
           value={interview}
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           id="scoreInterview"
-          onChange={handleInputChange}
+        // onChange={handleInputChange}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
@@ -506,7 +305,6 @@ export default function DialogCandidateFormCreate() {
     setSelectedValuePassFaild(e.target.value);
   };
 
-  console.log(selectedValuePassFaild)
 
 
   return (
@@ -550,18 +348,18 @@ export default function DialogCandidateFormCreate() {
                 Họ và tên ứng viên <span className="color-red">*</span>
               </label>
               <input
-                 maxLength={60}
-                 onChange={formData.handleChange}
-                 name="name"
-                 id="name"
-                 type="text"
-                 placeholder="Nhập họ và tên ứng viên..."
-                 className="form-control grey-text"
+                maxLength={60}
+                onChange={formData.handleChange}
+                name="name"
+                id="name"
+                type="text"
+                placeholder="Nhập họ và tên ứng viên..."
+                className="form-control grey-text"
               />
               <div className="col-md-8  mt-0">
-                {errIdPersonalNeed && (
+                {errName && (
                   <p className="err-valid ws-nowrap ">
-                    Nhu cầu không được để trống
+                    Tên không được để trống, có kí tự đặc biệt hoặc số
                   </p>
                 )}
               </div>
@@ -580,9 +378,9 @@ export default function DialogCandidateFormCreate() {
                 className="form-control grey-text"
               />
               <div className="col-md-8  mt-0">
-                {errIdPersonalNeed && (
+                {errEmail && (
                   <p className="err-valid ws-nowrap ">
-                    Nhu cầu không được để trống
+                    Email không hợp lệ
                   </p>
                 )}
               </div>
@@ -592,18 +390,18 @@ export default function DialogCandidateFormCreate() {
                 Số điện thoại <span className="color-red">*</span>
               </label>
               <input
-               maxLength={60}
-               type="text"
-               name="phone"
-               id="phone"
-               onChange={formData.handleChange}
-               placeholder="Nhập số điện thoại..."
-               className="form-control grey-text"
+                maxLength={60}
+                type="text"
+                name="phone"
+                id="phone"
+                onChange={formData.handleChange}
+                placeholder="Nhập số điện thoại..."
+                className="form-control grey-text"
               />
               <div className="col-md-8  mt-0">
-                {errIdPersonalNeed && (
+                {errPhoneNumber && (
                   <p className="err-valid ws-nowrap ">
-                    Nhu cầu không được để trống
+                    Số điện thoại không hợp lệ
                   </p>
                 )}
               </div>
@@ -613,20 +411,13 @@ export default function DialogCandidateFormCreate() {
                 Link CV
               </label>
               <input
-              maxLength={60}
-              type="text"
-              id="linkCv"
-              name="linkCv"
-              onChange={formData.handleChange}
-              className="form-control grey-text"
+                maxLength={60}
+                type="text"
+                id="linkCv"
+                name="linkCv"
+                onChange={formData.handleChange}
+                className="form-control grey-text"
               />
-              <div className="col-md-8  mt-0">
-                {errIdPersonalNeed && (
-                  <p className="err-valid ws-nowrap ">
-                    Nhu cầu không được để trống
-                  </p>
-                )}
-              </div>
             </div>
             <div className="col-md-6 mt-1">
               <label htmlFor="time" className="form-label text-center grey-text mb-0 mt-2">
@@ -646,6 +437,8 @@ export default function DialogCandidateFormCreate() {
                       <DateTimePicker className="date-set form-control"
                         views={['day', 'month', 'year', 'hours', 'minutes']}
                         value={date}
+                        minDate={dateNow}
+                        // minTime={dateNow}
                         onChange={handleChangeDateTime}
                         format="YYYY/MM/DD"
                       />
@@ -673,9 +466,9 @@ export default function DialogCandidateFormCreate() {
                 ))}
               </select>
               <div className="col-md-8  mt-0">
-                {errIdPersonalNeed && (
+                {errRecruitmentPlan && (
                   <p className="err-valid ws-nowrap ">
-                    Nhu cầu không được để trống
+                    Kế hoạch tuyển dụng không được để trống
                   </p>
                 )}
               </div>
@@ -779,11 +572,11 @@ export default function DialogCandidateFormCreate() {
                     Cập nhật trạng thái
                   </label>
                   <select
-                   className="form-select grey-text"
-                   aria-label="Default select example"
-                   onChange={formData.handleChange}
-                   id="status"
-                   name="status"
+                    className="form-select grey-text"
+                    aria-label="Default select example"
+                    onChange={formData.handleChange}
+                    id="status"
+                    name="status"
                   >
                     <option value="default">chọn trạng thái</option>
                     {listTestSelect.map((item) => (
@@ -792,19 +585,20 @@ export default function DialogCandidateFormCreate() {
                       </option>
                     ))}
                   </select>
+
                 </div>
                 <div className="col-md-7 ms-4">
                   <label htmlFor="name" className="form-label grey-text mb-0 mt-2 ws-nowrap">
                     Lưu ý
                   </label>
                   <input
-                   type="text"
-                   placeholder="Nhập lưu ý nếu có..."
-                   className="form-control grey-text"
-                   id="note"
-                   name="note"
-                   onChange={formData.handleChange}
-              />
+                    type="text"
+                    placeholder="Nhập lưu ý nếu có..."
+                    className="form-control grey-text"
+                    id="note"
+                    name="note"
+                    onChange={formData.handleChange}
+                  />
                 </div>
               </div>
               <div className=" text-right mt-0 d-flex align-item-flex-end">
@@ -814,6 +608,13 @@ export default function DialogCandidateFormCreate() {
                   </button>
                 </div>
               </div>
+            </div>
+            <div className="col-md-8  mt-0">
+              {errStatus && (
+                <p className="err-valid ws-nowrap ">
+                  Trạng thái không được để trống
+                </p>
+              )}
             </div>
           </form>
         </DialogTitle >
