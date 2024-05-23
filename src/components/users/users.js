@@ -231,7 +231,7 @@ export default function Users() {
                     <div className="table-container" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
                         <div className="table-user">
 
-                            <div>
+                            <thead>
                                 <tr className="grey-text">
                                     <th className="user-id">STT</th>
                                     <th className="user-name" style={{ padding: '8px' }}>Tên</th>
@@ -241,9 +241,9 @@ export default function Users() {
                                     <th className="user-actions">Trạng thái</th>
                                     <th className="user-actions">Hành động</th>
                                 </tr>
-                            </div>
+                            </thead>
 
-                            <div>
+                            <tbody>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
@@ -278,7 +278,7 @@ export default function Users() {
                                         </td>
                                     </tr>
                                 ))}
-                            </div>
+                            </tbody>
                         </div>
 
                         {/* <Stack spacing={1} style={{marginTop: '190px', alignItems: 'center', alignItems: 'center', marginTop: '50px' }}>
