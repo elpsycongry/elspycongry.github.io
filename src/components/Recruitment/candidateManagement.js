@@ -94,7 +94,6 @@ export default function CandidateManagement() {
     const handleSubmitSearch = async (event, pageNumber) => {
         event.preventDefault();
         try {
-
             const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
@@ -144,7 +143,6 @@ export default function CandidateManagement() {
         }
     };
 
-
     const handlePlanChange = (event) => {
         setSelectPlan(event.target.value);
         handleSubmitSelectPlan(event.target.value, page);
@@ -178,6 +176,7 @@ export default function CandidateManagement() {
     useEffect(() => {
         getAllRecruitmentPlan();
     }, [])
+
 
     async function getAll(pageNumber) {
         try {
