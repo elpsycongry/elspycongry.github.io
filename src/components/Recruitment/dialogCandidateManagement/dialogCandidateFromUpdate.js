@@ -526,7 +526,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       </div>
     );
   }
-  const[change,setChange] = useState(finalResult ? true : false);
+  const[change,setChange] = useState(finalResult ? "true" : "false");
   const handleChangePassFaild = (e) => {
     setFinalResult(e.target.value);
     setChange(e.target.value)
@@ -799,7 +799,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                 >
                   Kết quả cuối cùng:
                 </label>
-                {finalResult === "true" || finalResult === true ? (
+                {finalResult === "true"  ? (
                   <select
                     className="form-select text-success  ms-2"
                     style={{ width: "170px" }}
@@ -809,6 +809,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                     id="finalResult"
                     name="finalResult"
                   >
+                    <option value="">N/A</option>
                     <option className="text-success" value="true">
                       Pass
                     </option>
@@ -826,6 +827,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                     id="finalResult"
                     name="finalResult"
                   >
+                    <option value="">N/A</option>
                     <option className="text-success" value="true">
                       Pass
                     </option>

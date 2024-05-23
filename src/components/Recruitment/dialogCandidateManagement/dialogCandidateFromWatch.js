@@ -151,6 +151,9 @@ export default function DialogCandidateFormWatch({ id }) {
         const dateNow = dayjs(formatT);
         setDate(dateNow)
         setSelectedValuePassFaild(res.data.finalResult)
+        if(selectedValuePassFaild === ''){
+          selectedValuePassFaild = "";
+        }
       });
   }, []);
 
@@ -646,7 +649,7 @@ export default function DialogCandidateFormWatch({ id }) {
                 <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === "true" || selectedValuePassFaild === true ? <select
+                {selectedValuePassFaild === "true" || selectedValuePassFaild === "" ? <select
                   className="form-select text-success  ms-2"
                   style={{ width: '170px' }}
                   aria-label="Default select example"
@@ -654,6 +657,7 @@ export default function DialogCandidateFormWatch({ id }) {
                   onChange={handleChangePassFaild}
                   disabled
                 >
+                  <option value="">N/A</option>
                   <option className="text-success" value="true">Pass</option>
                   <option className="text-danger" value="false">Faild</option>
                 </select> : <select
@@ -664,6 +668,7 @@ export default function DialogCandidateFormWatch({ id }) {
                   onChange={handleChangePassFaild}
                   disabled
                 >
+                  <option value="">N/A</option>
                   <option className="text-success" value="true">Pass</option>
                   <option className="text-danger" value="false">Faild</option>
                 </select>}

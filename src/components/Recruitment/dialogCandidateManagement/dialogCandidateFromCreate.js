@@ -162,6 +162,9 @@ export default function DialogCandidateFormCreate() {
       if(values.scoreTest === ''){
         values.scoreTest = 50;
       }
+      if(values.finalResult === ''){
+        values.finalResult = null;
+      }
       console.log(values)
         setSubmitting(true);
         try {
@@ -500,7 +503,7 @@ export default function DialogCandidateFormCreate() {
   }
 
 
-  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState('true');
+  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState('');
 
   const handleChangePassFaild = (e) => {
     setSelectedValuePassFaild(e.target.value);
@@ -746,13 +749,14 @@ export default function DialogCandidateFormCreate() {
                 <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === 'true' ? <select
+                {selectedValuePassFaild === 'true' || selectedValuePassFaild === '' ? <select
                   className="form-select text-success  ms-2"
                   style={{ width: '170px' }}
                   aria-label="Default select example"
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
                 >
+                  <option value="">N/A</option>
                   <option className="text-success" value="true">Pass</option>
                   <option className="text-danger" value="false">Faild</option>
                 </select> : <select
@@ -762,6 +766,7 @@ export default function DialogCandidateFormCreate() {
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
                 >
+                  <option value="">N/A</option>
                   <option className="text-success" value="true">Pass</option>
                   <option className="text-danger" value="false">Faild</option>
                 </select>}
