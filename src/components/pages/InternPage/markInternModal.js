@@ -113,7 +113,6 @@ export function MarkInternModal({userID, updateFunction}) {
     }
     // Thực hành
     const handlePracticeScoreChange = (event, index) => {
-        console.log(target.value)
         if (event.target.value.match(inputRegex)) {
             const updatedSubjects = [...data.subjects];
             updatedSubjects[index].practiceScore = event.target.value;
@@ -124,7 +123,6 @@ export function MarkInternModal({userID, updateFunction}) {
     }
     // Thái độ
     const handleAttitudeScoreChange = (event, index) => {
-        console.log(target.value)
         if (event.target.value.match(inputRegex)) {
             const updatedSubjects = [...data.subjects];
             updatedSubjects[index].attitudeScore = event.target.value;
@@ -175,7 +173,7 @@ export function MarkInternModal({userID, updateFunction}) {
         if (result % 1 === 0) {
             result = result.toFixed(1)
         }
-        if (result > 7) {
+        if (result >= 7) {
             return (<div className={"result"}> {result}
                 <div className={"result-icon success"}>
                     <FontAwesomeIcon icon={faCheck}/>
@@ -191,6 +189,7 @@ export function MarkInternModal({userID, updateFunction}) {
 
     // Tính kết quả thực tập theo điểm tổng kết và đánh giá team
     const fetchFinalResultPass = (finalScore, inTeamScore) => {
+        console.log('ok')
         // Set fail nếu training state là stop_training
         if (data.trainingState === 'stop_training') {
             setFinalResultPass(false)
@@ -202,11 +201,18 @@ export function MarkInternModal({userID, updateFunction}) {
                 setFinalResultPass(false)
                 return;
             }
+
             finalScore = parseFloat(finalScore);
             inTeamScore = parseFloat(inTeamScore);
             if (!isNaN(finalScore) && !isNaN(inTeamScore)) {
                 let isPass = parseFloat(((finalScore + inTeamScore) / 2).toFixed(2));
-                setFinalResultPass(isPass > 7)
+                setFinalResultPass(isPass >= 7)
+                // Tự động cho đã hoàn thành nếu chấm điểm xong
+                // if (data.trainingState === 'training' || data.trainingState === null){
+                //     const currentDate = new Date().toISOString().split('T')[0];
+                //     setData({...data, trainingState: 'trained', endDate: currentDate});
+                // }
+
             } else {
                 setFinalResultPass(null)
             }
@@ -286,8 +292,12 @@ export function MarkInternModal({userID, updateFunction}) {
             <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>)
     }
 
+    const convertFormatDate = (dateString) => {
+        const date = new Date(dateString)
 
-    //
+        return `${date.getDate().toString().padStart(2,'0')}-${date.getMonth().toString().padStart(2,'0')}-${date.getFullYear()}`
+    }
+
     const theme = createTheme({
         components: {
             MuiTooltip: {
@@ -320,6 +330,7 @@ export function MarkInternModal({userID, updateFunction}) {
             setReadOnly(false)
         }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
         <Dialog
+
             sx={{
                 '& .MuiPaper-root': {
                     overflow: 'visible',
@@ -333,35 +344,35 @@ export function MarkInternModal({userID, updateFunction}) {
                 <div key={3} className={"flex-col"}>
                     <h6>Họ tên: {data.name}</h6>
                     <div className={"flex-row"}>
-                        <p>Ngày bắt đầu: {data.startDate}</p>
+                        <p>Ngày bắt đầu: {convertFormatDate(data.startDate)}</p>
                         <p style={{paddingRight: '18px'}}>
                             Số ngày thực tập: {getBusinessDay(new Date(data.startDate), new Date(data.endDate))}
                         </p>
                     </div>
-                    <p>Ngày kết thúc: {data.endDate ? data.endDate : "Chưa kết thúc"}</p>
+                    <p>Ngày kết thúc: {data.endDate ?  convertFormatDate(data.endDate) : "Chưa kết thúc"}</p>
                 </div>
                 {/*Modal body*/}
                 <div key={5} className={"table-score"}>
                     <div className={"flex flex-row justify-content-between"}>
-                        <p className={"w110 l"}>Môn học</p>
-                        <p id={"theory"}>Lý thuyết</p>
-                        <p>Thực hành</p>
-                        <p>Thái độ</p>
-                        <p>Tổng</p>
+                        <p className={"w110 tb l"}>Môn học</p>
+                        <p className={"tb"} id={"theory"} >Lý thuyết</p>
+                        <p className={"tb"}>Thực hành</p>
+                        <p className={"tb"}>Thái độ</p>
+                        <p className={"tb"}>Tổng</p>
                     </div>
                     {data.subjects.map((subject, index) => {
                         return (<div className={"flex flex-row justify-content-between"}>
                             <div className={"table-score__item tl w110"}>
-                                {subject.name}
                                     <Tippy
                                         interactive
-                                        offset={[0, 25]}
+                                        offset={[0, 45]}
                                         animation={false}
                                         trigger={'click'}
                                         content={'test'}
                                         render={() => (<div className="comment-box">
                                             <h5>Ghi chú môn {subject.name}</h5>
                                             <textarea
+                                                maxLength={132}
                                                 className={readOnly ? "edit-comment" : "edit-comment"}
                                                 // ref={(textarea) => {
                                                 //     if (textarea) {
@@ -383,14 +394,14 @@ export function MarkInternModal({userID, updateFunction}) {
                                             <Tooltip title="Thêm comment" disableInteractive={true}>
                                                 <AddComment className={"add_icon"}/>
                                             </Tooltip>}
-
                                     </Tippy>
+                                {subject.name}
                             </div>
 
                             <div className={"table-score__item"}>
                                 {readOnly ? subject.theoryScore : (<input
                                     type={"number"}
-                                    // onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
+                                    onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
                                     value={subject.theoryScore}
                                     onChange={(e) => {
                                         handleTheoryScoreChange(e, index)
@@ -429,15 +440,7 @@ export function MarkInternModal({userID, updateFunction}) {
                         </p>
                     </div>
                     <div className={"flex flex-row justify-content-between"}>
-                        <p className={"tb "}>Kết quả thực tập</p>
-                        <p className={"table-score__item"}>
-                            {finalResultPass === null ? "NA" : (finalResultPass ?
-                                <span style={{color: "green"}}>Pass</span> :
-                                <span style={{color: "red"}}>Fail</span>)}
-                        </p>
-                    </div>
-                    <div className={"flex flex-row justify-content-between"}>
-                        <p className={"tl"}>Đánh giá trên team</p>
+                        <p className={"tl tb"}>Đánh giá trên team</p>
                         <div className={"table-score__item "}>
                             {readOnly ? data.scoreInTeam : <input
                                 onChange={(e) => {
@@ -449,8 +452,17 @@ export function MarkInternModal({userID, updateFunction}) {
                         </div>
                     </div>
                     <div className={"flex flex-row justify-content-between"}>
+                        <p className={"tb "}>Kết quả thực tập</p>
+                        <p className={"table-score__item"}>
+                            {finalResultPass === null ? "NA" : (finalResultPass ?
+                                <span style={{color: "green"}}>Pass</span> :
+                                <span style={{color: "red"}}>Fail</span>)}
+                        </p>
+                    </div>
+
+                    <div className={"flex flex-row justify-content-between"}>
                         {readOnly ? (data.trainingState === null || data.trainingState === "training" || data.trainingState === "") ?
-                            <div>Đang thực tập</div> : <div>Đã hoàn thành</div> : <FormControl sx={{width: '30%'}}>
+                            <div>Đang thực tập</div> : (data.trainingState === 'stop_training' ? <div>Dừng thực tập</div> : <div>Đã hoàn thành</div>  ) : <FormControl sx={{width: '30%'}}>
                             <NativeSelect
                                 disabled={readOnly}
                                 value={data.trainingState}

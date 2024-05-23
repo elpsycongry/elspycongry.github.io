@@ -61,14 +61,14 @@ p {
     align-items: center;
     position: relative;
     .add_icon {
-      position: absolute;
-      left: -21px;
+      margin-right: 3px
+    ;
       font-size: 1rem;
-      color: #9bc2ff;
+      color: #0f6aff;
 
       &:hover {
         cursor: pointer;
-        color: #0866ff;
+        color: #659fff;
       }
     }
 
@@ -117,7 +117,7 @@ p {
 }
 
 .MuiDialogTitle-root + .css-ypiqx9-MuiDialogContent-root {
-  padding: 0 0 0 30px;
+  padding: 0 0 0 25px;
 }
 
 .css-ojb00g-MuiDialogActions-root {
@@ -126,7 +126,7 @@ p {
 
 .save-btn {
   background-color: #388738 !important;
-  margin-right: 10px !important;;
+  margin-right: 5px !important;;
   padding: 5px 20px !important;;
   color: white !important;;
   font-size: 0.9rem !important;;
@@ -148,11 +148,15 @@ p {
 .tb {
   font-weight: 600;
 }
+.result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .result-icon {
-  position: absolute;
-  right: 15px;
-  top: 4px;
+  margin-left: 5px;
   font-size: 0.7rem;
 
   &.success {
@@ -211,4 +215,7 @@ p {
   border-bottom: 10px solid transparent;
   border-right: 10px solid transparent;
 
+}
+.css-87k0pl-MuiTypography-root-MuiDialogTitle-root {
+  padding: 14px 24px 8px 25px !important;
 }
