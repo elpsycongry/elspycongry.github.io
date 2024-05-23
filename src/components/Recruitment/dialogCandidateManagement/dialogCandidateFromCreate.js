@@ -156,14 +156,22 @@ export default function DialogCandidateFormCreate() {
       const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
       values.interviewTime = formattedDateTime;
       values.finalResult = selectedValuePassFaild;
-      if(values.scoreInterview === ''){
-        values.scoreInterview = 1;
-      }
-      if(values.scoreTest === ''){
-        values.scoreTest = 50;
-      }
+     
+        if(values.scoreInterview === ''){
+          values.scoreInterview = 1;
+        }
+        if(values.scoreTest === ''){
+          values.scoreTest = 50;
+        }
+      
       if(values.finalResult === ''){
-        values.finalResult = null;
+        swal("kết quả cuối cùng buộc phải chọn", {
+          icon: "error",
+          buttons: false,
+          timer: 1000,
+        });
+        setSubmitting(false);
+        return;
       }
       console.log(values)
         setSubmitting(true);
@@ -749,7 +757,7 @@ export default function DialogCandidateFormCreate() {
                 <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === 'true' || selectedValuePassFaild === '' ? <select
+                {selectedValuePassFaild === 'true' || selectedValuePassFaild === true ? <select
                   className="form-select text-success  ms-2"
                   style={{ width: '170px' }}
                   aria-label="Default select example"
@@ -757,8 +765,8 @@ export default function DialogCandidateFormCreate() {
                   onChange={handleChangePassFaild}
                 >
                   <option value="">N/A</option>
-                  <option className="text-success" value="true">Pass</option>
-                  <option className="text-danger" value="false">Faild</option>
+                  <option className="text-success" value="true">Passed</option>
+                  <option className="text-danger" value="false">Failed</option>
                 </select> : <select
                   className="form-select text-danger  ms-2"
                   style={{ width: '170px' }}

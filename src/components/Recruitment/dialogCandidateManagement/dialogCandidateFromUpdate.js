@@ -799,7 +799,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                 >
                   Kết quả cuối cùng:
                 </label>
-                {finalResult === "true"  ? (
+                {finalResult === "true" || finalResult === true  ? (
                   <select
                     className="form-select text-success  ms-2"
                     style={{ width: "170px" }}
@@ -809,12 +809,11 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                     id="finalResult"
                     name="finalResult"
                   >
-                    <option value="">N/A</option>
                     <option className="text-success" value="true">
-                      Pass
+                      Passed
                     </option>
                     <option className="text-danger" value="false">
-                      Faild
+                      Failed
                     </option>
                   </select>
                 ) : (
@@ -827,12 +826,11 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                     id="finalResult"
                     name="finalResult"
                   >
-                    <option value="">N/A</option>
                     <option className="text-success" value="true">
-                      Pass
+                      Passed
                     </option>
                     <option className="text-danger" value="false">
-                      Faild
+                      Failed
                     </option>
                   </select>
                 )}
