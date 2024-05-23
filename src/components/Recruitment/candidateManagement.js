@@ -111,13 +111,12 @@ export default function CandidateManagement() {
     };
     const listTestSelect = [
         { id: "", text: "Trạng thái" },
-        { id: "status", text: "Đã hủy" },
-        { id: "3", text: "Đã xác nhận" },
-        { id: "Đang chờ", text: "Đang chờ" },
-        { id: "Bị từ chối bởi DET", text: "Bị từ chối bởi DET" },
-        { id: "Bị từ chối bởi DCAN", text: "Bị từ chối bởi DCAN" },
-        { id: "Đang tuyển dụng", text: "Đang tuyển dụng" },
-        { id: "Đã bàn giao", text: "Đã bàn giao" },
+        { id: "Chưa có kết quả", text: "Chưa có kết quả"},
+        { id: "Đã có kết quả", text: "Đã có kết quả"},
+        { id: "Đã gửi email cảm ơn", text: "Đã gửi email cảm ơn" },
+        { id: "Đã hẹn ngày thực tập", text: "Đã hẹn ngày thực tập" },
+        { id: "Không nhận việc", text: "Không nhận việc" },
+        { id: "Đã nhận việc", text: "Đã nhận việc" }
     ]
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
