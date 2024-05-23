@@ -24,8 +24,8 @@ import Pagination from '@mui/material/Pagination';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandidateFromCreate";
-import DialogPersonalFormUpdate from "./dialogPersonalNeeds/dialogPersonalFormUpdate";
-import DialogPersonalFormWatch from './dialogPersonalNeeds/dialogPersonalFormWatch';
+import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
+import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
 export default function CandidateManagement() {
 
     const [open, setOpen] = useState(false);
@@ -69,7 +69,7 @@ export default function CandidateManagement() {
             status: "Chưa có kq",
         }
     ];
-
+    
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const [recuitments, setRecuitment] = useState([]);
@@ -126,6 +126,7 @@ export default function CandidateManagement() {
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
         console.log(selectedStatus);
         try {
+
             const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
@@ -175,6 +176,7 @@ export default function CandidateManagement() {
     useEffect(() => {
         getAllRecruitmentPlan();
     }, [])
+
 
     async function getAll(pageNumber) {
         try {
@@ -313,6 +315,7 @@ export default function CandidateManagement() {
                                 <th className="w-130 text-center">Trạng thái</th>
                                 <th className="w-130 text-right">Hành động</th>
                             </tr>
+
                             {recuitments.map((item, index) => (
                                 <tr className="grey-text count-tr" key={item.id}>
                                     <td style={{ paddingLeft: "15px" }}>
@@ -325,11 +328,11 @@ export default function CandidateManagement() {
                                     <td className="text-center">{item.scoreInterview}</td>
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-right p-tricklord">
-                                        <DialogPersonalFormWatch id={item.id} />
-                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" ? (
-                                            <DialogPersonalFormUpdate id={item.id} check={true} />
+                                        <DialogCandidateFromWatch id={item.id} />
+                                        {item.status === "Đã có kết quả" || item.status === "Đã gửi mail cảm ơn" || item.status === "Đã hẹn ngày thực tập" || item.status === "Không nhận việc" || item.status === "Đã nhận việc" ? (
+                                            <DialogCandidateFromUpdate id={item.id} check={true} />
                                         ) : (
-                                            <DialogPersonalFormUpdate id={item.id} />
+                                            <DialogCandidateFromUpdate id={item.id} />
                                         )}
                                     </td>
                                 </tr>
