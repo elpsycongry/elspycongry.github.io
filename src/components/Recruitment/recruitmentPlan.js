@@ -25,7 +25,8 @@ import Navbar from "../fragment/navbar/navbar";
 import DialogRecruitmentPlanFormCreate from "./dialogRecruitmentPlan/dialogRecruitmentPlanFormCreate";
 import Pagination from '@mui/material/Pagination';
 // import Stack from '@mui/material/Stack';
-
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import DialogRecruitmentPlanFormWatch from './dialogRecruitmentPlan/dialogRecruitmentPlanFormWatch';
 import DialogRecruitmentPlanFormUpdate from './dialogRecruitmentPlan/dialogRecruitmentPlanFormUpdate';
 import { Padding } from '@mui/icons-material';
@@ -191,6 +192,13 @@ export default function RecruitmentPlan() {
         }
     }
 
+    async function handleFristPage() {
+        handlePagination(null, 1);
+    }
+    async function handleLastPage() {
+        handlePagination(null, totalPages);
+    }
+
     useEffect(() => {
         getAll(page);
     }, [page]);
@@ -291,8 +299,8 @@ export default function RecruitmentPlan() {
                             </tr>
                             {recuitments.map((item, index) => (
                                 <tr className="grey-text count-tr" key={item.id}>
-                                    <td style={{ paddingLeft:  "15px" }}>
-                                        {index + 1 + page *10}
+                                    <td style={{ paddingLeft: "15px" }}>
+                                        {index + 1 + page * 10}
                                     </td>
                                     <td className=''>{item.name}</td>
                                     <td className="text-center">{moment(item.recruitmentRequest.dateStart).format("HH:mm YYYY-MM-DD")}</td>
@@ -315,10 +323,15 @@ export default function RecruitmentPlan() {
                             ))}
                         </table>
                         {showError && <p>No Content</p>}
-                        <div className=' position-absolute bottom-0  w-100 start-0' style={{ marginBottom: "20px" }}>
-                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
+                        <div className=' position-absolute bottom-0  w-100 start-0 page align-item-center'>
+                            <button className='first-button position-relative hover-btn-page btn-page'onClick={handleFristPage} disabled={currentPage === 1}> 
+                                <KeyboardDoubleArrowLeftIcon className='icon-page position-absolute'/>
+                                </button>
+                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination}  className=' d-flex justify-content-center ' />
+                            <button className='first-button position-relative hover-btn-page btn-page' onClick={handleLastPage} disabled={currentPage === totalPages}>
+                                <KeyboardDoubleArrowRightIcon className='icon-page position-absolute'/>
+                                </button>
                         </div>
-
                     </div>
                 </div>
             </Box>
