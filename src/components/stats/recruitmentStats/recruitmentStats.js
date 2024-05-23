@@ -207,31 +207,39 @@ export default function RecruitmentStats() {
                                     }
                                 </div>
                                 <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '20px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>
-                                    <label>Số thực tập sinh nhập học:</label>
+                                    <label>Số CV mới:</label>
                                     <label style={{ marginLeft: '200px' }}>{trainingStats.internsEnrolled} TTS</label>
                                     <br></br>
                                     <br></br>
-                                    <label>Số thực tập sinh tốt nghiệp:</label>
+                                    <label>Số CV phỏng vấn:</label>
                                     <label style={{ marginLeft: '195px' }}>{trainingStats.graduatingInterns} TTS</label>
                                     <br></br>
                                     <br></br>
-                                    <label>Số thực tập sinh fail:</label>
+                                    <label>Số ứng viên đã phỏng vấn:</label>
                                     <label style={{ marginLeft: '264px' }}>{trainingStats.internsFailed} TTS</label>
                                     <br></br>
                                     <br></br>
-                                    <label>Tỷ lệ Pass/fail:</label>
+                                    <label>Số ứng viên không đến phỏng vấn:</label>
                                     <label style={{ marginLeft: '328px' }}>{trainingStats.rate}</label>
                                     <br></br>
                                     <br></br>
-                                    <label>Số thực tập sinh đang thực tập:</label>
+                                    <label>Số PASS:</label>
                                     <label style={{ marginLeft: '162px' }}>{trainingStats.internsCurrentlyPracticing} TTS</label>
                                     <br></br>
                                     <br></br>
-                                    <label>Số thực tập sinh nghỉ thực tập:</label>
+                                    <label>Số FAIL:</label>
                                     <label style={{ marginLeft: '170px' }}>{trainingStats.internsQuitInternship} TTS</label>
                                     <br></br>
                                     <br></br>
-                                    <label>Điểm tốt nghiệp trung bình:</label>
+                                    <label>Số ứng viên nhận việc:</label>
+                                    <label style={{ marginLeft: '208px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <br></br>
+                                    <br></br>
+                                    <label>Số ứng viên không nhận việc:</label>
+                                    <label style={{ marginLeft: '208px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <br></br>
+                                    <br></br>
+                                    <label>Số ứng viên chưa nhận việc:</label>
                                     <label style={{ marginLeft: '208px' }}>{trainingStats.averageGraduationScore}</label>
                                 </div>
                             </div>
