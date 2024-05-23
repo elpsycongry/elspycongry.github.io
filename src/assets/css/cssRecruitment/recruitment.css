@@ -218,6 +218,7 @@
     width: 372px;
 }
 
+
 .w-310 {
     width: 310px;
 }
@@ -510,4 +511,29 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .hover-primary {
     transition: 0.2s ease-in-out;
+}
+.page{
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+.first-button {
+    border-radius: 50%;
+}
+.hover-btn-page{
+    transition: 0.3s ease-in-out;
+}
+.hover-btn-page:hover{
+    background-color:  rgba(0, 0, 0, 0.08)!important;
+    transition: 0.2s ease-in-out;
+}
+.icon-page{
+    top: 3px;
+    left: 2.5px;
+}
+.btn-page{
+    width: 30px;
+    height: 30px;
+    background-color: #fdfdfd;
+    border: none;
 }
