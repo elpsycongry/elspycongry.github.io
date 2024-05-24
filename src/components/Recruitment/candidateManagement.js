@@ -35,41 +35,6 @@ export default function CandidateManagement() {
     const handleClickPracticeClose = () => {
         setOpen(false);
     };
-    const [check, setCheck] = useState(false);
-    const checkDisplay = () => {
-        setCheck(false);
-    };
-
-    const CandidateManagementTest = [
-        {
-            id: 1,
-            name: "trọng",
-            email: "trong@gmail.com",
-            number: "0392017345",
-            scoreTest: "53",
-            scorePV: "8",
-            status: "Chưa có kq",
-        },
-        {
-            id: 2,
-            name: "Hoàng",
-            email: "trong@gmail.com",
-            number: "0392017345",
-            scoreTest: "53",
-            scorePV: "8",
-            status: "Chưa có kq",
-        },
-        {
-            id: 3,
-            name: "Hoa",
-            email: "trong@gmail.com",
-            number: "0392017345",
-            scoreTest: "53",
-            scorePV: "8",
-            status: "Chưa có kq",
-        }
-    ];
-    
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const [recuitments, setRecuitment] = useState([]);
@@ -124,7 +89,6 @@ export default function CandidateManagement() {
     };
 
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
-        console.log(selectedStatus);
         try {
 
             const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
@@ -149,7 +113,6 @@ export default function CandidateManagement() {
     };
 
     const handleSubmitSelectPlan = async (selectPlan, pageNumber) => {
-        console.log(selectedStatus);
         try {
             const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
@@ -170,20 +133,15 @@ export default function CandidateManagement() {
     async function getAllRecruitmentPlan() {
         const res = await axios.get('http://localhost:8080/api/interns')
         setRecruitmentPlan(res.data.content);
-        console.log(res.data.content);
     }
 
     useEffect(() => {
         getAllRecruitmentPlan();
     }, [])
 
-
     async function getAll(pageNumber) {
         try {
             const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
-            console.log(response.data.totalPages)
-            console.log(response.data.pageable.pageNumber);
-            console.log(currentPage);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -253,7 +211,7 @@ export default function CandidateManagement() {
                             >
                                 <ClearIcon />
                             </IconButton>
-                            <img src={imagePractice} alt="image" style={{ width: '100%' }} />
+                            <img src={imagePractice} alt="practice" style={{ width: '100%' }} />
                         </DialogContent>
                     </Dialog>
                     <div className=" mt-2">

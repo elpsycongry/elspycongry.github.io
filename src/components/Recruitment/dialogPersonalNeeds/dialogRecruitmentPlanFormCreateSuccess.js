@@ -4,10 +4,8 @@ import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
-import BackspaceIcon from '@mui/icons-material/Backspace';
 import axios from "axios";
 import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
 export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClose }) {
@@ -34,7 +32,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     setTechErr(hasErrTech);
     // 
     const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+      if (item.numberOfPersonnelNeeded !== "" && item.NumberOfOutputPersonnel !== "" && item.numberOfPersonnelNeeded !== 0 && item.NumberOfOutputPersonnel !== 0) {
         return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
@@ -48,7 +46,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     var hasErrOfPersonal;
     if (!hasErrNumber) {
       const errNumberPersonal = techArr.map(item => {
-        if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+        if (item.numberOfPersonnelNeeded === 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
           return true;
         } else {
           return false;
@@ -64,7 +62,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     var hasErrNumberOutput;
     if (!hasErrNumber) {
       const errNumberOutput = techArr.map(item => {
-        if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
+        if (item.numberOfOutputPersonnel === 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
           return true;
         } else {
           return false;
@@ -79,7 +77,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     //  
 
     var hasErrRecruitmentPlan;
-    if (nameRecruitmentPlan == "") {
+    if (nameRecruitmentPlan === "") {
       hasErrRecruitmentPlan = true;
       setErrNameRecruitmentPlan(true);
     } else {
@@ -87,14 +85,14 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
       setErrNameRecruitmentPlan(false);
     }
 
-    if (dateSet < futureDate || dateSet == "Invalid Date") {
+    if (dateSet < futureDate || dateSet === "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
     console.log(hasErrRecruitmentPlan)
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrNumber) {
+    if (dateSet < futureDate || dateSet === "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrNumber) {
       return false;
     } else {
       return true;
@@ -132,10 +130,10 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
       values.recruitmentPlan.recruitmentRequest.id = idRecruitment;
       const nameRecruitmentPlan = values.recruitmentPlan.name;
       // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
-      if (values.recruitmentPlan.dateRecruitmentEnd == '') {
+      if (values.recruitmentPlan.dateRecruitmentEnd === '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
-      if (values.recruitmentPlan.handoverDeadline == '') {
+      if (values.recruitmentPlan.handoverDeadline === '') {
         values.recruitmentPlan.handoverDeadline = handoverDeadline;
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
@@ -176,16 +174,14 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const [handoverDeadline, setHandoverDeadline] = useState();
   const [recruitmentName, setRecuitmentName] = useState();
   const [idRecruitment, setIdRecruitment] = useState();
-  const [recruitment, setRecuitment] = useState();
   // Call api
   useEffect(() => {
 
-    if (id != null) {
+    if (id !== null) {
       axios
         .get("http://localhost:8080/api/recruitmentRequests/" + id)
         .then((res) => {
           setRecuitmentName(res.data.recruitmentRequest.name);
-          setRecuitment(res.data.recruitmentRequest);
           setIdRecruitment(res.data.recruitmentRequest.id);
 
           setHandoverDeadline(res.data.recruitmentRequest.dateEnd);
@@ -237,7 +233,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
 
   // Hàm dữ liệu đầu ra
   function NumberOfOutputPersonnel({ number, idx }) {
-    if (number === "" || number == 0) {
+    if (number === "" || number === 0) {
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);
@@ -293,7 +289,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
 
   // Hàm dữ liệu cần tuyển
   function NumberOfPersonnelNeeded({ number, idx }) {
-    if (number === "" || number == 0) {
+    if (number === "" || number === 0) {
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);

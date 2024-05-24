@@ -1,15 +1,12 @@
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveIcon from "@mui/icons-material/Remove";
-import SendIcon from "@mui/icons-material/Send";
 import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-
 import CreateIcon from "@mui/icons-material/Create";
 import axios from "axios";
 import { useFormik } from "formik";
 import swal from "sweetalert";
-import { number } from "yup";
 
 export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [dateErr, setDateErr] = useState(false);
@@ -18,7 +15,6 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
-  const [chooseRecruitmentNeeds, setChooseRecruitmentNeeds] = useState('');
   const [errNumber, setErrNumber] = useState(false);
 
 
@@ -48,7 +44,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     setTechErr(hasErrTech);
     // 
     const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+      if (item.numberOfPersonnelNeeded !== "" && item.NumberOfOutputPersonnel !== "" && item.numberOfPersonnelNeeded !== 0 && item.NumberOfOutputPersonnel !== 0) {
         return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
@@ -62,7 +58,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     var hasErrOfPersonal;
     if (!hasErrNumber) {
       const errNumberPersonal = techArr.map(item => {
-        if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+        if (item.numberOfPersonnelNeeded === 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
           return true;
         } else {
           return false;
@@ -78,7 +74,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     var hasErrNumberOutput;
     if (!hasErrNumber) {
       const errNumberOutput = techArr.map(item => {
-        if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
+        if (item.numberOfOutputPersonnel === 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
           return true;
         } else {
           return false;
@@ -93,7 +89,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     //  
 
     var hasErrRecruitmentPlan;
-    if (nameRecruitmentPlan == "") {
+    if (nameRecruitmentPlan === "") {
       hasErrRecruitmentPlan = true;
       setErrNameRecruitmentPlan(true);
     } else {
@@ -102,14 +98,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date") {
+    if (dateSet < futureDate || dateSet === "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
+    if (dateSet < futureDate || dateSet === "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
       return false;
     } else {
       return true;
@@ -154,10 +150,10 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       console.log(values.recruitmentPlan.recruitmentRequest.id);
       const personalneed = values.recruitmentPlan.recruitmentRequest.id;
       const nameRecruitmentPlan = values.recruitmentPlan.name;
-      if (values.recruitmentPlan.dateRecruitmentEnd == '') {
+      if (values.recruitmentPlan.dateRecruitmentEnd === '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
-      if (values.recruitmentPlan.handoverDeadline == '') {
+      if (values.recruitmentPlan.handoverDeadline === '') {
         values.recruitmentPlan.handoverDeadline = handoverDeadline;
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
@@ -204,7 +200,6 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
       formData.setValues(res.data);
       setHandoverDeadline(res.data.recruitmentPlan.handoverDeadline);
-      setChooseRecruitmentNeeds(res.data.recruitmentPlan.recruitmentRequest.id);
       const detail = res.data.planDetails;
       setTech(
         detail.map((item) => ({
@@ -214,14 +209,6 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
         }))
       );
     });
-  }, []);
-  const [recuitments, setRecuitment] = useState([]);
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-      setRecuitment(res.data);
-      // setChooseRecruitmentNeeds(res.data.)
-    });
-
   }, []);
   // Xử lý mở form
   const listTechnology = [
@@ -267,7 +254,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
 
   // Hàm dữ liệu đầu ra
   function NumberOfOutputPersonnel({ number, idx }) {
-    if (number === "" || number == 0) {
+    if (number === "" || number === 0) {
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);
@@ -324,7 +311,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   };
   // Hàm dữ liệu cần tuyển
   function NumberOfPersonnelNeeded({ number, idx }) {
-    if (number === "" || number == 0) {
+    if (number === "" || number === 0) {
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);
@@ -457,10 +444,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     }
   };
 
-  const handleChangeRecruitmentNeeds = (event) => {
-    setChooseRecruitmentNeeds(event.target.value);
-    formData.handleChange(event);
-  }
+
   return (
     <>
       {check ? (
