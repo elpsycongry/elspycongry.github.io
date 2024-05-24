@@ -59,6 +59,16 @@ export default function DialogCandidateFormCreate() {
       setErrPhoneNumber(false);
       hasErrPhone = false;
     }
+    console.log(hasErrPhone)
+
+    var hasErrPhone;
+    if (!validPhone.test(phoneNumber) || phoneNumber === "") {
+      setErrPhoneNumber(true);
+      hasErrPhone = true;
+    } else {
+      setErrPhoneNumber(false);
+      hasErrPhone = false;
+    }
 
     var hasErrRecruitmentPlan;
     if (recruitmentPlan === '' || recruitmentPlan === null || recruitmentPlan === 'default' || recruitmentPlan === 'undefined') {
@@ -151,6 +161,7 @@ export default function DialogCandidateFormCreate() {
       // return;
 
       if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status, finalResult)) {
+
         setSubmitting(false);
         return;
       } else {
@@ -204,28 +215,6 @@ export default function DialogCandidateFormCreate() {
 
       fetchIsFullManagement();
 
-
-
-  // plans.map(item => {
-  //   console.log(item.isFullManagement)
-  // })
-
-
-  // plans.map(item => {
-  //   console.log(item.id)
-  // })
-
-
-
-  // useEffect(() => {
-  // if (plansLoaded) {
-
-  // }
-
-  // }, [plansLoaded]);
-
-
-
   // Xử lý mở form
   const listTestSelect = [
     { id: 1, text: "Chưa có kết quả" },
@@ -247,7 +236,6 @@ export default function DialogCandidateFormCreate() {
 
   const dateNow = dayjs();
   const newDate = dateNow.add(1, 'hour');
-
   const [date, setDate] = useState(newDate);
   const handleChangeDateTime = (e) => {
     setDate(e);
@@ -362,12 +350,6 @@ export default function DialogCandidateFormCreate() {
   const handleChangePassFaild = (e) => {
     setSelectedValuePassFaild(e.target.value);
   };
-
-
-  // const []
-
-
-
   return (
     <>
       <div className=" position-relative " style={{ width: '75px', minWidth: '170px' }} onClick={handleClickFormOpen}>

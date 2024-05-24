@@ -142,7 +142,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       const phoneNumber = values.phone;
       const recruitmentPlan = values.recruitmentPlan.id;
       const status = values.status;
-
       // checkValid(fullName, email, phoneNumber, recruitmentPlan, status)
 
       if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status, finalResult)) {
@@ -327,6 +326,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       </div>
     );
   }
+
   const [change, setChange] = useState(finalResult ? "true" : "false");
   const handleChangePassFaild = (e) => {
     setFinalResult(e.target.value);

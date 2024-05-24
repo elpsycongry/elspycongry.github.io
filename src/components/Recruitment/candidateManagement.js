@@ -106,6 +106,7 @@ export default function CandidateManagement() {
             console.error('Error searching by status:', error);
         }
     };
+
     const handlePlanChange = (event) => {
         setSelectPlan(event.target.value);
         handleSubmitSelectPlan(event.target.value, page);
@@ -137,6 +138,7 @@ export default function CandidateManagement() {
     useEffect(() => {
         getAllRecruitmentPlan();
     }, [])
+
     async function getAll(pageNumber) {
         try {
             const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
