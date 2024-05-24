@@ -222,7 +222,7 @@ export default function Training() {
                 </div>
                 <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
-                        <table className="table_training" style={{ display: 'flex', alignItems: 'center' }}>
+                        <table className="table_training" style={{ display: 'flex', alignItems: 'center', marginTop: '-40px' }}>
                             <div className="no-scrolling">
                                 <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
                                     <th className="training-id">STT</th>

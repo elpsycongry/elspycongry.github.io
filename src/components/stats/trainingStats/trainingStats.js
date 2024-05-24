@@ -157,7 +157,7 @@ export default function TrainingStats() {
             setQuarter(0)
             setMonth(1)
             setTitleStatistics("Tháng")
-            setYear(1)
+            setYear(0)
             setActive5(true)
             setActive6(false)
             setActive7(false)
@@ -168,7 +168,7 @@ export default function TrainingStats() {
             console.log(quarter);
             setMonth(0)
             setTitleStatistics("Quý")
-            setYear(1)
+            setYear(0)
             setActive5(false)
             setActive6(true)
             setActive7(false)
@@ -188,15 +188,27 @@ export default function TrainingStats() {
         }
 
         if (theValue == -1) {
-            setYear(year - 1)
-            setMonth(month -1)
-            setQuarter(quarter -1)
+            if(year != 0){
+                setYear(year - 1)
+            }
+            if(month != 0){
+                setMonth(month -1)
+            }
+            if(quarter != 0){
+                setQuarter(quarter -1)
+            }
         }
 
         if (theValue == -2) {
-            setQuarter(quarter + 1)
-            setYear(year + 1)
-            setMonth(month + 1)
+            if(year != 0){
+                setYear(year + 1)
+            }
+            if(month != 0){
+                setMonth(month + 1)
+            }
+            if(quarter != 0){
+                setQuarter(quarter + 1)
+            }
         }
 
     };
@@ -408,7 +420,15 @@ export default function TrainingStats() {
                                                             <ArrowForwardIosIcon fontSize="inherit" sx={{ color: 'white', width: '15px', height: '15px' }} />
                                                         </IconButton>
                                                     </TableCell>
-                                                    <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {year} </TableCell>
+                                                    {year !== 0 && (
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {year} </TableCell> 
+                                                    )}
+                                                    {month !== 0 && (
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {month} </TableCell> 
+                                                    )}
+                                                    {quarter !== 0 && (
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {quarter} </TableCell> 
+                                                    )}
                                                     <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Tăng trưởng</TableCell>
                                                 </TableRow>
                                             </TableHead>
