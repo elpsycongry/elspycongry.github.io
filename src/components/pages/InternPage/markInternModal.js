@@ -34,7 +34,7 @@ export function MarkInternModal({userID, updateFunction}) {
     // alert
     const [openAlert, setOpenAlert] = useState(false);
     const handleClose = () => {
-        updateFunction()
+        // updateFunction()
         setOpen(false)
     };
 
@@ -48,7 +48,7 @@ export function MarkInternModal({userID, updateFunction}) {
             attitudeScore: '',
             comment: {id: 1, value: 'Comment 1'}
         }, {
-            name: "Cơ sở dữ liệu",
+            name: "CSDL",
             theoryScore: '',
             practiceScore: '',
             attitudeScore: '',
@@ -384,7 +384,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                             disabled={inValidSave}
                                             onClick={() => {handleSubmit()}}
                                             className={"save-btn comment-btn"}>
-                                            LƯU
+                                            LƯU GHI CHÚ
                                         </button>)}
                                     </div>)}
                                     placement={'left'}>
