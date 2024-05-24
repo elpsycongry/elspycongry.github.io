@@ -500,25 +500,27 @@ export function MarkInternModal({userID, updateFunction}) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">
-                {"Bạn có chắc là muốn dừng thực tập intern này ?"}
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText style={{paddingRight: '26px', textAlign: 'justify'}}
-                                   id="alert-dialog-description">
-                    Dừng thực tập đồng nghĩa với việc kết quả thực tập của người này sẽ là trượt
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => {
-                    setOpenAlert(false)
-                }}>Quay lại</Button>
-                <StyledEngineProvider injectFirst={true}>
-                    <Button className={"save-btn"} onClick={handleClickAgreeAlert} autoFocus>
-                        Đồng ý
-                    </Button>
-                </StyledEngineProvider>
-            </DialogActions>
+            <div className={"alert-modal"}>
+                <DialogTitle id="alert-dialog-title">
+                    {"Bạn có chắc là muốn dừng thực tập intern này ?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText style={{paddingRight: '26px', textAlign: 'justify'}}
+                                       id="alert-dialog-description">
+                        Dừng thực tập đồng nghĩa với việc kết quả thực tập của người này sẽ là trượt
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {
+                        setOpenAlert(false)
+                    }}>Quay lại</Button>
+                    <StyledEngineProvider injectFirst={true}>
+                        <Button className={"save-btn"} onClick={handleClickAgreeAlert} autoFocus>
+                            Đồng ý
+                        </Button>
+                    </StyledEngineProvider>
+                </DialogActions>
+            </div>
         </Dialog>
     </>);
 }
