@@ -37,62 +37,7 @@ export default function PersonalNeeds() {
     const handleClickPracticeClose = () => {
         setOpen(false);
     };
-    const [check, setCheck] = useState(false);
-    const checkDisplay = () => {
-        setCheck(false);
-    };
 
-    const listPersonal = [
-        {
-            id: 1,
-            name: "DECEN- Nhu cầu nhân sự quý 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 2,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 3,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 4,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 5,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 6,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-        {
-            id: 7,
-            name: "DECEN- Nhu cầu 3",
-            time: "14:19 11/11/2019",
-            status: "Đã gửi",
-            man: "KongDT",
-        },
-    ];
 
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
@@ -233,7 +178,7 @@ export default function PersonalNeeds() {
                             >
                                 <ClearIcon />
                             </IconButton>
-                            <img src={imagePractice} alt="image" style={{ width: '100%' }} />
+                            <img src={imagePractice} alt="practice" style={{ width: '100%' }} />
                         </DialogContent>
                     </Dialog>
                     <div className=" mt-2">

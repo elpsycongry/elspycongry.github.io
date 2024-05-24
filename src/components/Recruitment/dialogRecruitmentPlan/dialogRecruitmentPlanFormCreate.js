@@ -4,11 +4,8 @@ import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
 import RemoveIcon from '@mui/icons-material/Remove';
-import BackspaceIcon from '@mui/icons-material/Backspace';
-
 import axios from "axios";
 import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
 export default function DialogRecruitmentPlanFormCreate({ id }) {
@@ -48,7 +45,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
 
     // 
     const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded != "" && item.NumberOfOutputPersonnel != "" && item.numberOfPersonnelNeeded != 0 && item.NumberOfOutputPersonnel != 0) {
+      if (item.numberOfPersonnelNeeded !== "" && item.NumberOfOutputPersonnel !== "" && item.numberOfPersonnelNeeded !== 0 && item.NumberOfOutputPersonnel !== 0) {
         return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
@@ -60,7 +57,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     var hasErrOfPersonal;
     if (!hasErrNumber) {
       const errNumberPersonal = techArr.map(item => {
-        if (item.numberOfPersonnelNeeded == 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+        if (item.numberOfPersonnelNeeded === 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
           return true;
         } else {
           return false;
@@ -76,7 +73,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     var hasErrNumberOutput;
     if (!hasErrNumber) {
       const errNumberOutput = techArr.map(item => {
-        if (item.numberOfOutputPersonnel == 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
+        if (item.numberOfOutputPersonnel === 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
           return true;
         } else {
           return false;
@@ -90,7 +87,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     }
     //  
     var hasErrRecruitmentPlan;
-    if (nameRecruitmentPlan == "") {
+    if (nameRecruitmentPlan === "") {
       hasErrRecruitmentPlan = true;
       setErrNameRecruitmentPlan(true);
     } else {
@@ -99,14 +96,14 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date") {
+    if (dateSet < futureDate || dateSet === "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
 
-    if (dateSet < futureDate || dateSet == "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
+    if (dateSet < futureDate || dateSet === "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
       return false;
     } else {
       return true;
@@ -146,10 +143,10 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       const nameRecruitmentPlan = values.recruitmentPlan.name;
       values.planDetails = [...tech];
       values.idUser = 1;
-      if (values.recruitmentPlan.dateRecruitmentEnd == '') {
+      if (values.recruitmentPlan.dateRecruitmentEnd === '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
-      if (values.recruitmentPlan.handoverDeadline == '') {
+      if (values.recruitmentPlan.handoverDeadline === '') {
         values.recruitmentPlan.handoverDeadline = handoverDeadline;
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
@@ -239,7 +236,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   // Hàm dữ liệu đầu ra
   function NumberOfOutputPersonnel({ number, idx }) {
 
-    if (number === "" || number == 0) {
+    if (number === "" || number === 0) {
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);
@@ -294,7 +291,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   };
   // Hàm dữ liệu cần tuyển
   function NumberOfPersonnelNeeded({ number, idx, numberOutPut }) {
-    if (number === "" || number == 0) {
+    if (number === "" || number === 0) {
       number = 0;
     }
     const [countOf, setCountOf] = useState(number);
@@ -470,7 +467,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 id="recruitmentPlan.recruitmentRequest.id"
               >
                 <option value="default">Chọn nhu cầu nhân sự</option>
-                {recuitments.filter(item => item.status == "Đã gửi").map((item) => (
+                {recuitments.filter(item => item.status === "Đã gửi").map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>

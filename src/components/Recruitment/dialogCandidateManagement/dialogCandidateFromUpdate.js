@@ -28,6 +28,8 @@ export default function DialogCandidateFormUpdate({ id, check }) {
   const [errPhoneNumber, setErrPhoneNumber] = useState(false);
   const [errRecruitmentPlan, setErrRecruitmentPlan] = useState(false);
   const [errStatus, setErrStatus] = useState(false);
+  const [errFinalResult, setErrFinalResult] = useState(false);
+
 
   // Xử lý số lượng nhân sự
   const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status) => {
@@ -46,7 +48,14 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       setErrEmail(false);
       hasErrEmail = false;
     }
-
+    var hasErrFinalResult;
+    if (finalResult === '' || finalResult === 'default' || finalResult === 'undefined') {
+      hasErrFinalResult = true;
+      setErrFinalResult(true)
+    } else {
+      hasErrFinalResult = false;
+      setErrFinalResult(false)
+    }
 
     var hasErrPhone;
     if (!validPhone.test(phoneNumber) || phoneNumber === "") {
@@ -78,7 +87,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
 
 
-    if (!validFullName.test(fullName) || !validEmail.test(email) || hasErrRecruitmentPlan || hasErrStatus || hasErrPhone || hasErrEmail) {
+    if (!validFullName.test(fullName) || !validEmail.test(email) || hasErrRecruitmentPlan || hasErrStatus || hasErrPhone || hasErrEmail || hasErrFinalResult) {
       return false;
     } else {
       return true;
@@ -133,12 +142,10 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       const phoneNumber = values.phone;
       const recruitmentPlan = values.recruitmentPlan.id;
       const status = values.status;
+
       // checkValid(fullName, email, phoneNumber, recruitmentPlan, status)
 
-
-
-      console.log(values);
-      if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status)) {
+      if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status, finalResult)) {
         setSubmitting(false);
         return;
       } else {
@@ -171,12 +178,31 @@ export default function DialogCandidateFormUpdate({ id, check }) {
     });
     axios.get("http://localhost:8080/api/interns/" + id).then((res) => {
       formData.setValues(res.data);
+      setFinalResult(res.data.finalResult);
       const formatT = res.data.interviewTime;
       const dateNow = dayjs(formatT);
       setDate(dateNow);
       setFinalResult(res.data.finalResult);
     });
   }, []);
+
+  const fetchIsFullManagement = async () => {
+    const updatedPlans = await Promise.all(
+      plans.map(async (item) => {
+        try {
+          const res = await axios.get(`http://localhost:8080/api/interns/isFull/${item.id}`);
+          return { ...item, isFullManagement: res.data };
+        } catch (error) {
+          console.error(`Error fetching isFullManagement for plan ${item.id}:`, error);
+          return { ...item, isFullManagement: null }; // hoặc giá trị mặc định nào đó
+        }
+      })
+    );
+    setPlans(updatedPlans);
+    // console.log('Updated plans with isFullManagement:', updatedPlans);
+  };
+
+  fetchIsFullManagement();
 
   // Xử lý mở form
   const listTestSelect = [
@@ -211,11 +237,8 @@ export default function DialogCandidateFormUpdate({ id, check }) {
     if (scoreTest === '' || scoreTest === 0) {
       scoreTest = 50;
     }
+    scoreTest = parseInt(scoreTest);
     const [testMarks, setTestMarks] = useState(scoreTest);
-    // useEffect(() => {
-    //   setTestMarks(scoreTest);
-    // }, [scoreTest]);
-
     const handleClickCountPlus = () => {
       if (testMarks < 100) {
         const newTestMarks = testMarks + 1;
@@ -304,7 +327,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       </div>
     );
   }
-  const [change, setChange] = useState(finalResult ? true : false);
+  const [change, setChange] = useState(finalResult ? "true" : "false");
   const handleChangePassFaild = (e) => {
     setFinalResult(e.target.value);
     setChange(e.target.value)
@@ -475,10 +498,15 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                 id="recruitmentPlan.id"
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
-                {plans.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
+                {plans.filter(item => item.status === "Đã xác nhận").map((item) => (
+                  item.isFullManagement === true ?
+                    <option style={{ color: 'gainsboro' }} key={item.id} value={item.id} disabled>
+                      {item.name}
+                    </option>
+                    :
+                    <option className="cursor-pointer" key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
                 ))}
               </select>
               <div className="col-md-8  mt-0">
@@ -583,10 +611,10 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                     name="finalResult"
                   >
                     <option className="text-success" value="true">
-                      Pass
+                      Passed
                     </option>
                     <option className="text-danger" value="false">
-                      Faild
+                      Failed
                     </option>
                   </select>
                 ) : (
@@ -600,12 +628,19 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                     name="finalResult"
                   >
                     <option className="text-success" value="true">
-                      Pass
+                      Passed
                     </option>
                     <option className="text-danger" value="false">
-                      Faild
+                      Failed
                     </option>
                   </select>
+                )}
+              </div>
+              <div className="col-md-12 text-center  mt-0">
+                {errFinalResult && (
+                  <p style={{ paddingLeft: '230px' }} className="err-valid ws-nowrap ">
+                    Trạng thái không được để trống
+                  </p>
                 )}
               </div>
             </div>

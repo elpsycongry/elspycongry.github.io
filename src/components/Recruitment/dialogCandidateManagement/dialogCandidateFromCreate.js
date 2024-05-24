@@ -20,23 +20,34 @@ export default function DialogCandidateFormCreate() {
   const [errPhoneNumber, setErrPhoneNumber] = useState(false);
   const [errRecruitmentPlan, setErrRecruitmentPlan] = useState(false);
   const [errStatus, setErrStatus] = useState(false);
+  const [errFinalResult, setErrFinalResult] = useState(false);
 
   // Xử lý số lượng nhân sự
-  const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status) => {
-    console.log(phoneNumber);
-    console.log(validPhone.test(phoneNumber));
+  const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status, finalResult) => {
+    console.log(finalResult);
+    // console.log(validPhone.test(phoneNumber));
     if (!validFullName.test(fullName)) {
       setErrName(true);
     } else {
       setErrName(false);
     }
     var hasErrEmail;
-    if (!validEmail.test(email) ||  email === "") {
+    if (!validEmail.test(email) || email === "") {
       setErrEmail(true);
       hasErrEmail = true;
     } else {
       setErrEmail(false);
       hasErrEmail = false;
+    }
+
+
+    var hasErrFinalResult;
+    if (finalResult === '' || finalResult === 'default' || finalResult === 'undefined') {
+      hasErrFinalResult = true;
+      setErrFinalResult(true)
+    } else {
+      hasErrFinalResult = false;
+      setErrFinalResult(false)
     }
 
 
@@ -48,7 +59,6 @@ export default function DialogCandidateFormCreate() {
       setErrPhoneNumber(false);
       hasErrPhone = false;
     }
-    console.log(hasErrPhone)
 
     var hasErrRecruitmentPlan;
     if (recruitmentPlan === '' || recruitmentPlan === null || recruitmentPlan === 'default' || recruitmentPlan === 'undefined') {
@@ -70,7 +80,7 @@ export default function DialogCandidateFormCreate() {
 
 
 
-    if (!validFullName.test(fullName) || !validEmail.test(email) || hasErrRecruitmentPlan || hasErrStatus || hasErrPhone || hasErrEmail) {
+    if (!validFullName.test(fullName) || !validEmail.test(email) || hasErrRecruitmentPlan || hasErrStatus || hasErrPhone || hasErrEmail || hasErrFinalResult) {
       return false;
     } else {
       return true;
@@ -114,26 +124,33 @@ export default function DialogCandidateFormCreate() {
       const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
       values.interviewTime = formattedDateTime;
       values.finalResult = selectedValuePassFaild;
+      console.log(values)
+
       if (values.scoreInterview === '') {
         values.scoreInterview = 1;
       }
+
       if (values.scoreTest === '') {
         values.scoreTest = 50;
       }
-      console.log(values)
-
+      if (values.checkInterview === '') {
+        values.checkInterview = true;
+      }
       // Lấy dữ liệu check
+
+
+      const finalResult = values.finalResult;
       const fullName = values.name;
       const email = values.email;
       const phoneNumber = values.phone;
       const recruitmentPlan = values.recruitmentPlan.id;
       const status = values.status;
-      // checkValid(fullName, email, phoneNumber, recruitmentPlan, status)
 
-
+      // checkValid(fullName, email, phoneNumber, recruitmentPlan, status, finalResult)
       // setSubmitting(false);
       // return;
-      if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status)) {
+
+      if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status, finalResult)) {
         setSubmitting(false);
         return;
       } else {
@@ -161,13 +178,53 @@ export default function DialogCandidateFormCreate() {
     }
   });
   // Call api
+  const [plansLoaded, setPlansLoaded] = useState(false);
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     axios.get("http://localhost:8080/api/plans").then((res) => {
       setPlans(res.data);
     });
-
   }, []);
+
+  const fetchIsFullManagement = async () => {
+    const updatedPlans = await Promise.all(
+      plans.map(async (item) => {
+        try {
+          const res = await axios.get(`http://localhost:8080/api/interns/isFull/${item.id}`);
+          return { ...item, isFullManagement: res.data };
+        } catch (error) {
+          console.error(`Error fetching isFullManagement for plan ${item.id}:`, error);
+          return { ...item, isFullManagement: null }; // hoặc giá trị mặc định nào đó
+        }
+      })
+    );
+    setPlans(updatedPlans);
+    // console.log('Updated plans with isFullManagement:', updatedPlans);
+  };
+
+      fetchIsFullManagement();
+
+
+
+  // plans.map(item => {
+  //   console.log(item.isFullManagement)
+  // })
+
+
+  // plans.map(item => {
+  //   console.log(item.id)
+  // })
+
+
+
+  // useEffect(() => {
+  // if (plansLoaded) {
+
+  // }
+
+  // }, [plansLoaded]);
+
+
 
   // Xử lý mở form
   const listTestSelect = [
@@ -189,8 +246,7 @@ export default function DialogCandidateFormCreate() {
   // Code mới của thg candidate
 
   const dateNow = dayjs();
-  const newDate = dateNow.add(1,'hour');
-  console.log(newDate);
+  const newDate = dateNow.add(1, 'hour');
 
   const [date, setDate] = useState(newDate);
   const handleChangeDateTime = (e) => {
@@ -216,6 +272,8 @@ export default function DialogCandidateFormCreate() {
         setScoreTest(newTestMarks);
       }
     };
+
+
 
     const handleInputChange = (e) => {
       if (e.target.value <= 100) {
@@ -299,11 +357,14 @@ export default function DialogCandidateFormCreate() {
   }
 
 
-  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState('true');
+  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState('');
 
   const handleChangePassFaild = (e) => {
     setSelectedValuePassFaild(e.target.value);
   };
+
+
+  // const []
 
 
 
@@ -459,10 +520,15 @@ export default function DialogCandidateFormCreate() {
                 id="recruitmentPlan.id"
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
-                {plans.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
+                {plans.filter(item => item.status === "Đã xác nhận").map((item) => (
+                  item.isFullManagement === true ?
+                    <option style={{ color: 'gainsboro' }} key={item.id} value={item.id} disabled>
+                      {item.name}
+                    </option>
+                    :
+                    <option className="cursor-pointer" key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
                 ))}
               </select>
               <div className="col-md-8  mt-0">
@@ -539,15 +605,16 @@ export default function DialogCandidateFormCreate() {
                 <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === 'true' ? <select
+                {selectedValuePassFaild === 'true' || selectedValuePassFaild === true ? <select
                   className="form-select text-success  ms-2"
                   style={{ width: '170px' }}
                   aria-label="Default select example"
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
                 >
-                  <option className="text-success" value="true">Pass</option>
-                  <option className="text-danger" value="false">Faild</option>
+                  <option value="">N/A</option>
+                  <option className="text-success" value="true">Passed</option>
+                  <option className="text-danger" value="false">Failed</option>
                 </select> : <select
                   className="form-select text-danger  ms-2"
                   style={{ width: '170px' }}
@@ -555,9 +622,17 @@ export default function DialogCandidateFormCreate() {
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
                 >
+                  <option value="">N/A</option>
                   <option className="text-success" value="true">Pass</option>
                   <option className="text-danger" value="false">Faild</option>
                 </select>}
+              </div>
+              <div className="col-md-12 text-center  mt-0">
+                {errFinalResult && (
+                  <p style={{ paddingLeft: '230px' }} className="err-valid ws-nowrap ">
+                    Trạng thái không được để trống
+                  </p>
+                )}
               </div>
             </div>
 

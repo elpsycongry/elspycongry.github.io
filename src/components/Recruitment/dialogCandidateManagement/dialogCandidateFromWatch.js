@@ -1,8 +1,6 @@
 import { Dialog, DialogTitle, IconButton, TextField, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
-import RemoveIcon from '@mui/icons-material/Remove';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -66,12 +64,11 @@ export default function DialogCandidateFormWatch({ id }) {
 
   // const 
   function TestMarks() {
-    const [testMarks, setTestMarks] = useState(formData.values.scoreTest);
     return (
       <div className="d-flex justify-content-center align-items-center">
        
         <input
-          value={testMarks}
+          value={formData.values.scoreTest}
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
@@ -82,12 +79,11 @@ export default function DialogCandidateFormWatch({ id }) {
   }
 
   function Interview() {
-    const [interview, setInterview] = useState(formData.values.scoreInterview);
     return (
       <div className="d-flex justify-content-center align-items-center">
        
         <input
-          value={interview}
+          value={formData.values.scoreInterview}
           style={{ fontSize: "15px", height: "36px" }}
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
@@ -295,8 +291,8 @@ export default function DialogCandidateFormWatch({ id }) {
                   onChange={handleChangePassFaild}
                   disabled
                 >
-                  <option className="text-success" value="true">Pass</option>
-                  <option className="text-danger" value="false">Faild</option>
+                  <option className="text-success" value="true">Passed</option>
+                  <option className="text-danger" value="false">Failed</option>
                 </select> : <select
                   className="form-select text-danger  ms-2"
                   style={{ width: '170px' }}
@@ -305,8 +301,8 @@ export default function DialogCandidateFormWatch({ id }) {
                   onChange={handleChangePassFaild}
                   disabled
                 >
-                  <option className="text-success" value="true">Pass</option>
-                  <option className="text-danger" value="false">Faild</option>
+                  <option className="text-success" value="true">Passed</option>
+                  <option className="text-danger" value="false">Failed</option>
                 </select>}
               </div>
             </div>
