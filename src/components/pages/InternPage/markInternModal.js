@@ -448,6 +448,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                 onChange={(e) => {
                                     handleScoreInTeamChange(e)
                                 }}
+                                onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
                                 type={"number"}
                                 value={data.scoreInTeam}
                                 className={"input-score"}/>}
