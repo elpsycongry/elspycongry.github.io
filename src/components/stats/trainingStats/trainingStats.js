@@ -59,6 +59,10 @@ export default function TrainingStats() {
                 .then(res => {
                     setGrowthStatistics(res.data)
                 })
+            axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithYear")
+                .then(res1 => {
+                    setMaxGrowthStatistics(res1.data)
+                })
         }
         setActiveStat(theValue);
     }
@@ -71,29 +75,36 @@ export default function TrainingStats() {
                 .then(res => {
                     setTrainingStats(res.data)
                 })
-            if(year > 12){
+            if (year > 12) {
                 axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=" + year)
-                .then(res1 => {
-                    setGrowthStatistics(res1.data)
-                })
-            }if(quarter != 0){
+                    .then(res1 => {
+                        setGrowthStatistics(res1.data)
+                    })
+                    axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithYear")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })    
+            } if (quarter != 0) {
                 axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithQuarter?quarter=" + quarter)
                     .then(res4 => {
                         setGrowthStatistics(res4.data)
                     })
+                    axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithQuarter")
+                .then(res1 => {
+                    setMaxGrowthStatistics(res1.data)
+                })
             }
-            if(month != 0){
+            if (month != 0) {
                 axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithMonth?month=" + month)
                     .then(res3 => {
                         setGrowthStatistics(res3.data)
                     })
-            }
-            
-            axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithYear")
-                .then(res2 => {
-                    setMaxGrowthStatistics(res2.data)
+                    axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithMonth")
+                .then(res1 => {
+                    setMaxGrowthStatistics(res1.data)
                 })
-            
+            }
+
         }
 
     }, [year, month, quarter])
@@ -182,31 +193,31 @@ export default function TrainingStats() {
             setActive6(false)
             setActive7(true)
             axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=2024")
-            .then(res => {
-                setGrowthStatistics(res.data)
-            })
+                .then(res => {
+                    setGrowthStatistics(res.data)
+                })
         }
 
         if (theValue == -1) {
-            if(year != 0){
+            if (year != 0) {
                 setYear(year - 1)
             }
-            if(month != 0){
-                setMonth(month -1)
+            if (month != 0) {
+                setMonth(month - 1)
             }
-            if(quarter != 0){
-                setQuarter(quarter -1)
+            if (quarter != 0) {
+                setQuarter(quarter - 1)
             }
         }
 
         if (theValue == -2) {
-            if(year != 0){
+            if (year != 0) {
                 setYear(year + 1)
             }
-            if(month != 0){
+            if (month != 0) {
                 setMonth(month + 1)
             }
-            if(quarter != 0){
+            if (quarter != 0) {
                 setQuarter(quarter + 1)
             }
         }
@@ -421,13 +432,13 @@ export default function TrainingStats() {
                                                         </IconButton>
                                                     </TableCell>
                                                     {year !== 0 && (
-                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {year} </TableCell> 
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {year} </TableCell>
                                                     )}
                                                     {month !== 0 && (
-                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {month} </TableCell> 
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {month} </TableCell>
                                                     )}
                                                     {quarter !== 0 && (
-                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {quarter} </TableCell> 
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {quarter} </TableCell>
                                                     )}
                                                     <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Tăng trưởng</TableCell>
                                                 </TableRow>
