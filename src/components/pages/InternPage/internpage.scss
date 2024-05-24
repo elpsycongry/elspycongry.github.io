@@ -183,15 +183,18 @@ p {
 
 .comment-box {
   background-color: #fff;
-  padding: 10px 10px 3px 10px;
+  padding: 10px;
   border-radius: 4px;
+  overflow: auto;
 
   .edit-comment {
+    padding: 4px;
+    text-align: justify;
     resize: none;
     width: 300px;
     height: 100px;
     overflow: auto;
-    outline: #adadff  auto 1px;
+    outline: #c5c5fd auto 1px;
     &:focus {
       outline-color: #5c5cfb;
     }
@@ -218,4 +221,9 @@ p {
 }
 .css-87k0pl-MuiTypography-root-MuiDialogTitle-root {
   padding: 14px 24px 8px 25px !important;
+}
+.comment-btn {
+  margin-right: 0 !important;
+  margin-top: 1px;
+  float: right;
 }

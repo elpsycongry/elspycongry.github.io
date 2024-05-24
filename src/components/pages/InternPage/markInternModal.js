@@ -284,9 +284,9 @@ export function MarkInternModal({userID, updateFunction}) {
                 <Tooltip
                     arrow
                     placement={'top'}
-                title="Đã quá ngày thực tập" disableInteractive={true}>
-                <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
-            </Tooltip>
+                    title="Đã quá ngày thực tập" disableInteractive={true}>
+                    <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
+                </Tooltip>
             </ThemeProvider>)
             :
             <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>)
@@ -295,7 +295,7 @@ export function MarkInternModal({userID, updateFunction}) {
     const convertFormatDate = (dateString) => {
         const date = new Date(dateString)
 
-        return `${date.getDate().toString().padStart(2,'0')}-${date.getMonth().toString().padStart(2,'0')}-${date.getFullYear()}`
+        return `${date.getDate().toString().padStart(2, '0')}-${date.getMonth().toString().padStart(2, '0')}-${date.getFullYear()}`
     }
 
     const theme = createTheme({
@@ -349,13 +349,13 @@ export function MarkInternModal({userID, updateFunction}) {
                             Số ngày thực tập: {getBusinessDay(new Date(data.startDate), new Date(data.endDate))}
                         </p>
                     </div>
-                    <p>Ngày kết thúc: {data.endDate ?  convertFormatDate(data.endDate) : "Chưa kết thúc"}</p>
+                    <p>Ngày kết thúc: {data.endDate ? convertFormatDate(data.endDate) : "Chưa kết thúc"}</p>
                 </div>
                 {/*Modal body*/}
                 <div key={5} className={"table-score"}>
                     <div className={"flex flex-row justify-content-between"}>
                         <p className={"w110 tb l"}>Môn học</p>
-                        <p className={"tb"} id={"theory"} >Lý thuyết</p>
+                        <p className={"tb"} id={"theory"}>Lý thuyết</p>
                         <p className={"tb"}>Thực hành</p>
                         <p className={"tb"}>Thái độ</p>
                         <p className={"tb"}>Tổng</p>
@@ -363,38 +363,40 @@ export function MarkInternModal({userID, updateFunction}) {
                     {data.subjects.map((subject, index) => {
                         return (<div className={"flex flex-row justify-content-between"}>
                             <div className={"table-score__item tl w110"}>
-                                    <Tippy
-                                        interactive
-                                        offset={[0, 45]}
-                                        animation={false}
-                                        trigger={'click'}
-                                        content={'test'}
-                                        render={() => (<div className="comment-box">
-                                            <h5>Ghi chú môn {subject.name}</h5>
-                                            <textarea
-                                                maxLength={132}
-                                                className={readOnly ? "edit-comment" : "edit-comment"}
-                                                // ref={(textarea) => {
-                                                //     if (textarea) {
-                                                //         textarea.focus();
-                                                //     }
-                                                // }}
-                                                // autoFocus
-                                                disabled={readOnly}
-                                                onChange={readOnly ? null : (e) => handleCommentChange(e, index)}
-                                                value={subject.comment.value}
-                                            />
-                                        </div>)}
-                                        placement={'left'}>
-                                        {readOnly ?
-                                            <Tooltip title="Xem comment" disableInteractive={true}>
-                                                <InsertComment className={"add_icon"}/>
-                                            </Tooltip>
-                                            :
-                                            <Tooltip title="Thêm comment" disableInteractive={true}>
-                                                <AddComment className={"add_icon"}/>
-                                            </Tooltip>}
-                                    </Tippy>
+                                <Tippy
+                                    interactive
+                                    offset={[0, 45]}
+                                    animation={false}
+                                    trigger={'click'}
+                                    content={'test'}
+                                    render={() => (
+                                        <div className="comment-box">
+                                        <h5>Ghi chú môn {subject.name}</h5>
+                                        <textarea
+                                            maxLength={132}
+                                            className={readOnly ? "edit-comment" : "edit-comment"}
+                                            disabled={readOnly}
+                                            onChange={readOnly ? null : (e) => handleCommentChange(e, index)}
+                                            value={subject.comment.value}
+                                        />
+                                        {!readOnly && (
+                                            <button
+                                            disabled={inValidSave}
+                                            onClick={() => {handleSubmit()}}
+                                            className={"save-btn comment-btn"}>
+                                            LƯU
+                                        </button>)}
+                                    </div>)}
+                                    placement={'left'}>
+                                    {readOnly ?
+                                        <Tooltip title="Xem comment" disableInteractive={true}>
+                                            <InsertComment className={"add_icon"}/>
+                                        </Tooltip>
+                                        :
+                                        <Tooltip title="Thêm comment" disableInteractive={true}>
+                                            <AddComment className={"add_icon"}/>
+                                        </Tooltip>}
+                                </Tippy>
                                 {subject.name}
                             </div>
 
@@ -435,14 +437,14 @@ export function MarkInternModal({userID, updateFunction}) {
 
                     <div className={"flex flex-row justify-content-between"}>
                         <p className={"tb l"}>Tổng kết</p>
-                        <p className={"table-score__item"}>
+                        <p className={"table-score__item tb"}>
                             {finalScoreValue}
                         </p>
                     </div>
                     <div className={"flex flex-row justify-content-between"}>
                         <p className={"tl tb"}>Đánh giá trên team</p>
                         <div className={"table-score__item "}>
-                            {readOnly ? data.scoreInTeam : <input
+                            {readOnly ? <span className={"tb"}>{data.scoreInTeam}</span> : <input
                                 onChange={(e) => {
                                     handleScoreInTeamChange(e)
                                 }}
@@ -453,7 +455,7 @@ export function MarkInternModal({userID, updateFunction}) {
                     </div>
                     <div className={"flex flex-row justify-content-between"}>
                         <p className={"tb "}>Kết quả thực tập</p>
-                        <p className={"table-score__item"}>
+                        <p className={"table-score__item tb"}>
                             {finalResultPass === null ? "NA" : (finalResultPass ?
                                 <span style={{color: "green"}}>Pass</span> :
                                 <span style={{color: "red"}}>Fail</span>)}
@@ -462,7 +464,8 @@ export function MarkInternModal({userID, updateFunction}) {
 
                     <div className={"flex flex-row justify-content-between"}>
                         {readOnly ? (data.trainingState === null || data.trainingState === "training" || data.trainingState === "") ?
-                            <div>Đang thực tập</div> : (data.trainingState === 'stop_training' ? <div>Dừng thực tập</div> : <div>Đã hoàn thành</div>  ) : <FormControl sx={{width: '30%'}}>
+                            <div>Đang thực tập</div> : (data.trainingState === 'stop_training' ?
+                                <div>Dừng thực tập</div> : <div>Đã hoàn thành</div>) : <FormControl sx={{width: '30%'}}>
                             <NativeSelect
                                 disabled={readOnly}
                                 value={data.trainingState}
@@ -479,11 +482,16 @@ export function MarkInternModal({userID, updateFunction}) {
                 </div>
             </DialogContent>
             <DialogActions sx={{display: "flex"}}>
-                {!readOnly && <button disabled={inValidSave} onClick={() => {
-                    handleSubmit()
-                }} className={"save-btn"}>
-                    LƯU
-                </button>}
+                {!readOnly &&
+                    <button
+                        disabled={inValidSave}
+                        onClick={() => {
+                            handleSubmit()
+                        }}
+                        className={"save-btn"}>
+                        LƯU
+                    </button>
+                }
             </DialogActions>
         </Dialog>
         <Dialog
