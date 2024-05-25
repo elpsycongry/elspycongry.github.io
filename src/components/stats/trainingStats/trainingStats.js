@@ -49,7 +49,8 @@ export default function TrainingStats() {
     const [active6, setActive6] = useState(false);
     const [active7, setActive7] = useState(true);
 
-    const [year, setYear] = useState(2024);
+    const currentYear = new Date().getFullYear();
+    const [year, setYear] = useState(currentYear);
     const [month, setMonth] = useState(0);
     const [quarter, setQuarter] = useState(0)
     const handleClickStat = (event) => {
@@ -415,7 +416,7 @@ export default function TrainingStats() {
                                                         <IconButton onClick={handleClick} value={-2}
                                                             aria-label="previous"
                                                             size="small"
-                                                            disabled={year === 2024}
+                                                            disabled={year === currentYear}
                                                             sx={{
                                                                 width: '17px',
                                                                 height: '17px',
