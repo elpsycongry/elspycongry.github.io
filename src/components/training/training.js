@@ -31,6 +31,7 @@ import './training.css';
 import axios from "axios";
 import { MarkInternModal } from "../pages/InternPage/markInternModal";
 import { text } from "@fortawesome/fontawesome-svg-core";
+import { format } from 'date-fns';
 
 function Copyright(props) {
     return (
@@ -139,7 +140,7 @@ export default function Training() {
         }
     };
 
-    
+
 
     return (
         <>
@@ -222,13 +223,13 @@ export default function Training() {
                 </div>
                 <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
                     <div className="table-container">
-                        <table className="table_training" style={{ display: 'flex', alignItems: 'center', marginTop: '-40px' }}>
+                        <table className="table_training" style={{ display: 'flex', alignItems: 'center' }}>
                             <div className="no-scrolling">
                                 <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
                                     <th className="training-id">STT</th>
                                     <th className="training-name">Tên</th>
-                                    <th>Bắt đầu</th>
-                                    <th>Số ngày thực tập</th>
+                                    <th style={{ width: '200px' }}>Bắt đầu</th>
+                                    <th className="training-total-days">Số ngày thực tập</th>
                                 </tr>
                                 {listInter.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
@@ -238,7 +239,7 @@ export default function Training() {
                                                 <span className="training-name">{item.userName}</span>
                                             </Tooltip>
                                         </td>
-                                        <td>{item.startDate}</td>
+                                        <td>{format(new Date(item.startDate), 'dd-MM-yyyy')}</td>
                                         <td>{item.numberDate}</td>
                                     </tr>
                                 ))}
@@ -260,18 +261,20 @@ export default function Training() {
                             <div className="no-scrolling">
                                 <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
                                     <th>Tổng kết</th>
-                                    <th>Đánh giá trên team</th>
+                                    <th className="team-score">Đánh giá trên team</th>
                                     <th>Kết quả</th>
                                     <th className=" text-center">Hành động</th>
                                 </tr>
                                 {listInter.map(item => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td>{item.finalScore}</td>
-                                        <td>
+                                        <td className="team-score">
                                             {item.scoreInTeam == "" || item.scoreInTeam == null ? "NA" : item.scoreInTeam}
 
                                         </td>
-                                        <td>Pass/Fail</td>
+                                        <td>{item.pass === null ? "NA" : (item.pass ?
+                                            <span style={{ color: "green" }}>Pass</span> :
+                                            <span style={{ color: "red" }}>Fail</span>)}</td>
                                         <td style={{ cursor: 'pointer' }}>
                                             <MarkInternModal updateFunction={update} userID={item.id} />
                                         </td>

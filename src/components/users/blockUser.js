@@ -61,7 +61,7 @@ export default function BlockUser({ userId, status, onUpdate }) {
             borderRadius: "50%",
           }}
         >
-          {isBlocked ? <CheckIcon /> : <CloseIcon />}
+          {isBlocked ? <CheckIcon /> : <CloseIcon sx={{bgcolor: 'red', borderRadius: '100%'}} />}
         </ToggleButton>
       </React.Fragment>
     );

@@ -53,7 +53,6 @@
 
 div .table-user th{
     height: 100px;
-    line-height: 100px;
     font-size: 25px;
     font-weight: 400;
     flex: 1;
@@ -65,7 +64,7 @@ div .table-user th{
     min-width: 200px; /* Đặt giá trị tối thiểu cho chiều rộng của các ô */
     padding: 8px;
     text-align: center;
-    height: 45px;
+    height: 43px;
 }
 
 .user-name{
