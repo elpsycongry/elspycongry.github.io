@@ -236,7 +236,6 @@ export default function Users() {
                                     <th className="user-id">STT</th>
                                     <th className="user-name" style={{ padding: '8px' }}>Tên</th>
                                     <th className="user-email">Email</th>
-                                    <th className="user-phone">Số điện thoại</th>
                                     <th className="user-roles">Vai trò</th>
                                     <th className="user-actions">Trạng thái</th>
                                     <th className="user-actions">Hành động</th>
@@ -253,7 +252,6 @@ export default function Users() {
                                             </Tooltip>
                                         </td>
                                         <td>{item.email}</td>
-                                        <td>{item.phone}</td>
                                         <td className="user-roles">
                                             {item.roles && item.roles.length > 0 ? (
                                                 item.roles.length === 4 ? (
