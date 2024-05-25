@@ -3,8 +3,18 @@
 }
 
 .table-container {
+    margin-top: 40px;
     width: 100%;
+    table-layout: fixed;
 }
+
+.table-training thead,
+.table-training tbody {
+    width: 100%; /* Đảm bảo rằng thead và tbody chiếm 100% chiều rộng của table */
+    display: table; /* Để thead và tbody được hiển thị dưới dạng bảng */
+    table-layout: fixed; /* Đặt thuộc tính này cho thead và tbody để các ô co giãn */
+}
+
 
 div .table-container th{
     height: 100px;
@@ -32,15 +42,17 @@ div .table-container th{
 .table_training div th:not(.training-id, .training-name) {
     align-items: center;
     text-align: center;
+    width: auto;
     min-width: 140px;
     flex: 1 !important;
+    height: 45px;
     padding: 8px;
     white-space: nowrap;
 }
 
 .table_training div{
     flex: 1;
-    height: auto;
+    height: 550px;
 }
 
 /* .table_training th{
@@ -50,12 +62,13 @@ div .table-container th{
 } */
 
 .wrapper {
-    width: 330px;
+    /* width: 40%; */
     /* background-color: white; */
-    margin-top: 15px;
+    /* margin-top: 15px; */
     overflow-x: auto;
     flex-flow: column;
     text-wrap: nowrap;
+    align-items: center;
 }
 
 .wrapper th{

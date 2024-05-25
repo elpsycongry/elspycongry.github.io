@@ -228,15 +228,15 @@ export default function Users() {
                     </div>
                 </div>
                 <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
-                    <div className="table-container" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
+                    <div className="table-container-user" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
                         <div className="table-user">
 
                             <thead>
                                 <tr className="grey-text">
                                     <th className="user-id">STT</th>
                                     <th className="user-name" style={{ padding: '8px' }}>Tên</th>
-                                    <th>Email</th>
-                                    <th>Số điện thoại</th>
+                                    <th className="user-email">Email</th>
+                                    <th className="user-phone">Số điện thoại</th>
                                     <th className="user-roles">Vai trò</th>
                                     <th className="user-actions">Trạng thái</th>
                                     <th className="user-actions">Hành động</th>
