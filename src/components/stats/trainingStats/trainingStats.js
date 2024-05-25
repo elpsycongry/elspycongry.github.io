@@ -394,6 +394,7 @@ export default function TrainingStats() {
                                                     <TableCell sx={{ fontWeight: '700', minHeight: '50px', fontSize: '16px', width: '600px' }} align="left">
                                                         Chi tiêu
                                                         <IconButton onClick={handleClick} value={-1}
+                                                            disabled={year === 2020 || quarter === 1 || month === 1}
                                                             aria-label="previous"
                                                             size="small"
                                                             sx={{
@@ -416,7 +417,7 @@ export default function TrainingStats() {
                                                         <IconButton onClick={handleClick} value={-2}
                                                             aria-label="previous"
                                                             size="small"
-                                                            disabled={year === currentYear}
+                                                            disabled={year === currentYear || quarter === 4 || month === 12}
                                                             sx={{
                                                                 width: '17px',
                                                                 height: '17px',
