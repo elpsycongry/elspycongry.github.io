@@ -415,6 +415,7 @@ export default function TrainingStats() {
                                                         <IconButton onClick={handleClick} value={-2}
                                                             aria-label="previous"
                                                             size="small"
+                                                            disabled={year === 2024}
                                                             sx={{
                                                                 width: '17px',
                                                                 height: '17px',
