@@ -168,7 +168,6 @@ export default function DialogCandidateFormCreate() {
       }
       // Lấy dữ liệu check
 
-      const finalResult = values.finalResult;
       const fullName = values.name;
       const email = values.email;
       const phoneNumber = values.phone;
@@ -185,8 +184,7 @@ export default function DialogCandidateFormCreate() {
           email,
           phoneNumber,
           recruitmentPlan,
-          status,
-          finalResult
+          status
         )
       ) {
         setSubmitting(false);
