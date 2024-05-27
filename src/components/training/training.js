@@ -15,7 +15,6 @@ import {
 import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
-// import "../../assets/css/cssRecruitment/recruitment.css";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.css"
 import ClearIcon from '@mui/icons-material/Clear';
 import imagePractice from '../../assets/image/logoCodeGym.png'

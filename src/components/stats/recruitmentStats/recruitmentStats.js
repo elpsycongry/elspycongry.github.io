@@ -36,7 +36,7 @@ export default function RecruitmentStats() {
     // const []
 
     const [activeStat, setActiveStat] = useState("stats1");
-    const [title, setTitle] = useState("Kết quả đào tạo tháng 5");
+    const [title, setTitle] = useState("Kết quả tuyển dụng tháng 5");
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
     const [active3, setActive3] = useState(false);
