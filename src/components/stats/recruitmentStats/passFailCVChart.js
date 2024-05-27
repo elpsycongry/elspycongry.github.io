@@ -7,19 +7,19 @@ import { size } from 'lodash';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
-export default function CVChart() {
+export default function PassFailCVChart() {
     const data = {
         labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         datasets: [
             {
-                label: 'Ứng viên không đến phỏng vấn',
+                label: 'Ứng viên PASS',
                 data: [2, 3, 4, 0, 5, 0, 0, 0, 0, 0, 0, 0],
                 backgroundColor: 'rgba(75, 75, 75, 0.6)',
                 borderColor: 'rgba(75, 75, 75, 1)',
                 borderWidth: 1
             },
             {
-                label: 'Ứng viên đã phỏng vấn',
+                label: 'Ứng viên FAIL',
                 data: [7, 29, 39, 6, 55, 0, 10, 0, 0, 0, 0, 0],
                 backgroundColor: 'rgba(54, 162, 235, 0.6)',
                 borderColor: 'rgba(54, 162, 235, 1)',
@@ -74,7 +74,6 @@ export default function CVChart() {
                 labels: {
                     font: {
                         size: 20,
-                        weight: 700
                     }
                 }
             },
@@ -132,8 +131,8 @@ export default function CVChart() {
     };
 
     return (
-        <Box  sx={{ height: 1, padding: 2, width:"80%" }}>
-                <Bar data={data} options={options} plugins={[totalPlugin]} />
+        <Box sx={{ height: 1, padding: 2, width: "80%" }}>
+            <Bar data={data} options={options} plugins={[totalPlugin]} />
         </Box>
     );
 }

@@ -14,7 +14,9 @@ import RecruitmentStatsChart from './recruitmentStatsChart ';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import axios from "axios";
-import CVChart from "./recruitmentStatsColumnChart";
+import ProcessedCVChart from "./processedCVChart";
+import PassFailCVChart from "./passFailCVChart";
+import AcceptJobCVChart from "./acceptJobCVChart";
 
 
 function Copyright(props) {
@@ -33,9 +35,9 @@ function Copyright(props) {
 export default function RecruitmentStats() {
     const [trainingStats, setTrainingStats] = useState([]);
 
-    // const []
 
     const [activeStat, setActiveStat] = useState("stats1");
+    const [activeColumnChart, setActiveColumnChart] = useState("col1");
     const [title, setTitle] = useState("Kết quả tuyển dụng tháng 5");
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
@@ -46,6 +48,12 @@ export default function RecruitmentStats() {
         const theValue = event.currentTarget.value;
 
         setActiveStat(theValue);
+    }
+
+    const handleClickColumnChart = (event) => {
+        const theValue = event.currentTarget.value;
+
+        setActiveColumnChart(theValue);
     }
 
     useEffect(() => {
@@ -120,28 +128,19 @@ export default function RecruitmentStats() {
         return { name, quantity, growth };
     }
 
-    function createSubjects(name, points, growth) {
-        return { name, points, growth }
-    }
-
-    const subjects = [
-        createSubjects('Linux', 7.28, 6),
-        createSubjects('Git', 7.31, 9),
-        createSubjects('Docker', 7.34, 10),
-        createSubjects('Resful API', 7.08, 15),
-        createSubjects('Lavarel', 7.08, 16),
-    ]
-
     const rows = [
-        createData('Thực tập sinh nhập học', 159, 6.0),
-        createData('Thực tập sinh tốt nghiệp', 237, 9.0),
-        createData('Thực tập sinh fail', 262, 16.0),
-        createData('Tỷ lệ pass/fail', 305, 3.7),
-        createData('Điểm tốt nghiệp trung bình', 356, 16.0),
+        createData('Số CV mới', 159, 6.0),
+        createData('Số CV phỏng vấn', 237, 9.0),
+        createData('Số ứng viên đã phỏng vấn', 262, 16.0),
+        createData('Số ứng viên không đến phỏng vấn', 305, 3.7),
+        createData('Số pass', 356, 16.0),
+        createData('Số fail', 356, 16.0),
+        createData('Số ứng viên nhận việc', 356, 16.0),
+        createData('Số ứng viên không việc', 356, 16.0),
+        createData('Số ứng viên chưa việc', 356, 16.0),
     ];
 
     const maxGrowth = Math.max(...rows.map(row => row.growth));
-    const maxGrowthOfSubjects = Math.max(...subjects.map(subject => subject.growth));
     // console.log('row 0:', rows[0].growth);
     // console.log('max', maxGrowth);
     // console.log((6/16));
@@ -165,58 +164,58 @@ export default function RecruitmentStats() {
                 <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
-                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-outline-warning active">Chỉ số</button>
+                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning ">Chỉ số</button>
                         ) :
-                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-outline-warning">Chỉ số</button>
+                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-secondary">Chỉ số</button>
                         }
                         {activeStat === "stats2" ? (
-                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-outline-warning active">Biểu đồ</button>
+                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-warning ">Biểu đồ</button>
                         ) :
-                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-outline-warning">Biểu đồ</button>
+                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-secondary">Biểu đồ</button>
                         }
                         {activeStat === "stats3" ? (
-                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-outline-warning active">Thống kê tăng trưởng</button>
+                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-warning ">Thống kê tăng trưởng</button>
                         ) :
-                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-outline-warning">Thống kê tăng trưởng</button>
+                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-secondary">Thống kê tăng trưởng</button>
                         }
                     </div>
                     <div className="main-content">
                         {activeStat === "stats1" && (
                             <div className="content-stat-1">
-                                <h4 style={{ marginLeft: '10px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>{title}</h4>
+                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>{title}</h3>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active1 ? (
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-outline-warning active">Theo tháng</button>
+                                        <button type="button" value="1" onClick={handleClick} className="btn btn-warning ">Theo tháng</button>
                                     ) :
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-outline-warning">Theo tháng</button>
+                                        <button type="button" value="1" onClick={handleClick} className="btn btn-secondary">Theo tháng</button>
                                     }
                                     {active2 ? (
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-outline-warning active">Theo quý</button>
+                                        <button type="button" value="2" onClick={handleClick} className="btn btn-warning ">Theo quý</button>
                                     ) :
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-outline-warning">Theo quý</button>
+                                        <button type="button" value="2" onClick={handleClick} className="btn btn-secondary">Theo quý</button>
                                     }
                                     {active3 ? (
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-outline-warning active">Theo năm</button>
+                                        <button type="button" value="3" onClick={handleClick} className="btn btn-warning ">Theo năm</button>
                                     ) :
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-outline-warning">Theo năm</button>
+                                        <button type="button" value="3" onClick={handleClick} className="btn btn-secondary">Theo năm</button>
                                     }
                                     {active4 ? (
-                                        <button type="button" value="4" onClick={handleClick} className="btn btn-outline-warning active">Tất cả</button>
+                                        <button type="button" value="4" onClick={handleClick} className="btn btn-warning ">Tất cả</button>
                                     ) :
-                                        <button type="button" value="4" onClick={handleClick} className="btn btn-outline-warning">Tất cả</button>
+                                        <button type="button" value="4" onClick={handleClick} className="btn btn-secondary">Tất cả</button>
                                     }
                                 </div>
-                                <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '20px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>
+                                <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '16px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)' }}>
                                     <label>Số CV mới:</label>
-                                    <label style={{ marginLeft: '260px' }}>{trainingStats.internsEnrolled} </label>
+                                    <label style={{ marginLeft: '197px' }}>{trainingStats.internsEnrolled} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số CV phỏng vấn:</label>
-                                    <label style={{ marginLeft: '195px' }}>{trainingStats.graduatingInterns} </label>
+                                    <label style={{ marginLeft: '151px' }}>{trainingStats.graduatingInterns} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên đã phỏng vấn:</label>
-                                    <label style={{ marginLeft: '108px' }}>{trainingStats.internsFailed} </label>
+                                    <label style={{ marginLeft: '87px' }}>{trainingStats.internsFailed} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên không đến phỏng vấn:</label>
@@ -224,30 +223,30 @@ export default function RecruitmentStats() {
                                     <br></br>
                                     <br></br>
                                     <label>Số PASS:</label>
-                                    <label style={{ marginLeft: '276px' }}>{trainingStats.internsCurrentlyPracticing}</label>
+                                    <label style={{ marginLeft: '210px' }}>{trainingStats.internsCurrentlyPracticing}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số FAIL:</label>
-                                    <label style={{ marginLeft: '287px' }}>{trainingStats.internsQuitInternship}</label>
+                                    <label style={{ marginLeft: '222px' }}>{trainingStats.internsQuitInternship}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên nhận việc:</label>
-                                    <label style={{ marginLeft: '145px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <label style={{ marginLeft: '116px' }}>{trainingStats.averageGraduationScore}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên không nhận việc:</label>
-                                    <label style={{ marginLeft: '79px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <label style={{ marginLeft: '67px' }}>{trainingStats.averageGraduationScore}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên chưa nhận việc:</label>
-                                    <label style={{ marginLeft: '89px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <label style={{ marginLeft: '74px' }}>{trainingStats.averageGraduationScore}</label>
                                 </div>
                             </div>
                         )}
                         {activeStat === "stats2" && (
                             <div className="content-stat-2">
                                 {/* line */}
-                                <h4 style={{ marginLeft: '10px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '0px' }}>Biểu đồ</h4>
+                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '0px' }}>Biểu đồ</h3>
                                 <div style={{ width: '100%', height: '60%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                                     <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
                                         <Typography style={{ fontSize: '20px', paddingRight: '5px' }}>Biểu đồ tuyển dụng thực tập sinh trong năm</Typography>
@@ -266,30 +265,59 @@ export default function RecruitmentStats() {
                                 </div>
 
                                 {/* column */}
-                                <h4 style={{ marginLeft: '10px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', marginTop: '35px', marginBottom: '30px' }}>Biểu đồ cột số lượng CV đã xử lý</h4>
-                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center' }}>
-                                    <CVChart />
+                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Biểu đồ cột</h3>
+                                <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
+                                    {activeColumnChart === "col1" ? (
+                                        <button type="button" value="col1" onClick={handleClickColumnChart} className="btn btn-warning ">Số lượng CV đã xử lý</button>
+                                    ) :
+                                        <button type="button" value="col1" onClick={handleClickColumnChart} className="btn btn-secondary">Số lượng CV đã xử lý</button>
+                                    }
+                                    {activeColumnChart === "col2" ? (
+                                        <button type="button" value="col2" onClick={handleClickColumnChart} className="btn btn-warning ">Số lượng CV PASS/FAIL</button>
+                                    ) :
+                                        <button type="button" value="col2" onClick={handleClickColumnChart} className="btn btn-secondary">Số lượng CV PASS/FAIL</button>
+                                    }
+                                    {activeColumnChart === "col3" ? (
+                                        <button type="button" value="col3" onClick={handleClickColumnChart} className="btn btn-warning ">Số lượng CV nhận việc/ không nhận việc</button>
+                                    ) :
+                                        <button type="button" value="col3" onClick={handleClickColumnChart} className="btn btn-secondary">Số lượng CV nhận việc/ không nhận việc</button>
+                                    }
                                 </div>
+                                {activeColumnChart === "col1" && (
+                                    <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center' }}>
+                                        <ProcessedCVChart />
+                                    </div>
+                                )}
+                                {activeColumnChart === "col2" && (
+                                    <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center' }}>
+                                        <PassFailCVChart />
+                                    </div>
+                                )}
+                                {activeColumnChart === "col3" && (
+                                    <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center' }}>
+                                        <AcceptJobCVChart />
+                                    </div>
+                                )}
                             </div>
                         )}
                         {activeStat === "stats3" && (
                             <div className="content-stat-3">
-                                <h4 style={{ marginLeft: '10px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Thống kê tăng trưởng</h4>
+                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Thống kê tăng trưởng</h3>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active1 ? (
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-outline-warning active">Theo tháng</button>
+                                        <button type="button" value="1" onClick={handleClick} className="btn btn-warning ">Theo tháng</button>
                                     ) :
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-outline-warning">Theo tháng</button>
+                                        <button type="button" value="1" onClick={handleClick} className="btn btn-secondary">Theo tháng</button>
                                     }
                                     {active2 ? (
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-outline-warning active">Theo quý</button>
+                                        <button type="button" value="2" onClick={handleClick} className="btn btn-warning ">Theo quý</button>
                                     ) :
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-outline-warning">Theo quý</button>
+                                        <button type="button" value="2" onClick={handleClick} className="btn btn-secondary">Theo quý</button>
                                     }
                                     {active3 ? (
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-outline-warning active">Theo năm</button>
+                                        <button type="button" value="3" onClick={handleClick} className="btn btn-warning ">Theo năm</button>
                                     ) :
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-outline-warning">Theo năm</button>
+                                        <button type="button" value="3" onClick={handleClick} className="btn btn-secondary">Theo năm</button>
                                     }
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
@@ -298,8 +326,8 @@ export default function RecruitmentStats() {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell sx={{ fontWeight: '700', minHeight: '50px', fontSize: '16px', width: '600px' }} align="left">
-                                                        Chi tiêu
-                                                        <IconButton
+                                                        Thông số
+                                                        {/* <IconButton
                                                             aria-label="previous"
                                                             size="small"
                                                             sx={{
@@ -336,9 +364,9 @@ export default function RecruitmentStats() {
                                                             }}
                                                         >
                                                             <ArrowForwardIosIcon fontSize="inherit" sx={{ color: 'white', width: '15px', height: '15px' }} />
-                                                        </IconButton>
+                                                        </IconButton> */}
                                                     </TableCell>
-                                                    <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Năm 2021</TableCell>
+                                                    <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Số lượng</TableCell>
                                                     <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Tăng trưởng</TableCell>
                                                 </TableRow>
                                             </TableHead>
@@ -366,41 +394,8 @@ export default function RecruitmentStats() {
                                                         </TableCell>
                                                     </TableRow>
                                                 ))}
-                                                <TableRow
-                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                >
-                                                    <TableCell align="left" component="th" scope="row">
-                                                        Điểm trung bình môn
-                                                    </TableCell>
-                                                    <TableCell align="center"></TableCell>
-                                                    <TableCell align="center"></TableCell>
-                                                </TableRow>
                                             </TableBody>
-                                            <TableBody>
-                                                {subjects.map((subject) => (
-                                                    <TableRow
-                                                        key={subject.name}
-                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                    >
-                                                        <TableCell sx={{ fontWeight: '700' }} align="center" component="th" scope="row">
-                                                            {subject.name}
-                                                        </TableCell>
-                                                        <TableCell align="center">{subject.points}</TableCell>
-                                                        <TableCell align="center">
-                                                            {/* {subject.growth} */}
-                                                            <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
-                                                                <Box
-                                                                    sx={{
-                                                                        width: 10,
-                                                                        height: `${(subject.growth / maxGrowthOfSubjects) * 40}px`,
-                                                                        bgcolor: 'primary.main',
-                                                                    }}
-                                                                />
-                                                            </Box>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
+
                                         </Table>
                                     </TableContainer>
                                 </div>

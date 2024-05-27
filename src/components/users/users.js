@@ -272,7 +272,9 @@ export default function Users() {
                                         </td>
                                         <td className="user-actions">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />
+                                            
+                                                <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />
+                                            
                                         </td>
                                     </tr>
                                 ))}

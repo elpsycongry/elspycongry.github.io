@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography,
-    TextField, FormGroup, FormControlLabel, Checkbox, Button
+    TextField, FormGroup, FormControlLabel, Checkbox, Button, Tooltip
 } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import { useSnackbar } from 'notistack';
@@ -98,7 +98,9 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
 
     return (
         <>
-            <CreateIcon className="color-orange pencil-btn font-size-medium cursor" onClick={() => setOpen(true)} />
+            <Tooltip title="Chỉnh sửa" arrow>
+                <CreateIcon className="color-orange pencil-btn font-size-medium cursor" onClick={() => setOpen(true)} />
+            </Tooltip>
 
             <Dialog
                 open={open}
@@ -106,11 +108,11 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                 PaperProps={{ component: 'form', onSubmit: formik.handleSubmit }}
             >
                 <div className='form-update-user'>
-                    <DialogTitle style={{padding: '0'}}><span style={{ fontWeight: '700', fontSize: '32px' }} className='update-title'>Cập nhật thông tin</span></DialogTitle>
+                    <DialogTitle style={{ padding: '0' }}><span style={{ fontWeight: '700', fontSize: '32px' }} className='update-title'>Cập nhật thông tin</span></DialogTitle>
                     <DialogContent>
                         <div className='form-label-input'>
                             <div className="form-label grey-text information-user">Họ tên:
-                            <span style={{color: 'red'}}> *</span>
+                                <span style={{ color: 'red' }}> *</span>
                             </div>
                             <TextField
                                 name='name'
@@ -123,8 +125,8 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                             />
                         </div>
                         <div className='form-label-input'>
-                        <div className="form-label grey-text information-user">Email:
-                            <span style={{color: 'red'}}> *</span>
+                            <div className="form-label grey-text information-user">Email:
+                                <span style={{ color: 'red' }}> *</span>
                             </div>
                             <TextField
                                 name='email'
@@ -160,23 +162,23 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
                     </DialogContent>
                     <div className='btn-container-user'>
                         {formik.isValid ? (
-                             <Button
-                             type="submit"
+                            <Button
+                                type="submit"
 
-                             variant="contained"
-                             className='send-btn'
-                             style={{backgroundColor: 'green'}}>
-                                 Cập nhật
-                             </Button>
-                        ):
-                        <Button
-                        type="submit"
-                        disabled
-                        variant="contained"
-                        className='send-btn'
-                        >
-                            Cập nhật
-                        </Button>
+                                variant="contained"
+                                className='send-btn'
+                                style={{ backgroundColor: 'green' }}>
+                                Cập nhật
+                            </Button>
+                        ) :
+                            <Button
+                                type="submit"
+                                disabled
+                                variant="contained"
+                                className='send-btn'
+                            >
+                                Cập nhật
+                            </Button>
                         }
                     </div>
                 </div>

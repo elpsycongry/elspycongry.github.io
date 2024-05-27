@@ -18,7 +18,8 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 export default function TrainingStatsChart({ year }) {
     const [trainingCharts, setTrainingCharts] = useState([
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -26,7 +27,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -34,7 +36,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -42,7 +45,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -50,7 +54,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -58,7 +63,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -66,7 +72,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -74,7 +81,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -82,7 +90,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -90,7 +99,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -98,7 +108,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -106,7 +117,8 @@ export default function TrainingStatsChart({ year }) {
             "internsQuitInternship": 0,
             "rate": 0
         },
-        {"averageGraduationScore": 0,
+        {
+            "averageGraduationScore": 0,
             "graduatingInterns": 0,
             "internsCurrentlyPracticing": 0,
             "internsEnrolled": 0,
@@ -143,19 +155,19 @@ export default function TrainingStatsChart({ year }) {
         datasets: [
             {
                 label: 'Thực tập sinh nhập học',
-                data: [trainingCharts.at(0).internsEnrolled, 
-                    trainingCharts.at(1).internsEnrolled, 
-                    trainingCharts.at(2).internsEnrolled,  
-                    trainingCharts.at(3).internsEnrolled,  
-                    trainingCharts.at(4).internsEnrolled,  
-                    trainingCharts.at(5).internsEnrolled,  
-                    trainingCharts.at(6).internsEnrolled,  
-                    trainingCharts.at(7).internsEnrolled,  
-                    trainingCharts.at(8).internsEnrolled,  
-                    trainingCharts.at(9).internsEnrolled,  
-                    trainingCharts.at(10).internsEnrolled,  
-                    trainingCharts.at(11).internsEnrolled
-                ], 
+                data: [trainingCharts.at(0).internsEnrolled,
+                trainingCharts.at(1).internsEnrolled,
+                trainingCharts.at(2).internsEnrolled,
+                trainingCharts.at(3).internsEnrolled,
+                trainingCharts.at(4).internsEnrolled,
+                trainingCharts.at(5).internsEnrolled,
+                trainingCharts.at(6).internsEnrolled,
+                trainingCharts.at(7).internsEnrolled,
+                trainingCharts.at(8).internsEnrolled,
+                trainingCharts.at(9).internsEnrolled,
+                trainingCharts.at(10).internsEnrolled,
+                trainingCharts.at(11).internsEnrolled
+                ],
                 borderColor: 'blue',
                 backgroundColor: 'blue',
                 fill: false,
@@ -163,18 +175,18 @@ export default function TrainingStatsChart({ year }) {
             },
             {
                 label: 'Thực tập sinh nghỉ',
-                data: [trainingCharts.at(0).internsQuitInternship, 
-                    trainingCharts.at(1).internsQuitInternship, 
-                    trainingCharts.at(2).internsQuitInternship,  
-                    trainingCharts.at(3).internsQuitInternship,  
-                    trainingCharts.at(4).internsQuitInternship,  
-                    trainingCharts.at(5).internsQuitInternship,  
-                    trainingCharts.at(6).internsQuitInternship,  
-                    trainingCharts.at(7).internsQuitInternship,  
-                    trainingCharts.at(8).internsQuitInternship,  
-                    trainingCharts.at(9).internsQuitInternship,  
-                    trainingCharts.at(10).internsQuitInternship,  
-                    trainingCharts.at(11).internsQuitInternship], 
+                data: [trainingCharts.at(0).internsQuitInternship,
+                trainingCharts.at(1).internsQuitInternship,
+                trainingCharts.at(2).internsQuitInternship,
+                trainingCharts.at(3).internsQuitInternship,
+                trainingCharts.at(4).internsQuitInternship,
+                trainingCharts.at(5).internsQuitInternship,
+                trainingCharts.at(6).internsQuitInternship,
+                trainingCharts.at(7).internsQuitInternship,
+                trainingCharts.at(8).internsQuitInternship,
+                trainingCharts.at(9).internsQuitInternship,
+                trainingCharts.at(10).internsQuitInternship,
+                trainingCharts.at(11).internsQuitInternship],
                 borderColor: 'green',
                 backgroundColor: 'green',
                 fill: false,
@@ -182,18 +194,18 @@ export default function TrainingStatsChart({ year }) {
             },
             {
                 label: 'Thực tập sinh tốt nghiệp',
-                data: [trainingCharts.at(0).graduatingInterns, 
-                    trainingCharts.at(1).graduatingInterns, 
-                    trainingCharts.at(2).graduatingInterns,  
-                    trainingCharts.at(3).graduatingInterns,  
-                    trainingCharts.at(4).graduatingInterns,  
-                    trainingCharts.at(5).graduatingInterns,  
-                    trainingCharts.at(6).graduatingInterns,  
-                    trainingCharts.at(7).graduatingInterns,  
-                    trainingCharts.at(8).graduatingInterns,  
-                    trainingCharts.at(9).graduatingInterns,  
-                    trainingCharts.at(10).graduatingInterns,  
-                    trainingCharts.at(11).graduatingInterns], 
+                data: [trainingCharts.at(0).graduatingInterns,
+                trainingCharts.at(1).graduatingInterns,
+                trainingCharts.at(2).graduatingInterns,
+                trainingCharts.at(3).graduatingInterns,
+                trainingCharts.at(4).graduatingInterns,
+                trainingCharts.at(5).graduatingInterns,
+                trainingCharts.at(6).graduatingInterns,
+                trainingCharts.at(7).graduatingInterns,
+                trainingCharts.at(8).graduatingInterns,
+                trainingCharts.at(9).graduatingInterns,
+                trainingCharts.at(10).graduatingInterns,
+                trainingCharts.at(11).graduatingInterns],
                 borderColor: 'black',
                 backgroundColor: 'black',
                 fill: false,
@@ -201,18 +213,18 @@ export default function TrainingStatsChart({ year }) {
             },
             {
                 label: 'Thực tập sinh Fail',
-                data: [trainingCharts.at(0).internsFailed, 
-                    trainingCharts.at(1).internsFailed, 
-                    trainingCharts.at(2).internsFailed,  
-                    trainingCharts.at(3).internsFailed,  
-                    trainingCharts.at(4).internsFailed,  
-                    trainingCharts.at(5).internsFailed,  
-                    trainingCharts.at(6).internsFailed,  
-                    trainingCharts.at(7).internsFailed,  
-                    trainingCharts.at(8).internsFailed,  
-                    trainingCharts.at(9).internsFailed,  
-                    trainingCharts.at(10).internsFailed,  
-                    trainingCharts.at(11).internsFailed], 
+                data: [trainingCharts.at(0).internsFailed,
+                trainingCharts.at(1).internsFailed,
+                trainingCharts.at(2).internsFailed,
+                trainingCharts.at(3).internsFailed,
+                trainingCharts.at(4).internsFailed,
+                trainingCharts.at(5).internsFailed,
+                trainingCharts.at(6).internsFailed,
+                trainingCharts.at(7).internsFailed,
+                trainingCharts.at(8).internsFailed,
+                trainingCharts.at(9).internsFailed,
+                trainingCharts.at(10).internsFailed,
+                trainingCharts.at(11).internsFailed],
                 borderColor: 'orange',
                 backgroundColor: 'orange',
                 fill: false,
@@ -229,7 +241,7 @@ export default function TrainingStatsChart({ year }) {
                 position: 'bottom',
                 labels: {
                     usePointStyle: true,
-                    pointStyle: 'line',
+                    pointStyle: 'shape',
                     font: {
                         size: 20,
                         weight: 700
@@ -247,6 +259,11 @@ export default function TrainingStatsChart({ year }) {
             tooltip: {
                 mode: 'index',
                 intersect: false,
+                callbacks: {
+                    title: function (tooltipItems) {
+                        return 'Tháng ' + tooltipItems[0].label;
+                    }
+                },
                 bodyFont: {
                     size: 20,
                 },

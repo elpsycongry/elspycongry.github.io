@@ -224,29 +224,25 @@ export default function Training() {
                     <div className="table-container">
                         <table className="table_training" style={{ display: 'flex', alignItems: 'center' }}>
                             <div className="no-scrolling">
-                                <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
-                                    <th className="training-id">STT</th>
-                                    <th className="training-name">Tên</th>
-                                    <th style={{ width: '200px' }}>Bắt đầu</th>
+                                <tr style={{ alignItems: 'center' }} className="header-tr grey-text ">
+                                    <th className="training-id position-relative" style={{ padding: '8px' }}><p className=" position-p w-84">STT</p></th>
+                                    <th className="training-name position-relative" style={{ padding: '8px' }}><p className=" position-p w-124">Tên</p></th>
+                                    <th style={{ width: '200px' }} className="position-relative"><p className="mt-short-th position-p w-184">Bắt đầu</p></th>
                                     <th className="training-total-days">Số ngày thực tập</th>
                                 </tr>
                                 {listInter.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="training-id" style={{ padding: '8px' }}>{index + 1 + pagination.page * pagination.size}</td>
-                                        <td>
-                                            <Tooltip title={item.userName} arrow>
-                                                <span className="training-name">{item.userName}</span>
-                                            </Tooltip>
-                                        </td>
+                                        <td><span className="training-name">{item.userName}</span></td>
                                         <td>{format(new Date(item.startDate), 'dd-MM-yyyy')}</td>
                                         <td>{item.numberDate}</td>
                                     </tr>
                                 ))}
                             </div>
                             <div className="wrapper">
-                                <tr style={{ alignItems: 'center', fontSize: '25px' }} className=" grey-text">
+                                <tr style={{ alignItems: 'center', fontSize: '25px' }} className="grey-text">
                                     {listSubjectSelect.map(item => (
-                                        <th value={item.name} key={item.id}>{item.name}</th>
+                                        <th value={item.name} key={item.id} className="position-relative"><p className="position-p w-124">{item.name}</p></th>
                                     ))}
                                 </tr>
                                 {listInter.map((item) => (
@@ -259,10 +255,10 @@ export default function Training() {
                             </div>
                             <div className="no-scrolling">
                                 <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
-                                    <th>Tổng kết</th>
+                                    <th className="position-relative"><p className="position-p w-124">Tổng kết</p></th>
                                     <th className="team-score">Đánh giá trên team</th>
-                                    <th>Kết quả</th>
-                                    <th className=" text-center">Hành động</th>
+                                    <th className="position-relative"><p className="position-p w-124">Kết quả</p></th>
+                                    <th className=" text-center position-relative"><p className="position-p w-124">Hành động</p></th>
                                 </tr>
                                 {listInter.map(item => (
                                     <tr className="grey-text count-tr" key={item.id}>

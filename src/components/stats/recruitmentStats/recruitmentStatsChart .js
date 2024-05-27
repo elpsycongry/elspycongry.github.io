@@ -119,7 +119,7 @@ export default function RecruitmentStatsChart({ year }) {
                 position: 'bottom',
                 labels: {
                     usePointStyle: true,
-                    pointStyle: 'line',
+                    pointStyle: 'shape',
                     font: {
                         size: 20,
                         weight: 700

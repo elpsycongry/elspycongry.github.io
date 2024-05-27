@@ -81,29 +81,29 @@ export default function TrainingStats() {
                     .then(res1 => {
                         setGrowthStatistics(res1.data)
                     })
-                    axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithYear")
+                axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithYear")
                     .then(res1 => {
                         setMaxGrowthStatistics(res1.data)
-                    })    
+                    })
             } if (quarter != 0) {
                 axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithQuarter?quarter=" + quarter)
                     .then(res4 => {
                         setGrowthStatistics(res4.data)
                     })
-                    axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithQuarter")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithQuarter")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
             if (month != 0) {
                 axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithMonth?month=" + month)
                     .then(res3 => {
                         setGrowthStatistics(res3.data)
                     })
-                    axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithMonth")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithMonth")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
 
         }
@@ -274,19 +274,19 @@ export default function TrainingStats() {
                 <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
-                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning active">Chỉ số</button>
+                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning" >Chỉ số</button>
                         ) :
-                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning">Chỉ số</button>
+                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-secondary">Chỉ số</button>
                         }
                         {activeStat === "stats2" ? (
-                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-warning active">Biểu đồ</button>
-                        ) :
                             <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-warning">Biểu đồ</button>
+                        ) :
+                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-secondary">Biểu đồ</button>
                         }
                         {activeStat === "stats3" ? (
-                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-warning active">Thống kê tăng trưởng</button>
-                        ) :
                             <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-warning">Thống kê tăng trưởng</button>
+                        ) :
+                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-secondary">Thống kê tăng trưởng</button>
                         }
                     </div>
                     <div className="main-content">
@@ -295,24 +295,24 @@ export default function TrainingStats() {
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>{title}</h3>
                                 <div style={{ width: '50%', marginBottom: '25px', fontSize: '18px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active1 ? (
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-warning active">Theo tháng</button>
-                                    ) :
                                         <button type="button" value="1" onClick={handleClick} className="btn btn-warning">Theo tháng</button>
+                                    ) :
+                                        <button type="button" value="1" onClick={handleClick} className="btn btn-secondary">Theo tháng</button>
                                     }
                                     {active2 ? (
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-warning active">Theo quý</button>
-                                    ) :
                                         <button type="button" value="2" onClick={handleClick} className="btn btn-warning">Theo quý</button>
+                                    ) :
+                                        <button type="button" value="2" onClick={handleClick} className="btn btn-secondary">Theo quý</button>
                                     }
                                     {active3 ? (
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-warning active">Theo năm</button>
-                                    ) :
                                         <button type="button" value="3" onClick={handleClick} className="btn btn-warning">Theo năm</button>
+                                    ) :
+                                        <button type="button" value="3" onClick={handleClick} className="btn btn-secondary">Theo năm</button>
                                     }
                                     {active4 ? (
-                                        <button type="button" value="4" onClick={handleClick} className="btn btn-warning active">Tất cả</button>
-                                    ) :
                                         <button type="button" value="4" onClick={handleClick} className="btn btn-warning">Tất cả</button>
+                                    ) :
+                                        <button type="button" value="4" onClick={handleClick} className="btn btn-secondary">Tất cả</button>
                                     }
                                 </div>
                                 <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '16px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)' }}>
@@ -371,19 +371,19 @@ export default function TrainingStats() {
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Thống kê tăng trưởng</h3>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active5 ? (
-                                        <button type="button" value="5" onClick={handleClick} className="btn btn-warning active">Theo tháng</button>
-                                    ) :
                                         <button type="button" value="5" onClick={handleClick} className="btn btn-warning">Theo tháng</button>
+                                    ) :
+                                        <button type="button" value="5" onClick={handleClick} className="btn btn-secondary">Theo tháng</button>
                                     }
                                     {active6 ? (
-                                        <button type="button" value="6" onClick={handleClick} className="btn btn-warning active">Theo quý</button>
+                                        <button type="button" value="6" onClick={handleClick} className="btn btn-warning ">Theo quý</button>
                                     ) :
-                                        <button type="button" value="6" onClick={handleClick} className="btn btn-warning">Theo quý</button>
+                                        <button type="button" value="6" onClick={handleClick} className="btn btn-secondary">Theo quý</button>
                                     }
                                     {active7 ? (
-                                        <button type="button" value="7" onClick={handleClick} className="btn btn-warning active">Theo năm</button>
+                                        <button type="button" value="7" onClick={handleClick} className="btn btn-warning ">Theo năm</button>
                                     ) :
-                                        <button type="button" value="7" onClick={handleClick} className="btn btn-warning">Theo năm</button>
+                                        <button type="button" value="7" onClick={handleClick} className="btn btn-secondary">Theo năm</button>
                                     }
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
@@ -392,7 +392,7 @@ export default function TrainingStats() {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell sx={{ fontWeight: '700', minHeight: '50px', fontSize: '16px', width: '600px' }} align="left">
-                                                        Chi tiêu
+                                                        Tiêu chí
                                                         <IconButton onClick={handleClick} value={-1}
                                                             aria-label="previous"
                                                             size="small"
