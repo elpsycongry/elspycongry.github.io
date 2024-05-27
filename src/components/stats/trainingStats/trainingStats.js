@@ -65,6 +65,17 @@ export default function TrainingStats() {
                     setMaxGrowthStatistics(res1.data)
                 })
         }
+        if(theValue === "stats1") {
+            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setActive1(true)
+            setActive2(false)
+            setActive3(false)
+            setActive4(false)
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+                .then(res => {
+                    setTrainingStats(res.data)
+                })
+        }
         setActiveStat(theValue);
     }
 
@@ -249,12 +260,6 @@ export default function TrainingStats() {
         createData('Điểm tốt nghiệp trung bình', 356, 16.0),
     ];
 
-    const maxGrowth = Math.max(...rows.map(row => row.growth));
-    const maxGrowthOfSubjects = Math.max(...subjects.map(subject => subject.growth));
-    // console.log('row 0:', rows[0].growth);
-    // console.log('max', maxGrowth);
-    // console.log((6/16));
-
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     const handleYearChange = (event) => {
@@ -274,19 +279,19 @@ export default function TrainingStats() {
                 <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
-                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning" >Chỉ số</button>
+                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning text-white " >Chỉ số</button>
                         ) :
-                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-secondary">Chỉ số</button>
+                            <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-stats-gray">Chỉ số</button>
                         }
                         {activeStat === "stats2" ? (
-                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-warning">Biểu đồ</button>
+                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-warning text-white">Biểu đồ</button>
                         ) :
-                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-secondary">Biểu đồ</button>
+                            <button type="button" value="stats2" onClick={handleClickStat} className="btn btn-stats-gray">Biểu đồ</button>
                         }
                         {activeStat === "stats3" ? (
-                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-warning">Thống kê tăng trưởng</button>
+                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-warning text-white">Thống kê tăng trưởng</button>
                         ) :
-                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-secondary">Thống kê tăng trưởng</button>
+                            <button type="button" value="stats3" onClick={handleClickStat} className="btn btn-stats-gray">Thống kê tăng trưởng</button>
                         }
                     </div>
                     <div className="main-content">
@@ -295,24 +300,24 @@ export default function TrainingStats() {
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>{title}</h3>
                                 <div style={{ width: '50%', marginBottom: '25px', fontSize: '18px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active1 ? (
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-warning">Theo tháng</button>
+                                        <button type="button" value="1" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
                                     ) :
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-secondary">Theo tháng</button>
+                                        <button type="button" value="1" onClick={handleClick} className="btn btn-stats-gray">Theo tháng</button>
                                     }
                                     {active2 ? (
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-warning">Theo quý</button>
+                                        <button type="button" value="2" onClick={handleClick} className="btn btn-warning text-white">Theo quý</button>
                                     ) :
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-secondary">Theo quý</button>
+                                        <button type="button" value="2" onClick={handleClick} className="btn btn-stats-gray">Theo quý</button>
                                     }
                                     {active3 ? (
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-warning">Theo năm</button>
+                                        <button type="button" value="3" onClick={handleClick} className="btn btn-warning text-white">Theo năm</button>
                                     ) :
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-secondary">Theo năm</button>
+                                        <button type="button" value="3" onClick={handleClick} className="btn btn-stats-gray">Theo năm</button>
                                     }
                                     {active4 ? (
-                                        <button type="button" value="4" onClick={handleClick} className="btn btn-warning">Tất cả</button>
+                                        <button type="button" value="4" onClick={handleClick} className="btn btn-warning text-white">Tất cả</button>
                                     ) :
-                                        <button type="button" value="4" onClick={handleClick} className="btn btn-secondary">Tất cả</button>
+                                        <button type="button" value="4" onClick={handleClick} className="btn btn-stats-gray">Tất cả</button>
                                     }
                                 </div>
                                 <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '16px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)' }}>
@@ -371,19 +376,19 @@ export default function TrainingStats() {
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Thống kê tăng trưởng</h3>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active5 ? (
-                                        <button type="button" value="5" onClick={handleClick} className="btn btn-warning">Theo tháng</button>
+                                        <button type="button" value="5" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
                                     ) :
-                                        <button type="button" value="5" onClick={handleClick} className="btn btn-secondary">Theo tháng</button>
+                                        <button type="button" value="5" onClick={handleClick} className="btn btn-stats-gray">Theo tháng</button>
                                     }
                                     {active6 ? (
-                                        <button type="button" value="6" onClick={handleClick} className="btn btn-warning ">Theo quý</button>
+                                        <button type="button" value="6" onClick={handleClick} className="btn btn-warning text-white ">Theo quý</button>
                                     ) :
-                                        <button type="button" value="6" onClick={handleClick} className="btn btn-secondary">Theo quý</button>
+                                        <button type="button" value="6" onClick={handleClick} className="btn btn-stats-gray">Theo quý</button>
                                     }
                                     {active7 ? (
-                                        <button type="button" value="7" onClick={handleClick} className="btn btn-warning ">Theo năm</button>
+                                        <button type="button" value="7" onClick={handleClick} className="btn btn-warning text-white ">Theo năm</button>
                                     ) :
-                                        <button type="button" value="7" onClick={handleClick} className="btn btn-secondary">Theo năm</button>
+                                        <button type="button" value="7" onClick={handleClick} className="btn btn-stats-gray">Theo năm</button>
                                     }
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
@@ -394,6 +399,7 @@ export default function TrainingStats() {
                                                     <TableCell sx={{ fontWeight: '700', minHeight: '50px', fontSize: '16px', width: '600px' }} align="left">
                                                         Tiêu chí
                                                         <IconButton onClick={handleClick} value={-1}
+                                                            disabled={year === 2020 || quarter === 1 || month === 1}
                                                             aria-label="previous"
                                                             size="small"
                                                             sx={{
@@ -416,7 +422,7 @@ export default function TrainingStats() {
                                                         <IconButton onClick={handleClick} value={-2}
                                                             aria-label="previous"
                                                             size="small"
-                                                            disabled={year === currentYear}
+                                                            disabled={year === currentYear || quarter === 4 || month === 12}
                                                             sx={{
                                                                 width: '17px',
                                                                 height: '17px',
@@ -593,7 +599,7 @@ export default function TrainingStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '28px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '28px',  paddingBottom: '30px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}

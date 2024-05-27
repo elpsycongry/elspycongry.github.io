@@ -150,7 +150,7 @@ export default function Training() {
                     <Icon style={{ width: 23, height: 23, color: 'rgba(0, 0, 0, 0.60)' }} icon="ion:book-sharp" />
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Đào tạo</p>
                 </Box>
-                <div style={{ marginTop: '-5px' }} className=" d-flex align-items-centent justify-content-between pl-15">
+                <div style={{ marginTop: '-9px' }} className=" d-flex align-items-centent justify-content-between pl-15">
                     <p className="title text-center mb-0">
                         Quản lý đào tạo
                     </p>
@@ -178,7 +178,7 @@ export default function Training() {
                 </Dialog>
                 <div className=" mt-3">
                     <div className="d-flex justify-content-between">
-                        <div style={{ marginTop: '-7px' }} className="d-flex pl-15">
+                        <div style={{ marginTop: '-14px' }} className="d-flex pl-15">
                             <div className="search-input position-relative ">
                                 <input
                                     type="text"
@@ -220,14 +220,15 @@ export default function Training() {
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', height: '600px', width: '99.7%' }}>
                     <div className="table-container">
-                        <table className="table_training" style={{ display: 'flex', alignItems: 'center' }}>
+                        <table className="table_training" style={{ }}>
                             <div className="no-scrolling">
                                 <tr style={{ alignItems: 'center' }} className="header-tr grey-text ">
                                     <th className="training-id position-relative" style={{ padding: '8px' }}><p className=" position-p w-84">STT</p></th>
                                     <th className="training-name position-relative" style={{ padding: '8px' }}><p className=" position-p w-124">Tên</p></th>
                                     <th style={{ width: '200px' }} className="position-relative"><p className="mt-short-th position-p w-184">Bắt đầu</p></th>
+
                                     <th className="training-total-days">Số ngày thực tập</th>
                                 </tr>
                                 {listInter.map((item, index) => (
@@ -241,6 +242,7 @@ export default function Training() {
                             </div>
                             <div className="wrapper">
                                 <tr style={{ alignItems: 'center', fontSize: '25px' }} className="grey-text">
+
                                     {listSubjectSelect.map(item => (
                                         <th value={item.name} key={item.id} className="position-relative"><p className="position-p w-124">{item.name}</p></th>
                                     ))}
@@ -256,6 +258,7 @@ export default function Training() {
                             <div className="no-scrolling">
                                 <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
                                     <th className="position-relative"><p className="position-p w-124">Tổng kết</p></th>
+
                                     <th className="team-score">Đánh giá trên team</th>
                                     <th className="position-relative"><p className="position-p w-124">Kết quả</p></th>
                                     <th className=" text-center position-relative"><p className="position-p w-124">Hành động</p></th>

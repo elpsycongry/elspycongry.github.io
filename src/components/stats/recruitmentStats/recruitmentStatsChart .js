@@ -124,6 +124,7 @@ export default function RecruitmentStatsChart({ year }) {
                         size: 20,
                         weight: 700
                     },
+                    padding: 30,
                     onClick: (e, legendItem, legend) => {
                         const index = legendItem.datasetIndex;
                         const chart = legend.chart;
