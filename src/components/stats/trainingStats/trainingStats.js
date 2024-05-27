@@ -65,6 +65,17 @@ export default function TrainingStats() {
                     setMaxGrowthStatistics(res1.data)
                 })
         }
+        if(theValue === "stats1") {
+            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setActive1(true)
+            setActive2(false)
+            setActive3(false)
+            setActive4(false)
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+                .then(res => {
+                    setTrainingStats(res.data)
+                })
+        }
         setActiveStat(theValue);
     }
 
@@ -248,12 +259,6 @@ export default function TrainingStats() {
         createData('Tỷ lệ pass/fail', 305, 3.7),
         createData('Điểm tốt nghiệp trung bình', 356, 16.0),
     ];
-
-    const maxGrowth = Math.max(...rows.map(row => row.growth));
-    const maxGrowthOfSubjects = Math.max(...subjects.map(subject => subject.growth));
-    // console.log('row 0:', rows[0].growth);
-    // console.log('max', maxGrowth);
-    // console.log((6/16));
 
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
@@ -594,7 +599,7 @@ export default function TrainingStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '28px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '28px',  paddingBottom: '30px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}

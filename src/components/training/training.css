@@ -3,20 +3,22 @@
 }
 
 .table-container {
-    margin-top: 40px;
     width: 100%;
     table-layout: fixed;
 }
 
 .table-training thead,
 .table-training tbody {
-    width: 100%; /* Đảm bảo rằng thead và tbody chiếm 100% chiều rộng của table */
-    display: table; /* Để thead và tbody được hiển thị dưới dạng bảng */
-    table-layout: fixed; /* Đặt thuộc tính này cho thead và tbody để các ô co giãn */
+    width: 100%;
+    /* Đảm bảo rằng thead và tbody chiếm 100% chiều rộng của table */
+    display: table;
+    /* Để thead và tbody được hiển thị dưới dạng bảng */
+    table-layout: fixed;
+    /* Đặt thuộc tính này cho thead và tbody để các ô co giãn */
 }
 
 
-div .table-container th{
+div .table-container th {
     height: 100px;
 }
 
@@ -48,7 +50,7 @@ div .table-container th{
     white-space: nowrap;
 }
 
-.table_training div{
+.table_training div {
     flex: 1;
     height: 550px;
 }
@@ -69,15 +71,15 @@ div .table-container th{
     align-items: center;
 }
 
-.wrapper th{
+.wrapper th {
     font-weight: 400;
 }
 
-.wrapper td{
+.wrapper td {
     height: 43px;
 }
 
-.no-scrolling td{
+.no-scrolling td {
     height: 43px;
 }
 
@@ -86,25 +88,23 @@ div .table-container th{
     min-width: 100px;
 }
 
-.training-name{
+.training-name {
     text-align: center;
     max-width: 60px;
     flex: 1;
 }
 
-.training-total-days{
+.training-total-days {
     width: 140px;
     text-align: center;
 }
 
-.team-score{
-    width: 140px;
+.team-score {
+    min-width: 140px;
     text-align: center;
 }
 
-
-
-.input-intern{
+.input-intern {
     text-rendering: auto;
     color: fieldtext;
     letter-spacing: normal;
@@ -131,12 +131,12 @@ div .table-container th{
     width: 300px;
 }
 
-.pl-15{
+.pl-15 {
     padding-left: 15px;
 }
 
-table .table-training tr, 
-table .table-training th, 
+table .table-training tr,
+table .table-training th,
 table .table-training td {
     flex: 1;
     min-width: 140px;

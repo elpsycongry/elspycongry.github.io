@@ -132,8 +132,8 @@ export default function Users() {
         <>
             <Header />
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
-                <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '14px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', width: '95.9%' }}>
+                <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '10px' }}>
                     {/* <Breadcrumbs
                         aria-label='breadcrumb'
                         separator={<NavigateNextIcon fontSize="small" />}>
@@ -151,7 +151,7 @@ export default function Users() {
                         fontWeight: '550',
                     }}>Quản lý người dùng</p>
                 </Box>
-                <div style={{ marginTop: '-5px' }} className=" d-flex align-items-centent justify-content-between pl-15">
+                <div style={{ marginTop: '-7px' }} className=" d-flex align-items-centent justify-content-between pl-15">
                     <p className="title text-center mb-0">
                         Quản lý người dùng
                     </p>
@@ -227,11 +227,11 @@ export default function Users() {
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
-                    <div className="table-container-user" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px',}}>
+                    <div className="table-container-user" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px', height: '520px' }}>
                         <div className="table-user">
 
-                            <thead>
+                            <thead style={{marginTop: '-20px'}}>
                                 <tr className="grey-text">
                                     <th className="user-id">STT</th>
                                     <th className="user-name" style={{ padding: '8px' }}>Tên</th>
@@ -242,7 +242,7 @@ export default function Users() {
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody style={{marginTop: '-15px'}}>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
@@ -299,7 +299,7 @@ export default function Users() {
                     </div>
                 </div>
             </Box >
-            <div style={{ paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <div style={{marginTop: '-10px' ,paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
             {/* <Footer /> */}

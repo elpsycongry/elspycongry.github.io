@@ -151,7 +151,7 @@ export default function Training() {
                     <Icon style={{ width: 23, height: 23, color: 'rgba(0, 0, 0, 0.60)' }} icon="ion:book-sharp" />
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Đào tạo</p>
                 </Box>
-                <div style={{ marginTop: '-5px' }} className=" d-flex align-items-centent justify-content-between pl-15">
+                <div style={{ marginTop: '-9px' }} className=" d-flex align-items-centent justify-content-between pl-15">
                     <p className="title text-center mb-0">
                         Quản lý đào tạo
                     </p>
@@ -179,7 +179,7 @@ export default function Training() {
                 </Dialog>
                 <div className=" mt-3">
                     <div className="d-flex justify-content-between">
-                        <div style={{ marginTop: '-7px' }} className="d-flex pl-15">
+                        <div style={{ marginTop: '-14px' }} className="d-flex pl-15">
                             <div className="search-input position-relative ">
                                 <input
                                     type="text"
@@ -221,11 +221,11 @@ export default function Training() {
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', height: '600px', width: '99.7%' }}>
                     <div className="table-container">
-                        <table className="table_training" style={{ display: 'flex', alignItems: 'center' }}>
+                        <table className="table_training" style={{ }}>
                             <div className="no-scrolling">
-                                <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
+                                <tr style={{  }} className="header-tr grey-text">
                                     <th className="training-id">STT</th>
                                     <th className="training-name">Tên</th>
                                     <th style={{ width: '200px' }}>Bắt đầu</th>
@@ -245,7 +245,7 @@ export default function Training() {
                                 ))}
                             </div>
                             <div className="wrapper">
-                                <tr style={{ alignItems: 'center', fontSize: '25px' }} className=" grey-text">
+                                <tr style={{  fontSize: '25px' }} className=" grey-text">
                                     {listSubjectSelect.map(item => (
                                         <th value={item.name} key={item.id}>{item.name}</th>
                                     ))}
@@ -259,7 +259,7 @@ export default function Training() {
                                 ))}
                             </div>
                             <div className="no-scrolling">
-                                <tr style={{ alignItems: 'center' }} className="header-tr grey-text">
+                                <tr style={{  }} className="header-tr grey-text">
                                     <th>Tổng kết</th>
                                     <th className="team-score">Đánh giá trên team</th>
                                     <th>Kết quả</th>

@@ -10,7 +10,7 @@ body {
     /* Thiết lập Flexbox */
     flex-direction: column;
     /* Các thành phần con sắp xếp theo chiều dọc */
-    min-height: 100vh;
+    /* min-height: 100vh; */
     /* Đảm bảo body có ít nhất chiều cao bằng viewport */
 
     background-color: rgb(231, 227, 227) !important;

@@ -153,9 +153,38 @@ export function MarkInternModal({userID, updateFunction}) {
         setData({...data, trainingState: 'stop_training', endDate: currentDate});
         setOpenAlert(false)
     }
-    finalScore.current = []
 
+    finalScore.current = []
     passed.current = {validScore: true, scorePassed: true}
+
+    // Hàm lấy ra ngày thực tập
+    const getBusinessDay = (dateFrom, dateTo) => {
+        let day = 0;
+        if (new Date(null).toDateString() === dateTo.toDateString()) {
+            dateTo = new Date()
+        }
+
+        for (var currentDate = new Date(dateFrom); currentDate <= dateTo; currentDate.setDate(currentDate.getDate() + 1)) {
+            if (currentDate.toLocaleDateString('en-US', {weekday: "short"}) !== 'Sun' && currentDate.toLocaleDateString('en-US', {weekday: "short"}) !== 'Sat') {
+                day++;
+            }
+        }
+        if (day > 50) {
+            passed.current = {...passed.current, scorePassed: false}
+        }
+        return (day > 50 ?
+            
+            (<ThemeProvider theme={theme}>
+                <Tooltip
+                    arrow
+                    placement={'top'}
+                    title="Đã quá ngày thực tập" disableInteractive={true}>
+                    <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
+                </Tooltip>
+            </ThemeProvider>)
+            :
+            <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>)
+    }
 
     function findTotal(theory, practice, attitude) {
         theory = parseFloat(theory);
@@ -220,8 +249,8 @@ export function MarkInternModal({userID, updateFunction}) {
             setFinalResultPass(null)
         }
     }
-    // Kiểm tra nếu comment là null thì thêm value rỗng vào
 
+    // Kiểm tra nếu comment là null thì thêm value rỗng vào
     const checkCommentSubject = (data) => {
         for (const subj of data.subjects) {
             if (subj.comment === null) {
@@ -245,8 +274,7 @@ export function MarkInternModal({userID, updateFunction}) {
             .toFixed(2), data.scoreInTeam, false)
     }, [data]);
     // Handle submit
-    const handleSubmit = () => {
-
+    const handleSubmit = (type) => {
         let sendData;
         if (finalResultPass !== null) {
             const currentDate = new Date().toISOString().split('T')[0];
@@ -260,6 +288,9 @@ export function MarkInternModal({userID, updateFunction}) {
                 variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"}
             })
             updateFunction()
+            if (type === 'saveCmt'){
+                return;
+            }
             setOpen(false)
         }).catch(e => {
             enqueueSnackbar("Không thể lưu vui lòng thử lại sau! ", {
@@ -267,30 +298,7 @@ export function MarkInternModal({userID, updateFunction}) {
             });
         })
     }
-    // Hàm lấy ra ngày thực tập
-    const getBusinessDay = (dateFrom, dateTo) => {
-        let day = 0;
-        if (new Date(null).toDateString() === dateTo.toDateString()) {
-            dateTo = new Date()
-        }
-
-        for (var currentDate = new Date(dateFrom); currentDate <= dateTo; currentDate.setDate(currentDate.getDate() + 1)) {
-            if (currentDate.toLocaleDateString('en-US', {weekday: "short"}) !== 'Sun' && currentDate.toLocaleDateString('en-US', {weekday: "short"}) !== 'Sat') {
-                day++;
-            }
-        }
-        return (day > 50 ?
-            (<ThemeProvider theme={theme}>
-                <Tooltip
-                    arrow
-                    placement={'top'}
-                    title="Đã quá ngày thực tập" disableInteractive={true}>
-                    <span style={{fontWeight: 600, color: "red", fontSize: '1.1rem'}}>{day}</span>
-                </Tooltip>
-            </ThemeProvider>)
-            :
-            <span style={{fontWeight: 600, fontSize: '1.1rem'}}>{day}</span>)
-    }
+    
 
     const convertFormatDate = (dateString) => {
         const date = new Date(dateString)
@@ -382,7 +390,7 @@ export function MarkInternModal({userID, updateFunction}) {
                                         {!readOnly && (
                                             <button
                                             disabled={inValidSave}
-                                            onClick={() => {handleSubmit()}}
+                                            onClick={() => {handleSubmit('saveCmt')}}
                                             className={"save-btn comment-btn"}>
                                             LƯU GHI CHÚ
                                         </button>)}
