@@ -657,65 +657,23 @@ export default function DialogCandidateFormCreate() {
                 >
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === "" && (
-                  <select
-                    className="form-select grey-text  ms-2"
-                    style={{ width: "170px" }}
-                    aria-label="Default select example"
-                    value={selectedValuePassFaild}
-                    onChange={handleChangePassFaild}
-                  >
-                    <option className=" grey-text" disabled value="">
-                      N/A
-                    </option>
-                    <option className="text-success" value="true">
-                      Passed
-                    </option>
-                    <option className="text-danger" value="false">
-                      Failed
-                    </option>
-                  </select>
-                )}
-                {selectedValuePassFaild === "true" ||
-                  selectedValuePassFaild === true && (
-                    <select
-                      className="form-select text-success  ms-2"
-                      style={{ width: "170px" }}
-                      aria-label="Default select example"
-                      value={selectedValuePassFaild}
-                      onChange={handleChangePassFaild}
-                    >
-                      <option className=" grey-text" disabled value="">
-                        N/A
-                      </option>
-                      <option className="text-success" value="true">
-                        Passed
-                      </option>
-                      <option className="text-danger" value="false">
-                        Failed
-                      </option>
-                    </select>
-                  )}
-                {selectedValuePassFaild === "false" ||
-                  selectedValuePassFaild === false && (
-                    <select
-                      className="form-select text-danger  ms-2"
-                      style={{ width: "170px" }}
-                      aria-label="Default select example"
-                      value={selectedValuePassFaild}
-                      onChange={handleChangePassFaild}
-                    >
-                      <option className=" grey-text" disabled value="">
-                        N/A
-                      </option>
-                      <option className="text-success" value="true">
-                        Passed
-                      </option>
-                      <option className="text-danger" value="false">
-                        Failed
-                      </option>
-                    </select>
-                  )}
+                <select
+  className={`form-select ms-2 ${selectedValuePassFaild === "true" || selectedValuePassFaild === true ? 'text-success' : selectedValuePassFaild === "false" || selectedValuePassFaild === false ? 'text-danger' : 'grey-text'}`}
+  style={{ width: "170px" }}
+  aria-label="Default select example"
+  value={selectedValuePassFaild}
+  onChange={handleChangePassFaild}
+>
+  <option className={`grey-text ${selectedValuePassFaild === "true" || selectedValuePassFaild === true || selectedValuePassFaild === "false" || selectedValuePassFaild === false|| selectedValuePassFaild === "" ? 'd-none' : ''}`} disabled value="">
+    N/A
+  </option>
+  <option className="text-success" value="true">
+    Passed
+  </option>
+  <option className="text-danger" value="false">
+    Failed
+  </option>
+</select>
               </div>
               <div className="col-md-12 text-center  mt-0">
                 {errFinalResult && (

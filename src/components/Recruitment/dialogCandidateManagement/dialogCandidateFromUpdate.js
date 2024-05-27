@@ -604,42 +604,23 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                 >
                   Kết quả cuối cùng:
                 </label>
-                {finalResult === "true" || finalResult === true ? (
-                  <select
-                    className="form-select text-success  ms-2"
-                    style={{ width: "170px" }}
-                    aria-label="Default select example"
-                    value={finalResult}
-                    onChange={handleChangePassFaild}
-                    id="finalResult"
-                    name="finalResult"
-                    placeholder='N/A'
-                  >
-                    <option className="text-success" value="true">
-                      Passed
-                    </option>
-                    <option className="text-danger" value="false">
-                      Failed
-                    </option>
-                  </select>
-                ) : (
-                  <select
-                    className="form-select text-danger  ms-2"
-                    style={{ width: "170px" }}
-                    aria-label="Default select example"
-                    value={finalResult}
-                    onChange={handleChangePassFaild}
-                    id="finalResult"
-                    name="finalResult"
-                  >
-                    <option className="text-success" value="true">
-                      Passed
-                    </option>
-                    <option className="text-danger" value="false">
-                      Failed
-                    </option>
-                  </select>
-                )}
+                <select
+  className={`form-select ms-2 ${finalResult === "true" || finalResult === true ? 'text-success' : finalResult === "false" || finalResult === false ? 'text-danger' : 'grey-text'}`}
+  style={{ width: "170px" }}
+  aria-label="Default select example"
+  value={finalResult}
+  onChange={handleChangePassFaild}
+>
+  <option className={`grey-text ${finalResult === "true" || finalResult === true || finalResult === "false" || finalResult === false|| finalResult === "" ? 'd-none' : ''}`} disabled value="">
+    N/A
+  </option>
+  <option className="text-success" value="true">
+    Passed
+  </option>
+  <option className="text-danger" value="false">
+    Failed
+  </option>
+</select>
               </div>
               <div className="col-md-12 text-center  mt-0">
                 {errFinalResult && (
