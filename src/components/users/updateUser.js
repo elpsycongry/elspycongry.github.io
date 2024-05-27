@@ -26,7 +26,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
             roles: []
         },
         validationSchema: Yup.object({
-            name: Yup.string().max(30, 'Không quá 30 ký tự').required('Tên không được bỏ trống'),
+            name: Yup.string().max(30, 'Không quá 30 ký tự').matches(/^[a-zA-Z\s@]+$/, 'Tên không được chứa ký tự đặc biệt ngoại trừ @').required('Tên không được bỏ trống'),
             email: Yup.string().email('Email không đúng định dạng').required('Email không được bỏ trống'),
             phone: Yup.string().matches(/^(0[3|5|7|8|9])+([0-9]{8})$/, 'Số điện thoại không hợp lệ')
         }),

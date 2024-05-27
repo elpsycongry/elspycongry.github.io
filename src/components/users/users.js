@@ -246,7 +246,7 @@ export default function Users() {
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
-                                        <td style={{ padding: '8px' }}>
+                                        <td style={{ padding: '8px' }} className="user-name">
                                             <Tooltip title={item.name} arrow>
                                                 <span className="user-name">{item.name}</span>
                                             </Tooltip>
