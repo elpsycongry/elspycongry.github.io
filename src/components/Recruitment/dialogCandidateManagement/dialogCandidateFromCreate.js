@@ -1,13 +1,13 @@
 import { Dialog, DialogTitle, IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import axios from "axios";
 import swal from "sweetalert";
 import { useFormik } from "formik";
@@ -23,7 +23,14 @@ export default function DialogCandidateFormCreate() {
   const [errFinalResult, setErrFinalResult] = useState(false);
 
   // Xử lý số lượng nhân sự
-  const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status, finalResult) => {
+  const checkValid = (
+    fullName,
+    email,
+    phoneNumber,
+    recruitmentPlan,
+    status,
+    finalResult
+  ) => {
     console.log(finalResult);
     // console.log(validPhone.test(phoneNumber));
     if (!validFullName.test(fullName)) {
@@ -40,16 +47,18 @@ export default function DialogCandidateFormCreate() {
       hasErrEmail = false;
     }
 
-
     var hasErrFinalResult;
-    if (finalResult === '' || finalResult === 'default' || finalResult === 'undefined') {
+    if (
+      finalResult === "" ||
+      finalResult === "default" ||
+      finalResult === "undefined"
+    ) {
       hasErrFinalResult = true;
-      setErrFinalResult(true)
+      setErrFinalResult(true);
     } else {
       hasErrFinalResult = false;
-      setErrFinalResult(false)
+      setErrFinalResult(false);
     }
-
 
     var hasErrPhone;
     if (!validPhone.test(phoneNumber) || phoneNumber === "") {
@@ -59,7 +68,7 @@ export default function DialogCandidateFormCreate() {
       setErrPhoneNumber(false);
       hasErrPhone = false;
     }
-    console.log(hasErrPhone)
+    console.log(hasErrPhone);
 
     var hasErrPhone;
     if (!validPhone.test(phoneNumber) || phoneNumber === "") {
@@ -71,7 +80,12 @@ export default function DialogCandidateFormCreate() {
     }
 
     var hasErrRecruitmentPlan;
-    if (recruitmentPlan === '' || recruitmentPlan === null || recruitmentPlan === 'default' || recruitmentPlan === 'undefined') {
+    if (
+      recruitmentPlan === "" ||
+      recruitmentPlan === null ||
+      recruitmentPlan === "default" ||
+      recruitmentPlan === "undefined"
+    ) {
       setErrRecruitmentPlan(true);
       hasErrRecruitmentPlan = true;
     } else {
@@ -80,7 +94,7 @@ export default function DialogCandidateFormCreate() {
     }
 
     var hasErrStatus;
-    if (status === '' || status === 'default') {
+    if (status === "" || status === "default") {
       setErrStatus(true);
       hasErrStatus = true;
     } else {
@@ -88,14 +102,20 @@ export default function DialogCandidateFormCreate() {
       hasErrStatus = false;
     }
 
-
-
-    if (!validFullName.test(fullName) || !validEmail.test(email) || hasErrRecruitmentPlan || hasErrStatus || hasErrPhone || hasErrEmail || hasErrFinalResult) {
+    if (
+      !validFullName.test(fullName) ||
+      !validEmail.test(email) ||
+      hasErrRecruitmentPlan ||
+      hasErrStatus ||
+      hasErrPhone ||
+      hasErrEmail ||
+      hasErrFinalResult
+    ) {
       return false;
     } else {
       return true;
     }
-  }
+  };
 
   const formData = useFormik({
     initialValues: {
@@ -118,7 +138,7 @@ export default function DialogCandidateFormCreate() {
       scoreInterview: "",
     },
     onSubmit: async (values, { setSubmitting }) => {
-      // console.log(values); 
+      // console.log(values);
       const inputDateTime = date.$d;
       const dateObject = new Date(inputDateTime);
 
@@ -134,20 +154,19 @@ export default function DialogCandidateFormCreate() {
       const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
       values.interviewTime = formattedDateTime;
       values.finalResult = selectedValuePassFaild;
-      console.log(values)
+      console.log(values);
 
-      if (values.scoreInterview === '') {
+      if (values.scoreInterview === "") {
         values.scoreInterview = 1;
       }
 
-      if (values.scoreTest === '') {
+      if (values.scoreTest === "") {
         values.scoreTest = 50;
       }
-      if (values.checkInterview === '') {
+      if (values.checkInterview === "") {
         values.checkInterview = true;
       }
       // Lấy dữ liệu check
-
 
       const finalResult = values.finalResult;
       const fullName = values.name;
@@ -160,8 +179,16 @@ export default function DialogCandidateFormCreate() {
       // setSubmitting(false);
       // return;
 
-      if (!checkValid(fullName, email, phoneNumber, recruitmentPlan, status, finalResult)) {
-
+      if (
+        !checkValid(
+          fullName,
+          email,
+          phoneNumber,
+          recruitmentPlan,
+          status,
+          finalResult
+        )
+      ) {
         setSubmitting(false);
         return;
       } else {
@@ -175,7 +202,6 @@ export default function DialogCandidateFormCreate() {
                 timer: 1000,
               }).then(() => {
                 window.location.href = "/recruitment/candidateManagement";
-
               });
             });
         } catch (error) {
@@ -186,7 +212,7 @@ export default function DialogCandidateFormCreate() {
           });
         }
       }
-    }
+    },
   });
   // Call api
   const [plansLoaded, setPlansLoaded] = useState(false);
@@ -201,10 +227,15 @@ export default function DialogCandidateFormCreate() {
     const updatedPlans = await Promise.all(
       plans.map(async (item) => {
         try {
-          const res = await axios.get(`http://localhost:8080/api/interns/isFull/${item.id}`);
+          const res = await axios.get(
+            `http://localhost:8080/api/interns/isFull/${item.id}`
+          );
           return { ...item, isFullManagement: res.data };
         } catch (error) {
-          console.error(`Error fetching isFullManagement for plan ${item.id}:`, error);
+          console.error(
+            `Error fetching isFullManagement for plan ${item.id}:`,
+            error
+          );
           return { ...item, isFullManagement: null }; // hoặc giá trị mặc định nào đó
         }
       })
@@ -213,7 +244,7 @@ export default function DialogCandidateFormCreate() {
     // console.log('Updated plans with isFullManagement:', updatedPlans);
   };
 
-      fetchIsFullManagement();
+  // fetchIsFullManagement();
 
   // Xử lý mở form
   const listTestSelect = [
@@ -227,27 +258,26 @@ export default function DialogCandidateFormCreate() {
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
     setOpenForm(true);
-  }
+  };
   const handleClickFormClose = () => {
     setOpenForm(false);
-  }
+  };
 
   // Code mới của thg candidate
 
   const dateNow = dayjs();
-  const newDate = dateNow.add(1, 'hour');
+  const newDate = dateNow.add(1, "hour");
   const [date, setDate] = useState(newDate);
   const handleChangeDateTime = (e) => {
     setDate(e);
-  }
+  };
 
-
-
-  // const 
+  // const
   function TestMarks({ scoreTest, setScoreTest }) {
-    if (scoreTest === '' || scoreTest === 0) {
+    if (scoreTest === "") {
       scoreTest = 50;
     }
+    console.log(scoreTest);
     const [testMarks, setTestMarks] = useState(scoreTest);
     // useEffect(() => {
     //   setTestMarks(scoreTest);
@@ -260,8 +290,6 @@ export default function DialogCandidateFormCreate() {
         setScoreTest(newTestMarks);
       }
     };
-
-
 
     const handleInputChange = (e) => {
       if (e.target.value <= 100) {
@@ -284,7 +312,7 @@ export default function DialogCandidateFormCreate() {
         setTestMarks(newCount);
         setScoreTest(newCount);
       }
-    }
+    };
 
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -303,23 +331,31 @@ export default function DialogCandidateFormCreate() {
     );
   }
   function Interview({ scoreInterview, setScoreInterview }) {
-    if (scoreInterview === '') {
+    if (scoreInterview === "") {
       scoreInterview = 1;
     }
     const [interview, setInterview] = useState(scoreInterview);
+
+    const handleBlurIternview = (e) => {
+      const newCount = parseInt(e.target.value);
+      if (!isNaN(newCount) && newCount <= 100) {
+        setInterview(newCount);
+        setScoreInterview(newCount);
+      }
+    };
     const handleClickCountPlus = () => {
       if (interview < 10) {
         setInterview(interview + 1);
         setScoreInterview(+interview + 1);
       }
     };
-    // const handleInputChange = (e) => {
-    //   if (e.target.value <= 10) {
-    //     const newCount = parseInt(e.target.value);
-    //     setInterview(newCount);
-    //     setScoreInterview(newCount);
-    //   }
-    // };
+    const handleInputChange = (e) => {
+      if (e.target.value <= 10) {
+        const newCount = parseInt(e.target.value);
+        setInterview(newCount);
+        setScoreInterview(newCount);
+      }
+    };
     const handleClickCountMinus = () => {
       if (!interview <= 0) {
         setInterview(interview - 1);
@@ -337,23 +373,30 @@ export default function DialogCandidateFormCreate() {
           className="form-control w-25 border-clr-grey border text-center"
           type="number"
           id="scoreInterview"
-        // onChange={handleInputChange}
+          onChange={handleInputChange}
+          onBlur={handleBlurIternview}
         />
         <AddIcon onClick={handleClickCountPlus} className="ms-1" />
       </div>
     );
   }
 
-
-  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState('');
+  const [selectedValuePassFaild, setSelectedValuePassFaild] = useState("");
+  console.log(selectedValuePassFaild);
 
   const handleChangePassFaild = (e) => {
     setSelectedValuePassFaild(e.target.value);
   };
   return (
     <>
-      <div className=" position-relative " style={{ width: '75px', minWidth: '170px' }} onClick={handleClickFormOpen}>
-        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">Thêm ứng viên</button>
+      <div
+        className=" position-relative "
+        style={{ width: "75px", minWidth: "170px" }}
+        onClick={handleClickFormOpen}
+      >
+        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">
+          Thêm ứng viên
+        </button>
         <AddIcon className=" position-absolute plus-icon clr-white" />
       </div>
       <Dialog
@@ -364,7 +407,6 @@ export default function DialogCandidateFormCreate() {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle>
-
           <form className="row g-3" onSubmit={formData.handleSubmit}>
             {/* Form 1 */}
             <div className="col-md-12">
@@ -422,9 +464,7 @@ export default function DialogCandidateFormCreate() {
               />
               <div className="col-md-8  mt-0">
                 {errEmail && (
-                  <p className="err-valid ws-nowrap ">
-                    Email không hợp lệ
-                  </p>
+                  <p className="err-valid ws-nowrap ">Email không hợp lệ</p>
                 )}
               </div>
             </div>
@@ -463,22 +503,25 @@ export default function DialogCandidateFormCreate() {
               />
             </div>
             <div className="col-md-6 mt-1">
-              <label htmlFor="time" className="form-label text-center grey-text mb-0 mt-2">
+              <label
+                htmlFor="time"
+                className="form-label text-center grey-text mb-0 mt-2"
+              >
                 Thời gian hẹn phỏng vấn <span className="color-red">*</span>
               </label>
-              <div
-                id="time"
-                className=" d-flex justify-content-center">
+              <div id="time" className=" d-flex justify-content-center">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimeField className="time-set form-control"
+                  <TimeField
+                    className="time-set form-control"
                     value={date}
                     onChange={handleChangeDateTime}
                     format="HH:mm"
                   />
-                  <DemoContainer components={['DateTimePicker']}>
-                    <DemoItem >
-                      <DateTimePicker className="date-set form-control"
-                        views={['day', 'month', 'year', 'hours', 'minutes']}
+                  <DemoContainer components={["DateTimePicker"]}>
+                    <DemoItem>
+                      <DateTimePicker
+                        className="date-set form-control"
+                        views={["day", "month", "year", "hours", "minutes"]}
                         value={date}
                         minDate={dateNow}
                         // minTime={dateNow}
@@ -502,16 +545,28 @@ export default function DialogCandidateFormCreate() {
                 id="recruitmentPlan.id"
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
-                {plans.filter(item => item.status === "Đã xác nhận").map((item) => (
-                  item.isFullManagement === true ?
-                    <option style={{ color: 'gainsboro' }} key={item.id} value={item.id} disabled>
-                      {item.name}
-                    </option>
-                    :
-                    <option className="cursor-pointer" key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                ))}
+                {plans
+                  .filter((item) => item.status === "Đã xác nhận")
+                  .map((item) =>
+                    item.isFullManagement === true ? (
+                      <option
+                        style={{ color: "gainsboro" }}
+                        key={item.id}
+                        value={item.id}
+                        disabled
+                      >
+                        {item.name}
+                      </option>
+                    ) : (
+                      <option
+                        className="cursor-pointer"
+                        key={item.id}
+                        value={item.id}
+                      >
+                        {item.name}
+                      </option>
+                    )
+                  )}
               </select>
               <div className="col-md-8  mt-0">
                 {errRecruitmentPlan && (
@@ -528,7 +583,10 @@ export default function DialogCandidateFormCreate() {
               </div>
               <div className="col-md-12 d-flex mt-3">
                 <div className="col-md-4 ">
-                  <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
+                  <label
+                    htmlFor="name"
+                    className="form-label grey-text mb-0 ws-nowrap"
+                  >
                     Có đến phỏng vấn?
                   </label>
                   <select
@@ -545,7 +603,10 @@ export default function DialogCandidateFormCreate() {
                 </div>
                 {/*  */}
                 <div className="col-md-4 text-center mt-0 mb-2">
-                  <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
+                  <label
+                    htmlFor="name"
+                    className="form-label grey-text mb-0 ws-nowrap"
+                  >
                     Điểm kiểm tra (%)
                   </label>
                   <TestMarks
@@ -556,7 +617,10 @@ export default function DialogCandidateFormCreate() {
                   />
                 </div>
                 <div className="col-md-4 text-center mt-0 mb-2">
-                  <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
+                  <label
+                    htmlFor="name"
+                    className="form-label grey-text mb-0 ws-nowrap"
+                  >
                     Điểm phỏng vấn trực tiếp
                   </label>
                   <Interview
@@ -569,7 +633,10 @@ export default function DialogCandidateFormCreate() {
               </div>
               {/*  */}
               <div className="col-md-12 mt-2">
-                <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
+                <label
+                  htmlFor="name"
+                  className="form-label grey-text mb-0 ws-nowrap"
+                >
                   Nhận xét (nếu có)
                 </label>
                 <div className="col-md-12 text-area-field">
@@ -584,34 +651,78 @@ export default function DialogCandidateFormCreate() {
                 </div>
               </div>
               <div className="col-md-12 mt-2 d-flex align-item-center justify-content-center">
-                <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
+                <label
+                  htmlFor="name"
+                  className="form-label grey-text mb-0 ws-nowrap"
+                >
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === 'true' || selectedValuePassFaild === true ? <select
-                  className="form-select text-success  ms-2"
-                  style={{ width: '170px' }}
-                  aria-label="Default select example"
-                  value={selectedValuePassFaild}
-                  onChange={handleChangePassFaild}
-                >
-                  <option value="">N/A</option>
-                  <option className="text-success" value="true">Passed</option>
-                  <option className="text-danger" value="false">Failed</option>
-                </select> : <select
-                  className="form-select text-danger  ms-2"
-                  style={{ width: '170px' }}
-                  aria-label="Default select example"
-                  value={selectedValuePassFaild}
-                  onChange={handleChangePassFaild}
-                >
-                  <option value="">N/A</option>
-                  <option className="text-success" value="true">Pass</option>
-                  <option className="text-danger" value="false">Faild</option>
-                </select>}
+                {selectedValuePassFaild === "" && (
+                  <select
+                    className="form-select grey-text  ms-2"
+                    style={{ width: "170px" }}
+                    aria-label="Default select example"
+                    value={selectedValuePassFaild}
+                    onChange={handleChangePassFaild}
+                  >
+                    <option className=" grey-text" disabled value="">
+                      N/A
+                    </option>
+                    <option className="text-success" value="true">
+                      Passed
+                    </option>
+                    <option className="text-danger" value="false">
+                      Failed
+                    </option>
+                  </select>
+                )}
+                {selectedValuePassFaild === "true" ||
+                  selectedValuePassFaild === true && (
+                    <select
+                      className="form-select text-success  ms-2"
+                      style={{ width: "170px" }}
+                      aria-label="Default select example"
+                      value={selectedValuePassFaild}
+                      onChange={handleChangePassFaild}
+                    >
+                      <option className=" grey-text" disabled value="">
+                        N/A
+                      </option>
+                      <option className="text-success" value="true">
+                        Passed
+                      </option>
+                      <option className="text-danger" value="false">
+                        Failed
+                      </option>
+                    </select>
+                  )}
+                {selectedValuePassFaild === "false" ||
+                  selectedValuePassFaild === false && (
+                    <select
+                      className="form-select text-danger  ms-2"
+                      style={{ width: "170px" }}
+                      aria-label="Default select example"
+                      value={selectedValuePassFaild}
+                      onChange={handleChangePassFaild}
+                    >
+                      <option className=" grey-text" disabled value="">
+                        N/A
+                      </option>
+                      <option className="text-success" value="true">
+                        Passed
+                      </option>
+                      <option className="text-danger" value="false">
+                        Failed
+                      </option>
+                    </select>
+                  )}
               </div>
               <div className="col-md-12 text-center  mt-0">
                 {errFinalResult && (
-                  <p style={{ paddingLeft: '230px' }} className="err-valid ws-nowrap ">
+                  <p
+                    style={{ paddingLeft: "230px" }}
+                    className="err-valid ws-nowrap "
+                  >
                     Trạng thái không được để trống
                   </p>
                 )}
@@ -625,7 +736,10 @@ export default function DialogCandidateFormCreate() {
             <div className="col-md-12 mb-2 mt-1 d-flex justify-content-between">
               <div className="col-md-10 d-flex">
                 <div className="col-md-5">
-                  <label htmlFor="name" className="form-label grey-text mb-0 mt-2 ws-nowrap">
+                  <label
+                    htmlFor="name"
+                    className="form-label grey-text mb-0 mt-2 ws-nowrap"
+                  >
                     Cập nhật trạng thái
                   </label>
                   <select
@@ -642,10 +756,12 @@ export default function DialogCandidateFormCreate() {
                       </option>
                     ))}
                   </select>
-
                 </div>
                 <div className="col-md-7 ms-4">
-                  <label htmlFor="name" className="form-label grey-text mb-0 mt-2 ws-nowrap">
+                  <label
+                    htmlFor="name"
+                    className="form-label grey-text mb-0 mt-2 ws-nowrap"
+                  >
                     Lưu ý
                   </label>
                   <input
@@ -660,7 +776,10 @@ export default function DialogCandidateFormCreate() {
               </div>
               <div className=" text-right mt-0 d-flex align-item-flex-end">
                 <div className="send-child position-relative ">
-                  <button type="submit" className=" text-center align-item-center btn send-btn btn-success ">
+                  <button
+                    type="submit"
+                    className=" text-center align-item-center btn send-btn btn-success "
+                  >
                     Lưu
                   </button>
                 </div>
@@ -674,8 +793,8 @@ export default function DialogCandidateFormCreate() {
               )}
             </div>
           </form>
-        </DialogTitle >
-      </Dialog >
+        </DialogTitle>
+      </Dialog>
     </>
-  )
+  );
 }

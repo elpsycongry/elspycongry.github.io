@@ -201,7 +201,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
     // console.log('Updated plans with isFullManagement:', updatedPlans);
   };
 
-  fetchIsFullManagement();
+  // fetchIsFullManagement();
 
   // Xử lý mở form
   const listTestSelect = [
@@ -233,14 +233,16 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
   // const 
   function TestMarks({ scoreTest, setScoreTest }) {
-    if (scoreTest === '' || scoreTest === 0) {
+    if (scoreTest === '') {
       scoreTest = 50;
     }
-    scoreTest = parseInt(scoreTest);
+    console.log(scoreTest)
+    // scoreTest = parseInt(scoreTest);
     const [testMarks, setTestMarks] = useState(scoreTest);
     const handleClickCountPlus = () => {
       if (testMarks < 100) {
-        const newTestMarks = testMarks + 1;
+        
+        const newTestMarks = parseInt(testMarks) + 1;
         setTestMarks(newTestMarks);
         setScoreTest(newTestMarks);
       }
@@ -255,7 +257,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
     const handleClickCountMinus = () => {
       if (testMarks > 0) {
-        const newTestMarks = testMarks - 1;
+        const newTestMarks = parseInt(testMarks) - 1;
         setTestMarks(newTestMarks);
         setScoreTest(newTestMarks);
       }
@@ -285,6 +287,8 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       </div>
     );
   }
+
+  // 
   function Interview({ scoreInterview, setScoreInterview }) {
     if (scoreInterview === '') {
       scoreInterview = 1;
@@ -487,7 +491,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
             </div>
             <div className="col-md-6 mt-1 ">
               <label htmlFor="name" className="form-label grey-text mb-0 mt-2">
-                Kế hoạch tuyển dụng
+                Kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
               <select
                 className="form-select grey-text"
@@ -609,6 +613,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                     onChange={handleChangePassFaild}
                     id="finalResult"
                     name="finalResult"
+                    placeholder='N/A'
                   >
                     <option className="text-success" value="true">
                       Passed
