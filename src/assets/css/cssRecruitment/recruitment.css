@@ -5,18 +5,21 @@
 }
 
 .practice {
+
     color: #4d4dff;
 }
 
 .content-recruiment {
     margin-top: 20px;
     margin-bottom: 15px;
+
     min-height: 550px;
     padding: 20px;
     width: 100%;
     background-color: #fdfdfd;
 
 }
+
 
 .cursor-pointer {
     cursor: pointer;
@@ -38,6 +41,23 @@
     top: -12px !important;
 }
 
+.hover-btn:hover {
+    background-color: #21912e;
+    transition: 0.5s ease-in-out;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.w-px {
+    width: 300px;
+}
+
+.ml-10 {
+    margin-left: 10px !important;
+}
+
 .search-icon {
     right: 7px;
     top: 2px;
@@ -47,6 +67,7 @@
 
 .plus-icon {
     left: 6px;
+    font-size: 27px !important;
     top: 4px;
 }
 
@@ -55,6 +76,14 @@
     height: 110%;
     background-color: #20af30;
     padding: 0 10px;
+    border-radius: 4px;
+    font-size: 20px;
+    border: none;
+    height: 100%;
+    background-color: #419A00;
+    padding: 0 10px;
+    box-sizing: border-box;
+    transition: 0.5s ease-in-out;
 }
 
 .search-input input {
@@ -62,16 +91,21 @@
     border: 1px solid light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
     padding-left: 14px;
     padding-right: 36px;
-
 }
 .pencil-btn{
     background-color: #ff8a00 !important;
+    height: 35px;
+}
+
+.pencil-btn {
+    background-color: #FFAA00 !important;
     border-radius: 50% !important;
     width: 25px !important;
     height: 25px !important;
     padding: 3px !important;
     color: white !important;
 }
+
 .search-input input:focus {
     outline: none;
     border: 2px solid #4088FF;
@@ -81,15 +115,26 @@
     min-width: 195px;
 }
 
+
+
+.search-input input:focus {
+    outline: none;
+    border: 2px solid #4088FF !important;
+}
+
+
+
 .header-tr th {
     font-weight: 400;
 }
 
 .header-tr {
     min-height: 100px;
+    height: 100px;
     margin-bottom: 10px;
     font-size: 25px;
 }
+
 
 /* .count-td{
     counter-reset: my-sec-counter;
@@ -99,12 +144,148 @@
     content: counter(my-sec-counter);
 }
 
+#formCreateRecruitmentPlan .MuiPaper-root {
+    max-width: 960px;
+}
+
+#formCandidateCreate .MuiPaper-root {
+    max-width: 812px;
+}
+
+#formWatchRecruitmentPlan .MuiPaper-root {
+    max-width: 800px;
+}
+
+
+#dialog .MuiPaper-root {
+    max-width: 1315px;
+}
+
+#formWatch .MuiPaper-root {
+    width: 45%;
+    overflow: hidden;
+}
+
+.select-form .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+    top: -10px !important;
+}
+
+.select-form .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+    padding: 5px;
+}
+
+.select-form .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+    height: 100%;
+}
+
+
+
 .count-tr {
     height: 40px;
 }
 
 
+
 /*Có thể tái sử dụng */
+
+.send {
+    text-align: right;
+    display: flex;
+    margin-top: 7px;
+    justify-content: flex-end;
+
+}
+
+.send-btn {
+    width: 80px;
+    text-align: left;
+    background-color: #388738;
+    color: #fdfdfd;
+    border-radius: 3px;
+}
+
+.plusTech {
+    margin-left: 14px;
+    font-size: 14px;
+}
+
+.select-edit {
+    padding-right: 34px;
+    padding-left: 14px;
+    transition: 0.2s ease-in-out;
+}
+
+.select-edit:focus {
+    color: rgb(43, 42, 42) !important;
+    transition: 0.2s ease-in-out;
+}
+
+
+.send .iconSend {
+    top: 6px;
+    right: 9px;
+    color: #fdfdfd;
+}
+
+.hr-infor {
+    border: 3px solid orange;
+    margin: 1px;
+    opacity: 1;
+    border-radius: 4px;
+    width: 35%;
+}
+
+/*Có thể tái sử dụng */
+.listChild>div {
+    padding-left: 0;
+}
+
+.select-navbar+span {
+    z-index: -1;
+    background-color: #ffac14;
+}
+
+.linkChild {
+    width: 238px;
+    padding-left: 80px;
+}
+
+
+.select-navbar+span:hover {
+    /* --bs-link-color-rgb: var(--bs-link-hover-color-rgb); */
+    background-color: #005B9F;
+}
+
+
+.w-618 {
+    width: 618px;
+}
+
+.w-372 {
+    width: 372px;
+}
+
+
+.w-310 {
+    width: 310px;
+}
+
+.w-160 {
+    width: 160px;
+}
+
+.ws-nowrap {
+    white-space: nowrap;
+}
+
+.err-valid {
+    padding-left: 8px;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #ff3535;
+}
+
 .text-right {
     text-align: right;
 }
@@ -116,9 +297,12 @@
 .clr-white {
     color: #f3f3f3;
 }
+
 .w-100{
     width: 100%;
 }
+
+
 
 .font-w-1 {
     font-weight: 400;
@@ -128,13 +312,23 @@
     outline: none;
 }
 
+
 .grey-text {
     color: #687168;
+}
+
+.transformTooltip {
+    inset: 0 10px 10px 10px !important;
+}
+
+.grey-text {
+    color: #687168 !important;
 }
 
 .font-size-medium {
     font-size: 36px !important;
 }
+
 .font-size-large{
     font-size: 40px !important;
 }
@@ -148,4 +342,258 @@
     color: #4f4fe5 !important
 }
 
+
+.bg-whiteImportant {
+    background-color: #fdfdfd !important;
+}
+
+.color-red {
+    color: red;
+}
+
+
+.border-clr-grey {
+    border-color: light-dark(rgb(163 163 163), rgb(133, 133, 133)) !important;
+}
+
+.border {
+    border: 1px solid;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.child:last-child {
+    margin-bottom: 0;
+}
+
+.w-130 {
+    width: 130px;
+}
+
+.w-1 {
+    width: 1px;
+}
+
+.w-600 {
+    width: 600px;
+}
+
+.w-250 {
+    width: 220px;
+}
+
+.p-tricklord {
+    padding-right: 31px;
+}
+
+.align-item-center {
+    align-items: center !important;
+}
+.align-item-flex-end {
+    align-items: flex-end !important;
+}
+
+
+.fs-edit {
+    font-size: 45px !important;
+}
+
+.fs-15 {
+    font-size: 15px !important;
+}
+
+.fs-1_5em {
+    font-size: 1.5em !important;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.mr-15 {
+    margin-right: 15px;
+}
+
+.fs-18_5 {
+    font-size: 18.5px;
+}
+
+.bg-clr-danger {
+    background-color: #FF4A4A !important;
+}
+
+.bg-clr-success {
+    background-color: #419A00 !important;
+}
+
+.clr-danger {
+    color: #FF4A4A !important;
+}
+
+.oc-08 {
+    opacity: 0.8;
+}
+
+.w-98 {
+    width: 98%;
+}
+
+.height-35 {
+    height: 35px;
+}
+
+.resize {
+    overflow: hidden;
+    resize: none;
+}
+
+.text-area {
+    height: 200px;
+    padding-top: 32px !important;
+}
+
+.pr-0 {
+    padding-right: 0;
+}
+
+.pl-20 {
+    padding-left: 20px;
+}
+
+.time-set {
+    width: 70px;
+}
+
+.time-set div {
+    height: 38px;
+}
+
+.time-set div input {
+    text-align: center;
+    color: #687168;
+
+}
+
+#time .css-v0pjtz-MuiStack-root {
+    padding: 0;
+    overflow: hidden;
+}
+
+.date-set div {
+    text-align: center;
+    width: 205px;
+    margin-left: 5px;
+    height: 38px;
+
+}
+
+.date-set div div {
+    width: 18px;
+    justify-content: flex-end;
+}
+.date-set div input {
+    text-align: center;
+    color: #687168;
+}
+
+.text-area-field .MuiFormControl-root {
+    width: 100%;
+    padding:10px;
+    padding-left: 0;
+}
+
+
 /*Có thể tái sử dụng */
+.bg-clr-primary {
+    background-color: #398CC4;
+}
+
+.bg-clr-successV1 {
+    background-color: #419A00;
+}
+
+.table-edit th,
+.table-edit td {
+    border: 2px solid;
+    border-color: #D5D5D5;
+}
+
+.namePersonal {
+    margin-top: 4px;
+    font-size: 16px;
+    font-weight: 200;
+}
+
+.time-edit {
+    font-size: 16px;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    line-height: 36px;
+    margin-left: 15px;
+}
+
+.btn-edit {
+    border-radius: 4px;
+    font-size: 20px;
+    padding: 3px 6px;
+}
+
+.hover-danger:hover {
+    color: #FF4A4A !important;
+    opacity: 1;
+    transition: 0.2s ease-in-out;
+}
+
+.hover-danger {
+    transition: 0.2s ease-in-out;
+}
+
+.hover-warning:hover {
+    background-color: #fab11f !important;
+    opacity: 1;
+    transition: 0.2s ease-in-out;
+}
+
+.hover-warning {
+    transition: 0.2s ease-in-out;
+}
+
+.hover-primary:hover {
+    color: #3165f3 !important;
+    opacity: 1;
+    transition: 0.2s ease-in-out;
+}
+
+.hover-primary {
+    transition: 0.2s ease-in-out;
+}
+.page{
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+.first-button {
+    border-radius: 50%;
+}
+.hover-btn-page{
+    transition: 0.3s ease-in-out;
+}
+.hover-btn-page:hover{
+    background-color:  rgba(0, 0, 0, 0.08)!important;
+    transition: 0.2s ease-in-out;
+}
+.icon-page{
+    top: 3px;
+    left: 2.5px;
+}
+.btn-page{
+    width: 30px;
+    height: 30px;
+    background-color: #fdfdfd;
+    border: none;
+}
+
