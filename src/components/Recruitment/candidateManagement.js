@@ -136,7 +136,7 @@ export default function CandidateManagement() {
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const res = await axios.get('http://localhost:8080/api/plans')
-                setRecruitmentPlan(res.data.content);
+                setRecruitmentPlan(res.data);
                 console.log(recruitmentPlan);
             } catch (error) {
                 console.log(error);
@@ -263,7 +263,7 @@ export default function CandidateManagement() {
                                         <MenuItem value={""} onClick={handleSubmitSelectPlan}>Kế hoạch tuyển dụng</MenuItem>
                                         {
                                             Array.isArray(recruitmentPlan) && recruitmentPlan.map(item => (
-                                                <MenuItem value={item.recruitmentPlan.name} key={item.recruitmentPlan.name} onClick={handleSubmitSelectPlan}>{item.recruitmentPlan.name}</MenuItem>
+                                                <MenuItem value={item.name} key={item.name} onClick={handleSubmitSelectPlan}>{item.name}</MenuItem>
                                             ))
                                         }
                                     </Select>

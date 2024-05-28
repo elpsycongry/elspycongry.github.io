@@ -1,26 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Box } from '@mui/material';
 import { size } from 'lodash';
+import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 export default function AcceptJobCVChart() {
+    const [recruitmentChart, setRecuitmentChart] = useState(new Array(12).fill({
+        candidatesAcceptJob: 0,
+        candidatesRejectJob: 0,
+    }));
+    useEffect(() => {
+        const fetchData = async () => {
+            const user = JSON.parse(localStorage.getItem("currentUser"))
+            if (user != null) {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=2024`);
+                    setRecuitmentChart(response.data)
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+        };
+
+        fetchData();
+    }, []);
     const data = {
         labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         datasets: [
             {
                 label: 'Ứng viên nhận việc',
-                data: [2, 3, 4, 0, 5, 0, 0, 0, 0, 0, 0, 0],
+                data: recruitmentChart.map(item => item.candidatesAcceptJob),
                 backgroundColor: 'rgba(75, 75, 75, 0.6)',
                 borderColor: 'rgba(75, 75, 75, 1)',
                 borderWidth: 1
             },
             {
                 label: 'Ứng viên không nhận việc',
-                data: [7, 29, 39, 6, 55, 0, 10, 0, 0, 0, 0, 0],
+                data: recruitmentChart.map(item => item.candidatesRejectJob),
                 backgroundColor: 'rgba(54, 162, 235, 0.6)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
