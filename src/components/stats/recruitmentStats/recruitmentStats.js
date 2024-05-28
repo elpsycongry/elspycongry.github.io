@@ -33,7 +33,7 @@ function Copyright(props) {
 }
 
 export default function RecruitmentStats() {
-    const [trainingStats, setTrainingStats] = useState([]);
+    const [recruitmentStats, setRecruitmentStats] = useState([]);
 
 
     const [activeStat, setActiveStat] = useState("stats1");
@@ -61,9 +61,9 @@ export default function RecruitmentStats() {
         console.log("handled")
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
                 .then(res => {
-                    setTrainingStats(res.data)
+                    setRecruitmentStats(res.data)
                 })
         }
 
@@ -78,9 +78,9 @@ export default function RecruitmentStats() {
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
                 .then(res => {
-                    setTrainingStats(res.data)
+                    setRecruitmentStats(res.data)
                 })
         }
 
@@ -90,9 +90,9 @@ export default function RecruitmentStats() {
             setActive2(true)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/quarter?quarter=2&year=2024")
+            axios.get("http://localhost:8080/api/recruitmentStats/quarter?quarter=2")
                 .then(res => {
-                    setTrainingStats(res.data)
+                    setRecruitmentStats(res.data)
                 })
         }
 
@@ -102,9 +102,9 @@ export default function RecruitmentStats() {
             setActive2(false)
             setActive3(true)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/year?year=2024")
+            axios.get("http://localhost:8080/api/recruitmentStats/year?year=2024")
                 .then(res => {
-                    setTrainingStats(res.data)
+                    setRecruitmentStats(res.data)
                 })
         }
 
@@ -116,9 +116,10 @@ export default function RecruitmentStats() {
             setActive4(true)
 
 
-            axios.get("http://localhost:8080/api/stats/trainingStats/all")
+            axios.get("http://localhost:8080/api/recruitmentStats")
                 .then(res => {
-                    setTrainingStats(res.data)
+                    setRecruitmentStats(res.data)
+                    console.log(recruitmentStats);
                 })
         }
 
@@ -207,39 +208,39 @@ export default function RecruitmentStats() {
                                 </div>
                                 <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '16px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)' }}>
                                     <label>Số CV mới:</label>
-                                    <label style={{ marginLeft: '197px' }}>{trainingStats.internsEnrolled} </label>
+                                    <label style={{ marginLeft: '200px' }}>{recruitmentStats.totalCV} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số CV phỏng vấn:</label>
-                                    <label style={{ marginLeft: '151px' }}>{trainingStats.graduatingInterns} </label>
+                                    <label style={{ marginLeft: '151px' }}>{recruitmentStats.totalInterviewCV} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên đã phỏng vấn:</label>
-                                    <label style={{ marginLeft: '87px' }}>{trainingStats.internsFailed} </label>
+                                    <label style={{ marginLeft: '88px' }}>{recruitmentStats.candidatesInterview} </label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên không đến phỏng vấn:</label>
-                                    <label style={{ marginLeft: '29px' }}>{trainingStats.rate}</label>
+                                    <label style={{ marginLeft: '30px' }}>{recruitmentStats.candidatesDoNotInterview}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số PASS:</label>
-                                    <label style={{ marginLeft: '210px' }}>{trainingStats.internsCurrentlyPracticing}</label>
+                                    <label style={{ marginLeft: '213px' }}>{recruitmentStats.candidatesPass}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số FAIL:</label>
-                                    <label style={{ marginLeft: '222px' }}>{trainingStats.internsQuitInternship}</label>
+                                    <label style={{ marginLeft: '222px' }}>{recruitmentStats.candidatesFail}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên nhận việc:</label>
-                                    <label style={{ marginLeft: '116px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <label style={{ marginLeft: '117px' }}>{recruitmentStats.candidatesAcceptJob}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên không nhận việc:</label>
-                                    <label style={{ marginLeft: '67px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <label style={{ marginLeft: '68px' }}>{recruitmentStats.candidatesRejectJob}</label>
                                     <br></br>
                                     <br></br>
                                     <label>Số ứng viên chưa nhận việc:</label>
-                                    <label style={{ marginLeft: '74px' }}>{trainingStats.averageGraduationScore}</label>
+                                    <label style={{ marginLeft: '75px' }}>{recruitmentStats.candidatesAcceptJobYet}</label>
                                 </div>
                             </div>
                         )}

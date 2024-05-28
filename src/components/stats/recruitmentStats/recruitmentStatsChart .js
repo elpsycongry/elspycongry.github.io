@@ -18,17 +18,15 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 export default function RecruitmentStatsChart({ year }) {
     const [trainingCharts, setTrainingCharts] = useState(new Array(12).fill({
-        newCVs: 0,
-        interviewedCVs: 0,
-        noShowCandidates: 0,
-        passCandidates: 0,
-        failCandidates: 0,
-        hiredCandidates: 0,
-        totalInterviews: 0,
+        totalCV: 0,
+        totalInterviewCV: 0,
+        candidatesInterview: 0,
+        candidatesDoNotInterview: 0,
+        candidatesPass: 0,
+        candidatesFail: 0,
+        candidatesAcceptJob: 0,
     }));
     const [hiddenDatasets, setHiddenDatasets] = useState([]);
-    console.log(year);
-    console.log(trainingCharts);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,7 +34,7 @@ export default function RecruitmentStatsChart({ year }) {
             if (user != null) {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/stats/trainingCharts/year?year=${year}`);
+                    const response = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=${year}`);
                     setTrainingCharts(response.data);
                     console.log(response.data);
                     console.log(trainingCharts);
@@ -54,7 +52,7 @@ export default function RecruitmentStatsChart({ year }) {
         datasets: [
             {
                 label: 'Số CV mới',
-                data: trainingCharts.map(item => item.newCVs),
+                data: trainingCharts.map(item => item.totalCV),
                 borderColor: 'blue',
                 backgroundColor: 'blue',
                 fill: false,
@@ -62,7 +60,7 @@ export default function RecruitmentStatsChart({ year }) {
             },
             {
                 label: 'Số CV phỏng vấn',
-                data: trainingCharts.map(item => item.interviewedCVs),
+                data: trainingCharts.map(item => item.totalInterviewCV),
                 borderColor: 'green',
                 backgroundColor: 'green',
                 fill: false,
@@ -70,7 +68,7 @@ export default function RecruitmentStatsChart({ year }) {
             },
             {
                 label: 'Ứng viên không đến phỏng vấn',
-                data: trainingCharts.map(item => item.noShowCandidates),
+                data: trainingCharts.map(item => item.candidatesDoNotInterview),
                 borderColor: 'black',
                 backgroundColor: 'black',
                 fill: false,
@@ -78,7 +76,7 @@ export default function RecruitmentStatsChart({ year }) {
             },
             {
                 label: 'Ứng viên pass',
-                data: trainingCharts.map(item => item.passCandidates),
+                data: trainingCharts.map(item => item.candidatesPass),
                 borderColor: 'orange',
                 backgroundColor: 'orange',
                 fill: false,
@@ -86,7 +84,7 @@ export default function RecruitmentStatsChart({ year }) {
             },
             {
                 label: 'Ứng viên fail',
-                data: trainingCharts.map(item => item.failCandidates),
+                data: trainingCharts.map(item => item.candidatesFail),
                 borderColor: 'red',
                 backgroundColor: 'red',
                 fill: false,
@@ -94,7 +92,7 @@ export default function RecruitmentStatsChart({ year }) {
             },
             {
                 label: 'Ứng viên nhận việc',
-                data: trainingCharts.map(item => item.hiredCandidates),
+                data: trainingCharts.map(item => item.candidatesAcceptJob),
                 borderColor: 'purple',
                 backgroundColor: 'purple',
                 fill: false,
@@ -102,7 +100,7 @@ export default function RecruitmentStatsChart({ year }) {
             },
             {
                 label: 'Ứng viên đã phỏng vấn',
-                data: trainingCharts.map(item => item.totalInterviews),
+                data: trainingCharts.map(item => item.candidatesInterview),
                 borderColor: 'brown',
                 backgroundColor: 'brown',
                 fill: false,
