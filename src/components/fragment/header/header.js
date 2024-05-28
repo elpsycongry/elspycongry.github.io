@@ -1,26 +1,21 @@
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import HomeIcon from '@mui/icons-material/Home';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem'
-import { styled, useTheme } from '@mui/material/styles';
+import {styled, useTheme} from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
-import { useState } from 'react';
 import Box from '@mui/material/Box';
-import { doLogout } from "../../checkToken/AuthContext";
-import { useNavigate } from "react-router-dom";
+import {doLogout} from "../../checkToken/AuthContext";
+import {useNavigate} from "react-router-dom";
 import logoCodeGym from '../../../assets/image/logoCodeGym.png'
 import avatarDemo from '../../../assets/image/boy_2.png'
 import './header.css'
+import {Notification} from "../../Notification/notification";
 
 const settings = ['Đăng xuất'];
 const drawerWidth = 240;
@@ -46,29 +41,6 @@ const AppBar = styled(MuiAppBar, {
 
 export default function Header() {
     // Notification
-    const StyledIconWrapper = styled(Box)(({ theme }) => ({
-        position: 'relative',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-
-        // Create pseudo-element fake
-        '&::before': {
-            content: '"3"',
-            position: 'absolute',
-            right: 2,
-            top: 3,
-            width: '40%',
-            height: '40%',
-            backgroundColor: 'rgba(255, 0, 0, 0.83)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.75rem',
-            color: 'white'
-        }
-    }));
 
 
     const handleOpenNavMenu = (event) => {
@@ -111,11 +83,9 @@ export default function Header() {
                         Hệ thống quản lý đào tạo
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
-                    {/* <Box sx={{ marginRight: '10px' }}>
-                        <StyledIconWrapper>
-                            <NotificationsIcon sx={{ fontSize: '35px' }} />
-                        </StyledIconWrapper>
-                    </Box> */}
+                    <Box sx={{ marginRight: '10px' }}>
+                      <Notification />
+                    </Box>
                     <Tooltip title="Open settings">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                             <Avatar className='avt-img' alt="Remy Sharp" src={avatarDemo} />
