@@ -172,24 +172,33 @@ export default function DialogCandidateFormUpdate({ id, check }) {
   const [finalResult, setFinalResult] = useState();
   const [plans, setPlans] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:8080/api/plans").then((res) => {
-      setPlans(res.data);
-    });
-    axios.get("http://localhost:8080/api/interns/" + id).then((res) => {
-      formData.setValues(res.data);
-      setFinalResult(res.data.finalResult);
-      const formatT = res.data.interviewTime;
-      const dateNow = dayjs(formatT);
-      setDate(dateNow);
-      setFinalResult(res.data.finalResult);
-    });
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if (user != null) {
+      try {
+        axios.get("http://localhost:8080/api/plans").then((res) => {
+          setPlans(res.data);
+          console.log(plans);
+          console.log(res.data);
+        });
+        axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
+          formData.setValues(res.data);
+          setFinalResult(res.data.finalResult);
+          const formatT = res.data.interviewTime;
+          const dateNow = dayjs(formatT);
+          setDate(dateNow);
+          setFinalResult(res.data.finalResult);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
   }, []);
 
   const fetchIsFullManagement = async () => {
     const updatedPlans = await Promise.all(
       plans.map(async (item) => {
         try {
-          const res = await axios.get(`http://localhost:8080/api/interns/isFull/${item.id}`);
+          const res = await axios.get(`http://localhost:8080/api/plansIntern/isFull/${item.id}`);
           return { ...item, isFullManagement: res.data };
         } catch (error) {
           console.error(`Error fetching isFullManagement for plan ${item.id}:`, error);
@@ -241,7 +250,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
     const [testMarks, setTestMarks] = useState(scoreTest);
     const handleClickCountPlus = () => {
       if (testMarks < 100) {
-        
+
         const newTestMarks = parseInt(testMarks) + 1;
         setTestMarks(newTestMarks);
         setScoreTest(newTestMarks);
@@ -605,22 +614,22 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                   Kết quả cuối cùng:
                 </label>
                 <select
-  className={`form-select ms-2 ${finalResult === "true" || finalResult === true ? 'text-success' : finalResult === "false" || finalResult === false ? 'text-danger' : 'grey-text'}`}
-  style={{ width: "170px" }}
-  aria-label="Default select example"
-  value={finalResult}
-  onChange={handleChangePassFaild}
->
-  <option className={`grey-text ${finalResult === "true" || finalResult === true || finalResult === "false" || finalResult === false|| finalResult === "" ? 'd-none' : ''}`} disabled value="">
-    N/A
-  </option>
-  <option className="text-success" value="true">
-    Passed
-  </option>
-  <option className="text-danger" value="false">
-    Failed
-  </option>
-</select>
+                  className={`form-select ms-2 ${finalResult === "true" || finalResult === true ? 'text-success' : finalResult === "false" || finalResult === false ? 'text-danger' : 'grey-text'}`}
+                  style={{ width: "170px" }}
+                  aria-label="Default select example"
+                  value={finalResult}
+                  onChange={handleChangePassFaild}
+                >
+                  <option className={`grey-text ${finalResult === "true" || finalResult === true || finalResult === "false" || finalResult === false || finalResult === "" ? 'd-none' : ''}`} disabled value="">
+                    N/A
+                  </option>
+                  <option className="text-success" value="true">
+                    Passed
+                  </option>
+                  <option className="text-danger" value="false">
+                    Failed
+                  </option>
+                </select>
               </div>
               <div className="col-md-12 text-center  mt-0">
                 {errFinalResult && (

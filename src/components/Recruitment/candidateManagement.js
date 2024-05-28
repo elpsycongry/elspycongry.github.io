@@ -1,6 +1,6 @@
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ClearIcon from "@mui/icons-material/Clear";
-import {
+    import {
     Box,
     Dialog,
     DialogContent,
@@ -76,8 +76,8 @@ export default function CandidateManagement() {
     };
     const listTestSelect = [
         { id: "", text: "Trạng thái" },
-        { id: "Chưa có kết quả", text: "Chưa có kết quả"},
-        { id: "Đã có kết quả", text: "Đã có kết quả"},
+        { id: "Chưa có kết quả", text: "Chưa có kết quả" },
+        { id: "Đã có kết quả", text: "Đã có kết quả" },
         { id: "Đã gửi email cảm ơn", text: "Đã gửi email cảm ơn" },
         { id: "Đã hẹn ngày thực tập", text: "Đã hẹn ngày thực tập" },
         { id: "Không nhận việc", text: "Không nhận việc" },
@@ -131,8 +131,17 @@ export default function CandidateManagement() {
     };
 
     async function getAllRecruitmentPlan() {
-        const res = await axios.get('http://localhost:8080/api/interns')
-        setRecruitmentPlan(res.data.content);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                const res = await axios.get('http://localhost:8080/api/plans')
+                setRecruitmentPlan(res.data.content);
+                console.log(recruitmentPlan);
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 
     useEffect(() => {
@@ -140,20 +149,24 @@ export default function CandidateManagement() {
     }, [])
 
     async function getAll(pageNumber) {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
-            setRecuitment(response.data.content);
-            setPage(response.data.pageable.pageNumber);
-            setTotalPages(response.data.totalPages);
-            if (response.data.content.length === 0) {
-                setPage(0);
-                setTotalPages(1)
-                setShowError(true);
-            } else {
-                setShowError(false);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+                setRecuitment(response.data.content);
+                setPage(response.data.pageable.pageNumber);
+                setTotalPages(response.data.totalPages);
+                if (response.data.content.length === 0) {
+                    setPage(0);
+                    setTotalPages(1)
+                    setShowError(true);
+                } else {
+                    setShowError(false);
+                }
+                console.log(recuitments);
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
         }
     }
 
@@ -249,9 +262,10 @@ export default function CandidateManagement() {
                                     >
                                         <MenuItem value={""} onClick={handleSubmitSelectPlan}>Kế hoạch tuyển dụng</MenuItem>
                                         {
-                                            recruitmentPlan.map(item => (
+                                            Array.isArray(recruitmentPlan) && recruitmentPlan.map(item => (
                                                 <MenuItem value={item.recruitmentPlan.name} key={item.recruitmentPlan.name} onClick={handleSubmitSelectPlan}>{item.recruitmentPlan.name}</MenuItem>
-                                            ))}
+                                            ))
+                                        }
                                     </Select>
                                 </FormControl>
                             </div>

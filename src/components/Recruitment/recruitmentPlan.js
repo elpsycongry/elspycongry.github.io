@@ -112,24 +112,26 @@ export default function RecruitmentPlan() {
     };
 
     async function getAll(pageNumber) {
-        console.log(pageNumber)
-        try {
-            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
-            console.log(response.data.totalPages)
-            console.log(response.data.pageable.pageNumber);
-            console.log(currentPage);
-            setRecuitment(response.data.content);
-            setPage(response.data.pageable.pageNumber);
-            setTotalPages(response.data.totalPages);
-            if (response.data.content.length === 0) {
-                setPage(0);
-                setTotalPages(1)
-                setShowError(true);
-            } else {
-                setShowError(false);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+                setRecuitment(response.data.content);
+                setPage(response.data.pageable.pageNumber);
+                setTotalPages(response.data.totalPages);
+                if (response.data.content.length === 0) {
+                    setPage(0);
+                    setTotalPages(1)
+                    setShowError(true);
+                } else {
+                    setShowError(false);
+                }
+                console.log(user);
+                console.log(1);
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
         }
     }
 

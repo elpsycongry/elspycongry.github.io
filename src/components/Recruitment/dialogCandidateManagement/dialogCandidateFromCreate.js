@@ -192,7 +192,7 @@ export default function DialogCandidateFormCreate() {
       } else {
         try {
           await axios
-            .post("http://localhost:8080/api/interns", values)
+            .post("http://localhost:8080/api/plansIntern", values)
             .then((res) => {
               swal("Thêm ứng viên thành công", {
                 icon: "success",
@@ -216,9 +216,17 @@ export default function DialogCandidateFormCreate() {
   const [plansLoaded, setPlansLoaded] = useState(false);
   const [plans, setPlans] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:8080/api/plans").then((res) => {
-      setPlans(res.data);
-    });
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if (user != null) {
+      try {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+        axios.get("http://localhost:8080/api/plans").then((res) => {
+          setPlans(res.data);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
   }, []);
 
   const fetchIsFullManagement = async () => {
@@ -656,22 +664,22 @@ export default function DialogCandidateFormCreate() {
                   Kết quả cuối cùng:
                 </label>
                 <select
-  className={`form-select ms-2 ${selectedValuePassFaild === "true" || selectedValuePassFaild === true ? 'text-success' : selectedValuePassFaild === "false" || selectedValuePassFaild === false ? 'text-danger' : 'grey-text'}`}
-  style={{ width: "170px" }}
-  aria-label="Default select example"
-  value={selectedValuePassFaild}
-  onChange={handleChangePassFaild}
->
-  <option className={`grey-text ${selectedValuePassFaild === "true" || selectedValuePassFaild === true || selectedValuePassFaild === "false" || selectedValuePassFaild === false|| selectedValuePassFaild === "" ? 'd-none' : ''}`} disabled value="">
-    N/A
-  </option>
-  <option className="text-success" value="true">
-    Passed
-  </option>
-  <option className="text-danger" value="false">
-    Failed
-  </option>
-</select>
+                  className={`form-select ms-2 ${selectedValuePassFaild === "true" || selectedValuePassFaild === true ? 'text-success' : selectedValuePassFaild === "false" || selectedValuePassFaild === false ? 'text-danger' : 'grey-text'}`}
+                  style={{ width: "170px" }}
+                  aria-label="Default select example"
+                  value={selectedValuePassFaild}
+                  onChange={handleChangePassFaild}
+                >
+                  <option className={`grey-text ${selectedValuePassFaild === "true" || selectedValuePassFaild === true || selectedValuePassFaild === "false" || selectedValuePassFaild === false || selectedValuePassFaild === "" ? 'd-none' : ''}`} disabled value="">
+                    N/A
+                  </option>
+                  <option className="text-success" value="true">
+                    Passed
+                  </option>
+                  <option className="text-danger" value="false">
+                    Failed
+                  </option>
+                </select>
               </div>
               <div className="col-md-12 text-center  mt-0">
                 {errFinalResult && (

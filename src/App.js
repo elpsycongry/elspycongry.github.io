@@ -14,7 +14,9 @@ import Test from './components/Recruitment/test'
 import PersonalNeeds from './components/Recruitment/personalNeeds';
 import CandidateManagement from './components/Recruitment/candidateManagement';
 import RecruitmentPlan from './components/Recruitment/recruitmentPlan';
+import axiosInstance from './components/checkToken/axiosInstance';
 function App() {
+    
     return (
         <>
             <Routes>
@@ -32,9 +34,13 @@ function App() {
                 } />
 
 
-        <Route path='/recruitment/personalNeeds' element={<PersonalNeeds />} />
-        <Route path='/recruitment/candidateManagement' element={<CandidateManagement />} />
-        <Route path='/recruitment/recruitmentPlan' element={<RecruitmentPlan />} />
+        <Route path='/recruitment/personalNeeds' element={
+            <AuthContext><PersonalNeeds /></AuthContext>
+        } />
+        <Route path='/recruitment/candidateManagement' element={
+            <AuthContext><CandidateManagement /></AuthContext>
+        } />
+        <Route path='/recruitment/recruitmentPlan' element={ <AuthContext><RecruitmentPlan /></AuthContext>} />
         <Route path='/' element={<Test />} />
       </Routes>
     </>

@@ -7,6 +7,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import axios from "axios";
 import swal from "sweetalert";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 export default function DialogRecruitmentPlanFormCreate({ id }) {
   const [dateErr, setDateErr] = useState(false);
@@ -16,7 +17,8 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
   const [errNumber, setErrNumber] = useState(false);
-
+  const navigate = useNavigate()
+  const user = JSON.parse(localStorage.getItem("currentUser"))
 
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
@@ -112,7 +114,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
 
   const formData = useFormik({
     initialValues: {
-      idUser: null,
+      idUser: user.id,
       recruitmentPlan: {
         recruitmentRequest: {
           id: null,
@@ -142,7 +144,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       const personalneed = values.recruitmentPlan.recruitmentRequest.id;
       const nameRecruitmentPlan = values.recruitmentPlan.name;
       values.planDetails = [...tech];
-      values.idUser = 1;
+      values.idUser = user.id;
       if (values.recruitmentPlan.dateRecruitmentEnd === '') {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
@@ -185,10 +187,13 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   // Call api
   const [recuitments, setRecuitment] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-      setRecuitment(res.data);
-    });
-
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+          axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+          axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
+            setRecuitment(res.data);
+          });
+        }
   }, []);
 
 
