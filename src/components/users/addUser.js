@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {
-    Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography,
-    TextField, FormGroup, FormControlLabel, Checkbox, Button, Tooltip
+    Button,
+    Checkbox,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    FormControlLabel,
+    FormGroup,
+    TextField,
+    Tooltip
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { useSnackbar } from 'notistack';
 import axios from 'axios';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
-import './addUser.css';
 import '../../assets/css/cssRecruitment/recruitment.css';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import './addUser.css';
 
 export default function DialogAddUserForm({ token, onAdd }) {
     const [open, setOpen] = useState(false);
@@ -29,7 +35,7 @@ export default function DialogAddUserForm({ token, onAdd }) {
         validationSchema: Yup.object({
             name: Yup.string()
                 .max(30, 'Không quá 30 ký tự')
-                .matches(/^[a-zA-Z\s@]+$/, 'Tên không được chứa ký tự đặc biệt ngoại trừ @')
+                .matches(/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơưĂƯẠ-ỹ\s']+$/, 'Tên không được chứa ký tự đặc biệt')
                 .required('Tên không được bỏ trống'),
             email: Yup.string()
                 .email('Email không đúng định dạng')
@@ -38,7 +44,9 @@ export default function DialogAddUserForm({ token, onAdd }) {
                 /^(0[3|5|7|8|9])+([0-9]{8})$/,
                 'Số điện thoại không hợp lệ'
             ),
-            password: Yup.string().required('Mật khẩu không được bỏ trống'),
+            password: Yup.string()
+            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+]{8,}$/, 'Mật khẩu không hợp lệ')
+            .required('Mật khẩu không được bỏ trống'),
             roles: Yup.array()
                 .min(1, 'Phải chọn ít nhất một vai trò')
                 .required('Phải chọn ít nhất một vai trò'),

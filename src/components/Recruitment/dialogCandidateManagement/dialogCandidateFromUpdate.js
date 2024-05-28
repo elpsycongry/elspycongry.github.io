@@ -33,8 +33,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
   // Xử lý số lượng nhân sự
   const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status) => {
-    console.log(phoneNumber);
-    console.log(validPhone.test(phoneNumber));
     if (!validFullName.test(fullName)) {
       setErrName(true);
     } else {
@@ -65,7 +63,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       setErrPhoneNumber(false);
       hasErrPhone = false;
     }
-    console.log(hasErrPhone)
 
     var hasErrRecruitmentPlan;
     if (recruitmentPlan === '' || recruitmentPlan === null || recruitmentPlan === 'default' || recruitmentPlan === 'undefined') {
@@ -177,8 +174,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       try {
         axios.get("http://localhost:8080/api/plans").then((res) => {
           setPlans(res.data);
-          console.log(plans);
-          console.log(res.data);
         });
         axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
           formData.setValues(res.data);
@@ -207,7 +202,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       })
     );
     setPlans(updatedPlans);
-    // console.log('Updated plans with isFullManagement:', updatedPlans);
   };
 
   // fetchIsFullManagement();
@@ -245,7 +239,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
     if (scoreTest === '') {
       scoreTest = 50;
     }
-    console.log(scoreTest)
     // scoreTest = parseInt(scoreTest);
     const [testMarks, setTestMarks] = useState(scoreTest);
     const handleClickCountPlus = () => {

@@ -31,8 +31,6 @@ export default function DialogCandidateFormCreate() {
     status,
     finalResult
   ) => {
-    console.log(finalResult);
-    // console.log(validPhone.test(phoneNumber));
     if (!validFullName.test(fullName)) {
       setErrName(true);
     } else {
@@ -68,7 +66,6 @@ export default function DialogCandidateFormCreate() {
       setErrPhoneNumber(false);
       hasErrPhone = false;
     }
-    console.log(hasErrPhone);
 
     var hasErrPhone;
     if (!validPhone.test(phoneNumber) || phoneNumber === "") {
@@ -138,7 +135,6 @@ export default function DialogCandidateFormCreate() {
       scoreInterview: "",
     },
     onSubmit: async (values, { setSubmitting }) => {
-      // console.log(values);
       const inputDateTime = date.$d;
       const dateObject = new Date(inputDateTime);
 
@@ -154,7 +150,6 @@ export default function DialogCandidateFormCreate() {
       const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
       values.interviewTime = formattedDateTime;
       values.finalResult = selectedValuePassFaild;
-      console.log(values);
 
       if (values.scoreInterview === "") {
         values.scoreInterview = 1;
@@ -247,7 +242,6 @@ export default function DialogCandidateFormCreate() {
       })
     );
     setPlans(updatedPlans);
-    // console.log('Updated plans with isFullManagement:', updatedPlans);
   };
 
   // fetchIsFullManagement();
@@ -283,7 +277,6 @@ export default function DialogCandidateFormCreate() {
     if (scoreTest === "") {
       scoreTest = 50;
     }
-    console.log(scoreTest);
     const [testMarks, setTestMarks] = useState(scoreTest);
     // useEffect(() => {
     //   setTestMarks(scoreTest);
@@ -388,7 +381,6 @@ export default function DialogCandidateFormCreate() {
   }
 
   const [selectedValuePassFaild, setSelectedValuePassFaild] = useState("");
-  console.log(selectedValuePassFaild);
 
   const handleChangePassFaild = (e) => {
     setSelectedValuePassFaild(e.target.value);
