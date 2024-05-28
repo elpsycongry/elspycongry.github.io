@@ -83,9 +83,9 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
         <FormGroup>
             {[
                 { id: 2, label: "Trưởng bộ phận/nhóm" },
-                { id: 3, label: "Nhân sự" },
+                { id: 3, label: "Quản lý đào tạo" },
                 { id: 4, label: "Kiểm soát chất lượng" },
-                { id: 5, label: "Quản lý đào tạo" }
+                { id: 5, label: "Nhân sự" }
             ].map(role => (
                 <FormControlLabel
                     key={role.id}
