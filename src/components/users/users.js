@@ -28,6 +28,7 @@ import axios from "axios";
 import './users.css'
 import DialogUpdateUserForm from "./updateUser";
 import BlockUser from "./blockUser";
+import DialogAddUserForm from "./addUser";
 
 export default function Users() {
 
@@ -133,8 +134,10 @@ export default function Users() {
             <Header />
             <Navbar />
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', width: '95.9%' }}>
-                <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '10px' }}>
-                    {/* <Breadcrumbs
+                <div style={{ display: 'flex' }}>
+                    <div>
+                        <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '10px' }}>
+                            {/* <Breadcrumbs
                         aria-label='breadcrumb'
                         separator={<NavigateNextIcon fontSize="small" />}>
                         <Link underline="hover" href='#'>Home</Link>
@@ -142,96 +145,101 @@ export default function Users() {
                         <Link underline="hover" href='#'>Access</Link>
                         <Typography color='text.primary'><GroupIcon /> Users</Typography>
                     </Breadcrumbs> */}
-                    <GroupIcon style={{ paddingBottom: '3px', color: 'rgba(0, 0, 0, 0.60)' }} />
-                    <p style={{
-                        color: 'rgba(0, 0, 0, 0.60)',
-                        marginLeft: '10px',
-                        marginBottom: '0px',
-                        fontFamily: 'sans-serif',
-                        fontWeight: '550',
-                    }}>Quản lý người dùng</p>
-                </Box>
-                <div style={{ marginTop: '-7px' }} className=" d-flex align-items-centent justify-content-between pl-15">
-                    <p className="title text-center mb-0">
-                        Quản lý người dùng
-                    </p>
-                </div>
-                <Dialog
-                    open={open}
-                    onClose={handleClickPracticeClose}
-                >
-                    <DialogContent sx={{
-                        p: 0,
-                        position: 'relative'
-                    }}>
-                        <IconButton
-                            sx={{
-                                position: 'absolute',
-                                right: 0,
-                                top: 0
-                            }}
-                            onClick={handleClickPracticeClose}
+                            <GroupIcon style={{ paddingBottom: '3px', color: 'rgba(0, 0, 0, 0.60)' }} />
+                            <p style={{
+                                color: 'rgba(0, 0, 0, 0.60)',
+                                marginLeft: '10px',
+                                marginBottom: '0px',
+                                fontFamily: 'sans-serif',
+                                fontWeight: '550',
+                            }}>Quản lý người dùng</p>
+                        </Box>
+                        <div style={{ marginTop: '-7px' }} className=" d-flex align-items-centent justify-content-between pl-15">
+                            <p className="title text-center mb-0">
+                                Quản lý người dùng
+                            </p>
+                        </div>
+                        <Dialog
+                            open={open}
+                            onClose={handleClickPracticeClose}
                         >
-                            <ClearIcon />
-                        </IconButton>
-                    </DialogContent>
-                </Dialog>
-                <div className=" mt-3">
-                    <div className="d-flex justify-content-between">
-                        <div style={{ marginTop: '-10px' }} className="d-flex">
-                            <div className="search-input position-relative">
-                                <input
-                                    type="text"
-                                    className="w-px position-relative input-username-email"
-                                    style={{ width: '300px' }}
-                                    value={searchTerm}
-                                    onChange={handleChangeSearch}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Enter") {
-                                            handleFilterWithFields();
-                                        }
-                                    }}
-                                    placeholder="Tìm kiếm với tên hoặc email..."
-                                />
-                                <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg"
-                                    width="16" height="16" viewBox="0 0 24 24">
-                                    <path fill="rgb(131 125 125 / 87%)"
-                                        d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
-                                </svg>
-                            </div>
-                            <FormControl className="h-px" sx={{ minWidth: '250px' }}>
-                                <InputLabel className="top-left" id="demo-simple-small-label">
-                                    Vai trò...</InputLabel>
-                                <Select
+                            <DialogContent sx={{
+                                p: 0,
+                                position: 'relative'
+                            }}>
+                                <IconButton
                                     sx={{
-                                        height: '30px',
-                                        paddingTop: '0px',
-                                        paddingBottom: '0px',
-                                        backgroundColor: 'white',
-                                        width: '300px'
+                                        position: 'absolute',
+                                        right: 0,
+                                        top: 0
                                     }}
-                                    labelId="demo-simple-small-label"
-                                    className="h-px"
-                                    id="demo-simple-select"
-                                    label="Status"
-                                    value={selectedRole}
-                                    onChange={handleRoleChange}
-                                // onClick={handleFilterRole}
+                                    onClick={handleClickPracticeClose}
                                 >
-                                    <MenuItem value={""} >Tất cả</MenuItem>
-                                    {listRoleSelect.map(item => (
-                                        <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                    <ClearIcon />
+                                </IconButton>
+                            </DialogContent>
+                        </Dialog>
+                        <div className=" mt-3">
+                            <div className="d-flex justify-content-between">
+                                <div style={{ marginTop: '-10px' }} className="d-flex">
+                                    <div className="search-input position-relative">
+                                        <input
+                                            type="text"
+                                            className="w-px position-relative input-username-email"
+                                            style={{ width: '300px' }}
+                                            value={searchTerm}
+                                            onChange={handleChangeSearch}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    handleFilterWithFields();
+                                                }
+                                            }}
+                                            placeholder="Tìm kiếm với tên hoặc email..."
+                                        />
+                                        <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg"
+                                            width="16" height="16" viewBox="0 0 24 24">
+                                            <path fill="rgb(131 125 125 / 87%)"
+                                                d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
+                                        </svg>
+                                    </div>
+                                    <FormControl className="select-form ml-10 status" sx={{ minWidth: '300px' }}>
+                                        <InputLabel className="top-left" id="demo-simple-small-label">
+                                            Vai trò...</InputLabel>
+                                        <Select
+                                            sx={{
+                                                // height: '30px',
+                                                // paddingTop: '0px',
+                                                // paddingBottom: '0px',
+                                                backgroundColor: 'white',
+                                                // width: '300px'
+                                            }}
+                                            labelId="demo-simple-small-label"
+                                            className="select-edit"
+                                            id="demo-simple-select"
+                                            label="Vai trò..."
+                                            value={selectedRole}
+                                            onChange={handleRoleChange}
+                                        // onClick={handleFilterRole}
+                                        >
+                                            <MenuItem value={""} >Tất cả</MenuItem>
+                                            {listRoleSelect.map(item => (
+                                                <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div className="position-relative" style={{ width: '1165px' }}>
+                        <DialogAddUserForm token={token} onAdd={handleFilterWithFields}/>
+                    </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px',}}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px', minHeight:'615px'}}>
                     <div className="table-container-user" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px', height: '520px' }}>
                         <div className="table-user">
 
-                            <thead style={{marginTop: '-20px'}}>
+                            <thead style={{ marginTop: '-20px' }}>
                                 <tr className="grey-text">
                                     <th className="user-id">STT</th>
                                     <th className="user-name" style={{ padding: '8px' }}>Tên</th>
@@ -242,7 +250,7 @@ export default function Users() {
                                 </tr>
                             </thead>
 
-                            <tbody style={{marginTop: '-15px'}}>
+                            <tbody style={{ marginTop: '-15px' }}>
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
@@ -272,9 +280,9 @@ export default function Users() {
                                         </td>
                                         <td className="user-actions">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-                                            
-                                                <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />
-                                            
+
+                                            <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />
+
                                         </td>
                                     </tr>
                                 ))}
@@ -301,7 +309,7 @@ export default function Users() {
                     </div>
                 </div>
             </Box >
-            <div style={{marginTop: '-10px' ,paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <div style={{ marginTop: '-10px', paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
             {/* <Footer /> */}

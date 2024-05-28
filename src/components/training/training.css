@@ -2,6 +2,10 @@
     width: 0;
 }
 
+.status .MuiInputBase-root {
+    height: 35px;
+}
+
 .table-container {
     width: 100%;
     table-layout: fixed;

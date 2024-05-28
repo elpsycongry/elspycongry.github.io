@@ -167,7 +167,7 @@ function Navbar() {
                 }, {
                     id: 3,
                     name: "Thống kê sau đào tạo",
-                    linkTo: "/recruitment/personalNeeds",
+                    linkTo: "/afterTraining/stats",
                 },
             ]
         },
