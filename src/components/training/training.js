@@ -234,7 +234,7 @@ export default function Training() {
                                 {listInter.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="training-id" style={{ padding: '8px' }}>{index + 1 + pagination.page * pagination.size}</td>
-                                        <td><span className="training-name">{item.userName}</span></td>
+                                        <td><span className="training-name">{item.internName}</span></td>
                                         <td>{format(new Date(item.startDate), 'dd-MM-yyyy')}</td>
                                         <td>{item.numberDate}</td>
                                     </tr>
