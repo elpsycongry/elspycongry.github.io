@@ -132,7 +132,7 @@ function Navbar() {
     }
 
     const listItems = [
-        { id: 1, text: "Trang chủ", IconText: HomeIcon, linkTo: `/`, roles: [] },
+        { id: 1, text: "Trang chủ", IconText: HomeIcon, linkTo: `/dashboard`, roles: ['ROLE_ADMIN'] },
         { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
         {
             id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_ADMIN'], children: [
