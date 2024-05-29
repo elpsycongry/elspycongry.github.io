@@ -12,7 +12,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup"
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
-export default function DialogPersonalFormUpdate({ id, check }) {
+export default function DialogPersonalFormUpdate({ id, check,userRoles }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [quantityErr, setQuantityErr] = useState(false);
@@ -72,7 +72,9 @@ export default function DialogPersonalFormUpdate({ id, check }) {
 
 
   }
-  const navigate = useNavigate();
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_DM");
+  };
   // Xử lý số lượng nhân sự
   const formData = useFormik({
     initialValues: {
@@ -238,16 +240,15 @@ export default function DialogPersonalFormUpdate({ id, check }) {
 
   return (
     <>
-      {check ? <CreateIcon
-        className="bg-whiteImportant pencil-btn font-size-medium"
-      /> :
+      {hasRoleAdmin() && (
         <Tooltip title="Chỉnh sửa chi tiết">
           <CreateIcon
             className="color-orange pencil-btn font-size-medium hover-warning cursor-pointer"
             onClick={handleClickFormOpen}
           />
         </Tooltip>
-      }
+      )
+    }
       <Dialog
         open={openForm}
         onClose={handleClickFormClose}

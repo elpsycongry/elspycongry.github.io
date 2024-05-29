@@ -14,7 +14,7 @@ import { useFormik } from "formik";
 import { TimeField } from "@mui/x-date-pickers";
 import { validFullName, validEmail, validPhone } from "../regex/regex";
 
-export default function DialogCandidateFormCreate() {
+export default function DialogCandidateFormCreate({userRoles}) {
   const [errName, setErrName] = useState(false);
   const [errEmail, setErrEmail] = useState(false);
   const [errPhoneNumber, setErrPhoneNumber] = useState(false);
@@ -229,7 +229,7 @@ export default function DialogCandidateFormCreate() {
       plans.map(async (item) => {
         try {
           const res = await axios.get(
-            `http://localhost:8080/api/interns/isFull/${item.id}`
+            `http://localhost:8080/api/plansIntern/isFull/${item.id}`
           );
           return { ...item, isFullManagement: res.data };
         } catch (error) {
@@ -255,6 +255,9 @@ export default function DialogCandidateFormCreate() {
     { id: 5, text: "Không nhận việc" },
     { id: 6, text: "Đã nhận việc" },
   ];
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_NS");
+  };
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
     setOpenForm(true);
@@ -387,16 +390,19 @@ export default function DialogCandidateFormCreate() {
   };
   return (
     <>
-      <div
-        className=" position-relative "
-        style={{ width: "75px", minWidth: "170px" }}
-        onClick={handleClickFormOpen}
-      >
-        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">
-          Thêm ứng viên
-        </button>
-        <AddIcon className=" position-absolute plus-icon clr-white" />
-      </div>
+      {hasRoleAdmin() && (
+        <div
+          className=" position-relative "
+          style={{ width: "75px", minWidth: "170px" }}
+          onClick={handleClickFormOpen}
+        >
+          <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">
+            Thêm ứng viên
+          </button>
+          <AddIcon className=" position-absolute plus-icon clr-white" />
+        </div>
+      )}
+
       <Dialog
         id="formCandidateCreate"
         open={openForm}
@@ -656,13 +662,33 @@ export default function DialogCandidateFormCreate() {
                   Kết quả cuối cùng:
                 </label>
                 <select
-                  className={`form-select ms-2 ${selectedValuePassFaild === "true" || selectedValuePassFaild === true ? 'text-success' : selectedValuePassFaild === "false" || selectedValuePassFaild === false ? 'text-danger' : 'grey-text'}`}
+                  className={`form-select ms-2 ${
+                    selectedValuePassFaild === "true" ||
+                    selectedValuePassFaild === true
+                      ? "text-success"
+                      : selectedValuePassFaild === "false" ||
+                        selectedValuePassFaild === false
+                      ? "text-danger"
+                      : "grey-text"
+                  }`}
                   style={{ width: "170px" }}
                   aria-label="Default select example"
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
                 >
-                  <option className={`grey-text ${selectedValuePassFaild === "true" || selectedValuePassFaild === true || selectedValuePassFaild === "false" || selectedValuePassFaild === false || selectedValuePassFaild === "" ? 'd-none' : ''}`} disabled value="">
+                  <option
+                    className={`grey-text ${
+                      selectedValuePassFaild === "true" ||
+                      selectedValuePassFaild === true ||
+                      selectedValuePassFaild === "false" ||
+                      selectedValuePassFaild === false ||
+                      selectedValuePassFaild === ""
+                        ? "d-none"
+                        : ""
+                    }`}
+                    disabled
+                    value=""
+                  >
                     N/A
                   </option>
                   <option className="text-success" value="true">

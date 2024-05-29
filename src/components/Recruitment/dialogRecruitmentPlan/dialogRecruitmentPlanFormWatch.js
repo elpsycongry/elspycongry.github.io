@@ -9,9 +9,12 @@ import { useFormik } from "formik";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 
-export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
+export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem , userRoles }) {
   const [tenhnology, setTenhnology] = useState([]);
   const navigate = useNavigate();
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_NS");
+  };
   // Dữ liệu fake
   const formData = useFormik({
     initialValues: {
@@ -40,6 +43,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
       ],
     },
   });
+  
   // Call api
   const Toast = Swal.mixin({
     toast: true,
@@ -104,7 +108,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     setOpenFormReason(true);
   };
   return (
-    <>
+    <>{hasRoleAdmin() && (
       <Tooltip title="Xem chi tiết">
         <RemoveRedEyeIcon
           data-bs-toggle="tooltip"
@@ -114,6 +118,8 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
           onClick={handleClickFormOpen}
         />
       </Tooltip>
+    )}
+      
       <Dialog
         id="formWatchRecruitmentPlan"
         open={openForm}

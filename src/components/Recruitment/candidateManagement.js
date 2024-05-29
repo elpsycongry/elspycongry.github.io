@@ -158,9 +158,10 @@ export default function CandidateManagement() {
         getAllRecruitmentPlan();
     }, [])
 
-
+    const [userLogin, setUserLogin] = useState([]);
     async function getAll(pageNumber) {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        setUserLogin(user.roles);
         if (user != null) {
             try {
                 const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
@@ -315,7 +316,7 @@ export default function CandidateManagement() {
                                     PopperComponent={CustomPopper} // Sử dụng Popper tùy chỉnh
                                 />
                             </div>
-                            <DialogCandidateFormCreate />
+                            <DialogCandidateFormCreate userRoles={userLogin} />
                         </div>
 
                     </div>
@@ -347,7 +348,7 @@ export default function CandidateManagement() {
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogCandidateFromWatch id={item.id} />
-                                        <DialogCandidateFromUpdate id={item.id} />
+                                        <DialogCandidateFromUpdate id={item.id} userRoles={userLogin} />
                                     </td>
                                 </tr>
                             ))}

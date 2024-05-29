@@ -8,7 +8,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import swal from "sweetalert";
 
-export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
+export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
@@ -16,13 +16,14 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
   const [errNumber, setErrNumber] = useState(false);
-
+  
 
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
     // 
+  
     var hasErrPersonalNeeds;
     if (personalneed === "" || personalneed === null || personalneed === "default") {
       hasErrPersonalNeeds = true;
@@ -118,7 +119,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
       return false;
     }
   };
-
+  
   const formData = useFormik({
     initialValues: {
       idUser: null,
@@ -224,6 +225,9 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
     { id: 10, text: "JAVA" },
     { id: 11, text: ".NET" },
   ];
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+  };
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
     setOpenForm(true);
@@ -447,9 +451,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id }) {
 
   return (
     <>
-      {check ? (
-        <CreateIcon className="bg-whiteImportant pencil-btn font-size-medium" />
-      ) : (
+      {hasRoleAdmin() && (
         <Tooltip title="Chỉnh sửa chi tiết">
           <CreateIcon
             className="color-orange pencil-btn font-size-medium hover-warning cursor-pointer"

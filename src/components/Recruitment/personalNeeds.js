@@ -109,11 +109,12 @@ export default function PersonalNeeds() {
             console.error('Error searching by status:', error);
         }
     };
-
+    const [userLogin, setUserLogin] = useState([]);
     async function getAll(pageNumber) {
             const user = JSON.parse(localStorage.getItem("currentUser"))
             if (user != null) {
                 try {
+                    setUserLogin(user.roles)
                     axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                     const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
                     setRecuitment(response.data.content);
@@ -217,7 +218,7 @@ export default function PersonalNeeds() {
                                         </FormControl>
                                     </div>
 
-                                    <DialogPersonalFormCreate />
+                                    <DialogPersonalFormCreate userRoles={userLogin} />
 
                                 </div>
 
@@ -244,11 +245,11 @@ export default function PersonalNeeds() {
                                             <td className="text-center">{item.status}</td>
                                             <td className="text-center">{item.users.name}</td>
                                             <td className="text-right p-tricklord">
-                                                <DialogPersonalFormWatch id={item.id} />
+                                                <DialogPersonalFormWatch id={item.id} userRoles={userLogin} />
                                                 {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" || item.status === "Đang tuyển dụng" || item.status === "Bị từ chối bởi DECAN" ? (
-                                                    <DialogPersonalFormUpdate id={item.id} check={true} />
+                                                    <DialogPersonalFormUpdate id={item.id} check={true} userRoles={userLogin} />
                                                 ) : (
-                                                    <DialogPersonalFormUpdate id={item.id} />
+                                                    <DialogPersonalFormUpdate id={item.id} userRoles={userLogin}/>
                                                 )}
                                             </td>
                                         </tr>

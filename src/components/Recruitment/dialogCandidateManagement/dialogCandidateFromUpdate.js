@@ -146,7 +146,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
         return;
       } else {
         try {
-          await axios.put("http://localhost:8080/api/interns/" + id, values).then(res => {
+          await axios.put("http://localhost:8080/api/plansIntern/" + id, values).then(res => {
             swal(" cập nhật thông tin ứng viên thành công", {
               icon: "success",
               buttons: false,
@@ -172,7 +172,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
     const user = JSON.parse(localStorage.getItem("currentUser"))
     if (user != null) {
       try {
-        axios.get("http://localhost:8080/api/plans").then((res) => {
+        axios.get("http://localhost:8080/api/plansIntern").then((res) => {
           setPlans(res.data);
         });
         axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {

@@ -13,8 +13,11 @@ import DialogPersonalFormCreate from "./dialogPersonalFormCreate";
 import DialogRecruitmentPlanFormCreate from "../dialogRecruitmentPlan/dialogRecruitmentPlanFormCreate";
 import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess";
 
-export default function DialogPersonalFormWatch({ id }) {
+export default function DialogPersonalFormWatch({ id , userRoles }) {
     const [tenhnology, setTenhnology] = useState([]);
+    const hasRoleAdmin = () => {
+        return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+      };
     // Dữ liệu fake
     const formData = useFormik({
         initialValues: {
@@ -72,6 +75,7 @@ export default function DialogPersonalFormWatch({ id }) {
 
     return (
         <>
+        { hasRoleAdmin() &&
             <Tooltip title="Xem chi tiết">
                 <RemoveRedEyeIcon
                     data-bs-toggle="tooltip"
@@ -81,7 +85,8 @@ export default function DialogPersonalFormWatch({ id }) {
                     onClick={handleClickFormOpen}
                 />
             </Tooltip>
-
+        }
+            
             <Dialog
                 id="formWatch"
                 open={openForm}
@@ -254,7 +259,7 @@ export default function DialogPersonalFormWatch({ id }) {
                 open={openFormReason}
                 onClose={() => setOpenFormReason(false)}
             />
-            <DialogRecruitmentPlanFormCreateSuccess id={formData.values.recruitmentRequest.id} open={openFormCreateSuccess} onClose={() => setOpenFormCreateSuccess(false)} />
+            <DialogRecruitmentPlanFormCreateSuccess userRoles={userRoles} id={formData.values.recruitmentRequest.id} open={openFormCreateSuccess} onClose={() => setOpenFormCreateSuccess(false)} />
 
         </>
     );

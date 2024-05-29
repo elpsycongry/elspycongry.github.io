@@ -110,11 +110,13 @@ export default function RecruitmentPlan() {
             console.error('Error searching by status:', error);
         }
     };
-
+    const [userLogin, setUserLogin] = useState([]);
     async function getAll(pageNumber) {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+    
         if (user != null) {
             try {
+                setUserLogin(user.roles);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
@@ -222,8 +224,7 @@ export default function RecruitmentPlan() {
                                     </Select>
                                 </FormControl>
                             </div>
-
-                            <DialogRecruitmentPlanFormCreate />
+                            <DialogRecruitmentPlanFormCreate userRoles={userLogin} />
 
                         </div>
 
@@ -250,16 +251,16 @@ export default function RecruitmentPlan() {
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
-                                        {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} />
+                                        {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN"? (
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} userRoles={userLogin} />
                                         ) : (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} userRoles={userLogin} />
                                         )}
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
 
-                                            <DialogRecruitmentPlanFormUpdate id={item.id} check={true} />
+                                            <DialogRecruitmentPlanFormUpdate id={item.id} check={true} userRoles={userLogin}/>
                                         ) : (
-                                            <DialogRecruitmentPlanFormUpdate id={item.id} />
+                                            <DialogRecruitmentPlanFormUpdate id={item.id} userRoles={userLogin} />
                                         )}
                                     </td>
                                 </tr>
