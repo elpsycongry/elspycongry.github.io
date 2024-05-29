@@ -21,18 +21,26 @@
 
       .title {
         margin: 0;
-        font-size: 20px;
-        font-weight: 500;
-        color: #687168;
+        font-size: 22px;
+        font-weight: 600;
       }
+
       .btns {
         display: flex;
         margin-top: 5px;
+
         .btn {
-          padding: 0px 12px;
-          border-radius: 3px;
+          font-size: 0.9rem;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-weight: 600;
+          margin-right: 6px;
           &:hover {
-            background-color: #cccccc;
+            background-color: #ffecc8;
+          }
+          &.selected {
+            background-color: #ffecc8;
+            color: #fea400;
           }
         }
       }
@@ -41,7 +49,6 @@
     .body {
 
       .noti-item {
-
         padding: 5px 20px 5px 20px;
         position: relative;
         word-break: break-word;

@@ -6,18 +6,22 @@ import Tippy from "@tippyjs/react";
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale-extreme.css';
 import './notification.scss'
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Tooltip} from "@mui/material";
 import axios from "axios";
+import {NotificationsNone} from "@mui/icons-material";
 
 export function Notification() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(false);
-    const [type, setType] = useState('all')
+    const [type, setType] = useState('all');
+    const notiNumber = useRef(0);
     const handleToggle = () => {
+        getDatas()
         setOpen(!open)
     }
-    const [datas, setDatas] = useState([
+
+    const [renderData, setRenderData] = useState([
         {
             id: 1,
             content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
@@ -54,15 +58,14 @@ export function Notification() {
         alignItems: 'center',
         justifyContent: 'center',
 
-        // Create pseudo-element fake
         '&::before': {
-            content: '"3"',
+            content: notiNumber.current > 0 ? `"${notiNumber.current}"` : "''", // Sử dụng điều kiện để xác định nội dung của ::before
             position: 'absolute',
             right: 2,
             top: 3,
             width: '40%',
             height: '40%',
-            backgroundColor: 'rgba(255, 0, 0, 0.83)',
+            backgroundColor: notiNumber.current > 0 ? 'rgba(255, 0, 0, 0.83)' : 'transparent', // Sử dụng điều kiện để xác định màu nền
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
@@ -73,34 +76,46 @@ export function Notification() {
     }));
 
     const markReaded = (index) => {
-        datas[index].isRead = true
-        setDatas([...datas])
+        renderData[index].isRead = true
+        setRenderData([...renderData])
     }
+
     useEffect(() => {
-        console.log(datas)
+        if (renderData){
+            sendDatas().then(getDatas)
+        }
+    }, [type]);
+
+    const sendDatas = async () => {
+        try {
+            const response = await axios.put(`http://localhost:8080/api/notifications/${currentUser.id}`, renderData);
+        } catch (error) {
+            console.error('Error sending data:', error);
+        }
+    };
+    const getDatas = () => {
         axios.get(`http://localhost:8080/api/notifications/${currentUser.id}`, {
             params: {
                 type: type
             }
         }).then(
             response => {
-                setDatas(response.data);
+                findNotiNumber(response.data)
+                setRenderData(response.data);
             }
         )
-    }, [type]);
-
-    const sendDatas = async () => {
-        try {
-            const response = await axios.put(`http://localhost:8080/api/notifications/${currentUser.id}`, datas);
-        } catch (error) {
-            console.error('Error sending data:', error);
-        }
     };
 
+    const findNotiNumber = (data) => {
+        notiNumber.current = 0;
+        data.map(data => {if (data.isRead === false){
+            notiNumber.current++
+        }})
+    }
     return (
         <Tippy
             placement={"bottom-end"}
-            onClickOutside={() => {sendDatas(); handleToggle()}}
+            onClickOutside={() => {sendDatas().then(handleToggle)}}
             visible={open}
             interactive
             render={() => (
@@ -109,16 +124,22 @@ export function Notification() {
                         <div className={"header"}>
                             <h4 className={"title"}>Thông báo</h4>
                             <div className={"btns"}>
-                                <div className={"btn"} onClick={() => {sendDatas() ;setType('all')}}>
+                                <div
+                                    className={type === 'all' ? 'btn selected': 'btn '}
+                                    onClick={() => {setType('all')}}
+                                >
                                     Tất cả
                                 </div>
-                                <div className={"btn"} onClick={() => {sendDatas(); setType('un_read')}}>
+                                <div
+                                    className={type === 'un_read' ? 'btn selected': 'btn'}
+                                    onClick={() => { setType('un_read')}}
+                                >
                                     Chưa đọc
                                 </div>
                             </div>
                         </div>
                         <div className={"body"}>
-                            {datas.map((notiItem, index) => (
+                            {renderData.map((notiItem, index) => (
                                 <div key={notiItem.id} className={"noti-item"} onClick={() => {
                                     markReaded(index)
                                 }}>
@@ -138,8 +159,33 @@ export function Notification() {
                 </div>
             )}>
             <StyledIconWrapper onClick={handleToggle}>
-                <NotificationsIcon sx={{fontSize: '35px'}}/>
+                {open?
+                    <NotificationsIcon sx={{fontSize: '35px'}} />
+                    :
+                    <NotificationsNone sx={{fontSize: '35px'}} />
+                }
+
             </StyledIconWrapper>
         </Tippy>
     )
+}
+// Hàm gửi thông báo
+// Nếu set giá trị cho cả listReceiverID và roleReceiver thì sẽ lấy theo listReceiverID
+export function sendNotifications(
+    creatorId,
+    content,
+    roleReceiver,
+    listReceiverId
+) {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+    const notificationInfo = {
+        creatorId: creatorId || currentUser.id, // Nếu creatorId là null hoặc rỗng, gán giá trị là người dùng hiện tại
+        content: content,
+        roleReceiver: roleReceiver,
+        listReceiverId: listReceiverId,
+        timeCreate:new Date().toISOString(),
+    }
+    axios.post('http://localhost:8080/api/notifications', notificationInfo)
+        .then(res => {return true})
+        .catch(e => {return false})
 }
