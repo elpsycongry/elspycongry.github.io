@@ -19,7 +19,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
-import {sendNotifications} from "../../Notification/notification";
 
 export function MarkInternModal({userID, updateFunction}) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
@@ -278,9 +277,7 @@ export function MarkInternModal({userID, updateFunction}) {
     }, [data]);
     // Handle submit
     const handleSubmit = (type) => {
-        if (sendNotifications(currentUser.id,"Hello bạn admin",null,[1])){
-            console.log('ok')
-        }
+
         let sendData;
         // Save ngày và kết quả thực tập pass hoặc fail
         if (finalResultPass !== null) {

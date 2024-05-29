@@ -21,36 +21,39 @@ export function Notification() {
         setOpen(!open)
     }
 
-    const [renderData, setRenderData] = useState([
-        {
-            id: 1,
-            content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
-            timestamp: "1 phút trước",
-            link: "",
-            isRead: false,
-
-        }, {
-            id: 2,
-            content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
-            timestamp: "1 giờ trước",
-            isRead: false,
-        }, {
-            id: 3,
-            content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
-            timestamp: "5 giây trước",
-            isRead: false,
-        }, {
-            id: 4,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "3 ngày trước",
-            isRead: true,
-        }, {
-            id: 5,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "5 ngày trước",
-            isRead: true,
-        },
-    ]);
+    const [renderData, setRenderData] = useState(
+    //     [
+    //     {
+    //         id: 1,
+    //         content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
+    //         timestamp: "1 phút trước",
+    //         link: "",
+    //         isRead: false,
+    //
+    //     }, {
+    //         id: 2,
+    //         content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
+    //         timestamp: "1 giờ trước",
+    //         isRead: false,
+    //     }, {
+    //         id: 3,
+    //         content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
+    //         timestamp: "5 giây trước",
+    //         isRead: false,
+    //     }, {
+    //         id: 4,
+    //         content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+    //         timestamp: "3 ngày trước",
+    //         isRead: true,
+    //     }, {
+    //         id: 5,
+    //         content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+    //         timestamp: "5 ngày trước",
+    //         isRead: true,
+    //     },
+    // ]
+    []
+    );
 
     const StyledIconWrapper = styled(Box)(({theme}) => ({
         position: 'relative',
@@ -171,7 +174,7 @@ export function Notification() {
 }
 // Hàm gửi thông báo
 // Nếu set giá trị cho cả listReceiverID và roleReceiver thì sẽ lấy theo listReceiverID
-export function sendNotifications(
+export async function sendNotifications (
     creatorId,
     content,
     roleReceiver,
@@ -181,11 +184,9 @@ export function sendNotifications(
     const notificationInfo = {
         creatorId: creatorId || currentUser.id, // Nếu creatorId là null hoặc rỗng, gán giá trị là người dùng hiện tại
         content: content,
-        roleReceiver: roleReceiver,
+        listRoleReceiver: roleReceiver,
         listReceiverId: listReceiverId,
         timeCreate:new Date().toISOString(),
     }
-    axios.post('http://localhost:8080/api/notifications', notificationInfo)
-        .then(res => {return true})
-        .catch(e => {return false})
+    await axios.post('http://localhost:8080/api/notifications', notificationInfo)
 }
