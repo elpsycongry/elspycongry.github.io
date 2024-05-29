@@ -275,6 +275,7 @@ export default function CandidateManagement() {
                                         label="Trạng thái..."
                                         onChange={handleStatusChange}
                                         value={selectedStatus}
+                                        
                                         className="select-edit grey-text"
                                     >
                                         {
