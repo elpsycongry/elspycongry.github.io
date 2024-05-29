@@ -29,7 +29,8 @@ export default function DialogAddUserForm({ token, onAdd }) {
         validationSchema: Yup.object({
             name: Yup.string()
                 .max(30, 'Không quá 30 ký tự')
-                .matches(/^[a-zA-Z\s@]+$/, 'Tên không được chứa ký tự đặc biệt ngoại trừ @')
+                .matches(/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỶỸửữựỳỵỷỹ\s@]+$/
+                , 'Vui lòng nhập tên hợp lệ')
                 .required('Tên không được bỏ trống'),
             email: Yup.string()
                 .email('Email không đúng định dạng')
@@ -38,7 +39,9 @@ export default function DialogAddUserForm({ token, onAdd }) {
                 /^(0[3|5|7|8|9])+([0-9]{8})$/,
                 'Số điện thoại không hợp lệ'
             ),
-            password: Yup.string().required('Mật khẩu không được bỏ trống'),
+            password: Yup.string()
+            .matches(/^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[a-zA-Z0-9]).{8,}$/, 'Mật khẩu phải có ít nhất 8 ký tự và có ít nhất 1 ký tự đặc biệt')
+            .required('Mật khẩu không được bỏ trống'),
             roles: Yup.array()
                 .min(1, 'Phải chọn ít nhất một vai trò')
                 .required('Phải chọn ít nhất một vai trò'),
@@ -53,6 +56,17 @@ export default function DialogAddUserForm({ token, onAdd }) {
                     }
                 } catch (error) {
                     errors.phone = "Lỗi khi kiểm tra số điện thoại";
+                }
+            }
+
+            if (values.email) {
+                try {
+                    const response = await axios.get(`http://localhost:8080/admin/users/check-email/${values.email}`);
+                    if (response.data.exists) {
+                        errors.email = "Email đã tồn tại";
+                    }
+                } catch (error) {
+                    errors.email = "Lỗi khi kiểm tra email";
                 }
             }
             return errors;
