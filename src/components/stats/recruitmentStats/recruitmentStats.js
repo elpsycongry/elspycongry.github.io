@@ -17,6 +17,7 @@ import axios from "axios";
 import ProcessedCVChart from "./processedCVChart";
 import PassFailCVChart from "./passFailCVChart";
 import AcceptJobCVChart from "./acceptJobCVChart";
+import './recruitmentStats.css'
 
 
 function Copyright(props) {
@@ -38,15 +39,46 @@ export default function RecruitmentStats() {
 
     const [activeStat, setActiveStat] = useState("stats1");
     const [activeColumnChart, setActiveColumnChart] = useState("col1");
+    const [titleStatistics, setTitleStatistics] = useState("Năm");
+    const [growthStatistics, setGrowthStatistics] = useState();
+    const [maxGrowthStatistics, setMaxGrowthStatistics] = useState();
+    const [year, setYear] = useState("2024");
+    const [month, setMonth] = useState(0);
+    const [quarter, setQuarter] = useState(0)
     const [title, setTitle] = useState("Kết quả tuyển dụng tháng 5");
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
     const [active3, setActive3] = useState(false);
     const [active4, setActive4] = useState(false);
+    const [active5, setActive5] = useState(false);
+    const [active6, setActive6] = useState(false);
+    const [active7, setActive7] = useState(true);
 
     const handleClickStat = (event) => {
         const theValue = event.currentTarget.value;
+        if (theValue === "stats3") {
+            axios.get("http://localhost:8080/api/recruitmentStats/year?year=2024")
+                .then(res => {
+                    setGrowthStatistics(res.data)
+                    console.log(growthStatistics);
+                })
+                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+                .then(res1 => {
+                    setMaxGrowthStatistics(res1.data)
+                })
 
+        }
+        if (theValue === "stats1") {
+            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setActive1(true)
+            setActive2(false)
+            setActive3(false)
+            setActive4(false)
+            axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
+                .then(res => {
+                    setRecruitmentStats(res.data)
+                })
+        }
         setActiveStat(theValue);
     }
 
@@ -58,16 +90,45 @@ export default function RecruitmentStats() {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
-        console.log("handled")
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
+            if (year > 0) {
+                axios.get("http://localhost:8080/api/recruitmentStats/year?year=" + year)
+                    .then(res => {
+                        setGrowthStatistics(res.data)
+                    })
+                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+                .then(res1 => {
+                    setMaxGrowthStatistics(res1.data)
+                })
+            }
+            if (quarter != 0) {
+                axios.get("http://localhost:8080/api/recruitmentStats/quarter?quarter=" + quarter)
+                    .then(res4 => {
+                        setGrowthStatistics(res4.data)
+                    })
+                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithQuarter")
+                .then(res1 => {
+                    setMaxGrowthStatistics(res1.data)
+                })
+            }
+            if (month != 0) {
+                axios.get("http://localhost:8080/api/recruitmentStats/month?month=" + month)
+                    .then(res3 => {
+                        setGrowthStatistics(res3.data)
+                    })
+                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithMonth")
+                .then(res1 => {
+                    setMaxGrowthStatistics(res1.data)
+                })
+            }
         }
 
-    }, [])
+    }, [month, quarter, year])
 
     const handleClick = (event) => {
         const theValue = event.currentTarget.value;
@@ -121,6 +182,60 @@ export default function RecruitmentStats() {
                     setRecruitmentStats(res.data)
                     console.log(recruitmentStats);
                 })
+        }
+        if (theValue == 5) {
+            setQuarter(0)
+            setMonth(1)
+            setTitleStatistics("Tháng")
+            setYear(0)
+            setActive5(true)
+            setActive6(false)
+            setActive7(false)
+        }
+
+        if (theValue == 6) {
+            setQuarter(1)
+            setMonth(0)
+            setTitleStatistics("Quý")
+            setYear(0)
+            setActive5(false)
+            setActive6(true)
+            setActive7(false)
+        }
+
+        if (theValue == 7) {
+            setTitleStatistics("Năm")
+            setQuarter(0)
+            setYear(2024)
+            setActive5(false)
+            setActive6(false)
+            setActive7(true)
+
+        }
+
+        if (theValue == -1) {
+            console.log(year);
+            if (year != 0) {
+                setYear(year - 1)
+            }
+            if (month != 0) {
+                setMonth(month - 1)
+            }
+            if (quarter != 0) {
+                setQuarter(quarter - 1)
+            }
+        }
+
+        if (theValue == -2) {
+            if (year != 0) {
+                setYear(year + 1)
+            }
+            if (month != 0) {
+                setMonth(month + 1)
+            }
+            if (quarter != 0) {
+                setQuarter(quarter + 1)
+            }
         }
 
     };
@@ -305,20 +420,20 @@ export default function RecruitmentStats() {
                             <div className="content-stat-3">
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Thống kê tăng trưởng</h3>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
-                                    {active1 ? (
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
+                                    {active5 ? (
+                                        <button type="button" value="5" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
                                     ) :
-                                        <button type="button" value="1" onClick={handleClick} className="btn btn-stats-gray">Theo tháng</button>
+                                        <button type="button" value="5" onClick={handleClick} className="btn btn-stats-gray">Theo tháng</button>
                                     }
-                                    {active2 ? (
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-warning text-white">Theo quý</button>
+                                    {active6 ? (
+                                        <button type="button" value="6" onClick={handleClick} className="btn btn-warning text-white">Theo quý</button>
                                     ) :
-                                        <button type="button" value="2" onClick={handleClick} className="btn btn-stats-gray">Theo quý</button>
+                                        <button type="button" value="6" onClick={handleClick} className="btn btn-stats-gray">Theo quý</button>
                                     }
-                                    {active3 ? (
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-warning text-white">Theo năm</button>
+                                    {active7 ? (
+                                        <button type="button" value="7" onClick={handleClick} className="btn btn-warning text-white">Theo năm</button>
                                     ) :
-                                        <button type="button" value="3" onClick={handleClick} className="btn btn-stats-gray">Theo năm</button>
+                                        <button type="button" value="7" onClick={handleClick} className="btn btn-stats-gray">Theo năm</button>
                                     }
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
@@ -328,7 +443,8 @@ export default function RecruitmentStats() {
                                                 <TableRow>
                                                     <TableCell sx={{ fontWeight: '700', minHeight: '50px', fontSize: '16px', width: '600px' }} align="left">
                                                         Thông số
-                                                        {/* <IconButton
+                                                        <IconButton onClick={handleClick} value={-1}
+                                                            disabled={year === 2020 || quarter === 1 || month === 1}
                                                             aria-label="previous"
                                                             size="small"
                                                             sx={{
@@ -348,7 +464,8 @@ export default function RecruitmentStats() {
                                                         </IconButton>
                                                         <Typography sx={{ fontWeight: '700', display: 'inline', marginRight: '30px' }}>Trước</Typography>
                                                         <Typography sx={{ fontWeight: '700', display: 'inline' }}>Sau</Typography>
-                                                        <IconButton
+                                                        <IconButton onClick={handleClick} value={-2}
+                                                            disabled={year === 2024 || quarter === 4 || month === 12}
                                                             aria-label="previous"
                                                             size="small"
                                                             sx={{
@@ -365,36 +482,210 @@ export default function RecruitmentStats() {
                                                             }}
                                                         >
                                                             <ArrowForwardIosIcon fontSize="inherit" sx={{ color: 'white', width: '15px', height: '15px' }} />
-                                                        </IconButton> */}
+                                                        </IconButton>
                                                     </TableCell>
-                                                    <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Số lượng</TableCell>
+                                                    {year !== 0 && (
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {year} </TableCell>
+                                                    )}
+                                                    {month !== 0 && (
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {month} </TableCell>
+                                                    )}
+                                                    {quarter !== 0 && (
+                                                        <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">{titleStatistics}  {quarter} </TableCell>
+                                                    )}
                                                     <TableCell sx={{ fontWeight: '700', fontSize: '16px' }} align="center">Tăng trưởng</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {rows.map((row) => (
-                                                    <TableRow
-                                                        key={row.name}
-                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                    >
-                                                        <TableCell align="left" component="th" scope="row">
-                                                            {row.name}
-                                                        </TableCell>
-                                                        <TableCell align="center">{row.quantity}</TableCell>
-                                                        <TableCell align="center">
-                                                            {/* {row.growth / maxGrowth} */}
-                                                            <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
-                                                                <Box
-                                                                    sx={{
-                                                                        width: 10,
-                                                                        height: `${(row.growth / maxGrowth) * 40}px`,
-                                                                        bgcolor: 'primary.main',
-                                                                    }}
-                                                                />
-                                                            </Box>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
+                                                <TableRow
+                                                    key={'Số CV mới'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số CV mới"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.totalCV}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.totalCV / maxGrowthStatistics.totalCV) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số CV phỏng vấn'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số CV phỏng vấn"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.totalInterviewCV}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.totalInterviewCV / maxGrowthStatistics.totalInterviewCV) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số ứng viên đã phỏng vấn'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số ứng viên đã phỏng vấn"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.candidatesInterview}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.candidatesInterview / maxGrowthStatistics.candidatesInterview) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số ứng viên không đến phỏng vấn'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số ứng viên không đến phỏng vấn"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.candidatesDoNotInterview}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.candidatesDoNotInterview / maxGrowthStatistics.candidatesDoNotInterview) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số Pass'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số Pass"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.candidatesPass}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.candidatesPass / maxGrowthStatistics.candidatesPass) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số Fail'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số Fail"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.candidatesFail}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.candidatesFail / maxGrowthStatistics.candidatesFail) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số ứng viên nhận việc'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số ứng viên nhận việc"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.candidatesAcceptJob}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.candidatesAcceptJob / maxGrowthStatistics.candidatesAcceptJob) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số ứng viên không việc'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số ứng viên không việc"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.candidatesRejectJob}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.candidatesRejectJob / maxGrowthStatistics.candidatesRejectJob) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
+                                                <TableRow
+                                                    key={'Số ứng viên chưa việc'}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                >
+                                                    <TableCell align="left" component="th" >
+                                                        {"Số ứng viên chưa việc"}
+                                                    </TableCell>
+                                                    <TableCell align="center">{growthStatistics.candidatesAcceptJobYet}</TableCell>
+                                                    <TableCell align="center">
+                                                        {/* {row.growth / maxGrowth} */}
+                                                        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%', justifyContent: 'center' }}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 10,
+                                                                    height: `${(growthStatistics.candidatesAcceptJobYet / maxGrowthStatistics.candidatesAcceptJobYet) * 40}px`,
+                                                                    bgcolor: 'primary.main',
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </TableCell>
+                                                </TableRow>
                                             </TableBody>
 
                                         </Table>
@@ -404,7 +695,7 @@ export default function RecruitmentStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '4px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '25px', paddingBottom: '28px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}
