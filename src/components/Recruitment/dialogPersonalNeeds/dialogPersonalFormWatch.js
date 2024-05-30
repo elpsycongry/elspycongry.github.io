@@ -16,6 +16,8 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import ClearIcon from '@mui/icons-material/Clear';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import { Link } from "react-router-dom";
+import { Icon } from "@iconify/react/dist/iconify.js";
 export default function DialogPersonalFormWatch({ id, userRoles }) {
     const [tenhnology, setTenhnology] = useState([]);
     const hasRoleAdmin = () => {
@@ -85,17 +87,21 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
         requestName: "DECEN - Ori - Nhu cầu nhân sự tháng 9",
         requestCreator: "Trọng Khởi tạo nhu cầu nhân sự:",
         reason: "vãi cả chưởng",
-        decanAccept: "true",
+        decanAccept: "false",
         detAccept: "true",
         planName: "Kế hoạch tuyển dụng DECEN - ori - tháng 9",
-        applicants: 1,
+        applicants: 3,
         training: 0,
         intern: 3,
         totalIntern: 15,
-        step: 5,
+        step: 4,
     });
     const activeStep = steps.step;
-
+    const deleteIcon = () => {
+        return (
+            <Icon icon="typcn:delete" width="30" height="30" />
+        )
+    }
 
 
     return (
@@ -321,10 +327,10 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
                                         <div className="col-md-6">
                                             <Stepper activeStep={activeStep} orientation="vertical">
                                                 <Step>
-                                                    <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <a className="a-progress">{steps.requestName}</a></span> </StepLabel>
+                                                    <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <Link to={`/recruitment/personalNeeds?idRequest=${steps.resquestId}`} className="a-progress cursor-pointer">{steps.requestName}</Link></span> </StepLabel>
                                                 </Step>
                                                 <Step>
-                                                    <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? UnpublishedIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
+                                                    <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
                                                         {steps.detAccept !== "" ?
                                                             steps.detAccept === "true" || steps.detAccept === true ?
                                                                 <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <a className="a-progress">{steps.planName}</a></span>
@@ -338,7 +344,7 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
 
                                                 </Step>
                                                 <Step>
-                                                    <StepLabel StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? UnpublishedIcon : ''} className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
+                                                    <StepLabel StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
                                                         {steps.decanAccept !== "" ?
                                                             steps.decanAccept === "true" || steps.decanAccept === true ?
                                                                 <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a className="a-progress"></a></span>
@@ -352,14 +358,24 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
                                                 </Step>
                                                 <Step>
                                                     {steps.step >= 3 ?
-                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
+                                                        steps.applicants === 0 ?
+                                                            <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
+                                                            :
+                                                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }
                                                 </Step>
                                                 <Step>
                                                     {steps.step >= 4 ?
-                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span> </StepLabel>
+                                                        steps.training === 0 ?
+                                                            <StepLabel className={`ws-nowrap svg-size svg-size-none `} >
+                                                                <span className={`d-flex flex-column align-items-start mt-12`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span>
+                                                            </StepLabel>
+                                                            :
+                                                            <StepLabel className={`ws-nowrap svg-size  `} >
+                                                                <span className={`d-flex flex-column align-items-start mt-12`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span>
+                                                            </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }

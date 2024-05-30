@@ -607,6 +607,9 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 22px;
     color: red !important;
 }
+.svg-size-none span svg{
+    color: rgba(158,158,158,255) !important;
+}
 
 .svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed,.svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
     color: green;

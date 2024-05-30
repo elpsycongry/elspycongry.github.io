@@ -27,11 +27,15 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import DialogPersonalFormCreate from "./dialogPersonalNeeds/dialogPersonalFormCreate";
 import DialogPersonalFormUpdate from "./dialogPersonalNeeds/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialogPersonalNeeds/dialogPersonalFormWatch";
-import { json } from 'react-router-dom';
+import { json, useLocation, useParams } from 'react-router-dom';
 import { set } from 'lodash';
 
 
 export default function PersonalNeeds() {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const idPersonalNeeds = queryParams.get('idRequest');
+    console.log(idPersonalNeeds);
     const [open, setOpen] = useState(false);
     const handleClickPracticeOpen = () => {
         setOpen(true);
