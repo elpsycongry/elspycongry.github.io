@@ -29,7 +29,7 @@ export default function DialogAddUserForm({ token, onAdd }) {
         validationSchema: Yup.object({
             name: Yup.string()
                 .max(30, 'Không quá 30 ký tự')
-                .matches(/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỶỸửữựỳỵỷỹ\s@]+$/
+                .matches(/^[\p{L}\p{M}\s.'-]+$/u
                 , 'Vui lòng nhập tên hợp lệ')
                 .required('Tên không được bỏ trống'),
             email: Yup.string()

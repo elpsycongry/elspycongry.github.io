@@ -14,10 +14,7 @@ import Paper from '@mui/material/Paper';
 import TrainingStatsChart from './TrainingStatsChart ';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import Avatar from '@mui/material/Avatar';
-import { PaddingRounded } from "@mui/icons-material";
 import axios from "axios";
-import { set } from "lodash";
 import ExportButton from './exportButton'
 
 
