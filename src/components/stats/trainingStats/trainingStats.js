@@ -378,7 +378,7 @@ export default function TrainingStats() {
                                     <label>Điểm tốt nghiệp trung bình:</label>
                                     <label style={{ marginLeft: '203px' }}>{trainingStats.averageGraduationScore}</label>
                                 </div>
-                            </div>
+                            </div>   
                         )}
                         {activeStat === "stats2" && (
                             <div className="content-stat-2">
@@ -629,7 +629,7 @@ export default function TrainingStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '20px', paddingBottom: '30px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '16px', paddingBottom:'16px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}
