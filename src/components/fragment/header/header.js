@@ -83,7 +83,7 @@ export default function Header() {
                         Hệ thống quản lý đào tạo
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
-                    <Box sx={{ marginRight: '10px' }}>
+                    <Box sx={{ marginRight: '10px', display: "flex", alignItems: 'center'} }>
                       <Notification />
                     </Box>
                     <Tooltip title="Open settings">

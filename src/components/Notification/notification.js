@@ -10,6 +10,7 @@ import {useEffect, useRef, useState} from "react";
 import {Tooltip} from "@mui/material";
 import axios from "axios";
 import {NotificationsNone} from "@mui/icons-material";
+import Avatar from "@mui/material/Avatar";
 
 export function Notification() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
@@ -22,37 +23,57 @@ export function Notification() {
     }
 
     const [renderData, setRenderData] = useState(
-    //     [
-    //     {
-    //         id: 1,
-    //         content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
-    //         timestamp: "1 phút trước",
-    //         link: "",
-    //         isRead: false,
-    //
-    //     }, {
-    //         id: 2,
-    //         content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
-    //         timestamp: "1 giờ trước",
-    //         isRead: false,
-    //     }, {
-    //         id: 3,
-    //         content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
-    //         timestamp: "5 giây trước",
-    //         isRead: false,
-    //     }, {
-    //         id: 4,
-    //         content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-    //         timestamp: "3 ngày trước",
-    //         isRead: true,
-    //     }, {
-    //         id: 5,
-    //         content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-    //         timestamp: "5 ngày trước",
-    //         isRead: true,
-    //     },
-    // ]
-    []
+        [
+            {
+                id: 1,
+                content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
+                timestamp: "1 phút trước",
+                link: "",
+                isRead: false,
+
+            }, {
+            id: 2,
+            content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
+            timestamp: "1 giờ trước",
+            isRead: false,
+        }, {
+            id: 3,
+            content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
+            timestamp: "5 giây trước",
+            isRead: false,
+        }, {
+            id: 4,
+            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+            timestamp: "3 ngày trước",
+            isRead: true,
+        }, {
+            id: 5,
+            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+            timestamp: "5 ngày trước",
+            isRead: true,
+        }, {
+            id: 6,
+            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+            timestamp: "5 ngày trước",
+            isRead: true,
+        }, {
+            id: 7,
+            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+            timestamp: "5 ngày trước",
+            isRead: true,
+        }, {
+            id: 8,
+            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+            timestamp: "5 ngày trước",
+            isRead: true,
+        }, {
+            id: 9,
+            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+            timestamp: "5 ngày trước",
+            isRead: true,
+        },
+        ]
+        // []
     );
 
     const StyledIconWrapper = styled(Box)(({theme}) => ({
@@ -84,41 +105,46 @@ export function Notification() {
     }
 
     useEffect(() => {
-        if (renderData){
+        if (renderData) {
             sendDatas().then(getDatas)
         }
     }, [type]);
 
     const sendDatas = async () => {
-        try {
-            const response = await axios.put(`http://localhost:8080/api/notifications/${currentUser.id}`, renderData);
-        } catch (error) {
-            console.error('Error sending data:', error);
-        }
+        // try {
+        //     const response = await axios.put(`http://localhost:8080/api/notifications/${currentUser.id}`, renderData);
+        // } catch (error) {
+        //     console.error('Error sending data:', error);
+        // }
     };
     const getDatas = () => {
-        axios.get(`http://localhost:8080/api/notifications/${currentUser.id}`, {
-            params: {
-                type: type
-            }
-        }).then(
-            response => {
-                findNotiNumber(response.data)
-                setRenderData(response.data);
-            }
-        )
+        // axios.get(`http://localhost:8080/api/notifications/${currentUser.id}`, {
+        //     params: {
+        //         type: type
+        //     }
+        // }).then(
+        //     response => {
+        //         findNotiNumber(response.data)
+        //         setRenderData(response.data);
+        //     }
+        // )
     };
 
     const findNotiNumber = (data) => {
         notiNumber.current = 0;
-        data.map(data => {if (data.isRead === false){
-            notiNumber.current++
-        }})
+        data.map(data => {
+            if (data.isRead === false) {
+                notiNumber.current++
+            }
+        })
     }
     return (
         <Tippy
             placement={"bottom-end"}
-            onClickOutside={() => {sendDatas().then(handleToggle)}}
+            onClickOutside={() => {
+                sendDatas().then(handleToggle)
+            }}
+
             visible={open}
             interactive
             render={() => (
@@ -128,53 +154,66 @@ export function Notification() {
                             <h4 className={"title"}>Thông báo</h4>
                             <div className={"btns"}>
                                 <div
-                                    className={type === 'all' ? 'btn selected': 'btn '}
-                                    onClick={() => {setType('all')}}
+                                    className={type === 'all' ? 'btn selected' : 'btn '}
+                                    onClick={() => {
+                                        setType('all')
+                                    }}
                                 >
                                     Tất cả
                                 </div>
                                 <div
-                                    className={type === 'un_read' ? 'btn selected': 'btn'}
-                                    onClick={() => { setType('un_read')}}
+                                    className={type === 'un_read' ? 'btn selected' : 'btn'}
+                                    onClick={() => {
+                                        setType('un_read')
+                                    }}
                                 >
                                     Chưa đọc
                                 </div>
                             </div>
                         </div>
                         <div className={"body"}>
-                            {renderData.map((notiItem, index) => (
-                                <div key={notiItem.id} className={"noti-item"} onClick={() => {
-                                    markReaded(index)
-                                }}>
-                                    <div className={"content"}>{notiItem.content}</div>
-                                    <div className={"time"}>{notiItem.time}</div>
-                                    {!notiItem.isRead &&
-                                        <Tooltip title={"Đánh dấu là đã đọc"}>
-                                            <div className={"read-doc"} onClick={() => {
-                                                markReaded(index)
-                                            }}></div>
-                                        </Tooltip>
-                                    }
-                                </div>
-                            ))}
+                            {renderData.length > 0 ? (
+                                renderData.map((notiItem, index) => (
+                                    <div key={notiItem.id} className={"noti-item"} onClick={() => markReaded(index)}>
+                                        <div className={"avatar"}>
+                                            <Avatar
+                                                alt={"avatar"}
+                                                src={`https://picsum.photos/50/50?random=${index}`}
+                                            />
+                                        </div>
+                                        <div>
+                                            <div className={"content"}>{notiItem.content}</div>
+                                            <div className={"time"}>{notiItem.timestamp}</div>
+                                        </div>
+                                        {!notiItem.isRead && (
+                                            <Tooltip title={"Đánh dấu là đã đọc"}>
+                                                <div className={"read-doc"} onClick={() => markReaded(index)}></div>
+                                            </Tooltip>
+                                        )}
+                                    </div>
+                                ))
+                            ) : (
+                                <div>Hiện không có thông báo nào</div>
+                            )}
                         </div>
                     </div>
                 </div>
             )}>
-            <StyledIconWrapper onClick={handleToggle}>
-                {open?
-                    <NotificationsIcon sx={{fontSize: '35px'}} />
+            <StyledIconWrapper onClick={handleToggle} className={'notificateIcon'}>
+                {open ?
+                    <NotificationsIcon sx={{fontSize: '35px'}}/>
                     :
-                    <NotificationsNone sx={{fontSize: '35px'}} />
+                    <NotificationsNone sx={{fontSize: '35px'}}/>
                 }
 
             </StyledIconWrapper>
         </Tippy>
     )
 }
+
 // Hàm gửi thông báo
 // Nếu set giá trị cho cả listReceiverID và roleReceiver thì sẽ lấy theo listReceiverID
-export async function sendNotifications (
+export async function sendNotifications(
     creatorId,
     content,
     roleReceiver,
@@ -186,7 +225,7 @@ export async function sendNotifications (
         content: content,
         listRoleReceiver: roleReceiver,
         listReceiverId: listReceiverId,
-        timeCreate:new Date().toISOString(),
+        timeCreate: new Date().toISOString(),
     }
     await axios.post('http://localhost:8080/api/notifications', notificationInfo)
 }
