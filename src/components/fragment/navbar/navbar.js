@@ -132,10 +132,10 @@ function Navbar() {
     }
 
     const listItems = [
-        { id: 1, text: "Trang chủ", IconText: HomeIcon, linkTo: `/dashboard`, roles: ['ROLE_ADMIN'] },
-        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
+        { id: 1, text: "Trang chủ", IconText: HomeIcon, linkTo: `/dashboard`, roles: ['ROLE_ADMIN', 'ROLE_QLĐT'] },
+        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_QLĐT', 'ROLE_ADMIN'] },
         {
-            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_ADMIN'], children: [
+            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_ADMIN', 'ROLE_QLĐT'], children: [
                 {
                     id: 1,
                     name: "Nhu cầu",

@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
-import target from "lodash/seq";
+import target, { value } from "lodash/seq";
 import { useSnackbar } from "notistack";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import CreateIcon from "@mui/icons-material/Create";
@@ -218,7 +218,6 @@ export function MarkInternModal({ userID, updateFunction }) {
 
     // Tính kết quả thực tập theo điểm tổng kết và đánh giá team
     const fetchFinalResultPass = (finalScore, inTeamScore) => {
-        console.log('ok')
         // Set fail nếu training state là stop_training
         if (data.trainingState === 'stop_training') {
             setFinalResultPass(false)
@@ -338,7 +337,6 @@ export function MarkInternModal({ userID, updateFunction }) {
         <Tooltip title="Chỉnh sửa" arrow>
         <CreateIcon onClick={() => {
             setOpen(true);
-
             setReadOnly(false)
         }} style={{ width: '24px', height: '24px' }} className="hov color-orange pencil-btn font-size-medium" />
         </Tooltip>

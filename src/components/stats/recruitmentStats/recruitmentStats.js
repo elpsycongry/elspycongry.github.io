@@ -41,7 +41,7 @@ export default function RecruitmentStats() {
     const [titleStatistics, setTitleStatistics] = useState("Năm");
     const [growthStatistics, setGrowthStatistics] = useState();
     const [maxGrowthStatistics, setMaxGrowthStatistics] = useState();
-    const [year, setYear] = useState("2024");
+    const [year, setYear] = useState(2024);
     const [month, setMonth] = useState(0);
     const [quarter, setQuarter] = useState(0)
     const [title, setTitle] = useState("Kết quả tuyển dụng tháng 5");
