@@ -93,6 +93,7 @@ export default function PassFailCVChart() {
             legend: {
                 position: 'bottom',
                 labels: {
+                    pointStyle: 'shape',
                     font: {
                         size: 20,
                     }

@@ -93,6 +93,7 @@ export default function AcceptJobCVChart() {
             legend: {
                 position: 'bottom',
                 labels: {
+                    pointStyle: 'shape',
                     font: {
                         size: 20,
                     }
