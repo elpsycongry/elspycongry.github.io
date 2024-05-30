@@ -31,6 +31,7 @@ import axios from "axios";
 import { MarkInternModal } from "../pages/InternPage/markInternModal";
 import { text } from "@fortawesome/fontawesome-svg-core";
 import { format } from 'date-fns';
+import { South } from "@mui/icons-material";
 
 function Copyright(props) {
     return (
@@ -62,6 +63,8 @@ export default function Training() {
     const [listInter, setListIntern] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTrainingState, setSelectedTrainingState] = useState('');
+    const [listRecruitmentPlan, setListRecruitmentPlan] = useState([]);
+    const [selectedRecruitmentPlan, setSelectedRecruitmentPlan] = useState('');
     const [pagination, setPagination] = useState({
         page: 0,
         size: 10,
@@ -69,16 +72,18 @@ export default function Training() {
     });
     let update = () => {
         fetchListSubjectSelect();
+        fetchListRecruitmentPlan();
         fetchListInternSelect(pagination);
     }
     useEffect(() => {
         fetchListSubjectSelect();
+        fetchListRecruitmentPlan();
         fetchListInternSelect(pagination);
-    }, [selectedTrainingState]);
+    }, [selectedTrainingState, selectedRecruitmentPlan]);
+
 
     // Dữ liệu 
     const listTestSelect = [
-
         { id: 1, text: "Đang thực tập", name: "training" },
         { id: 2, text: "Đã hoàn thành", name: "trained" },
         { id: 3, text: "Đã dừng thực tập", name: "stop_training" }
@@ -97,13 +102,18 @@ export default function Training() {
         fetchListInternSelect(pagination);
     };
 
+    const handleRecruitmentPlan = (event) => {
+        setSelectedRecruitmentPlan(event.target.value);
+        pagination.page = 0;
+        fetchListInternSelect(pagination);
+    };
+
     const handlePageChange = (event, value) => {
         setPagination(prev => {
             const newPagination = { ...prev, page: value - 1 };
             fetchListInternSelect(newPagination);
             return newPagination;
-        });
-
+        })
     };
 
 
@@ -124,8 +134,9 @@ export default function Training() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             try {
+                console.log("ID: " + selectedRecruitmentPlan);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                axios.get(`http://localhost:8080/api/interns/search?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}`).then((res) => {
+                axios.get(`http://localhost:8080/api/interns/searchValue?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}&recruitmentPlan=${selectedRecruitmentPlan}`).then((res) => {
                     setListIntern(res.data.content);
                     console.log(res.data.content);
                     setPagination({
@@ -139,8 +150,21 @@ export default function Training() {
         }
     };
 
-
-
+    //API danh sách kế hoạch
+    const fetchListRecruitmentPlan = async () => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                axios.get("http://localhost:8080/api/interns/recruitment_plan").then((res) => {
+                    setListRecruitmentPlan(res.data);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+   
     return (
         <>
             <Header />
@@ -194,6 +218,7 @@ export default function Training() {
                                 />
                                 <svg className="search-icon position-absolute" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="rgb(131 125 125 / 87%)" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg>
                             </div>
+                            {/* Select status training */}
                             <FormControl className="select-form ml-10 status" sx={{ minWidth: '300px' }}>
                                 <InputLabel className="top-left" id="demo-simple-small-label">Trạng thái thực tập...</InputLabel>
                                 <Select
@@ -217,12 +242,31 @@ export default function Training() {
                                     ))}
                                 </Select>
                             </FormControl>
+                            {/* Select recruitment plan */}
+                            <FormControl className="select-form ml-10 status" sx={{ minWidth: 300 }}>
+                                <InputLabel className="top-left" id="demo-simple-small-label">Kế hoạch tuyển dụng</InputLabel>
+                                <Select 
+                                    sx={{ backgroundColor: 'white'}}
+                                    labelId="demo-simple-small-label"
+                                    className="select-edit "
+                                    id="demo-simple-select"
+                                    label="Kế hoạch tuyển dụng..."
+                                    value={selectedRecruitmentPlan}
+                                    onChange={handleRecruitmentPlan}
+                                // onClick={handleFilterRole}
+                                >
+                                    <MenuItem value={""} >Tất cả</MenuItem>
+                                    {listRecruitmentPlan.map(item => (
+                                        <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', minHeight:'615px', width: '99.7%', minWidth: '1745px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', minHeight: '615px', width: '99.7%', minWidth: '1745px' }}>
                     <div className="table-container">
-                        <table className="table_training" style={{ }}>
+                        <table className="table_training" style={{}}>
                             <div className="no-scrolling">
                                 <tr style={{ alignItems: 'center' }} className="header-tr grey-text ">
                                     <th className="training-id position-relative" style={{ padding: '8px' }}><p className=" position-p w-84">STT</p></th>
@@ -296,7 +340,7 @@ export default function Training() {
                     </div> */}
 
                 </div>
-                <div style={{ paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '47px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
             </Box>

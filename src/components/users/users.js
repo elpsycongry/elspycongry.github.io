@@ -318,7 +318,7 @@ export default function Users() {
                     </div>
                 </div>
             </Box >
-            <div style={{ marginTop: '-10px', paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <div style={{ paddingTop: '36px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
             {/* <Footer /> */}
