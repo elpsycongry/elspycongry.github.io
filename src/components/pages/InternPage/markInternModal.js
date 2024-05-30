@@ -218,7 +218,6 @@ export function MarkInternModal({ userID, updateFunction }) {
 
     // Tính kết quả thực tập theo điểm tổng kết và đánh giá team
     const fetchFinalResultPass = (finalScore, inTeamScore) => {
-        console.log('ok')
         // Set fail nếu training state là stop_training
         if (data.trainingState === 'stop_training') {
             setFinalResultPass(false)

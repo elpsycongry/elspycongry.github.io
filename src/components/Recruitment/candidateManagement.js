@@ -135,7 +135,7 @@ export default function CandidateManagement() {
         if (user != null) {
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                const res = await axios.get('http://localhost:8080/api/plans')
+                const res = await axios.get('http://localhost:8080/api/plansIntern')
                 setRecruitmentPlan(res.data.content);
                 console.log(recruitmentPlan);
             } catch (error) {
