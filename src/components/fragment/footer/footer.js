@@ -6,9 +6,10 @@ export default function Footer() {
       <div 
         className="text-center  pb-1 d-flex justify-content-center" style={{ minWidth: '1096px', marginLeft: "64px"}}
       >
-        © 2024 made by:  <span style={{fontWeight:600}}>Tyson lại</span> 
-        {/* <p className="text-reset fw-bold"> */}
-        {/* </p> */}
+        © 2024 Copyright 
+        <a>
+          : Hệ thống quản lý đào tạo
+        </a>
       </div>
     </>
   );

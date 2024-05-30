@@ -15,7 +15,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const [errNumberofOutput, setErrNumberOfOutput] = useState(false);
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errNumber, setErrNumber] = useState(false);
-
+  const user = JSON.parse(localStorage.getItem("currentUser"))
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
     const futureDate = new Date(dateCreate);
@@ -101,7 +101,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
 
   const formData = useFormik({
     initialValues: {
-      idUser: null,
+      idUser: user.id,
       recruitmentPlan: {
         recruitmentRequest: {
           id: null,
@@ -147,7 +147,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
         return;
       } else {
         values.planDetails = [...tech];
-        values.idUser = 1;
+        values.idUser = user.id;
         setSubmitting(true);
         try {
           await axios

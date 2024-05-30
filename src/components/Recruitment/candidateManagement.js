@@ -1,6 +1,7 @@
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ClearIcon from "@mui/icons-material/Clear";
 import {
+    Autocomplete,
     Box,
     Dialog,
     DialogContent,
@@ -8,7 +9,10 @@ import {
     IconButton,
     InputLabel,
     MenuItem,
-    Select
+    Popper,
+    Select,
+    TextField,
+    styled
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -27,6 +31,13 @@ import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandida
 import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
 import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
 export default function CandidateManagement() {
+    const CustomPopper = styled(Popper)({
+        '& .MuiAutocomplete-listbox': {
+            maxHeight: '150px',
+            backgroundColor: '#f0f0f0',
+            // Chỉnh chiều cao tối đa
+        },
+    });
 
     const [open, setOpen] = useState(false);
     const handleClickPracticeOpen = () => {
@@ -57,9 +68,11 @@ export default function CandidateManagement() {
         }
     };
     const handleSubmitSearch = async (event, pageNumber) => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
         event.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -76,8 +89,8 @@ export default function CandidateManagement() {
     };
     const listTestSelect = [
         { id: "", text: "Trạng thái" },
-        { id: "Chưa có kết quả", text: "Chưa có kết quả"},
-        { id: "Đã có kết quả", text: "Đã có kết quả"},
+        { id: "Chưa có kết quả", text: "Chưa có kết quả" },
+        { id: "Đã có kết quả", text: "Đã có kết quả" },
         { id: "Đã gửi email cảm ơn", text: "Đã gửi email cảm ơn" },
         { id: "Đã hẹn ngày thực tập", text: "Đã hẹn ngày thực tập" },
         { id: "Không nhận việc", text: "Không nhận việc" },
@@ -89,9 +102,12 @@ export default function CandidateManagement() {
     };
 
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
+        console.log(selectedStatus)
+        console.log(selectPlan);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
-
-            const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -107,14 +123,13 @@ export default function CandidateManagement() {
         }
     };
 
-    const handlePlanChange = (event) => {
-        setSelectPlan(event.target.value);
-        handleSubmitSelectPlan(event.target.value, page);
-    };
+
 
     const handleSubmitSelectPlan = async (selectPlan, pageNumber) => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
-            const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -131,29 +146,44 @@ export default function CandidateManagement() {
     };
 
     async function getAllRecruitmentPlan() {
-        const res = await axios.get('http://localhost:8080/api/interns')
-        setRecruitmentPlan(res.data.content);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                const res = await axios.get('http://localhost:8080/api/plans')
+                console.log(res.data)
+                setRecruitmentPlan(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 
     useEffect(() => {
         getAllRecruitmentPlan();
     }, [])
 
+
     async function getAll(pageNumber) {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/interns/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
-            setRecuitment(response.data.content);
-            setPage(response.data.pageable.pageNumber);
-            setTotalPages(response.data.totalPages);
-            if (response.data.content.length === 0) {
-                setPage(0);
-                setTotalPages(1)
-                setShowError(true);
-            } else {
-                setShowError(false);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+                setRecuitment(response.data.content);
+                setPage(response.data.pageable.pageNumber);
+                setTotalPages(response.data.totalPages);
+                if (response.data.content.length === 0) {
+                    setPage(0);
+                    setTotalPages(1)
+                    setShowError(true);
+                } else {
+                    setShowError(false);
+                }
+                console.log(recuitments);
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
         }
     }
 
@@ -172,6 +202,33 @@ export default function CandidateManagement() {
         setCurrentPage(value);
         getAll(value - 1);
     }
+    const handleGetOptionLabel = (option) => {
+        return typeof option === 'string' ? option : option.name || inputValue;
+    };
+    const [inputValue, setInputValue] = useState('');
+    const handlePlanChange = (event, value) => {
+        if (value) {
+            setSelectPlan(value.name);
+            handleSubmitSelectPlan(value.name, page);
+        } else {
+            setSelectPlan(null);
+            handleSubmitSelectPlan('', page);
+        }
+    };
+
+    const handleEnterChange = (event, value) => {
+        if (event.key === "Enter" && event.target) {
+            setInputValue(event.target.value)
+            console.log(event.target.value);
+            setSelectPlan(event.target.value);
+            handleSubmitSelectPlan(event.target.value, page);
+        }
+    }
+    const handleBlur = () => {
+        if (inputValue.trim() !== '' && !selectPlan) {
+            setSelectPlan({ name: inputValue });
+        }
+    };
 
     return (
         <>
@@ -180,7 +237,7 @@ export default function CandidateManagement() {
             <Box component="main" sx={{ minWidth: '1246px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Quản lý ứng viên" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
                 <div className="content-recruiment position-relative">
-                    <div className=" d-flex align-items-centent justify-content-between">
+                    <div className=" d-flex align-items-centent justify-content-between ">
                         <p className="title text-center mb-0">
                             Quản lý ứng viên
                         </p>
@@ -215,7 +272,7 @@ export default function CandidateManagement() {
                         </DialogContent>
                     </Dialog>
                     <div className=" mt-2">
-                        <div className="d-flex justify-content-between">
+                        <div className="d-flex justify-content-between w-auto-complete">
                             <div className="d-flex">
                                 <div className="search-input position-relative">
                                     <form onSubmit={handleSubmitSearch}>
@@ -230,6 +287,7 @@ export default function CandidateManagement() {
                                         label="Trạng thái..."
                                         onChange={handleStatusChange}
                                         value={selectedStatus}
+
                                         className="select-edit grey-text"
                                     >
                                         {
@@ -238,22 +296,36 @@ export default function CandidateManagement() {
                                             ))}
                                     </Select>
                                 </FormControl>
-                                <FormControl className="ml-10 select-form" sx={{ minWidth: 300 }}>
-                                    <InputLabel htmlFor="grouped-select">Kế hoạch tuyển dụng</InputLabel>
-                                    <Select defaultValue=""
-                                        id="grouped-select"
-                                        label="Kế hoạch tuyển dụng..."
-                                        onChange={handlePlanChange}
-                                        value={selectPlan}
-                                        className="select-edit grey-text"
-                                    >
-                                        <MenuItem value={""} onClick={handleSubmitSelectPlan}>Kế hoạch tuyển dụng</MenuItem>
-                                        {
-                                            recruitmentPlan.map(item => (
-                                                <MenuItem value={item.recruitmentPlan.name} key={item.recruitmentPlan.name} onClick={handleSubmitSelectPlan}>{item.recruitmentPlan.name}</MenuItem>
-                                            ))}
-                                    </Select>
-                                </FormControl>
+                                <Autocomplete
+                                    className='ml-10 select-form auto-complete'
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={recruitmentPlan}
+                                    onChange={handlePlanChange}
+                                    inputValue={inputValue}
+                                    value={selectPlan}
+                                    onInputChange={(event, value) => {
+                                        if (event && event.target) {
+                                            setInputValue(event.target.value);
+                                        } else {
+                                            setInputValue(value);
+                                        }
+                                    }}
+                                    onKeyPress={handleEnterChange}
+                                    onBlur={handleBlur}
+                                    getOptionLabel={handleGetOptionLabel}
+                                    sx={{ width: 300 }}
+                                    renderInput={(params) => <TextField {...params} label="Kế hoạch tuyển dụng" />}
+                                    filterOptions={(options, { inputValue }) => {
+
+                                        // Lọc các mục phù hợp với giá trị nhập vào, không tạo ra các mục trùng lặp
+                                        const filtered = options.filter(option => option.name.toLowerCase().includes(inputValue.toLowerCase()) && option.status === "Đã xác nhận");
+                                        // Sử dụng Set để loại bỏ các mục trùng lặp
+                                        return Array.from(new Set(filtered.map(option => option.name)))
+                                            .map(name => options.find(option => option.name === name));
+                                    }}
+                                    PopperComponent={CustomPopper} // Sử dụng Popper tùy chỉnh
+                                />
                             </div>
                             <DialogCandidateFormCreate />
                         </div>
@@ -287,11 +359,7 @@ export default function CandidateManagement() {
                                     <td className="text-center">{item.status}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogCandidateFromWatch id={item.id} />
-                                        {item.status === "Đã có kết quả" || item.status === "Đã gửi mail cảm ơn" || item.status === "Đã hẹn ngày thực tập" || item.status === "Không nhận việc" || item.status === "Đã nhận việc" ? (
-                                            <DialogCandidateFromUpdate id={item.id} check={true} />
-                                        ) : (
-                                            <DialogCandidateFromUpdate id={item.id} />
-                                        )}
+                                        <DialogCandidateFromUpdate id={item.id} />
                                     </td>
                                 </tr>
                             ))}
@@ -313,6 +381,3 @@ export default function CandidateManagement() {
         </>
     )
 }
-
-
-

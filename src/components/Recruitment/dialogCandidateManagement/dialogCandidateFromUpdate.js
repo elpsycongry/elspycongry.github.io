@@ -33,8 +33,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
   // Xử lý số lượng nhân sự
   const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status) => {
-    console.log(phoneNumber);
-    console.log(validPhone.test(phoneNumber));
     if (!validFullName.test(fullName)) {
       setErrName(true);
     } else {
@@ -65,7 +63,6 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       setErrPhoneNumber(false);
       hasErrPhone = false;
     }
-    console.log(hasErrPhone)
 
     var hasErrRecruitmentPlan;
     if (recruitmentPlan === '' || recruitmentPlan === null || recruitmentPlan === 'default' || recruitmentPlan === 'undefined') {
@@ -172,24 +169,31 @@ export default function DialogCandidateFormUpdate({ id, check }) {
   const [finalResult, setFinalResult] = useState();
   const [plans, setPlans] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:8080/api/plans").then((res) => {
-      setPlans(res.data);
-    });
-    axios.get("http://localhost:8080/api/interns/" + id).then((res) => {
-      formData.setValues(res.data);
-      setFinalResult(res.data.finalResult);
-      const formatT = res.data.interviewTime;
-      const dateNow = dayjs(formatT);
-      setDate(dateNow);
-      setFinalResult(res.data.finalResult);
-    });
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if (user != null) {
+      try {
+        axios.get("http://localhost:8080/api/plans").then((res) => {
+          setPlans(res.data);
+        });
+        axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
+          formData.setValues(res.data);
+          setFinalResult(res.data.finalResult);
+          const formatT = res.data.interviewTime;
+          const dateNow = dayjs(formatT);
+          setDate(dateNow);
+          setFinalResult(res.data.finalResult);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
   }, []);
 
   const fetchIsFullManagement = async () => {
     const updatedPlans = await Promise.all(
       plans.map(async (item) => {
         try {
-          const res = await axios.get(`http://localhost:8080/api/interns/isFull/${item.id}`);
+          const res = await axios.get(`http://localhost:8080/api/plansIntern/isFull/${item.id}`);
           return { ...item, isFullManagement: res.data };
         } catch (error) {
           console.error(`Error fetching isFullManagement for plan ${item.id}:`, error);
@@ -198,10 +202,9 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       })
     );
     setPlans(updatedPlans);
-    // console.log('Updated plans with isFullManagement:', updatedPlans);
   };
 
-  fetchIsFullManagement();
+  // fetchIsFullManagement();
 
   // Xử lý mở form
   const listTestSelect = [
@@ -233,14 +236,15 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
   // const 
   function TestMarks({ scoreTest, setScoreTest }) {
-    if (scoreTest === '' || scoreTest === 0) {
+    if (scoreTest === '') {
       scoreTest = 50;
     }
-    scoreTest = parseInt(scoreTest);
+    // scoreTest = parseInt(scoreTest);
     const [testMarks, setTestMarks] = useState(scoreTest);
     const handleClickCountPlus = () => {
       if (testMarks < 100) {
-        const newTestMarks = testMarks + 1;
+
+        const newTestMarks = parseInt(testMarks) + 1;
         setTestMarks(newTestMarks);
         setScoreTest(newTestMarks);
       }
@@ -255,7 +259,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
 
     const handleClickCountMinus = () => {
       if (testMarks > 0) {
-        const newTestMarks = testMarks - 1;
+        const newTestMarks = parseInt(testMarks) - 1;
         setTestMarks(newTestMarks);
         setScoreTest(newTestMarks);
       }
@@ -285,6 +289,8 @@ export default function DialogCandidateFormUpdate({ id, check }) {
       </div>
     );
   }
+
+  // 
   function Interview({ scoreInterview, setScoreInterview }) {
     if (scoreInterview === '') {
       scoreInterview = 1;
@@ -487,7 +493,7 @@ export default function DialogCandidateFormUpdate({ id, check }) {
             </div>
             <div className="col-md-6 mt-1 ">
               <label htmlFor="name" className="form-label grey-text mb-0 mt-2">
-                Kế hoạch tuyển dụng
+                Kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
               <select
                 className="form-select grey-text"
@@ -600,41 +606,23 @@ export default function DialogCandidateFormUpdate({ id, check }) {
                 >
                   Kết quả cuối cùng:
                 </label>
-                {finalResult === "true" || finalResult === true ? (
-                  <select
-                    className="form-select text-success  ms-2"
-                    style={{ width: "170px" }}
-                    aria-label="Default select example"
-                    value={finalResult}
-                    onChange={handleChangePassFaild}
-                    id="finalResult"
-                    name="finalResult"
-                  >
-                    <option className="text-success" value="true">
-                      Passed
-                    </option>
-                    <option className="text-danger" value="false">
-                      Failed
-                    </option>
-                  </select>
-                ) : (
-                  <select
-                    className="form-select text-danger  ms-2"
-                    style={{ width: "170px" }}
-                    aria-label="Default select example"
-                    value={finalResult}
-                    onChange={handleChangePassFaild}
-                    id="finalResult"
-                    name="finalResult"
-                  >
-                    <option className="text-success" value="true">
-                      Passed
-                    </option>
-                    <option className="text-danger" value="false">
-                      Failed
-                    </option>
-                  </select>
-                )}
+                <select
+                  className={`form-select ms-2 ${finalResult === "true" || finalResult === true ? 'text-success' : finalResult === "false" || finalResult === false ? 'text-danger' : 'grey-text'}`}
+                  style={{ width: "170px" }}
+                  aria-label="Default select example"
+                  value={finalResult}
+                  onChange={handleChangePassFaild}
+                >
+                  <option className={`grey-text ${finalResult === "true" || finalResult === true || finalResult === "false" || finalResult === false || finalResult === "" ? 'd-none' : ''}`} disabled value="">
+                    N/A
+                  </option>
+                  <option className="text-success" value="true">
+                    Passed
+                  </option>
+                  <option className="text-danger" value="false">
+                    Failed
+                  </option>
+                </select>
               </div>
               <div className="col-md-12 text-center  mt-0">
                 {errFinalResult && (

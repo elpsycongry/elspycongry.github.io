@@ -7,10 +7,11 @@ import DialogRecruitmentPlanFormReason from "./dialogRecruitmentPlanFormReason";
 import axios from "axios";
 import { useFormik } from "formik";
 import Swal from 'sweetalert2';
+import { useNavigate } from "react-router-dom";
 
 export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
-  console.log(reasonItem);
   const [tenhnology, setTenhnology] = useState([]);
+  const navigate = useNavigate();
   // Dữ liệu fake
   const formData = useFormik({
     initialValues: {
@@ -53,31 +54,37 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     }
   });
   const approve = () => {
-    try {
-      axios.put(`http://localhost:8080/api/plans/${id}/users/1`).then(() => {
-        setOpenForm(false);
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Phê duyệt thành công",
-          showConfirmButton: false,
-          timer: 1500
-        }).then(() => {
-          window.location.href = "/recruitment/recruitmentPlan";
-        });
-      })
-    } catch (error) {
-      console.error('Error fetching approval:', error);
-      // You can handle the error here, e.g., show a message to the user
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if (user != null) {
+      try {
+        axios.put(`http://localhost:8080/api/plans/${id}/users/1`).then(() => {
+          setOpenForm(false);
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Phê duyệt thành công",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            window.location.href = "/recruitment/recruitmentPlan";
+          });
+        })
+      } catch (error) {
+        console.error('Error fetching approval:', error);
+        // You can handle the error here, e.g., show a message to the user
+      }
     }
   };
   useEffect(() => {
-    axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
-      formData.setValues(res.data);
-      const detail = res.data.planDetails;
-      setTenhnology(detail);
-      console.log(tenhnology);
-    });
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if (user != null) {
+      axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+      axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
+        formData.setValues(res.data);
+        const detail = res.data.planDetails;
+        setTenhnology(detail);
+      });
+    }
   }, []);
   // const testId = [useState()]
 

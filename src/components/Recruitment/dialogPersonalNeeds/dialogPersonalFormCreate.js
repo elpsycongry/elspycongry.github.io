@@ -17,6 +17,7 @@ export default function DialogPersonalFormCreate() {
   const [techErr, setTechErr] = useState(false);
   const [quantityErr, setQuantityErr] = useState(false);
   const [nameErr, setNameErr] = useState(false);
+  const user = JSON.parse(localStorage.getItem("currentUser"))
   // Xử lý số lượng nhân sự
   const checkValid = (dateSet, techArr, name) => {
     const today = new Date();
@@ -67,7 +68,7 @@ export default function DialogPersonalFormCreate() {
 
   const formData = useFormik({
     initialValues: {
-      idUser: null,
+      idUser: user.id,
       recruitmentRequest: {
         dateStart: "",
         dateEnd: "",
@@ -90,7 +91,6 @@ export default function DialogPersonalFormCreate() {
         date = new Date(values.recruitmentRequest.dateEnd);
       }
       const name = values.recruitmentRequest.name;
-      console.log(values.recruitmentRequest.dateEnd);
       // checkValid(date, tech, name);
       // setSubmitting(false);
       // return;
@@ -100,7 +100,7 @@ export default function DialogPersonalFormCreate() {
       } else {
         // Dữ liệu hợp lệ, tiến hành gửi dữ liệu
         values.details = [...tech];
-        values.idUser = 1;
+        values.idUser = user.id;
         try {
           await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
             swal("tạo nhu cầu nhân sự thành công", {

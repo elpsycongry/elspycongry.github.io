@@ -36,7 +36,7 @@ export default function DialogCandidateFormWatch({ id }) {
   // Call api
  
   useEffect(() => {
-      axios.get("http://localhost:8080/api/interns/" + id).then((res) => {
+      axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
         formData.setValues(res.data);
         const formatT= res.data.interviewTime;
         const dateNow = dayjs(formatT);
@@ -283,27 +283,24 @@ export default function DialogCandidateFormWatch({ id }) {
                 <label htmlFor="name" className="form-label grey-text mb-0 ws-nowrap">
                   Kết quả cuối cùng:
                 </label>
-                {selectedValuePassFaild === "true" || selectedValuePassFaild === true ? <select
-                  className="form-select text-success  ms-2"
-                  style={{ width: '170px' }}
-                  aria-label="Default select example"
-                  value={selectedValuePassFaild}
-                  onChange={handleChangePassFaild}
-                  disabled
-                >
-                  <option className="text-success" value="true">Passed</option>
-                  <option className="text-danger" value="false">Failed</option>
-                </select> : <select
-                  className="form-select text-danger  ms-2"
-                  style={{ width: '170px' }}
-                  aria-label="Default select example"
-                  value={selectedValuePassFaild}
-                  onChange={handleChangePassFaild}
-                  disabled
-                >
-                  <option className="text-success" value="true">Passed</option>
-                  <option className="text-danger" value="false">Failed</option>
-                </select>}
+                <select
+  className={`form-select ms-2 ${selectedValuePassFaild === "true" || selectedValuePassFaild === true ? 'text-success' : selectedValuePassFaild === "false" || selectedValuePassFaild === false ? 'text-danger' : 'grey-text'}`}
+  style={{ width: "170px" }}
+  aria-label="Default select example"
+  value={selectedValuePassFaild}
+  disabled
+  onChange={handleChangePassFaild}
+>
+  <option className={`grey-text ${selectedValuePassFaild === "true" || selectedValuePassFaild === true || selectedValuePassFaild === "false" || selectedValuePassFaild === false|| selectedValuePassFaild === "" ? 'd-none' : ''}`} disabled value="">
+    N/A
+  </option>
+  <option className="text-success" value="true">
+    Passed
+  </option>
+  <option className="text-danger" value="false">
+    Failed
+  </option>
+  </select>
               </div>
             </div>
 

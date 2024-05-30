@@ -1,0 +1,169 @@
+.wrapper::-webkit-scrollbar {
+    width: 0;
+}
+
+.status .MuiInputBase-root {
+    height: 35px;
+}
+
+.table-container {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-training thead,
+.table-training tbody {
+    width: 100%;
+    /* Đảm bảo rằng thead và tbody chiếm 100% chiều rộng của table */
+    display: table;
+    /* Để thead và tbody được hiển thị dưới dạng bảng */
+    table-layout: fixed;
+    /* Đặt thuộc tính này cho thead và tbody để các ô co giãn */
+}
+
+
+div .table-container th {
+    height: 100px;
+}
+
+.table_training {
+    display: flex;
+    flex-direction: row;
+    /* margin-top: 20px; */
+    flex: 1;
+}
+
+.table_training div .no-scrolling {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* .table_training tr {
+    display: flex;
+} */
+
+.table_training div td:not(.training-id, .training-name, .training-total-days, .team-score),
+.table_training div th:not(.training-id, .training-name, .training-total-days, .team-score) {
+    align-items: center;
+    text-align: center;
+    width: auto;
+    min-width: 140px;
+    flex: 1 !important;
+    padding: 8px;
+    white-space: nowrap;
+}
+
+.table_training div {
+    flex: 1;
+    height: 550px;
+}
+
+/* .table_training th{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+} */
+
+.wrapper {
+    /* width: 40%; */
+    /* background-color: white; */
+    /* margin-top: 15px; */
+    overflow-x: auto;
+    flex-flow: column;
+    text-wrap: nowrap;
+    align-items: center;
+}
+
+.wrapper th {
+    font-weight: 400;
+}
+
+.wrapper td {
+    height: 43px;
+}
+
+.no-scrolling td {
+    height: 43px;
+}
+
+.training-id {
+    text-align: center;
+    min-width: 100px;
+}
+
+.training-name {
+    text-align: center;
+    min-width: 140px;
+    flex: 1;
+}
+
+.training-total-days {
+    padding: 8px;
+    width: 150px;
+    text-align: center;
+}
+
+.team-score {
+    padding: 8px;
+    width: 130px;
+    text-align: center;
+}
+
+.input-intern {
+    text-rendering: auto;
+    color: fieldtext;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    appearance: auto;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    background-color: field;
+    margin: 0em;
+    padding: 1px 0px;
+    border-width: 2px;
+    border-style: inset;
+    border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+    border-image: initial;
+    padding-block: 1px;
+    padding-inline: 2px;
+    height: 30px;
+    width: 300px;
+}
+
+.pl-15 {
+    padding-left: 15px;
+}
+
+table .table-training tr,
+table .table-training th,
+table .table-training td {
+    flex: 1;
+    min-width: 140px;
+    padding: 8px;
+    text-align: center;
+}
+
+
+.position-p {
+    position: absolute;
+    top: 16px;
+}
+
+.w-184 {
+    width: 184px;
+}
+
+.w-124 {
+    width: 124px;
+}
+
+.w-84 {
+    width: 84px;
+}
