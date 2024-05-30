@@ -18,7 +18,7 @@ function AuthContext({children}) {
             roles = [...roles, element.authority]
         });
         const isAdmin = roles.find((role) => role === 'ROLE_ADMIN') 
-        const isManager = roles.find((role) => role === 'ROLE_TM') 
+        const isManager = roles.find((role) => role === 'ROLE_QLĐT') 
         if (pathName === '/users'){
             if (!isAdmin) {
                 return <Navigate to={"/"}/>
@@ -31,12 +31,22 @@ function AuthContext({children}) {
         }
         if (pathName === "/training/stats") {
             if(!isAdmin){
-                return <Navigate to={"/"}/>
+                return <Navigate to="/" />
             }
         }
         {isAdmin && <div></div>}
         if (pathName === "/login") {
             return <Navigate to="/"/>
+        }
+        if(pathName === "/dashboard") {
+            if(!isAdmin && !isManager){
+                return <Navigate to="/" />
+            }
+        }
+        if(pathName === "/recruitment/stats") {
+            if(!isAdmin){
+                return <Navigate to="/" />
+            }
         }
 
     }
