@@ -173,7 +173,8 @@ export default function DialogCandidateFormUpdate({ id, check }) {
     if (user != null) {
       try {
         axios.get("http://localhost:8080/api/plansIntern").then((res) => {
-          setPlans(res.data);
+          console.log(res.data)
+          setPlans(res.data.content);
         });
         axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
           formData.setValues(res.data);
