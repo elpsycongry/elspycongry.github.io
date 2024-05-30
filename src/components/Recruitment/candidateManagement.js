@@ -35,7 +35,7 @@ export default function CandidateManagement() {
         '& .MuiAutocomplete-listbox': {
             maxHeight: '150px',
             backgroundColor: '#f0f0f0',
-           // Chỉnh chiều cao tối đa
+            // Chỉnh chiều cao tối đa
         },
     });
 
@@ -68,8 +68,10 @@ export default function CandidateManagement() {
         }
     };
     const handleSubmitSearch = async (event, pageNumber) => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
         event.preventDefault();
         try {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
@@ -102,8 +104,9 @@ export default function CandidateManagement() {
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
         console.log(selectedStatus)
         console.log(selectPlan);
+        const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
-
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
@@ -120,10 +123,12 @@ export default function CandidateManagement() {
         }
     };
 
-  
+
 
     const handleSubmitSelectPlan = async (selectPlan, pageNumber) => {
+        const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
@@ -163,6 +168,7 @@ export default function CandidateManagement() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             try {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
                 setPage(response.data.pageable.pageNumber);
@@ -196,7 +202,9 @@ export default function CandidateManagement() {
         setCurrentPage(value);
         getAll(value - 1);
     }
-    const handleGetOptionLabel = (option) => option.name;
+    const handleGetOptionLabel = (option) => {
+        return typeof option === 'string' ? option : option.name || inputValue;
+    };
     const [inputValue, setInputValue] = useState('');
     const handlePlanChange = (event, value) => {
         if (value) {
@@ -208,7 +216,6 @@ export default function CandidateManagement() {
         }
     };
 
-
     const handleEnterChange = (event, value) => {
         if (event.key === "Enter" && event.target) {
             setInputValue(event.target.value)
@@ -217,6 +224,11 @@ export default function CandidateManagement() {
             handleSubmitSelectPlan(event.target.value, page);
         }
     }
+    const handleBlur = () => {
+        if (inputValue.trim() !== '' && !selectPlan) {
+            setSelectPlan({ name: inputValue });
+        }
+    };
 
     return (
         <>
@@ -275,7 +287,7 @@ export default function CandidateManagement() {
                                         label="Trạng thái..."
                                         onChange={handleStatusChange}
                                         value={selectedStatus}
-                                        
+
                                         className="select-edit grey-text"
                                     >
                                         {
@@ -291,17 +303,16 @@ export default function CandidateManagement() {
                                     options={recruitmentPlan}
                                     onChange={handlePlanChange}
                                     inputValue={inputValue}
+                                    value={selectPlan}
                                     onInputChange={(event, value) => {
                                         if (event && event.target) {
                                             setInputValue(event.target.value);
                                         } else {
                                             setInputValue(value);
                                         }
-                                        // setInputValue(event.target.value);
-
                                     }}
                                     onKeyPress={handleEnterChange}
-                                    // onBlur={handlePlanChange}
+                                    onBlur={handleBlur}
                                     getOptionLabel={handleGetOptionLabel}
                                     sx={{ width: 300 }}
                                     renderInput={(params) => <TextField {...params} label="Kế hoạch tuyển dụng" />}
