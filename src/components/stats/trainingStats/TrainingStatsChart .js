@@ -243,7 +243,7 @@ export default function TrainingStatsChart({ year }) {
                     usePointStyle: true,
                     pointStyle: 'shape',
                     font: {
-                        size: 20,
+                        size: 18,
                         weight: 700
                     },
                     padding: 30,
@@ -307,13 +307,22 @@ export default function TrainingStatsChart({ year }) {
     };
 
     return (
-        <Box sx={{ width: '80%', height: '490px', padding: 2 }}>
+        <Box sx={{ width: '80%', height: '585px', padding: 2 }}>
             <div style={{ width: '100%', height: '100%' }}>
                 <Line data={data} options={options} />
             </div>
             <div>
                 {hiddenDatasets.join(', ')}
             </div>
+            <p style={{ 
+                textAlign: 'center', 
+                fontFamily: 'sans-serif', 
+                fontStyle: 'italic', 
+                paddingTop: '5px',
+                color: 'red' 
+            }}>
+                *( Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
+            </p>
         </Box>
     );
 }

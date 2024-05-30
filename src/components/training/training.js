@@ -340,7 +340,7 @@ export default function Training() {
                     </div> */}
 
                 </div>
-                <div style={{ paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '47px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
             </Box>
