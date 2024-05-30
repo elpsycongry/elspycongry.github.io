@@ -18,7 +18,7 @@ function AuthContext({children}) {
             roles = [...roles, element.authority]
         });
         const isAdmin = roles.find((role) => role === 'ROLE_ADMIN') 
-        const isManager = roles.find((role) => role === 'ROLE_QLĐT') 
+        const isManager = roles.find((role) => role === 'ROLE_TM') 
         if (pathName === '/users'){
             if (!isAdmin) {
                 return <Navigate to={"/"}/>

@@ -8,6 +8,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
+import {sendNotifications} from "../../Notification/notification";
 
 export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
   const [tenhnology, setTenhnology] = useState([]);
@@ -66,7 +67,10 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
-            window.location.href = "/recruitment/recruitmentPlan";
+            sendNotifications(null, `Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name}`, ['ROLE_HR']).then(r  => {
+              sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,['ROLE_DM'])
+            })
+            // window.location.href = "/recruitment/recruitmentPlan";
           });
         })
       } catch (error) {

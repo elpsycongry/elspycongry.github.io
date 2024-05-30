@@ -257,7 +257,7 @@ export default function Training() {
                                 >
                                     <MenuItem value={""} >Tất cả</MenuItem>
                                     {listRecruitmentPlan.map(item => (
-                                        <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>
+                                        <MenuItem value={item.name} key={item.id}>{item.name}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
