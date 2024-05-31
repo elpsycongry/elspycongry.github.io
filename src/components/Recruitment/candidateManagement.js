@@ -30,7 +30,11 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandidateFromCreate";
 import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
 import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
+import { useLocation } from 'react-router-dom';
 export default function CandidateManagement() {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const planName = queryParams.get('planName')
     const CustomPopper = styled(Popper)({
         '& .MuiAutocomplete-listbox': {
             maxHeight: '150px',
@@ -53,7 +57,7 @@ export default function CandidateManagement() {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [recruitmentPlan, setRecruitmentPlan] = useState([]);
-    const [selectPlan, setSelectPlan] = useState('');
+    const [selectPlan, setSelectPlan] = useState(planName);
     const [currentPage, setCurrentPage] = useState(1);
 
 

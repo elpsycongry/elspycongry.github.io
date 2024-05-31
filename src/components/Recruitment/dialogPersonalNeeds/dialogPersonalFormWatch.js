@@ -16,6 +16,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import ClearIcon from '@mui/icons-material/Clear';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import { Link, useNavigate } from "react-router-dom";
 export default function DialogPersonalFormWatch({ id, userRoles }) {
     const [tenhnology, setTenhnology] = useState([]);
     const hasRoleAdmin = () => {
@@ -87,7 +88,7 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
         reason: "vãi cả chưởng",
         decanAccept: "true",
         detAccept: "true",
-        planName: "Kế hoạch tuyển dụng DECEN - ori - tháng 9",
+        planName: "789",
         applicants: 1,
         training: 0,
         intern: 3,
@@ -95,9 +96,6 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
         step: 5,
     });
     const activeStep = steps.step;
-
-
-
     return (
         <>
             {hasRoleAdmin() &&
@@ -352,14 +350,14 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
                                                 </Step>
                                                 <Step>
                                                     {steps.step >= 3 ?
-                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
+                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <Link to={`/recruitment/candidateManagement?planName=${steps.planName}`} className="a-progress cursor-pointer" >Xem kết quả tuyển dụng</Link></span> </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }
                                                 </Step>
                                                 <Step>
                                                     {steps.step >= 4 ?
-                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span> </StepLabel>
+                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link className="a-progress">Xem kết quả đào tạo</Link></span> </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }
