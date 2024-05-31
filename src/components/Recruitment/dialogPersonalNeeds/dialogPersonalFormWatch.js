@@ -15,10 +15,10 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import ClearIcon from '@mui/icons-material/Clear';
-import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react/dist/iconify.js";
-export default function DialogPersonalFormWatch({ id, userRoles }) {
+export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
+    console.log(id);
     const [tenhnology, setTenhnology] = useState([]);
     const hasRoleAdmin = () => {
         return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_QLĐT" || role.authority === "ROLE_KSCL");
@@ -47,20 +47,24 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
         },
     });
     useEffect(() => {
-        axios
-            .get("http://localhost:8080/api/recruitmentRequests/" + id)
-            .then((res) => {
-                formData.setValues(res.data);
-                const detail = res.data.details;
-                setTenhnology(
-                    detail.map((item) => ({ type: item.type, quantity: item.quantity }))
-                );
-            });
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if (user != null) {
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios
+                .get("http://localhost:8080/api/recruitmentRequests/" + id)
+                .then((res) => {
+                    formData.setValues(res.data);
+                    const detail = res.data.details;
+                    setTenhnology(
+                        detail.map((item) => ({ type: item.type, quantity: item.quantity }))
+                    );
+                });
+        }
     }, []);
     // const testId = [useState()]
 
     // Xử lý mở form
-    const [openForm, setOpenForm] = useState(false);
+    const [openForm, setOpenForm] = useState(checkId);
     const handleClickFormOpen = () => {
         setOpenForm(true);
     };
@@ -87,7 +91,7 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
         requestName: "DECEN - Ori - Nhu cầu nhân sự tháng 9",
         requestCreator: "Trọng Khởi tạo nhu cầu nhân sự:",
         reason: "vãi cả chưởng",
-        decanAccept: "false",
+        decanAccept: "true",
         detAccept: "true",
         planName: "Kế hoạch tuyển dụng DECEN - ori - tháng 9",
         applicants: 3,
@@ -99,7 +103,7 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
     const activeStep = steps.step;
     const deleteIcon = () => {
         return (
-            <Icon icon="typcn:delete" width="30" height="30" />
+            <Icon icon="typcn:delete" width="24" height="24" />
         )
     }
 
@@ -333,7 +337,7 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
                                                     <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
                                                         {steps.detAccept !== "" ?
                                                             steps.detAccept === "true" || steps.detAccept === true ?
-                                                                <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <a className="a-progress">{steps.planName}</a></span>
+                                                                <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`} className="a-progress cursor-pointer">{steps.planName}</Link></span>
                                                                 :
                                                                 <span className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
                                                             :
