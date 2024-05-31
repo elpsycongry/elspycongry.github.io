@@ -88,7 +88,7 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
         reason: "vãi cả chưởng",
         decanAccept: "true",
         detAccept: "true",
-        planName: "789",
+        planName: "456",
         applicants: 1,
         training: 0,
         intern: 3,
@@ -357,7 +357,7 @@ export default function DialogPersonalFormWatch({ id, userRoles }) {
                                                 </Step>
                                                 <Step>
                                                     {steps.step >= 4 ?
-                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link className="a-progress">Xem kết quả đào tạo</Link></span> </StepLabel>
+                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`} className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span> </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }
