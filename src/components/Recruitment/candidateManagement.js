@@ -30,7 +30,13 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandidateFromCreate";
 import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
 import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
+import { useLocation } from 'react-router-dom';
 export default function CandidateManagement() {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const planName = queryParams.get('planName') || '';
+    const status = queryParams.get('status') || '';
+    
     const CustomPopper = styled(Popper)({
         '& .MuiAutocomplete-listbox': {
             maxHeight: '150px',
@@ -49,11 +55,11 @@ export default function CandidateManagement() {
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const [recuitments, setRecuitment] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState(status);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [recruitmentPlan, setRecruitmentPlan] = useState([]);
-    const [selectPlan, setSelectPlan] = useState('');
+    const [selectPlan, setSelectPlan] = useState(planName);
     const [currentPage, setCurrentPage] = useState(1);
 
 
@@ -171,6 +177,7 @@ export default function CandidateManagement() {
         setIdUser(user.id);
         if (user != null) {
             try {
+                console.log(status)
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
@@ -199,6 +206,8 @@ export default function CandidateManagement() {
 
     useEffect(() => {
         getAll(page)
+        setSelectedStatus(status);
+        setSelectPlan(planName);
     }, [page]);
 
     const handlePagination = (event, value) => {

@@ -467,7 +467,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                         <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
                           {checkDet() ?
                             steps.detAccept === "true" || steps.detAccept === true ?
-                              <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`} className="a-progress cursor-pointer">{steps.planName}</Link></span>
+                              <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <span className="fs-16">{steps.planName}</span></span>
                               :
                               steps.decanAccept === "false" || steps.decanAccept === false ?
                                 <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>

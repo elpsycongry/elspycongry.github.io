@@ -36,7 +36,6 @@ export default function RecruitmentPlan() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const idPlan = queryParams.get('idPlan');
-    console.log(idPlan);
     const checkIdPlan = () => {
         if (idPlan !== null) {
             return true;
@@ -274,6 +273,7 @@ export default function RecruitmentPlan() {
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
 
                                             <DialogRecruitmentPlanFormUpdate id={item.id} check={true} userRoles={userLogin} idUser={idUser} />
+
                                         ) : (
                                             <DialogRecruitmentPlanFormUpdate id={item.id} userRoles={userLogin} idUser={idUser} />
                                         )}
@@ -300,4 +300,5 @@ export default function RecruitmentPlan() {
             }
         </>
     );
+
 }

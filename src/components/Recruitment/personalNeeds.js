@@ -27,7 +27,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import DialogPersonalFormCreate from "./dialogPersonalNeeds/dialogPersonalFormCreate";
 import DialogPersonalFormUpdate from "./dialogPersonalNeeds/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialogPersonalNeeds/dialogPersonalFormWatch";
-import { json, useLocation } from 'react-router-dom';
+import { json, useLocation, useParams } from 'react-router-dom';
 import { set } from 'lodash';
 
 
@@ -129,6 +129,7 @@ export default function PersonalNeeds() {
             try {
                 setUserLogin(user.roles);
                 setIdUser(user.id);
+
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
                 setRecuitment(response.data.content);

@@ -11,7 +11,6 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react/dist/iconify.js";
-
 export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     const [tenhnology, setTenhnology] = useState([]);
     const hasRoleAdmin = () => {
@@ -126,7 +125,6 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
         }
     }
     console.log(checkDecan());
-
     return (
         <>
 
@@ -143,8 +141,8 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
             <Dialog
                 id="formWatch"
-                open={openForm}
                 className={`${hasRoleKSCL ? 'mwQC' : 'mw'}`}
+                open={openForm}
                 onClose={handleClickFormClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -351,7 +349,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                         <div className="col-md-6">
                                             <Stepper activeStep={activeStep} orientation="vertical">
                                                 <Step>
-                                                    <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <Link to={`/recruitment/personalNeeds?idRequest=${steps.resquestId}`} className="a-progress cursor-pointer">{steps.requestName}</Link></span> </StepLabel>
+                                                    <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <span className="fs-16">{steps.requestName}</span></span> </StepLabel>
                                                 </Step>
                                                 <Step>
                                                     <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
@@ -388,6 +386,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                     {steps.step >= 3 ?
                                                         steps.applicants === 0 ?
                                                             <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress"></a></span> </StepLabel>
+
                                                             :
                                                             <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <Link to={`/recruitment/candidateManagement?planName=${steps.planName}`} className="a-progress cursor-pointer" >Xem kết quả tuyển dụng</Link></span> </StepLabel>
                                                         :

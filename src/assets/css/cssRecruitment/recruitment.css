@@ -125,6 +125,9 @@
 .mw .MuiPaper-root {
     min-width: 600px;
 }
+.mwQC .MuiPaper-root {
+    min-width: 760px;
+}
 
 .mw-200 {
     min-width: 200px;
@@ -383,10 +386,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .fs-16 {
     font-size: 16px;
 }
-.mt-10{
+
+.mt-10 {
     margin-top: 10px;
 }
-.mt-12{
+
+.mt-12 {
     margin-top: 12px;
 }
 
@@ -603,12 +608,23 @@ input[type="number"]::-webkit-outer-spin-button {
 .svg-size span svg {
     font-size: 18px;
 }
-.svg-size-err span svg{
-    font-size: 22px;
+
+.svg-size-err span svg {
+    transform: scale(1.13);
+    transform-origin: center;
     color: red !important;
 }
 
-.svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed,.svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+.svg-size-none span svg {
+    color: rgba(158, 158, 158, 255) !important;
+}
+
+.css-1pe7n21-MuiStepConnector-root {
+    width: 10px;
+}
+
+.svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed,
+.svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
     color: green;
 }
 
@@ -618,11 +634,13 @@ input[type="number"]::-webkit-outer-spin-button {
     justify-content: center;
     align-items: center;
 }
-.a-progress{
+
+.a-progress {
     color: #3232f0;
     text-decoration: underline;
     font-size: 16px;
 }
+
 .input-disabled {
     position: relative;
   }
