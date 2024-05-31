@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import DialogPersonalFormReason from "./dialogPersonalFormReason";
 import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess";
 export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
-    console.log(id);
+    console.log(checkId);
     const [tenhnology, setTenhnology] = useState([]);
     const hasRoleAdmin = () => {
         return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_QLĐT" || role.authority === "ROLE_KSCL");
@@ -80,19 +80,19 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
 
     const [steps, setSteps] = useState({
-        resquestId: 1,
-        planId: 2,
-        requestName: "DECEN - Ori - Nhu cầu nhân sự tháng 9",
-        requestCreator: "Trọng Khởi tạo nhu cầu nhân sự:",
-        reason: "vãi cả chưởng",
-        decanAccept: "true",
-        detAccept: "true",
-        planName: "DECEN - Youtube - Kế hoạch tuyển dụng tháng 3/2024",
-        applicants: 3,
-        training: 2,
-        intern: 3,
-        totalIntern: 15,
-        step: 4,
+        resquestId: 0,
+        planId: 0,
+        requestName: "",
+        requestCreator: "",
+        reason: "",
+        decanAccept: "",
+        detAccept: "",
+        planName: "",
+        applicants: 0,
+        training: 0,
+        intern: 0,
+        totalIntern: 0,
+        step: 0,
     });
     const activeStep = steps.step;
     const deleteIcon = () => {
@@ -100,7 +100,34 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
             <Icon icon="typcn:delete" width="24" height="24" />
         )
     }
-
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/process/request/${id}`);
+                setSteps(response.data);
+                console.log("day la data");
+                console.log(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchData();
+    }, []);
+    const checkDecan = () => {
+        if (steps.decanAccept === null || steps.decanAccept === "") {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    const checkDet = () => {
+        if (steps.detAccept === null || steps.detAccept === "") {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    console.log(checkDecan());
     return (
         <>
             {hasRoleAdmin() &&
@@ -328,11 +355,15 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                 </Step>
                                                 <Step>
                                                     <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
-                                                        {steps.detAccept !== "" ?
+                                                        {checkDet() ?
                                                             steps.detAccept === "true" || steps.detAccept === true ?
                                                                 <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`} className="a-progress cursor-pointer">{steps.planName}</Link></span>
                                                                 :
-                                                                <span className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                steps.decanAccept === "false" || steps.decanAccept === false ?
+                                                                    <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                    :
+                                                                    <span className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+
                                                             :
                                                             <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
 
@@ -342,7 +373,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                 </Step>
                                                 <Step>
                                                     <StepLabel StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
-                                                        {steps.decanAccept !== "" ?
+                                                        {checkDecan() ?
                                                             steps.decanAccept === "true" || steps.decanAccept === true ?
                                                                 <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a className="a-progress"></a></span>
                                                                 :
@@ -370,7 +401,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                                 <span className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress"></a></span>
                                                             </StepLabel>
                                                             :
-                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`} className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span> </StepLabel>
+                                                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`} className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span> </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }
