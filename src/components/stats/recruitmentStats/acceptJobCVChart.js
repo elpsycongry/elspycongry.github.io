@@ -93,8 +93,12 @@ export default function AcceptJobCVChart() {
             legend: {
                 position: 'bottom',
                 labels: {
+                    usePointStyle: true,
+                    pointStyle: 'shape',
+                    padding: 30,
                     font: {
-                        size: 20,
+                        size: 18,
+                        weight: 700
                     }
                 }
             },
@@ -154,6 +158,15 @@ export default function AcceptJobCVChart() {
     return (
         <Box sx={{ height: 1, padding: 2, width: "80%" }}>
             <Bar data={data} options={options} plugins={[totalPlugin]} />
+            <p style={{ 
+                textAlign: 'center', 
+                fontFamily: 'sans-serif', 
+                fontStyle: 'italic', 
+                paddingTop: '5px',
+                color: 'red' 
+            }}>
+                *( Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
+            </p>
         </Box>
     );
 }

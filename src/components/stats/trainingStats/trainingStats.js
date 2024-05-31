@@ -14,10 +14,8 @@ import Paper from '@mui/material/Paper';
 import TrainingStatsChart from './TrainingStatsChart ';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import Avatar from '@mui/material/Avatar';
-import { PaddingRounded } from "@mui/icons-material";
 import axios from "axios";
-import { set } from "lodash";
+import ExportButton from './exportButton'
 
 
 function Copyright(props) {
@@ -65,7 +63,7 @@ export default function TrainingStats() {
                     setMaxGrowthStatistics(res1.data)
                 })
         }
-        if(theValue === "stats1") {
+        if (theValue === "stats1") {
             setTitle("Kết quả đào tạo tháng 5 năm 2024")
             setActive1(true)
             setActive2(false)
@@ -266,14 +264,43 @@ export default function TrainingStats() {
         setSelectedYear(event.target.value);
     };
 
+    // const handleExport = async () => {
+    //     try {
+    //       // Gửi yêu cầu tới endpoint /api/stats/export
+    //       const response = await axios.get('/api/stats/export', {
+    //         responseType: 'blob', // Để nhận dữ liệu dưới dạng blob
+    //       });
+
+    //       // Tạo URL từ blob
+    //       const url = window.URL.createObjectURL(new Blob([response.data]));
+
+    //       // Tạo một thẻ a để tải xuống
+    //       const link = document.createElement('a');
+    //       link.href = url;
+    //       link.setAttribute('download', 'stats.xlsx'); // Tên file muốn lưu
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       document.body.removeChild(link);
+
+    //       enqueueSnackbar('Tải xuống thành công!', { variant: 'success' });
+    //     } catch (error) {
+    //       enqueueSnackbar('Tải xuống thất bại!', { variant: 'error' });
+    //     }
+    // };
+
     return (
         <>
             <Header></Header>
             <Navbar></Navbar>
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', height: '700px' }}>
                 <Box m={2} style={{ display: 'flex' }}>
-                    <svg style={{ width: 25, height: 25, color: 'rgba(0, 0, 0, 0.60)' }} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20v-6h3v6zm6 0V9h3v11zm6 0V4h3v16z" /></svg>
-                    <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Thống kê {'>'} Kết quả đào tạo</p>
+                    <div style={{display: 'flex', width: '50%'}}>
+                        <svg style={{ width: 25, height: 25, color: 'rgba(0, 0, 0, 0.60)' }} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20v-6h3v6zm6 0V9h3v11zm6 0V4h3v16z" /></svg>
+                        <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', paddingTop: '2px' }}>Thống kê {'>'} Kết quả đào tạo</p>
+                    </div>
+                    <div style={{width: '50%', position: 'relative'}}>
+                        <ExportButton />
+                    </div>
                 </Box>
 
                 <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
@@ -348,7 +375,7 @@ export default function TrainingStats() {
                                     <label>Điểm tốt nghiệp trung bình:</label>
                                     <label style={{ marginLeft: '203px' }}>{trainingStats.averageGraduationScore}</label>
                                 </div>
-                            </div>
+                            </div>   
                         )}
                         {activeStat === "stats2" && (
                             <div className="content-stat-2">
@@ -599,7 +626,7 @@ export default function TrainingStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '28px',  paddingBottom: '30px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '16px', paddingBottom:'16px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}

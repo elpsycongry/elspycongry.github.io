@@ -31,12 +31,22 @@ function AuthContext({children}) {
         }
         if (pathName === "/training/stats") {
             if(!isAdmin){
-                return <Navigate to={"/"}/>
+                return <Navigate to="/" />
             }
         }
         {isAdmin && <div></div>}
         if (pathName === "/login") {
             return <Navigate to="/"/>
+        }
+        if(pathName === "/dashboard") {
+            if(!isAdmin && !isManager){
+                return <Navigate to="/" />
+            }
+        }
+        if(pathName === "/recruitment/stats") {
+            if(!isAdmin){
+                return <Navigate to="/" />
+            }
         }
 
     }

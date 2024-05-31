@@ -354,7 +354,6 @@ export function MarkInternModal({userID, updateFunction}) {
             className="color-blue white-div font-size-large hov"/>
         <CreateIcon onClick={() => {
             setOpen(true);
-
             setReadOnly(false)
         }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
         <div className={"modal"}>

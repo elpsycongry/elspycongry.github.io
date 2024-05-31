@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Line } from 'react-chartjs-2';
 import { Box } from "@mui/material";
 import {
@@ -14,7 +15,7 @@ import {
 } from 'chart.js';
 import axios from 'axios';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, ChartDataLabels);
 
 export default function RecruitmentStatsChart({ year }) {
     const [trainingCharts, setTrainingCharts] = useState(new Array(12).fill({
@@ -119,7 +120,7 @@ export default function RecruitmentStatsChart({ year }) {
                     usePointStyle: true,
                     pointStyle: 'shape',
                     font: {
-                        size: 20,
+                        size: 18,
                         weight: 700
                     },
                     padding: 30,
@@ -136,6 +137,11 @@ export default function RecruitmentStatsChart({ year }) {
             tooltip: {
                 mode: 'index',
                 intersect: false,
+                callbacks: {
+                    title: function (tooltipItems) {
+                        return 'Tháng ' + tooltipItems[0].label;
+                    },
+                },
                 bodyFont: {
                     size: 20,
                 },
@@ -178,13 +184,22 @@ export default function RecruitmentStatsChart({ year }) {
     };
 
     return (
-        <Box sx={{ width: '80%', height: '490px', padding: 2 }}>
+        <Box sx={{ width: '80%', height: '585px', padding: 2 }}>
             <div style={{ width: '100%', height: '100%' }}>
                 <Line data={data} options={options} />
             </div>
-            <div>
+            <div id="legendContainer">
                 {hiddenDatasets.join(', ')}
             </div>
+            <p style={{ 
+                textAlign: 'center', 
+                fontFamily: 'sans-serif', 
+                fontStyle: 'italic', 
+                paddingTop: '5px',
+                color: 'red' 
+            }}>
+                *( Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
+            </p>
         </Box>
     );
 }
