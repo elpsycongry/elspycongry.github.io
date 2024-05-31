@@ -125,6 +125,9 @@
 .mw .MuiPaper-root {
     min-width: 600px;
 }
+.mwQC .MuiPaper-root {
+    min-width: 760px;
+}
 
 .mw-200 {
     min-width: 200px;

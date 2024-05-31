@@ -1,22 +1,16 @@
-import { Dialog, DialogTitle, Grid, IconButton, StepContent, Tooltip, Typography, styled } from "@mui/material";
-import { useEffect, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import SendIcon from "@mui/icons-material/Send";
-import RemoveIcon from "@mui/icons-material/Remove";
-import CreateIcon from "@mui/icons-material/Create";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import ClearIcon from '@mui/icons-material/Clear';
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import DialogPersonalFormReason from "./dialogPersonalFormReason";
-import axios from "axios";
-import { useFormik } from "formik";
-import DialogPersonalFormCreate from "./dialogPersonalFormCreate";
-import DialogRecruitmentPlanFormCreate from "../dialogRecruitmentPlan/dialogRecruitmentPlanFormCreate";
-import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess";
-import Stepper from '@mui/material/Stepper';
+import { Dialog, DialogTitle, IconButton, Tooltip } from "@mui/material";
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import ClearIcon from '@mui/icons-material/Clear';
+import Stepper from '@mui/material/Stepper';
+import axios from "axios";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import DialogPersonalFormReason from "./dialogPersonalFormReason";
+import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess";
 export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     console.log(id);
     const [tenhnology, setTenhnology] = useState([]);
@@ -93,9 +87,9 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
         reason: "vãi cả chưởng",
         decanAccept: "true",
         detAccept: "true",
-        planName: "Kế hoạch tuyển dụng DECEN - ori - tháng 9",
+        planName: "DECEN - Youtube - Kế hoạch tuyển dụng tháng 3/2024",
         applicants: 3,
-        training: 0,
+        training: 2,
         intern: 3,
         totalIntern: 15,
         step: 4,
@@ -106,7 +100,6 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
             <Icon icon="typcn:delete" width="24" height="24" />
         )
     }
-
 
     return (
         <>
@@ -124,7 +117,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
             <Dialog
                 id="formWatch"
-                className="mw"
+                className={`${hasRoleKSCL ? 'mwQC' : 'mw'}`}
                 open={openForm}
                 onClose={handleClickFormClose}
                 aria-labelledby="alert-dialog-title"
@@ -363,9 +356,9 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                 <Step>
                                                     {steps.step >= 3 ?
                                                         steps.applicants === 0 ?
-                                                            <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
+                                                            <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress"></a></span> </StepLabel>
                                                             :
-                                                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
+                                                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <Link to={`/recruitment/candidateManagement?planName=${steps.planName}`} className="a-progress cursor-pointer" >Xem kết quả tuyển dụng</Link></span> </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }
@@ -374,12 +367,10 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                     {steps.step >= 4 ?
                                                         steps.training === 0 ?
                                                             <StepLabel className={`ws-nowrap svg-size svg-size-none `} >
-                                                                <span className={`d-flex flex-column align-items-start mt-12`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span>
+                                                                <span className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress"></a></span>
                                                             </StepLabel>
                                                             :
-                                                            <StepLabel className={`ws-nowrap svg-size  `} >
-                                                                <span className={`d-flex flex-column align-items-start mt-12`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span>
-                                                            </StepLabel>
+                                                        <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`} className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span> </StepLabel>
                                                         :
                                                         <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                                                     }

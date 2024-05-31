@@ -460,9 +460,9 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                       <Step>
                         {steps.step >= 3 ?
                           steps.applicants === 0 ?
-                            <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
+                            <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress"></a></span> </StepLabel>
                             :
-                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress">Xem kết quả tuyển dụng</a></span> </StepLabel>
+                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <Link to={`/recruitment/candidateManagement?planName=${steps.planName}`} className="a-progress cursor-pointer" >Xem kết quả tuyển dụng</Link></span> </StepLabel>
                           :
                           <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                         }
@@ -471,12 +471,10 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                         {steps.step >= 4 ?
                           steps.training === 0 ?
                             <StepLabel className={`ws-nowrap svg-size svg-size-none `} >
-                              <span className={`d-flex flex-column align-items-start mt-12`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span>
+                              <span className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress"></a></span>
                             </StepLabel>
                             :
-                            <StepLabel className={`ws-nowrap svg-size  `} >
-                              <span className={`d-flex flex-column align-items-start mt-12`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress">Xem kết quả đào tạo</a></span>
-                            </StepLabel>
+                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`} className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span> </StepLabel>
                           :
                           <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
                         }
