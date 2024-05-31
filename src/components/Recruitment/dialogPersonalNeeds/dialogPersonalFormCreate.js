@@ -109,7 +109,7 @@ export default function DialogPersonalFormCreate() {
               buttons: false,
               timer: 2000
             }).then(() => {
-              sendNotifications(null,`Có nhu cầu nhân sự mới: ${values.recruitmentRequest.name}`,['ROLE_QLĐT'])
+              sendNotifications(null,`Có nhu cầu nhân sự mới: ${values.recruitmentRequest.name}`,['ROLE_TM'])
               window.location.href = "/recruitment/personalNeeds";
             });
           });

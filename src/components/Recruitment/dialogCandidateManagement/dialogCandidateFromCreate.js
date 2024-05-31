@@ -199,6 +199,7 @@ export default function DialogCandidateFormCreate() {
                 buttons: false,
                 timer: 1000,
               }).then(() => {
+                
                 window.location.href = "/recruitment/candidateManagement";
               });
             });

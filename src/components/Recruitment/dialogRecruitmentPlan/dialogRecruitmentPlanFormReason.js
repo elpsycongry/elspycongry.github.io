@@ -3,10 +3,10 @@ import {  useState } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import swal from "sweetalert";
+import { sendNotifications } from "../../Notification/notification";
 
 
-export default function DialogRecruitmentPlanFormReason({ idPlan, open, onClose }) {
-
+export default function DialogRecruitmentPlanFormReason({requestPlanName, recruitmentRequestName, idPlan, open, onClose }) {
     const [reason, setReason] = useState('');
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,6 +20,8 @@ export default function DialogRecruitmentPlanFormReason({ idPlan, open, onClose 
                     buttons: false,
                     timer: 2000
                 }).then(() => {
+                    sendNotifications(null,`Nhu cầu nhân sự ${recruitmentRequestName} vừa cập nhật trạng thái: Bị từ chối bởi DCAN`,['ROLE_DM'])
+                    sendNotifications(null,`Kế hoạch tuyển dụng ${requestPlanName} vừa cập nhật trạng thái: Bị từ chối `,['ROLE_TM'])
                     window.location.href = "/recruitment/personalNeeds";
                 });
             });
