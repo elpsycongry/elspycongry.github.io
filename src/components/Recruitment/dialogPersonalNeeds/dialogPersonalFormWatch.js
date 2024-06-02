@@ -250,6 +250,7 @@ export default function DialogPersonalFormWatch({ id }) {
                 </DialogTitle>
             </Dialog>
             <DialogPersonalFormReason
+                nameNeedPlan={formData.values.recruitmentRequest.name}
                 idUser={id}
                 open={openFormReason}
                 onClose={() => setOpenFormReason(false)}

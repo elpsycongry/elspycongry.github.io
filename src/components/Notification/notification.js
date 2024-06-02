@@ -74,7 +74,6 @@ export function Notification() {
         //     isRead: true,
         // },
         ]
-        // []
     );
 
     const StyledIconWrapper = styled(Box)(({theme}) => ({
@@ -181,7 +180,7 @@ export function Notification() {
                                                 alt={"avatar"}
                                                 src={`https://picsum.photos/50/50?random=${index}`}
                                             />
-                                        </div>
+                                        </div>  
                                         <div>
                                             <div className={"content"}>{notiItem.content}</div>
                                             <div className={"time"}>{notiItem.timestamp}</div>

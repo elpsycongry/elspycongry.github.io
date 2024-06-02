@@ -53,12 +53,23 @@ export default function TrainingStatsChart({ year }) {
             body: trainingCharts.map((val, i) => [(i + 1) , val.internsEnrolled, val.graduatingInterns, val.internsFailed, val.internsQuitInternship]),
             startY: imgY + imgHeight + 20, // Vị trí y cho bảng, sau ảnh
             styles: {
-                halign: 'center', // Horizontal alignment of the text (left, center, right),
-              },
-              headStyles: {
                 halign: 'center',
-              }
-        })
+                cellWidth: 'wrap',
+                lineColor: [0, 0, 0],  // Set border color (black)
+                lineWidth: 0.1,        // Set border width
+            },
+            headStyles: {
+                halign: 'center',
+                fillColor: [255, 255, 255], // Background color for the header
+                textColor: [0, 0, 0],       // Text color for the header
+                lineWidth: 0.1,             // Border width for the header
+                lineColor: [0, 0, 0]        // Border color for the header
+            },
+            bodyStyles: {
+                lineWidth: 0.1,             // Border width for the body
+                lineColor: [0, 0, 0]        // Border color for the body
+            }
+            })
 
         
         pdf.save('chart.pdf'); // Tải xuống tài liệu PDF
