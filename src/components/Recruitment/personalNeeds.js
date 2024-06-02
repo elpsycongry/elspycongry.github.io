@@ -262,15 +262,15 @@ export default function PersonalNeeds() {
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogPersonalFormWatch id={item.id} userRoles={userLogin} />
-                                        {item.status === "Bị từ chối bởi DET" || item.status.toLowerCase() === "đã xác nhận" || item.status === "Đang tuyển dụng" || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogPersonalFormUpdate id={item.id} check={true} userRoles={userLogin} idUser={idUSer} />
+                                        {item.status === "Bị từ chối bởi DET" || item.status === "Đã xác nhận" || item.status === "Đang tuyển dụng" || item.status === "Bị từ chối bởi DECAN" ? (
+                                           <DialogPersonalFormUpdate id={item.id} check={true} userRoles={userLogin} idUser={idUSer} />
                                         ) : (
                                             <DialogPersonalFormUpdate id={item.id} userRoles={userLogin} idUser={idUSer} />
                                         )}
                                     </td>
                                 </tr>
                             ))}
-                        </table>
+                        </table>    
                         {showError && <p>No Content</p>}
                         <div className=' position-absolute bottom-0  w-100 start-0 page align-item-center'>
                             <button className='first-button position-relative hover-btn-page btn-page' onClick={handleFristPage} disabled={currentPage === 1}>

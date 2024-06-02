@@ -452,6 +452,9 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
   return (
     <>
       {hasRoleAdmin() && (
+        check ? <CreateIcon
+        className="bg-whiteImportant pencil-btn font-size-medium"
+      /> :
         <Tooltip title="Chỉnh sửa chi tiết">
           <CreateIcon
             className="color-orange pencil-btn font-size-medium hover-warning cursor-pointer"

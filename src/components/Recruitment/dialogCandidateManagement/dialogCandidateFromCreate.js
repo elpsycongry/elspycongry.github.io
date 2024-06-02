@@ -191,7 +191,7 @@ export default function DialogCandidateFormCreate({userRoles}) {
               });
             });
         } catch (error) {
-          swal("Thêm ứng viên thất bại", {
+          swal("Thêm ứng viên thất bại , số lượng nhân sự kế hoạch này đã đầy", {
             icon: "error",
             buttons: false,
             timer: 1000,
@@ -543,27 +543,26 @@ export default function DialogCandidateFormCreate({userRoles}) {
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
                 {plans
-                  .filter((item) => item.status === "Đã xác nhận")
-                  .map((item) =>
-                    item.isFullManagement === true ? (
-                      <option
-                        style={{ color: "gainsboro" }}
-                        key={item.id}
-                        value={item.id}
-                        disabled
-                      >
-                        {item.name}
-                      </option>
-                    ) : (
-                      <option
-                        className="cursor-pointer"
-                        key={item.id}
-                        value={item.id}
-                      >
-                        {item.name}
-                      </option>
-                    )
-                  )}
+  .filter((item) => item.status === "Đã xác nhận")
+  .map((item) =>
+    item.isFullManagement === true ? (
+      <option
+        className="cursor-pointer"
+        key={item.id}
+        value={item.id}
+      >
+        {item.name}
+      </option>
+    ) : (
+      <option
+        className="cursor-pointer"
+        key={item.id}
+        value={item.id}
+      >
+        {item.name}
+      </option>
+    )
+  )}
               </select>
               <div className="col-md-8  mt-0">
                 {errRecruitmentPlan && (

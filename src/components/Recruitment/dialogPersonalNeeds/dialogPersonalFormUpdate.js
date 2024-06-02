@@ -241,14 +241,17 @@ export default function DialogPersonalFormUpdate({ id, check,userRoles,idUser })
 
   return (
     <>
-      {hasRoleAdmin() && (
-        <Tooltip title="Chỉnh sửa chi tiết">
+      {hasRoleAdmin()  && (
+        check ? <CreateIcon
+        className="bg-whiteImportant pencil-btn font-size-medium"
+      /> :
+         <Tooltip title="Chỉnh sửa chi tiết">
           <CreateIcon
             className="color-orange pencil-btn font-size-medium hover-warning cursor-pointer"
             onClick={handleClickFormOpen}
           />
         </Tooltip>
-      )
+        ) 
     }
       <Dialog
         open={openForm}

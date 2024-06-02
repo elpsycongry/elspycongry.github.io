@@ -142,7 +142,12 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
           values.finalResult = "false";
         }
       }
-     
+      if(values.scoreInterview === ""){
+        values.scoreInterview = "N/A";
+      }
+      if(values.scoreTest === ""){
+        values.scoreTest = "N/A";
+      }
       // Lấy dữ liệu check
       const fullName = values.name;
       const email = values.email;
@@ -165,7 +170,7 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
             });
           })
         } catch (error) {
-          swal("cập nhật thông tin ứng viên thất bại", {
+          swal("cập nhật thông tin ứng viên thất bại , số lượng ứng viên kế hoạch bạn chọn đã đủ", {
             icon: "error",
             buttons: false,
             timer: 1000
@@ -181,15 +186,15 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
     const user = JSON.parse(localStorage.getItem("currentUser"))
     if (user != null) {
       try {
-        axios.get("http://localhost:8080/api/plansIntern").then((res) => {
-          console.log(res.data)
-          setPlans(res.data.content);
+        axios.get("http://localhost:8080/api/plans").then((res) => {
+          setPlans(res.data);
         });
         axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
           formData.setValues(res.data);
           setFinalResult(res.data.finalResult);
           const formatT = res.data.interviewTime;
           const dateNow = dayjs(formatT);
+          console.log(dateNow)
           setDate(dateNow);
           setFinalResult(res.data.finalResult);
         });
@@ -226,7 +231,7 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
     { id: 6, text: "Đã nhận việc" },
   ];
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_QLĐT");
   };
   const hasRoleHR = () => {
     return userRoles.some((role) => role.authority === "ROLE_HR");
@@ -583,16 +588,11 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
                 id="recruitmentPlan.id"
                 disabled
               >
-                <option value="default">Chọn kế hoạch tuyển dụng</option>
-                {plans.filter(item => item.status === "Đã xác nhận").map((item) => (
-                  item.isFullManagement === true ?
-                    <option style={{ color: 'gainsboro' }} key={item.id} value={item.id} disabled>
+                {plans.filter((item) => item.status === "Đã xác nhận").map((item) => (
+                    <option key={item.id} value={item.id}>
                       {item.name}
                     </option>
-                    :
-                    <option className="cursor-pointer" key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
+                  
                 ))}
               </select>
               </div>
@@ -781,7 +781,9 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
               )}
             </div>
           </form>
-          </>)}
+          </>)
+          }
+
           {hasRoleHR() && (<>
           <form className="row g-3" onSubmit={formData.handleSubmit}>
             {/* Form 1 */}
@@ -931,13 +933,8 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
                 id="recruitmentPlan.id"
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
-                {plans.filter(item => item.status === "Đã xác nhận").map((item) => (
-                  item.isFullManagement === true ?
-                    <option style={{ color: 'gainsboro' }} key={item.id} value={item.id} disabled>
-                      {item.name}
-                    </option>
-                    :
-                    <option className="cursor-pointer" key={item.id} value={item.id}>
+                {plans.filter((item) => item.status === "Đã xác nhận").map((item) => (
+                    <option key={item.id} value={item.id}>
                       {item.name}
                     </option>
                 ))}
