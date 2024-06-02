@@ -129,12 +129,12 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
       values.interviewTime = formattedDateTime;
       values.finalResult = finalResult;
       
-      if(userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT")){
+      if(userRoles.some((role) =>  role.authority === "ROLE_QLĐT")){
         if(values.scoreInterview === ""){
           values.scoreInterview = 1;
         }
         if(values.scoreTest === ""){
-          values.scoreTest = 50;
+          values.scoreTest = 50;  
         }
         if (values.finalResult === "true") {
           values.finalResult = "true";
@@ -223,12 +223,13 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
 
   // Xử lý mở form
   const listTestSelect = [
-    { id: 1, text: "Chưa có kết quả" },
-    { id: 2, text: "Đã có kết quả" },
-    { id: 3, text: "Đã gửi email cảm ơn" },
-    { id: 4, text: "Đã hẹn ngày thực tập" },
-    { id: 5, text: "Không nhận việc" },
-    { id: 6, text: "Đã nhận việc" },
+    { id: 1, text: "Chọn trạng thái" },
+    { id: 2, text: "Chưa có kết quả" },
+    { id: 3, text: "Đã có kết quả" },
+    { id: 4, text: "Đã gửi email cảm ơn" },
+    { id: 5, text: "Đã hẹn ngày thực tập" },
+    { id: 6, text: "Không nhận việc" },
+    { id: 7, text: "Đã nhận việc" },
   ];
   const hasRoleAdmin = () => {
     return userRoles.some((role) => role.authority === "ROLE_QLĐT");
@@ -256,7 +257,7 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
 
   // const 
   function TestMarks({ scoreTest, setScoreTest }) {
-    if (scoreTest === '') {
+    if (scoreTest === ''||scoreTest === 'N/A') {
       scoreTest = 50;
     }
     // scoreTest = parseInt(scoreTest);
@@ -333,7 +334,7 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
 
   // 
   function Interview({ scoreInterview, setScoreInterview }) {
-    if (scoreInterview === '') {
+    if (scoreInterview === '' || scoreInterview === 'N/A' ) {
       scoreInterview = 1;
     }
     const [interview, setInterview] = useState(scoreInterview);
