@@ -130,10 +130,10 @@ export default function DialogCandidateFormUpdate({ id, check,userRoles }) {
       values.finalResult = finalResult;
       
       if(userRoles.some((role) =>  role.authority === "ROLE_QLĐT")){
-        if(values.scoreInterview === ""){
+        if(values.scoreInterview === ""||values.scoreInterview === "N/A"){
           values.scoreInterview = 1;
         }
-        if(values.scoreTest === ""){
+        if(values.scoreTest === "" ||values.scoreTest === "N/A" ){
           values.scoreTest = 50;  
         }
         if (values.finalResult === "true") {
