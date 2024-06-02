@@ -186,7 +186,6 @@ export default function TrainingStats() {
 
         if (theValue == 6) {
             setQuarter(1)
-            console.log(quarter);
             setMonth(0)
             setTitleStatistics("Quý")
             setYear(0)
@@ -197,6 +196,7 @@ export default function TrainingStats() {
 
         if (theValue == 7) {
             setTitleStatistics("Năm")
+            setMonth(0)
             setQuarter(0)
             setYear(2024)
             setActive5(false)
