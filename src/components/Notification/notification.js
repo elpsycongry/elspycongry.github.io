@@ -9,7 +9,7 @@ import './notification.scss'
 import {useEffect, useRef, useState} from "react";
 import {Tooltip} from "@mui/material";
 import axios from "axios";
-import {NotificationsNone} from "@mui/icons-material";
+import {NotificationsNone, NotificationsPaused} from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 
 export function Notification() {
@@ -24,54 +24,54 @@ export function Notification() {
 
     const [renderData, setRenderData] = useState(
         [
-            {
-                id: 1,
-                content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
-                timestamp: "1 phút trước",
-                link: "",
-                isRead: false,
-
-            }, {
-            id: 2,
-            content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
-            timestamp: "1 giờ trước",
-            isRead: false,
-        }, {
-            id: 3,
-            content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
-            timestamp: "5 giây trước",
-            isRead: false,
-        }, {
-            id: 4,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "3 ngày trước",
-            isRead: true,
-        }, {
-            id: 5,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "5 ngày trước",
-            isRead: true,
-        }, {
-            id: 6,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "5 ngày trước",
-            isRead: true,
-        }, {
-            id: 7,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "5 ngày trước",
-            isRead: true,
-        }, {
-            id: 8,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "5 ngày trước",
-            isRead: true,
-        }, {
-            id: 9,
-            content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            timestamp: "5 ngày trước",
-            isRead: true,
-        },
+        //     {
+        //         id: 1,
+        //         content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
+        //         timestamp: "1 phút trước",
+        //         link: "",
+        //         isRead: false,
+        //
+        //     }, {
+        //     id: 2,
+        //     content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
+        //     timestamp: "1 giờ trước",
+        //     isRead: false,
+        // }, {
+        //     id: 3,
+        //     content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
+        //     timestamp: "5 giây trước",
+        //     isRead: false,
+        // }, {
+        //     id: 4,
+        //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+        //     timestamp: "3 ngày trước",
+        //     isRead: true,
+        // }, {
+        //     id: 5,
+        //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+        //     timestamp: "5 ngày trước",
+        //     isRead: true,
+        // }, {
+        //     id: 6,
+        //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+        //     timestamp: "5 ngày trước",
+        //     isRead: true,
+        // }, {
+        //     id: 7,
+        //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+        //     timestamp: "5 ngày trước",
+        //     isRead: true,
+        // }, {
+        //     id: 8,
+        //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+        //     timestamp: "5 ngày trước",
+        //     isRead: true,
+        // }, {
+        //     id: 9,
+        //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+        //     timestamp: "5 ngày trước",
+        //     isRead: true,
+        // },
         ]
         // []
     );
@@ -83,13 +83,13 @@ export function Notification() {
         justifyContent: 'center',
 
         '&::before': {
-            content: notiNumber.current > 0 ? `"${notiNumber.current}"` : "''", // Sử dụng điều kiện để xác định nội dung của ::before
+            content: notiNumber.current > 0 ? `"${notiNumber.current}"` : "''",
             position: 'absolute',
             right: 2,
             top: 3,
             width: '40%',
             height: '40%',
-            backgroundColor: notiNumber.current > 0 ? 'rgba(255, 0, 0, 0.83)' : 'transparent', // Sử dụng điều kiện để xác định màu nền
+            backgroundColor: notiNumber.current > 0 ? 'rgba(255, 0, 0, 0.83)' : 'transparent',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
@@ -193,7 +193,13 @@ export function Notification() {
                                     </div>
                                 ))
                             ) : (
-                                <div>Hiện không có thông báo nào</div>
+                                <div className={"noti-placeholder"}>
+                                    <div className={"icon"}>
+                                        <NotificationsPaused />
+                                    </div>
+                                    <div>Hiện không có thông báo nào</div>
+
+                                </div>
                             )}
                         </div>
                     </div>
