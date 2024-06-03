@@ -1,7 +1,7 @@
 import { Box, Button, ButtonGroup, Dialog, DialogContent, IconButton, Link, Typography } from "@mui/material";
 import Header from "../../fragment/header/header";
 import Navbar from "../../fragment/navbar/navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import Footer from "../../fragment/footer/footer";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,6 +18,7 @@ import ProcessedCVChart from "./processedCVChart";
 import PassFailCVChart from "./passFailCVChart";
 import AcceptJobCVChart from "./acceptJobCVChart";
 import './recruitmentStats.css'
+import ButtonPDFExport from "./buttonPDFExport";
 
 
 function Copyright(props) {
@@ -53,6 +54,10 @@ export default function RecruitmentStats() {
     const [active5, setActive5] = useState(false);
     const [active6, setActive6] = useState(false);
     const [active7, setActive7] = useState(true);
+    const pdfRef = useRef(null);
+    const pdfRef1 = useRef(null);
+    const pdfRef2 = useRef(null);
+    const pdfRef3 = useRef(null);
 
     const handleClickStat = (event) => {
         const theValue = event.currentTarget.value;
@@ -62,7 +67,7 @@ export default function RecruitmentStats() {
                     setGrowthStatistics(res.data)
                     console.log(growthStatistics);
                 })
-                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+            axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
                 .then(res1 => {
                     setMaxGrowthStatistics(res1.data)
                 })
@@ -101,30 +106,30 @@ export default function RecruitmentStats() {
                     .then(res => {
                         setGrowthStatistics(res.data)
                     })
-                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
             if (quarter != 0) {
                 axios.get("http://localhost:8080/api/recruitmentStats/quarter?quarter=" + quarter)
                     .then(res4 => {
                         setGrowthStatistics(res4.data)
                     })
-                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithQuarter")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithQuarter")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
             if (month != 0) {
                 axios.get("http://localhost:8080/api/recruitmentStats/month?month=" + month)
                     .then(res3 => {
                         setGrowthStatistics(res3.data)
                     })
-                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithMonth")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithMonth")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
         }
 
@@ -242,6 +247,10 @@ export default function RecruitmentStats() {
 
     function createData(name, quantity, growth) {
         return { name, quantity, growth };
+    }
+
+    const listChartElem = () => {
+        return [pdfRef, pdfRef1, pdfRef2, pdfRef3];
     }
 
     const rows = [
@@ -363,6 +372,7 @@ export default function RecruitmentStats() {
                             <div className="content-stat-2">
                                 {/* line */}
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '0px' }}>Biểu đồ</h3>
+                                <ButtonPDFExport listChartElem={listChartElem} year={selectedYear} />
                                 <div style={{ width: '100%', height: '60%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                                     <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
                                         <Typography style={{ fontSize: '20px', paddingRight: '5px' }}>Biểu đồ tuyển dụng thực tập sinh trong năm</Typography>
@@ -375,13 +385,13 @@ export default function RecruitmentStats() {
                                             })}
                                         </select>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'center' }} ref={pdfRef}>
                                         <RecruitmentStatsChart year={selectedYear} />
                                     </div>
                                 </div>
 
-                                {/* column */}
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Biểu đồ cột</h3>
+
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {activeColumnChart === "col1" ? (
                                         <button type="button" value="col1" onClick={handleClickColumnChart} className="btn btn-warning text-white">Số lượng CV đã xử lý</button>
@@ -400,7 +410,7 @@ export default function RecruitmentStats() {
                                     }
                                 </div>
                                 {activeColumnChart === "col1" && (
-                                    <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center' }}>
+                                    <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center' }} ref={pdfRef1}>
                                         <ProcessedCVChart />
                                     </div>
                                 )}
@@ -414,6 +424,19 @@ export default function RecruitmentStats() {
                                         <AcceptJobCVChart />
                                     </div>
                                 )}
+
+                                <div style={{ width: '100%', height: '490px', position: "fixed", left: "0px"}} ref={pdfRef2}>
+                                    <PassFailCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center', display: 'none' }}>
+                                    <PassFailCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', position: "fixed", left: "0px"}} ref={pdfRef3}>
+                                <AcceptJobCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center', display: 'none' }}>
+                                <AcceptJobCVChart />
+                                </div>
                             </div>
                         )}
                         {activeStat === "stats3" && (

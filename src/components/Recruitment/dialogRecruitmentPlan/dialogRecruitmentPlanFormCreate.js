@@ -171,9 +171,9 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 buttons: false,
                 timer: 2000,
               }).then(() => {
-                sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,['ROLE_DM']);
-                sendNotifications(null,`Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,['ROLE_HR']);
-                window.location.href = "/recruitment/recruitmentPlan";
+                sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,['ROLE_DM'])
+                .then(sendNotifications(null,`Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,['ROLE_HR']))
+                .then(window.location.href = "/recruitment/recruitmentPlan");
               });
             });
         } catch (error) {

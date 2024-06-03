@@ -21,7 +21,8 @@ export default function DialogRecruitmentPlanFormReason({requestPlanName, recrui
                     timer: 2000
                 }).then(() => {
                     sendNotifications(null,`Nhu cầu nhân sự ${recruitmentRequestName} vừa cập nhật trạng thái: Bị từ chối bởi DCAN`,['ROLE_DM'])
-                    sendNotifications(null,`Kế hoạch tuyển dụng ${requestPlanName} vừa cập nhật trạng thái: Bị từ chối `,['ROLE_TM'])
+                    .then(sendNotifications(null,`Kế hoạch tuyển dụng ${requestPlanName} vừa cập nhật trạng thái: Bị từ chối `,['ROLE_TM']))
+        
                     window.location.href = "/recruitment/personalNeeds";
                 });
             });

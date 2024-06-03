@@ -6,10 +6,11 @@
 
   background-color: white;
   width: 400px;
-  min-height: 500px;
+  height: 410px;
   border-radius: 5px;
   box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.5);
   color: black;
+
   .wrapper {
     overflow-y: scroll;
 
@@ -25,6 +26,7 @@
 
       .title {
         margin: 0;
+        margin-bottom: 5px;
         font-size: 22px;
         font-weight: 600;
       }
@@ -52,7 +54,7 @@
 
     .body {
       overflow-y: scroll;
-      max-height: 500px;
+      max-height: 320px;
 
       /* width */
       &::-webkit-scrollbar {
@@ -123,5 +125,16 @@
         }
       }
     }
+  }
+}
+
+.noti-placeholder {
+  font-size: 1.2rem;
+  padding-top: 40px;
+  text-align: center;
+  color: #727171;
+  .icon .MuiSvgIcon-root {
+    font-size: 40px;
+    margin-bottom: 12px;
   }
 }

@@ -14,12 +14,25 @@ import Header from '../../fragment/header/header';
 import { Icon } from '@iconify/react';
 import './homePage.css';
 import axios from 'axios';
+import { Link } from '@mui/material';
 
 // const HomeIcon = () => {
 //     return (
 //         <Icon icon="fa:home" width="25" height="25" />
 //     )
 // }
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="/public">
+                Quản lý đào tạo
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
 
 const HomePage = () => {
     const navigate = useNavigate()
@@ -194,6 +207,9 @@ const HomePage = () => {
                     </div>
                 </Box>
             </Box>
+            <div style={{ paddingTop: '70px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
+            </div>
         </>
     );
 };

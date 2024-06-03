@@ -209,7 +209,6 @@ export default function AcceptJobCVChart() {
 
     return (
         <Box sx={{ height: 1, padding: 2, width: "80%" }} ref={pdfRef}>
-        <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button>
             <Bar data={data} options={options} plugins={[totalPlugin]} />
             <p style={{ 
                 textAlign: 'center', 

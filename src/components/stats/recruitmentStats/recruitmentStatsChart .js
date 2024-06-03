@@ -242,7 +242,7 @@ export default function RecruitmentStatsChart({ year }) {
         <Box sx={{ width: '80%', height: '585px', padding: 2 }}  ref={pdfRef}>
             {/* <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button> */}
             {/* <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success'>Download PDF</button> */}
-            <ButtonPDFExport/>
+            {/* <ButtonPDFExport/> */}
             <div style={{ width: '100%', height: '100%' }}>
                 <Line data={data} options={options} />
             </div>

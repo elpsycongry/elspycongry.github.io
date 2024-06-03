@@ -68,7 +68,8 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
             timer: 1500
           }).then(() => {
               sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đang tuyển dụng`,['ROLE_DM'])
-              sendNotifications(null,`Kế hoạch tuyển dụng ${formData.values.recruitmentPlan.name} vừa cập nhật trạng thái: Đã phê duyệt`,['ROLE_TM'])
+              .then(sendNotifications(null,`Kế hoạch tuyển dụng ${formData.values.recruitmentPlan.name} vừa cập nhật trạng thái: Đã phê duyệt`,['ROLE_TM']))
+        
             })
             // window.location.href = "/recruitment/recruitmentPlan";
           });

@@ -9,7 +9,7 @@ import './notification.scss'
 import {useEffect, useRef, useState} from "react";
 import {Tooltip} from "@mui/material";
 import axios from "axios";
-import {NotificationsNone} from "@mui/icons-material";
+import {NotificationsNone, NotificationsPaused} from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 
 export function Notification() {
@@ -31,7 +31,6 @@ export function Notification() {
         //         timestamp: "1 phút trước",
         //         link: "",
         //         isRead: false,
-
         //     }, {
         //     id: 2,
         //     content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
@@ -83,13 +82,13 @@ export function Notification() {
         justifyContent: 'center',
 
         '&::before': {
-            content: notiNumber.current > 0 ? `"${notiNumber.current}"` : "''", // Sử dụng điều kiện để xác định nội dung của ::before
+            content: notiNumber.current > 0 ? `"${notiNumber.current}"` : "''",
             position: 'absolute',
             right: 2,
             top: 3,
             width: '40%',
             height: '40%',
-            backgroundColor: notiNumber.current > 0 ? 'rgba(255, 0, 0, 0.83)' : 'transparent', // Sử dụng điều kiện để xác định màu nền
+            backgroundColor: notiNumber.current > 0 ? 'rgba(255, 0, 0, 0.83)' : 'transparent',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
@@ -193,7 +192,13 @@ export function Notification() {
                                     </div>
                                 ))
                             ) : (
-                                <div>Hiện không có thông báo nào</div>
+                                <div className={"noti-placeholder"}>
+                                    <div className={"icon"}>
+                                        <NotificationsPaused />
+                                    </div>
+                                    <div>Hiện không có thông báo nào</div>
+
+                                </div>
                             )}
                         </div>
                     </div>
