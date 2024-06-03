@@ -18,7 +18,7 @@ import ProcessedCVChart from "./processedCVChart";
 import PassFailCVChart from "./passFailCVChart";
 import AcceptJobCVChart from "./acceptJobCVChart";
 import './recruitmentStats.css'
-import ExportRecruitment from "./excel/exportRecruitment";
+import ExportRecruitment from "./exportRecruitment";
 import * as XLSX from 'xlsx';
 import { Icon } from '@iconify/react';
 
@@ -37,16 +37,23 @@ function Copyright(props) {
 }
 
 export default function RecruitmentStats() {
-
+    // Tạo một biến thời gian hiện tại
+    const currentDate = new Date();
+    // Lấy tháng hiện tại (tháng trong JavaScript tính từ 0 đến 11)
+    const currentMonth = currentDate.getMonth() + 1;
+    // Lấy quý hiện tại
+    const currentQuarter = Math.floor(currentMonth / 3) + 1;
+    // Lấy năm hiện tại
+    const currentYear = currentDate.getFullYear();
     const [recruitmentStats, setRecruitmentStats] = useState([]);
     const [activeStat, setActiveStat] = useState("stats1");
     const [activeColumnChart, setActiveColumnChart] = useState("col1");
     const [titleStatistics, setTitleStatistics] = useState("Năm");
     const [growthStatistics, setGrowthStatistics] = useState();
     const [maxGrowthStatistics, setMaxGrowthStatistics] = useState();
-    const [year, setYear] = useState(2024);
-    const [month, setMonth] = useState(0);
-    const [quarter, setQuarter] = useState(0)
+    const [year, setYear] = useState(currentYear);
+    const [month, setMonth] = useState(currentMonth);
+    const [quarter, setQuarter] = useState(currentQuarter)
     const [title, setTitle] = useState("Kết quả tuyển dụng tháng 5");
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
@@ -56,9 +63,18 @@ export default function RecruitmentStats() {
     const [active6, setActive6] = useState(false);
     const [active7, setActive7] = useState(true);
 
+    //Kiem tra thong tin ngay, thang, nam va stats
+    console.log("Tháng: ", month);
+    console.log("Quý: ", quarter);
+    console.log("Năm: ", year);
+    console.log("Stats: ", activeStat);
+
     const handleClickStat = (event) => {
         const theValue = event.currentTarget.value;
         if (theValue === "stats3") {
+            setMonth(0)
+            setQuarter(0)
+            setYear(currentYear)
             axios.get("http://localhost:8080/api/recruitmentStats/year?year=2024")
                 .then(res => {
                     setGrowthStatistics(res.data)
@@ -76,6 +92,9 @@ export default function RecruitmentStats() {
             setActive2(false)
             setActive3(false)
             setActive4(false)
+            setMonth(currentMonth)
+            setQuarter(currentQuarter)
+            setYear(currentYear)
             axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
                 .then(res => {
                     setRecruitmentStats(res.data)
@@ -207,6 +226,7 @@ export default function RecruitmentStats() {
 
         if (theValue == 7) {
             setTitleStatistics("Năm")
+            setMonth(0)
             setQuarter(0)
             setYear(2024)
             setActive5(false)
@@ -310,7 +330,7 @@ export default function RecruitmentStats() {
                                     <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
                                         {/* Nút excel */}
                                         {/* <ExportRecruitment /> */}
-                                        <ExportRecruitment />
+                                        <ExportRecruitment month={month} quarter={quarter} year={year} />
                                     </div>
                                 </div>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
@@ -441,19 +461,10 @@ export default function RecruitmentStats() {
                                             Thống kê tăng trưởng
                                         </h3>
                                     </div>
-                                    {/* <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
-                                        <button
-                                            className="btn btn-stats-green"
-                                            style={{ position: 'absolute', left: '0', width: '123px', marginTop: '22px', marginLeft: '53px' }}
-                                            onClick={exportGrowthRecruitmentStatisticsExcelFile}
-                                        >
-                                            <span style={{ paddingRight: '5px' }}>Excel</span>
-                                            <Icon
-                                                icon="mdi:microsoft-excel"
-                                                style={{ width: '25px', height: '25px' }}
-                                            />
-                                        </button>
-                                    </div> */}
+                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                        {/* Nút excel */}
+                                        <ExportRecruitment month={month} quarter={quarter} year={year} />
+                                    </div>
                                 </div>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active5 ? (

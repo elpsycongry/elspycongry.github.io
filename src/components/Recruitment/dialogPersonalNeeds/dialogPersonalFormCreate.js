@@ -11,6 +11,7 @@ import * as Yup from "yup"
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import {sendNotifications} from "../../Notification/notification";
 
 export default function DialogPersonalFormCreate() {
   const [dateErr, setDateErr] = useState(false);
@@ -108,6 +109,7 @@ export default function DialogPersonalFormCreate() {
               buttons: false,
               timer: 2000
             }).then(() => {
+              sendNotifications(null,`Có nhu cầu nhân sự mới: ${values.recruitmentRequest.name}`,['ROLE_TM'])
               window.location.href = "/recruitment/personalNeeds";
             });
           });

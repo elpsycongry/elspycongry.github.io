@@ -8,6 +8,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
+import {sendNotifications} from "../../Notification/notification";
 
 export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
   const [tenhnology, setTenhnology] = useState([]);
@@ -54,7 +55,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     }
   });
   const approve = () => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
+    const user = JSON.parse(localStorage.getItem("currentUser"));
     if (user != null) {
       try {
         axios.put(`http://localhost:8080/api/plans/${id}/users/1`).then(() => {
@@ -66,10 +67,12 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
-            window.location.href = "/recruitment/recruitmentPlan";
+              sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đang tuyển dụng`,['ROLE_DM'])
+              sendNotifications(null,`Kế hoạch tuyển dụng ${formData.values.recruitmentPlan.name} vừa cập nhật trạng thái: Đã phê duyệt`,['ROLE_TM'])
+            })
+            // window.location.href = "/recruitment/recruitmentPlan";
           });
-        })
-      } catch (error) {
+        } catch (error) {
         console.error('Error fetching approval:', error);
         // You can handle the error here, e.g., show a message to the user
       }
@@ -372,6 +375,8 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
         </DialogTitle>
       </Dialog>
       <DialogRecruitmentPlanFormReason
+        requestPlanName={formData.values.recruitmentPlan.name}
+        recruitmentRequestName={formData.values.recruitmentPlan.recruitmentRequest.name}
         idPlan={id}
         open={openFormReason}
         onClose={() => setOpenFormReason(false)}
