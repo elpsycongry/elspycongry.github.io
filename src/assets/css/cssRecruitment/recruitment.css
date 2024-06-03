@@ -646,7 +646,7 @@ input[type="number"]::-webkit-outer-spin-button {
   }
   
   .input-disabled:after {
-    content: "\f057"; /* Unicode cho icon cấm */
+    content: "\f05e"; /* Unicode cho icon cấm */
     font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
     color: #dc3545; /* Màu đỏ */
@@ -667,7 +667,7 @@ input[type="number"]::-webkit-outer-spin-button {
   }
   
   .input-container.input-disabled:after {
-    content: "\f057"; /* Unicode cho icon cấm */
+    content: "\f05e"; /* Unicode cho icon cấm */
     font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
     color: #dc3545; /* Màu đỏ */
@@ -687,7 +687,7 @@ input[type="number"]::-webkit-outer-spin-button {
   }
   
   .select-container.input-disabled:after {
-    content: "\f057"; /* Unicode cho icon cấm */
+    content: "\f05e"; /* Unicode cho icon cấm */
     font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
     color: #dc3545; /* Màu đỏ */

@@ -39,7 +39,7 @@ export default function CandidateManagement() {
     
     const CustomPopper = styled(Popper)({
         '& .MuiAutocomplete-listbox': {
-            maxHeight: '150px',
+            maxHeight: '255px',
             backgroundColor: '#f0f0f0',
             // Chỉnh chiều cao tối đa
         },

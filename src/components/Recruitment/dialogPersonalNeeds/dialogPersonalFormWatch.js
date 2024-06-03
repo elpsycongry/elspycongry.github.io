@@ -364,7 +364,6 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
                                                             :
                                                             <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
-
                                                         }
                                                     </StepLabel>
 
