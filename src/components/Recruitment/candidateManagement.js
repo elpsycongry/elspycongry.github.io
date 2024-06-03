@@ -30,10 +30,16 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandidateFromCreate";
 import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
 import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
+import { useLocation } from 'react-router-dom';
 export default function CandidateManagement() {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const planName = queryParams.get('planName') || '';
+    const status = queryParams.get('status') || '';
+    
     const CustomPopper = styled(Popper)({
         '& .MuiAutocomplete-listbox': {
-            maxHeight: '150px',
+            maxHeight: '255px',
             backgroundColor: '#f0f0f0',
             // Chỉnh chiều cao tối đa
         },
@@ -49,11 +55,11 @@ export default function CandidateManagement() {
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const [recuitments, setRecuitment] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState(status);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [recruitmentPlan, setRecruitmentPlan] = useState([]);
-    const [selectPlan, setSelectPlan] = useState('');
+    const [selectPlan, setSelectPlan] = useState(planName);
     const [currentPage, setCurrentPage] = useState(1);
 
 
@@ -163,11 +169,15 @@ export default function CandidateManagement() {
         getAllRecruitmentPlan();
     }, [])
 
-
+    const [userLogin, setUserLogin] = useState([]);
+    const [idUser, setIdUser] = useState();
     async function getAll(pageNumber) {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        setUserLogin(user.roles);
+        setIdUser(user.id);
         if (user != null) {
             try {
+                console.log(status)
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
@@ -196,6 +206,8 @@ export default function CandidateManagement() {
 
     useEffect(() => {
         getAll(page)
+        setSelectedStatus(status);
+        setSelectPlan(planName);
     }, [page]);
 
     const handlePagination = (event, value) => {
@@ -327,7 +339,7 @@ export default function CandidateManagement() {
                                     PopperComponent={CustomPopper} // Sử dụng Popper tùy chỉnh
                                 />
                             </div>
-                            <DialogCandidateFormCreate />
+                            <DialogCandidateFormCreate userRoles={userLogin} />
                         </div>
 
                     </div>
@@ -354,12 +366,12 @@ export default function CandidateManagement() {
                                     <td className='ws-nowrap'>{item.name}</td>
                                     <td className="text-center">{item.email}</td>
                                     <td className="text-center">{item.phone}</td>
-                                    <td className="text-center">{item.scoreTest}</td>
-                                    <td className="text-center">{item.scoreInterview}</td>
-                                    <td className="text-center">{item.status}</td>
+                                    <td className="text-center">{item.scoreTest || "N/A"}</td>
+                                    <td className="text-center">{item.scoreInterview || "N/A"}</td>
+                                    <td className="text-center">{item.status || "N/A"}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogCandidateFromWatch id={item.id} />
-                                        <DialogCandidateFromUpdate id={item.id} />
+                                        <DialogCandidateFromUpdate id={item.id} userRoles={userLogin}  />
                                     </td>
                                 </tr>
                             ))}

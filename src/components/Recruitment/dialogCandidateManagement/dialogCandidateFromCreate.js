@@ -14,7 +14,7 @@ import { useFormik } from "formik";
 import { TimeField } from "@mui/x-date-pickers";
 import { validFullName, validEmail, validPhone } from "../regex/regex";
 
-export default function DialogCandidateFormCreate() {
+export default function DialogCandidateFormCreate({userRoles}) {
   const [errName, setErrName] = useState(false);
   const [errEmail, setErrEmail] = useState(false);
   const [errPhoneNumber, setErrPhoneNumber] = useState(false);
@@ -151,15 +151,8 @@ export default function DialogCandidateFormCreate() {
       values.interviewTime = formattedDateTime;
       values.finalResult = selectedValuePassFaild;
 
-      if (values.scoreInterview === "") {
-        values.scoreInterview = 1;
-      }
-
-      if (values.scoreTest === "") {
-        values.scoreTest = 50;
-      }
       if (values.checkInterview === "") {
-        values.checkInterview = true;
+        values.checkInterview = false;
       }
       // Lấy dữ liệu check
 
@@ -179,7 +172,7 @@ export default function DialogCandidateFormCreate() {
           email,
           phoneNumber,
           recruitmentPlan,
-          status
+          // status
         )
       ) {
         setSubmitting(false);
@@ -198,7 +191,7 @@ export default function DialogCandidateFormCreate() {
               });
             });
         } catch (error) {
-          swal("Thêm ứng viên thất bại", {
+          swal("Thêm ứng viên thất bại , số lượng nhân sự kế hoạch này đã đầy", {
             icon: "error",
             buttons: false,
             timer: 1000,
@@ -229,7 +222,7 @@ export default function DialogCandidateFormCreate() {
       plans.map(async (item) => {
         try {
           const res = await axios.get(
-            `http://localhost:8080/api/interns/isFull/${item.id}`
+            `http://localhost:8080/api/plansIntern/isFull/${item.id}`
           );
           return { ...item, isFullManagement: res.data };
         } catch (error) {
@@ -255,6 +248,9 @@ export default function DialogCandidateFormCreate() {
     { id: 5, text: "Không nhận việc" },
     { id: 6, text: "Đã nhận việc" },
   ];
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_HR");
+  };
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
     setOpenForm(true);
@@ -387,16 +383,19 @@ export default function DialogCandidateFormCreate() {
   };
   return (
     <>
-      <div
-        className=" position-relative "
-        style={{ width: "75px", minWidth: "170px" }}
-        onClick={handleClickFormOpen}
-      >
-        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">
-          Thêm ứng viên
-        </button>
-        <AddIcon className=" position-absolute plus-icon clr-white" />
-      </div>
+      {hasRoleAdmin() && (
+        <div
+          className=" position-relative "
+          style={{ width: "75px", minWidth: "170px" }}
+          onClick={handleClickFormOpen}
+        >
+          <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">
+            Thêm ứng viên
+          </button>
+          <AddIcon className=" position-absolute plus-icon clr-white" />
+        </div>
+      )}
+
       <Dialog
         id="formCandidateCreate"
         open={openForm}
@@ -533,7 +532,7 @@ export default function DialogCandidateFormCreate() {
             </div>
             <div className="col-md-6 mt-1 ">
               <label htmlFor="name" className="form-label grey-text mb-0 mt-2">
-                Kế hoạch tuyển dụng
+                Kế hoạch tuyển dụng <span className="color-red">*</span>
               </label>
               <select
                 className="form-select grey-text"
@@ -544,27 +543,26 @@ export default function DialogCandidateFormCreate() {
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
                 {plans
-                  .filter((item) => item.status === "Đã xác nhận")
-                  .map((item) =>
-                    item.isFullManagement === true ? (
-                      <option
-                        style={{ color: "gainsboro" }}
-                        key={item.id}
-                        value={item.id}
-                        disabled
-                      >
-                        {item.name}
-                      </option>
-                    ) : (
-                      <option
-                        className="cursor-pointer"
-                        key={item.id}
-                        value={item.id}
-                      >
-                        {item.name}
-                      </option>
-                    )
-                  )}
+  .filter((item) => item.status === "Đã xác nhận")
+  .map((item) =>
+    item.isFullManagement === true ? (
+      <option
+        className="cursor-pointer"
+        key={item.id}
+        value={item.id}
+      >
+        {item.name}
+      </option>
+    ) : (
+      <option
+        className="cursor-pointer"
+        key={item.id}
+        value={item.id}
+      >
+        {item.name}
+      </option>
+    )
+  )}
               </select>
               <div className="col-md-8  mt-0">
                 {errRecruitmentPlan && (
@@ -574,7 +572,7 @@ export default function DialogCandidateFormCreate() {
                 )}
               </div>
             </div>
-            <div className="col-md-12">
+            {/* <div className="col-md-12">
               <div className="col-md-12">
                 <h4 className="grey-text mb-1">Kết quả phỏng vấn</h4>
                 <hr className="hr-infor" />
@@ -600,7 +598,7 @@ export default function DialogCandidateFormCreate() {
                   </select>
                 </div>
                 {/*  */}
-                <div className="col-md-4 text-center mt-0 mb-2">
+                {/* <div className="col-md-4 text-center mt-0 mb-2">
                   <label
                     htmlFor="name"
                     className="form-label grey-text mb-0 ws-nowrap"
@@ -628,9 +626,9 @@ export default function DialogCandidateFormCreate() {
                     }
                   />
                 </div>
-              </div>
+              </div> */}
               {/*  */}
-              <div className="col-md-12 mt-2">
+              {/* <div className="col-md-12 mt-2">
                 <label
                   htmlFor="name"
                   className="form-label grey-text mb-0 ws-nowrap"
@@ -656,13 +654,33 @@ export default function DialogCandidateFormCreate() {
                   Kết quả cuối cùng:
                 </label>
                 <select
-                  className={`form-select ms-2 ${selectedValuePassFaild === "true" || selectedValuePassFaild === true ? 'text-success' : selectedValuePassFaild === "false" || selectedValuePassFaild === false ? 'text-danger' : 'grey-text'}`}
+                  className={`form-select ms-2 ${
+                    selectedValuePassFaild === "true" ||
+                    selectedValuePassFaild === true
+                      ? "text-success"
+                      : selectedValuePassFaild === "false" ||
+                        selectedValuePassFaild === false
+                      ? "text-danger"
+                      : "grey-text"
+                  }`}
                   style={{ width: "170px" }}
                   aria-label="Default select example"
                   value={selectedValuePassFaild}
                   onChange={handleChangePassFaild}
                 >
-                  <option className={`grey-text ${selectedValuePassFaild === "true" || selectedValuePassFaild === true || selectedValuePassFaild === "false" || selectedValuePassFaild === false || selectedValuePassFaild === "" ? 'd-none' : ''}`} disabled value="">
+                  <option
+                    className={`grey-text ${
+                      selectedValuePassFaild === "true" ||
+                      selectedValuePassFaild === true ||
+                      selectedValuePassFaild === "false" ||
+                      selectedValuePassFaild === false ||
+                      selectedValuePassFaild === ""
+                        ? "d-none"
+                        : ""
+                    }`}
+                    disabled
+                    value=""
+                  >
                     N/A
                   </option>
                   <option className="text-success" value="true">
@@ -683,9 +701,9 @@ export default function DialogCandidateFormCreate() {
                   </p>
                 )}
               </div>
-            </div>
+            </div> */}
 
-            <div className="col-md-12">
+            {/* <div className="col-md-12">
               <h4 className="grey-text mb-1">Trạng thái</h4>
               <hr className="hr-infor" />
             </div>
@@ -730,7 +748,8 @@ export default function DialogCandidateFormCreate() {
                   />
                 </div>
               </div>
-              <div className=" text-right mt-0 d-flex align-item-flex-end">
+            </div>  */}
+            <div className=" text-right mt-0 d-flex align-item-flex-end justify-content-end mt-3">
                 <div className="send-child position-relative ">
                   <button
                     type="submit"
@@ -740,7 +759,6 @@ export default function DialogCandidateFormCreate() {
                   </button>
                 </div>
               </div>
-            </div>
             <div className="col-md-8  mt-0">
               {errStatus && (
                 <p className="err-valid ws-nowrap ">

@@ -133,9 +133,9 @@ function Navbar() {
 
     const listItems = [
         { id: 1, text: "Trang chủ", IconText: HomeIcon, linkTo: `/`, roles: [] },
-        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
+        { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: [] },
         {
-            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_ADMIN'], children: [
+            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: [], children: [
                 {
                     id: 1,
                     name: "Nhu cầu",
@@ -154,7 +154,7 @@ function Navbar() {
             ]
         },
         {
-            id: 4, text: "Thống kê", IconText: SignalCellularAltIcon, roles: ['ROLE_ADMIN'], children: [
+            id: 4, text: "Thống kê", IconText: SignalCellularAltIcon, roles: [], children: [
                 {
                     id: 1,
                     name: "Kết quả đào tạo",

@@ -7,11 +7,21 @@ import DialogRecruitmentPlanFormReason from "./dialogRecruitmentPlanFormReason";
 import axios from "axios";
 import { useFormik } from "formik";
 import Swal from 'sweetalert2';
-import { useNavigate } from "react-router-dom";
-
-export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem }) {
+import { Link, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem, userRoles, checkId }) {
   const [tenhnology, setTenhnology] = useState([]);
+  console.log(checkId)
   const navigate = useNavigate();
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_HR");
+  };
+  const hasRoleKSCL = () => {
+    return userRoles.some((role) => role.authority === "ROLE_KSCL");
+  };
   // Dữ liệu fake
   const formData = useFormik({
     initialValues: {
@@ -40,6 +50,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
       ],
     },
   });
+
   // Call api
   const Toast = Swal.mixin({
     toast: true,
@@ -89,7 +100,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
   // const testId = [useState()]
 
   // Xử lý mở form
-  const [openForm, setOpenForm] = useState(false);
+  const [openForm, setOpenForm] = useState(checkId);
   const handleClickFormOpen = () => {
     setOpenForm(true);
   };
@@ -103,6 +114,57 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     setOpenForm(false);
     setOpenFormReason(true);
   };
+  const [steps, setSteps] = useState({
+    requestId: 0,
+    planId: 0,
+    requestName: "",
+    requestCreator: "",
+    reason: "",
+    decanAccept: "",
+    detAccept: "",
+    planName: "",
+    applicants: 0,
+    training: 0,
+    intern: 0,
+    totalIntern: 0,
+    step: 0,
+  });
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/process/plan/${id}`);
+        setSteps(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+  console.log(steps.requestId)
+
+  const activeStep = steps.step;
+  const deleteIcon = () => {
+    return (
+      <Icon icon="typcn:delete" width="24" height="24" />
+    )
+  }
+  const checkDecan = () => {
+    if (steps.decanAccept === null || steps.decanAccept === "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  const checkDet = () => {
+    if (steps.detAccept === null || steps.detAccept === "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
   return (
     <>
       <Tooltip title="Xem chi tiết">
@@ -114,6 +176,8 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
           onClick={handleClickFormOpen}
         />
       </Tooltip>
+
+
       <Dialog
         id="formWatchRecruitmentPlan"
         open={openForm}
@@ -270,66 +334,70 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                       </p>
                     </td>
                   </tr>
-                  {statusItem === "Đã xác nhận" ? (
-                    <tr>
-                      <td>
-                        <label
-                          htmlFor="time"
-                          style={{ color: "#6F6F6F" }}
-                          className="form-label fs-20 mb-0"
-                        >
-                          Trạng thái:{" "}
-                        </label>
-                      </td>
-                      <td>
-                        <p
-                          className=" namePersonal mb-0"
-                          style={{ color: "#838383" }}
-                        >
-                          {statusItem}
-                        </p>
-                      </td>
-                    </tr>
-                  ) : ("")
-                  }
+
+                  <tr>
+                    <td>
+                      <label
+                        htmlFor="time"
+                        style={{ color: "#6F6F6F" }}
+                        className="form-label fs-20 mb-0"
+                      >
+                        Trạng thái:{" "}
+                      </label>
+                    </td>
+                    <td>
+                      <p
+                        className=" namePersonal mb-0"
+                        style={{ color: "#838383" }}
+                      >
+                        {statusItem}
+                      </p>
+                    </td>
+                  </tr>
+
                 </tbody>
               </table>
             </div>
-
-            {formData.values.recruitmentPlan.status === "Bị từ chối bởi DET" ? (
-              <div className="col-md-12  d-flex ">
-                <label
-                  htmlFor="time"
-                  style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
-                  className="form-label fs-20 me-2"
-                >
-                  Lý do:
-                </label>
-                <textarea
-                  readOnly
-                  className="form-control resize pt-2 w-618"
-                  style={{ color: "#838383" }}
-                  value={formData.values.recruitmentPlan.reason}
-                ></textarea>
-              </div>
-            ) : (check ? (
-              <div className="col-md-12 mt-0 d-flex">
-                <div className="col-md-6 mt-2">
-                  <button
-                    type="button"
-                    className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
-                    onClick={handleCloseWatchOpenReason}
+            {!hasRoleKSCL() ?
+              formData.values.recruitmentPlan.status === "Bị từ chối bởi DET" ? (
+                <div className="col-md-12  d-flex ">
+                  <label
+                    htmlFor="time"
+                    style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                    className="form-label fs-20 me-2"
                   >
-                    Từ chối
-                  </button>
+                    Lý do:
+                  </label>
+                  <textarea
+                    readOnly
+                    className="form-control resize pt-2 w-618"
+                    style={{ color: "#838383" }}
+                    value={formData.values.recruitmentPlan.reason}
+                  ></textarea>
                 </div>
-                <div className="col-md-6 mt-2 ms-2">
-                  <button type="button" onClick={approve} className=" btn-edit btn btn-success w-98    bg-clr-success">
-                    Phê duyệt
-                  </button>
-                </div>
-              </div>)
-              : statusItem === "Bị từ chối bởi DECAN" ? (
+              ) : formData.values.recruitmentPlan.status === "Đã gửi" ? (
+                hasRoleAdmin() ? (<div className="col-md-12 mt-0 d-flex">
+                  <div className="col-md-6 mt-2">
+                    <button
+                      type="button"
+                      className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
+                      onClick={handleCloseWatchOpenReason}
+                    >
+                      Từ chối
+                    </button>
+                  </div>
+                  <div className="col-md-6 mt-2 ms-2">
+                    <button
+                      type="button"
+                      onClick={approve}
+                      className="btn-edit btn btn-success w-98 bg-clr-success"
+                    >
+                      Phê duyệt
+                    </button>
+                  </div>
+                </div>) : (<></>)
+
+              ) : formData.values.recruitmentPlan.status === "Bị từ chối bởi DECAN" ? (
                 <div className="col-md-12 mt-2 d-flex ">
                   <label
                     htmlFor="time"
@@ -345,7 +413,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                     value={reasonItem}
                   ></textarea>
                 </div>
-              ) : (
+              ) : formData.values.recruitmentPlan.status === "Đã xác nhận" ? (
                 <div className="col-md-12 mt-0 d-flex mt-2">
                   <div className="col-md-6 mt-2">
                     <button
@@ -360,14 +428,105 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                     <button
                       type="button"
                       style={{ height: '42px' }}
-                      className=" btn-edit btn btn-success w-98    bg-clr-successV1">
+                      className="btn-edit btn btn-success w-98 bg-clr-successV1"
+                    >
                       Xem kết quả đào tạo
                     </button>
                   </div>
-                </div>
-              )
+                </div>)
+                : (<></>)
+              :
+              <div className="col-md-12 mt-2">
+                <label
+                  htmlFor="time"
+                  style={{ color: "#6F6F6F" }}
+                  className="form-label fs-20 mb-0"
+                >
+                  Quy trình:{" "}
+                </label>
+                <div className="col-md-12 d-flex">
+                  <div className="col-md-4 d-flex flex-column mw-200">
+                    <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Khởi tạo nhu cầu nhân sự</span>
+                    <div style={{ height: '24px' }}></div>
+                    <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DET xác nhận</span>
+                    <div style={{ height: '24px' }}></div>
+                    <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DCAN xác nhận</span>
+                    <div style={{ height: '24px' }}></div>
+                    <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Tuyển dụng</span>
+                    <div style={{ height: '24px' }}></div>
+                    <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Đào tạo</span>
+                    <div style={{ height: '24px' }}></div>
+                    <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Bàn giao nhân sự</span>
+                  </div>
+                  <div className="col-md-6">
+                    <Stepper activeStep={activeStep} orientation="vertical">
+                      <Step>
+                        <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <Link to={`/recruitment/personalNeeds?idRequest=${steps.requestId}`} className="a-progress cursor-pointer">{steps.requestName}</Link></span> </StepLabel>
+                      </Step>
+                      <Step>
+                        <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
+                          {checkDet() ?
+                            steps.detAccept === "true" || steps.detAccept === true ?
+                              <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <span className="fs-16">{steps.planName}</span></span>
+                              :
+                              steps.decanAccept === "false" || steps.decanAccept === false ?
+                                <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                :
+                                <span className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
 
-            )}
+                            :
+                            <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
+                          }
+                        </StepLabel>
+
+                      </Step>
+                      <Step>
+                        <StepLabel StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
+                          {checkDecan() ?
+                            steps.decanAccept === "true" || steps.decanAccept === true ?
+                              <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a className="a-progress"></a></span>
+                              :
+                              <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                            :
+                            <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
+                          }
+
+                        </StepLabel>
+                      </Step>
+                      <Step>
+                        {steps.step >= 3 ?
+                          steps.applicants === 0 ?
+                            <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress"></a></span> </StepLabel>
+                            :
+                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <Link to={`/recruitment/candidateManagement?planName=${steps.planName}`} className="a-progress cursor-pointer" >Xem kết quả tuyển dụng</Link></span> </StepLabel>
+                          :
+                          <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
+                        }
+                      </Step>
+                      <Step>
+                        {steps.step >= 4 ?
+                          steps.training === 0 ?
+                            <StepLabel className={`ws-nowrap svg-size svg-size-none `} >
+                              <span className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress"></a></span>
+                            </StepLabel>
+                            :
+                            <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`} className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span> </StepLabel>
+                          :
+                          <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
+                        }
+                      </Step>
+                      <Step>
+                        {steps.step >= 5 ?
+                          <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự <a className="a-progress"></a></span> </StepLabel>
+                          :
+                          <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
+                        }
+                      </Step>
+                    </Stepper>
+                  </div>
+                </div>
+              </div>
+            }
           </form>
         </DialogTitle>
       </Dialog>
