@@ -202,6 +202,7 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
                 buttons: false,
                 timer: 2000,
               }).then(() => {
+                console.log(res)
                 sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,['ROLE_DM'])
                 .then(sendNotifications(null,`Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,['ROLE_HR']))
                 .then(window.location.href = "/recruitment/recruitmentPlan");
