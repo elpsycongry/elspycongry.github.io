@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {
-    Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography,
-    TextField, FormGroup, FormControlLabel, Checkbox, Button, Tooltip
+    Button,
+    Checkbox,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    FormControlLabel,
+    FormGroup,
+    TextField,
+    Tooltip
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { useSnackbar } from 'notistack';
 import axios from 'axios';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
-import './addUser.css';
 import '../../assets/css/cssRecruitment/recruitment.css';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import './addUser.css';
 
 export default function DialogAddUserForm({ token, onAdd }) {
     const [open, setOpen] = useState(false);

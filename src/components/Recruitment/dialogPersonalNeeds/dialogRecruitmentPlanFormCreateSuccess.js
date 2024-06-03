@@ -9,7 +9,7 @@ import swal from "sweetalert";
 import { useFormik } from "formik";
 import { sendNotifications } from "../../Notification/notification";
 
-export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClose }) {
+export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClose ,userRoles}) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
@@ -18,6 +18,9 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const [errNumber, setErrNumber] = useState(false);
   const user = JSON.parse(localStorage.getItem("currentUser"))
   // Xử lý số lượng nhân sự
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+  };
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
@@ -183,10 +186,9 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
     if (id !== null) {
       axios
         .get("http://localhost:8080/api/recruitmentRequests/" + id)
-        .then((res) => {
+        .then((res => {
           setRecuitmentName(res.data.recruitmentRequest.name);
           setIdRecruitment(res.data.recruitmentRequest.id);
-
           setHandoverDeadline(res.data.recruitmentRequest.dateEnd);
           const detail = res.data.details;
           setTech(
@@ -195,8 +197,9 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
               numberOfOutputPersonnel: item.quantity,
               numberOfPersonnelNeeded: item.quantity * 3,
             }))
-          );
-        });
+          )
+        })
+      );
     }
 
   }, [id]);
@@ -423,6 +426,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
 
   return (
     <>
+    {hasRoleAdmin() && 
       <Dialog
         id="formCreateRecruitmentPlan"
         open={open}
@@ -588,7 +592,10 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
             </div>
           </form>
         </DialogTitle>
+    
       </Dialog >
+}
     </>
+            
   )
 }

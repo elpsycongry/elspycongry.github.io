@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import {sendNotifications} from "../../Notification/notification";
 
-export default function DialogPersonalFormCreate() {
+export default function DialogPersonalFormCreate({userRoles}) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [quantityErr, setQuantityErr] = useState(false);
@@ -52,7 +52,7 @@ export default function DialogPersonalFormCreate() {
     }
     setNameErr(hasErrName);
     // 
-
+     
     if (dateSet < futureDate || dateSet == "Invalid Date") {
       setDateErr(true);
     } else {
@@ -66,7 +66,10 @@ export default function DialogPersonalFormCreate() {
       return true;
     }
   }
-
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_DM");
+  };
+  console.log(hasRoleAdmin());
   const formData = useFormik({
     initialValues: {
       idUser: user.id,
@@ -241,10 +244,13 @@ export default function DialogPersonalFormCreate() {
 
   return (
     <>
-      <div className=" min-width position-relative cursor-pointer" onClick={handleClickFormOpen}>
+    {hasRoleAdmin() && (
+    <div className=" min-width position-relative cursor-pointer" onClick={handleClickFormOpen}>
         <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline">Thêm nhu cầu nhân sự</button>
         <AddIcon className=" position-absolute plus-icon clr-white" />
       </div>
+      )}
+     
       <Dialog
         open={openForm}
         onClose={handleClickFormClose}

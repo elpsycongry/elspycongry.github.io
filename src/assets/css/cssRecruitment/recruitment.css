@@ -1,4 +1,3 @@
-
 .title {
     font-size: 28px;
     font-weight: 500;
@@ -121,6 +120,17 @@
 #formWatch .MuiPaper-root {
     width: 45%;
     overflow: hidden;
+}
+
+.mw .MuiPaper-root {
+    min-width: 600px;
+}
+.mwQC .MuiPaper-root {
+    min-width: 760px;
+}
+
+.mw-200 {
+    min-width: 200px;
 }
 
 .select-form .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
@@ -328,6 +338,14 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 220px;
 }
 
+.p-es-8 {
+    padding: 8px 0;
+}
+
+.h-40 {
+    height: 40px;
+}
+
 .p-tricklord {
     padding-right: 31px;
 }
@@ -335,6 +353,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .align-item-center {
     align-items: center !important;
 }
+
 .align-item-flex-end {
     align-items: flex-end !important;
 }
@@ -348,12 +367,32 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 15px !important;
 }
 
+.fs-14 {
+    font-size: 14px !important;
+}
+
 .fs-1_5em {
     font-size: 1.5em !important;
 }
 
 .fw-500 {
     font-weight: 500;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.fs-16 {
+    font-size: 16px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-12 {
+    margin-top: 12px;
 }
 
 .mr-15 {
@@ -420,11 +459,11 @@ input[type="number"]::-webkit-outer-spin-button {
 
 }
 
-#time .css-v0pjtz-MuiStack-root, #time .css-a643pv-MuiStack-root {
+#time .css-v0pjtz-MuiStack-root,
+#time .css-a643pv-MuiStack-root {
     padding: 0;
     overflow: hidden;
 }
-
 
 .date-set div {
     text-align: center;
@@ -438,6 +477,7 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 18px;
     justify-content: flex-end;
 }
+
 .date-set div input {
     text-align: center;
     color: #687168;
@@ -445,8 +485,27 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .text-area-field .MuiFormControl-root {
     width: 100%;
-    padding:10px;
+    padding: 10px;
     padding-left: 0;
+}
+
+.w-auto-complete .base-Popper-root {
+    white-space: nowrap;
+    min-width: 420px;
+    margin-left: 50px !important;
+    margin-top: 10px !important;
+    /* height: 30px !important; */
+}
+
+.auto-complete .MuiInputBase-root {
+    position: relative;
+    height: 35px;
+}
+
+.auto-complete .MuiInputBase-root input {
+    position: absolute;
+    width: 75% !important;
+    padding-right: 30px !important;
 }
 
 
@@ -514,28 +573,132 @@ input[type="number"]::-webkit-outer-spin-button {
 .hover-primary {
     transition: 0.2s ease-in-out;
 }
-.page{
+
+.page {
     margin-bottom: 20px;
     display: flex;
     justify-content: center;
 }
+
 .first-button {
     border-radius: 50%;
 }
-.hover-btn-page{
+
+.hover-btn-page {
     transition: 0.3s ease-in-out;
 }
-.hover-btn-page:hover{
-    background-color:  rgba(0, 0, 0, 0.08)!important;
+
+.hover-btn-page:hover {
+    background-color: rgba(0, 0, 0, 0.08) !important;
     transition: 0.2s ease-in-out;
 }
-.icon-page{
+
+.icon-page {
     top: 3px;
     left: 2.5px;
 }
-.btn-page{
+
+.btn-page {
     width: 30px;
     height: 30px;
     background-color: #fdfdfd;
     border: none;
 }
+
+.svg-size span svg {
+    font-size: 18px;
+}
+
+.svg-size-err span svg {
+    transform: scale(1.13);
+    transform-origin: center;
+    color: red !important;
+}
+
+.svg-size-none span svg {
+    color: rgba(158, 158, 158, 255) !important;
+}
+
+.css-1pe7n21-MuiStepConnector-root {
+    width: 10px;
+}
+
+.svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed,
+.svg-size span .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+    color: green;
+}
+
+.svg-size span {
+    width: 32px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+}
+
+.a-progress {
+    color: #3232f0;
+    text-decoration: underline;
+    font-size: 16px;
+}
+
+.input-disabled {
+    position: relative;
+  }
+  
+  .input-disabled:after {
+    content: "\f05e"; /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+    font-weight: 900;
+    color: #dc3545; /* Màu đỏ */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: not-allowed;
+    display: none;
+  }
+  
+  .input-disabled:hover:after,
+  .input-disabled:focus:after {
+    display: block;
+  }
+  .input-container.input-disabled {
+    position: relative;
+  }
+  
+  .input-container.input-disabled:after {
+    content: "\f05e"; /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+    font-weight: 900;
+    color: #dc3545; /* Màu đỏ */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: not-allowed;
+    display: none;
+  }
+  
+  .input-container.input-disabled:hover:after {
+    display: block;
+  }
+  .select-container.input-disabled {
+    position: relative;
+  }
+  
+  .select-container.input-disabled:after {
+    content: "\f05e"; /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+    font-weight: 900;
+    color: #dc3545; /* Màu đỏ */
+    position: absolute;
+    top: 62%; /* Thay đổi giá trị này để di chuyển icon cấm */
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: not-allowed;
+    display: none;
+  }
+  
+  .select-container.input-disabled:hover:after {
+    display: block;
+  }

@@ -1,16 +1,16 @@
 import { Dialog, DialogTitle, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
-import SendIcon from '@mui/icons-material/Send';
-import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+import SendIcon from "@mui/icons-material/Send";
+import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
 import swal from "sweetalert";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { sendNotifications } from "../../Notification/notification";
 
-export default function DialogRecruitmentPlanFormCreate({ id }) {
+export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
   const [dateErr, setDateErr] = useState(false);
   const [techErr, setTechErr] = useState(false);
   const [errNumberOfPersonal, setErrNumberOfPersonal] = useState(false);
@@ -18,16 +18,26 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   const [errNameRecruitmentPlan, setErrNameRecruitmentPlan] = useState(false);
   const [errIdPersonalNeed, setErrIdPersonalNeed] = useState(false);
   const [errNumber, setErrNumber] = useState(false);
-  const navigate = useNavigate()
-  const user = JSON.parse(localStorage.getItem("currentUser"))
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("currentUser"));
 
   // Xử lý số lượng nhân sự
-  const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan, personalneed) => {
+  const checkValid = (
+    dateSet,
+    techArr,
+    dateCreate,
+    nameRecruitmentPlan,
+    personalneed
+  ) => {
     const futureDate = new Date(dateCreate);
     futureDate.setDate(dateCreate.getDate() + 75);
-    // 
+    //
     var hasErrPersonalNeeds;
-    if (personalneed === "" || personalneed === null || personalneed === "default") {
+    if (
+      personalneed === "" ||
+      personalneed === null ||
+      personalneed === "default"
+    ) {
       hasErrPersonalNeeds = true;
       setErrIdPersonalNeed(true);
     } else {
@@ -35,60 +45,72 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       setErrIdPersonalNeed(false);
     }
 
-    const errTech = techArr.map(item => {
+    const errTech = techArr.map((item) => {
       if (item.type === "" || item.type === "default") {
         return true;
       } else {
         return false;
       }
-    })
-    const hasErrTech = errTech.some(item => item === true);
+    });
+    const hasErrTech = errTech.some((item) => item === true);
     setTechErr(hasErrTech);
 
-
-    // 
-    const errNumberR = techArr.map(item => {
-      if (item.numberOfPersonnelNeeded !== "" && item.NumberOfOutputPersonnel !== "" && item.numberOfPersonnelNeeded !== 0 && item.NumberOfOutputPersonnel !== 0) {
+    //
+    const errNumberR = techArr.map((item) => {
+      if (
+        item.numberOfPersonnelNeeded !== "" &&
+        item.NumberOfOutputPersonnel !== "" &&
+        item.numberOfPersonnelNeeded !== 0 &&
+        item.NumberOfOutputPersonnel !== 0
+      ) {
         return item.numberOfPersonnelNeeded < item.numberOfOutputPersonnel;
       } else {
         return false;
       }
-    })
-    const hasErrNumber = errNumberR.some(item => item === true);
-    setErrNumber(hasErrNumber)
+    });
+    const hasErrNumber = errNumberR.some((item) => item === true);
+    setErrNumber(hasErrNumber);
     //
     var hasErrOfPersonal;
     if (!hasErrNumber) {
-      const errNumberPersonal = techArr.map(item => {
-        if (item.numberOfPersonnelNeeded === 0 || item.numberOfPersonnelNeeded === "" || item.numberOfPersonnelNeeded < 0) {
+      const errNumberPersonal = techArr.map((item) => {
+        if (
+          item.numberOfPersonnelNeeded === 0 ||
+          item.numberOfPersonnelNeeded === "" ||
+          item.numberOfPersonnelNeeded < 0
+        ) {
           return true;
         } else {
           return false;
         }
-      })
-      hasErrOfPersonal = errNumberPersonal.some(item => item === true);
+      });
+      hasErrOfPersonal = errNumberPersonal.some((item) => item === true);
       setErrNumberOfPersonal(hasErrOfPersonal);
     } else {
       hasErrOfPersonal = false;
       setErrNumberOfPersonal(false);
     }
-    // 
+    //
     var hasErrNumberOutput;
     if (!hasErrNumber) {
-      const errNumberOutput = techArr.map(item => {
-        if (item.numberOfOutputPersonnel === 0 || item.numberOfOutputPersonnel === "" || item.numberOfOutputPersonnel < 0) {
+      const errNumberOutput = techArr.map((item) => {
+        if (
+          item.numberOfOutputPersonnel === 0 ||
+          item.numberOfOutputPersonnel === "" ||
+          item.numberOfOutputPersonnel < 0
+        ) {
           return true;
         } else {
           return false;
         }
-      })
-      hasErrNumberOutput = errNumberOutput.some(item => item === true)
+      });
+      hasErrNumberOutput = errNumberOutput.some((item) => item === true);
       setErrNumberOfOutput(hasErrNumberOutput);
     } else {
       hasErrNumberOutput = false;
       setErrNumberOfOutput(false);
     }
-    //  
+    //
     var hasErrRecruitmentPlan;
     if (nameRecruitmentPlan === "") {
       hasErrRecruitmentPlan = true;
@@ -98,20 +120,27 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       setErrNameRecruitmentPlan(false);
     }
 
-
     if (dateSet < futureDate || dateSet === "Invalid Date") {
       setDateErr(true);
     } else {
       setDateErr(false);
     }
 
-
-    if (dateSet < futureDate || dateSet === "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrPersonalNeeds || hasErrNumber) {
+    if (
+      dateSet < futureDate ||
+      dateSet === "Invalid Date" ||
+      hasErrTech ||
+      hasErrNumberOutput ||
+      hasErrOfPersonal ||
+      hasErrRecruitmentPlan ||
+      hasErrPersonalNeeds ||
+      hasErrNumber
+    ) {
       return false;
     } else {
       return true;
     }
-  }
+  };
 
   const formData = useFormik({
     initialValues: {
@@ -141,15 +170,15 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-      // console.log(values); 
+      // console.log(values);
       const personalneed = values.recruitmentPlan.recruitmentRequest.id;
       const nameRecruitmentPlan = values.recruitmentPlan.name;
       values.planDetails = [...tech];
       values.idUser = user.id;
-      if (values.recruitmentPlan.dateRecruitmentEnd === '') {
+      if (values.recruitmentPlan.dateRecruitmentEnd === "") {
         values.recruitmentPlan.dateRecruitmentEnd = dateRecruitmentEnd;
       }
-      if (values.recruitmentPlan.handoverDeadline === '') {
+      if (values.recruitmentPlan.handoverDeadline === "") {
         values.recruitmentPlan.handoverDeadline = handoverDeadline;
       }
       const date = new Date(values.recruitmentPlan.handoverDeadline);
@@ -157,7 +186,9 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
       // checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed);
       // setSubmitting(false);
       // return;
-      if (!checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)) {
+      if (
+        !checkValid(date, tech, dateCreate, nameRecruitmentPlan, personalneed)
+      ) {
         setSubmitting(false);
         return;
       } else {
@@ -184,22 +215,26 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
           });
         }
       }
-    }
+    },
   });
   // Call api
+
   const [recuitments, setRecuitment] = useState([]);
+  const hasRoleAdmin = () => {
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+  };
+  console.log(hasRoleAdmin());
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-        if (user != null) {
-          axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-          axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
-            setRecuitment(res.data);
-          });
-        }
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    if (user != null) {
+      axios.defaults.headers.common["Authorization"] =
+        "Bearer " + user.accessToken;
+      axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
+        setRecuitment(res.data);
+      });
+   
+    }
   }, []);
-
-
-
 
 
   // Xử lý mở form
@@ -214,21 +249,24 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     { id: 8, text: "Android" },
     { id: 9, text: "IOS" },
     { id: 10, text: "JAVA" },
-    { id: 11, text: ".NET" }
-  ]
+    { id: 11, text: ".NET" },
+  ];
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
     setOpenForm(true);
-  }
+  };
   const handleClickFormClose = () => {
     setOpenForm(false);
-  }
+  };
   // Xử lý thêm công nghệ
   const [tech, setTech] = useState([{ type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" }]);
   const addTech = () => {
-    setTech((prevTech) => [...prevTech, { type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" }]);
+    setTech((prevTech) => [
+      ...prevTech,
+      { type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" },
+    ]);
   };
-
+  console.log(tech)
   const removeTech = (index) => {
     const updateTech = tech.filter((_, idx) => idx !== index);
     setTech(updateTech);
@@ -237,12 +275,11 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     const updateTech = [...tech];
     updateTech[index] = { ...updateTech[index], type: e.target.value };
     setTech(updateTech);
-  }
+  };
   // NumberOfOutputPersonnel
 
   // Hàm dữ liệu đầu ra
   function NumberOfOutputPersonnel({ number, idx }) {
-
     if (number === "" || number === 0) {
       number = 0;
     }
@@ -251,7 +288,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     const handleClickCountPlus = () => {
       if (number < 20 || countOf < 20) {
         setCountOf(parseInt(countOf) + 1);
-        numberOfOutputPersonnel((parseInt(number) + 1), idx);
+        numberOfOutputPersonnel(parseInt(number) + 1, idx);
       }
     };
     const handleInputChange = (e) => {
@@ -263,8 +300,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
     const handleClickCountMinus = () => {
       if (!countOf <= 0) {
         setCountOf(countOf - 1);
-        numberOfOutputPersonnel((parseInt(number) - 1), idx);
-
+        numberOfOutputPersonnel(parseInt(number) - 1, idx);
       }
     };
     const handleBlur = () => {
@@ -347,59 +383,61 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
   const Dlt = ({ index }) => {
     if (tech.length > 1) {
       return (
-        <ClearIcon className="position-absolute oc-08 clr-danger hover-danger" sx={{ right: '55px', top: '6px' }} onClick={() => removeTech(index)} />
-      )
+        <ClearIcon
+          className="position-absolute oc-08 clr-danger hover-danger"
+          sx={{ right: "55px", top: "6px" }}
+          onClick={() => removeTech(index)}
+        />
+      );
     }
-  }
+  };
   const timeNow = new Date();
   const year = timeNow.getFullYear();
-  const month = String(timeNow.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-  const day = String(timeNow.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const month = String(timeNow.getMonth() + 1).padStart(2, "0"); // Tháng phải có 2 chữ số
+  const day = String(timeNow.getDate()).padStart(2, "0"); // Ngày phải có 2 chữ số
   const timeNowValue = `${year}-${month}-${day}`;
   const dateDeadline = new Date(timeNow);
   dateDeadline.setDate(timeNow.getDate() + 75);
   const yearDL = dateDeadline.getFullYear();
-  const monthDL = String(dateDeadline.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-  const dayDL = String(dateDeadline.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+  const monthDL = String(dateDeadline.getMonth() + 1).padStart(2, "0"); // Tháng phải có 2 chữ số
+  const dayDL = String(dateDeadline.getDate()).padStart(2, "0"); // Ngày phải có 2 chữ số
   const dateDeadlineValue = `${yearDL}-${monthDL}-${dayDL}`;
   const [dateRecruitmentEnd, setRecuitmentDateEnd] = useState(timeNowValue);
   const [handoverDeadline, setHandoverDeadline] = useState(dateDeadlineValue);
   const handleDateChange = (event) => {
-    if (event.target.name === 'recruitmentPlan.dateRecruitmentEnd') {
+    if (event.target.name === "recruitmentPlan.dateRecruitmentEnd") {
       setRecuitmentDateEnd(event.target.value);
-    } else if (event.target.name === 'recruitmentPlan.handoverDeadline') {
+    } else if (event.target.name === "recruitmentPlan.handoverDeadline") {
       setHandoverDeadline(event.target.value);
-      // 
+      //
       const timeChange = new Date(event.target.value);
       timeChange.setDate(timeChange.getDate() - 75);
       const yearChange = timeChange.getFullYear();
-      const monthChange = String(timeChange.getMonth() + 1).padStart(2, '0'); // Tháng phải có 2 chữ số
-      const dayChange = String(timeChange.getDate()).padStart(2, '0'); // Ngày phải có 2 chữ số
+      const monthChange = String(timeChange.getMonth() + 1).padStart(2, "0"); // Tháng phải có 2 chữ số
+      const dayChange = String(timeChange.getDate()).padStart(2, "0"); // Ngày phải có 2 chữ số
       const timeChangeValue = `${yearChange}-${monthChange}-${dayChange}`;
-      // 
+      //
       if (timeChange < timeNow) {
         setRecuitmentDateEnd(timeNowValue);
         formData.handleChange({
           target: {
-            name: 'recruitmentPlan.dateRecruitmentEnd',
-            value: timeNowValue
-          }
+            name: "recruitmentPlan.dateRecruitmentEnd",
+            value: timeNowValue,
+          },
         });
       } else {
-
         setRecuitmentDateEnd(timeChangeValue);
         formData.handleChange({
           target: {
-            name: 'recruitmentPlan.dateRecruitmentEnd',
-            value: timeChangeValue
-          }
+            name: "recruitmentPlan.dateRecruitmentEnd",
+            value: timeChangeValue,
+          },
         });
       }
     }
     formData.handleChange(event);
-  }
+  };
   function TimeRecruitment() {
-
     return (
       <>
         <div className="col-md-4 mt-0 mb-2 child">
@@ -425,19 +463,26 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
             id="recruitmentPlan.handoverDeadline"
             name="recruitmentPlan.handoverDeadline"
           />
-
         </div>
       </>
-    )
+    );
   }
-
 
   return (
     <>
-      <div className=" min-width position-relative " style={{ width: '280px' }} onClick={handleClickFormOpen}>
-        <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">Thêm kế hoạch tuyển dụng</button>
-        <AddIcon className=" position-absolute plus-icon clr-white" />
-      </div>
+      {hasRoleAdmin() && (
+        <div
+          className=" min-width position-relative"
+          style={{ width: "280px" }}
+          onClick={handleClickFormOpen}
+        >
+          <button className="hover-btn btn-create w-100  text-right clr-white font-w-1 non-outline cursor-pointer">
+            Thêm kế hoạch tuyển dụng
+          </button>
+          <AddIcon className=" position-absolute plus-icon clr-white" />
+        </div>
+      )}
+
       <Dialog
         id="formCreateRecruitmentPlan"
         open={openForm}
@@ -474,11 +519,13 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 id="recruitmentPlan.recruitmentRequest.id"
               >
                 <option value="default">Chọn nhu cầu nhân sự</option>
-                {recuitments.filter(item => item.status === "Đã gửi").map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
+                {recuitments
+                  .filter((item) => item.status === "Đã gửi")
+                  .map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
               </select>
               <div className="col-md-8  mt-0">
                 {errIdPersonalNeed && (
@@ -498,7 +545,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
                 placeholder="Ví dụ: DECEN - Kế hoạch tuyển dụng quý 3/2021"
                 onChange={formData.handleChange}
                 onBlur={formData.handleBlur} // Thêm onBlur để kiểm tra lỗi khi trường dữ liệu bị mất trỏ
-                className='form-control grey-text'
+                className="form-control grey-text"
                 id="recruitmentPlan.name"
                 name="recruitmentPlan.name"
               />
@@ -518,7 +565,8 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
               </div>
               <div className="col-md-4 mb-0 text-center">
                 <label className="form-label grey-text">
-                  Số lượng nhân sự cần tuyển <span className="color-red">*</span>
+                  Số lượng nhân sự cần tuyển{" "}
+                  <span className="color-red">*</span>
                 </label>
               </div>
               <div className="col-md-4 mb-0 text-center ">
@@ -530,7 +578,7 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
             {tech.map((tech, index) => (
               <>
                 <div key={index} className="col-md-4 mt-0 mb-2 child">
-                  <select
+                <select
                     className="form-select grey-text"
                     aria-label="Default select example"
                     defaultValue="default"
@@ -565,24 +613,40 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
             ))}
 
             <div className="col-md-4 mt-0">
-              {techErr && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Công nghệ không được để trống</p>}
+              {techErr && (
+                <p style={{ whiteSpace: "nowrap" }} className="err-valid">
+                  Công nghệ không được để trống
+                </p>
+              )}
             </div>
             {errNumber && (
               <div className="col-md-8  mt-0 text-center">
-
                 <p className="err-valid ws-nowrap ">
                   Số lượng cần tuyển phải lớn hơn số lượng đầu ra
                 </p>
               </div>
             )}
             <div className="col-md-4 mt-0 text-center">
-              {errNumberOfPersonal && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
+              {errNumberOfPersonal && (
+                <p style={{ whiteSpace: "nowrap" }} className="err-valid">
+                  Số lượng phải lớn hơn 0
+                </p>
+              )}
             </div>
             <div className="col-md-4 mt-0 text-center">
-              {errNumberofOutput && <p style={{ whiteSpace: 'nowrap' }} className="err-valid">Số lượng phải lớn hơn 0</p>}
+              {errNumberofOutput && (
+                <p style={{ whiteSpace: "nowrap" }} className="err-valid">
+                  Số lượng phải lớn hơn 0
+                </p>
+              )}
             </div>
-            <div className="col-md-12 mt-2 " >
-              <p className="grey-text plusTech mb-0 w-160 cursor-pointer" onClick={addTech}>Thêm công nghệ +</p>
+            <div className="col-md-12 mt-2 ">
+              <p
+                className="grey-text plusTech mb-0 w-160 cursor-pointer"
+                onClick={addTech}
+              >
+                Thêm công nghệ +
+              </p>
             </div>
             <div className="col-md-12  d-flex">
               <div className="col-md-4 mb-0">
@@ -613,13 +677,14 @@ export default function DialogRecruitmentPlanFormCreate({ id }) {
             <div className="col-md-8 text-center mt-0">
               {dateErr && (
                 <p className="err-valid ws-nowrap ">
-                  Thời hạn bàn giao phải lớn hơn thời hạn tuyển dụng tối thiểu 75 ngày
+                  Thời hạn bàn giao phải lớn hơn thời hạn tuyển dụng tối thiểu
+                  75 ngày
                 </p>
               )}
             </div>
           </form>
-        </DialogTitle >
-      </Dialog >
+        </DialogTitle>
+      </Dialog>
     </>
-  )
+  );
 }
