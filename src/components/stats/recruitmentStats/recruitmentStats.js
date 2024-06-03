@@ -18,6 +18,9 @@ import ProcessedCVChart from "./processedCVChart";
 import PassFailCVChart from "./passFailCVChart";
 import AcceptJobCVChart from "./acceptJobCVChart";
 import './recruitmentStats.css'
+import ExportRecruitment from "./excel/exportRecruitment";
+import * as XLSX from 'xlsx';
+import { Icon } from '@iconify/react';
 
 
 function Copyright(props) {
@@ -34,9 +37,8 @@ function Copyright(props) {
 }
 
 export default function RecruitmentStats() {
+
     const [recruitmentStats, setRecruitmentStats] = useState([]);
-
-
     const [activeStat, setActiveStat] = useState("stats1");
     const [activeColumnChart, setActiveColumnChart] = useState("col1");
     const [titleStatistics, setTitleStatistics] = useState("Năm");
@@ -62,7 +64,7 @@ export default function RecruitmentStats() {
                     setGrowthStatistics(res.data)
                     console.log(growthStatistics);
                 })
-                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+            axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
                 .then(res1 => {
                     setMaxGrowthStatistics(res1.data)
                 })
@@ -101,30 +103,30 @@ export default function RecruitmentStats() {
                     .then(res => {
                         setGrowthStatistics(res.data)
                     })
-                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
             if (quarter != 0) {
                 axios.get("http://localhost:8080/api/recruitmentStats/quarter?quarter=" + quarter)
                     .then(res4 => {
                         setGrowthStatistics(res4.data)
                     })
-                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithQuarter")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithQuarter")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
             if (month != 0) {
                 axios.get("http://localhost:8080/api/recruitmentStats/month?month=" + month)
                     .then(res3 => {
                         setGrowthStatistics(res3.data)
                     })
-                    axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithMonth")
-                .then(res1 => {
-                    setMaxGrowthStatistics(res1.data)
-                })
+                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithMonth")
+                    .then(res1 => {
+                        setMaxGrowthStatistics(res1.data)
+                    })
             }
         }
 
@@ -257,15 +259,13 @@ export default function RecruitmentStats() {
     ];
 
     const maxGrowth = Math.max(...rows.map(row => row.growth));
-    // console.log('row 0:', rows[0].growth);
-    // console.log('max', maxGrowth);
-    // console.log((6/16));
 
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     const handleYearChange = (event) => {
         setSelectedYear(event.target.value);
     };
+
 
     return (
         <>
@@ -298,7 +298,21 @@ export default function RecruitmentStats() {
                     <div className="main-content">
                         {activeStat === "stats1" && (
                             <div className="content-stat-1">
-                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>{title}</h3>
+                                <div className="box-title-and-button" style={{
+                                    display: 'flex', width: '100%', flexDirection: 'row'
+                                }}>
+                                    <div className="box-title-h3" style={{ width: '40%' }}>
+                                        {/* Thẻ h3 với title */}
+                                        <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>
+                                            {title}
+                                        </h3>
+                                    </div>
+                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                        {/* Nút excel */}
+                                        {/* <ExportRecruitment /> */}
+                                        <ExportRecruitment />
+                                    </div>
+                                </div>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active1 ? (
                                         <button type="button" value="1" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
@@ -418,7 +432,29 @@ export default function RecruitmentStats() {
                         )}
                         {activeStat === "stats3" && (
                             <div className="content-stat-3">
-                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Thống kê tăng trưởng</h3>
+                                <div className="box-title-and-button" style={{
+                                    display: 'flex', width: '100%', flexDirection: 'row'
+                                }}>
+                                    <div className="box-title-h3" style={{ width: '40%' }}>
+                                        {/* Thẻ h3 với title */}
+                                        <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>
+                                            Thống kê tăng trưởng
+                                        </h3>
+                                    </div>
+                                    {/* <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                        <button
+                                            className="btn btn-stats-green"
+                                            style={{ position: 'absolute', left: '0', width: '123px', marginTop: '22px', marginLeft: '53px' }}
+                                            onClick={exportGrowthRecruitmentStatisticsExcelFile}
+                                        >
+                                            <span style={{ paddingRight: '5px' }}>Excel</span>
+                                            <Icon
+                                                icon="mdi:microsoft-excel"
+                                                style={{ width: '25px', height: '25px' }}
+                                            />
+                                        </button>
+                                    </div> */}
+                                </div>
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active5 ? (
                                         <button type="button" value="5" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
