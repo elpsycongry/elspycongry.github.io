@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import ButtonPDFExport from './buttonPDFExport';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, ChartDataLabels);
 
@@ -239,7 +240,9 @@ export default function RecruitmentStatsChart({ year }) {
 
     return (
         <Box sx={{ width: '80%', height: '585px', padding: 2 }}  ref={pdfRef}>
-            <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button>
+            {/* <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button> */}
+            {/* <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success'>Download PDF</button> */}
+            <ButtonPDFExport/>
             <div style={{ width: '100%', height: '100%' }}>
                 <Line data={data} options={options} />
             </div>
