@@ -166,14 +166,14 @@ export default function DialogRecruitmentPlanFormCreateSuccess({id, open, onClos
                                     null,
                                     `/recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`
                                 ).then(sendNotifications(
-                                        null,
-                                        `Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,
-                                        ['ROLE_HR'],
+                                    null,
+                                    `Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,
+                                    ['ROLE_HR'],
                                     null,
                                     `/recruitment/recruitmentPlan?idPlan=${res.data.id}`
-                                )).then(
+                                )).then(() => {
                                     window.location.href = "/recruitment/recruitmentPlan"
-                                )
+                                })
                             });
                         });
                 } catch (error) {
