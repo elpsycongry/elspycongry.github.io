@@ -54,7 +54,6 @@ export default function Users() {
         totalElements: 0,
     });
 
-
     useEffect(() => {
         handleFilterWithFields(pagination);
         fetchListRoleSelect();
@@ -232,10 +231,10 @@ export default function Users() {
                         </div>
                     </div>
                     <div className="position-relative" style={{ width: '1165px' }}>
-                        <DialogAddUserForm token={token} onAdd={handleFilterWithFields}/>
+                        <DialogAddUserForm token={token} onAdd={handleFilterWithFields} />
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px', minHeight:'615px'}}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px', minHeight: '615px' }}>
                     <div className="table-container-user" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px', height: '520px' }}>
                         <div className="table-user">
 
@@ -276,7 +275,17 @@ export default function Users() {
                                             )}
                                         </td>
                                         <td>
-                                            <BlockUser inputProps={{ 'aria-label': 'controlled' }} token={token} userId={item.id} status={item.status} onUpdate={handleFilterWithFields} />
+                                            <Tooltip title={item.status ? "Được phép truy cập" : "Không được phép truy cập"}>
+                                                <div>
+                                                    <BlockUser
+                                                        inputProps={{ 'aria-label': 'controlled' }}
+                                                        token={token}
+                                                        userId={item.id}
+                                                        status={item.status}
+                                                        onUpdate={handleFilterWithFields}
+                                                    />
+                                                </div>
+                                            </Tooltip>
                                         </td>
                                         <td className="user-actions">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
@@ -309,7 +318,7 @@ export default function Users() {
                     </div>
                 </div>
             </Box >
-            <div style={{ marginTop: '-10px', paddingTop: '15px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <div style={{ paddingTop: '36px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
             {/* <Footer /> */}

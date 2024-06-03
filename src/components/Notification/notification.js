@@ -21,7 +21,8 @@ export function Notification() {
         getDatas()
         setOpen(!open)
     }
-
+   
+    
     const [renderData, setRenderData] = useState(
         [
         //     {
@@ -30,7 +31,6 @@ export function Notification() {
         //         timestamp: "1 phút trước",
         //         link: "",
         //         isRead: false,
-        //
         //     }, {
         //     id: 2,
         //     content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
@@ -73,7 +73,6 @@ export function Notification() {
         //     isRead: true,
         // },
         ]
-        // []
     );
 
     const StyledIconWrapper = styled(Box)(({theme}) => ({
@@ -111,23 +110,23 @@ export function Notification() {
     }, [type]);
 
     const sendDatas = async () => {
-        // try {
-        //     const response = await axios.put(`http://localhost:8080/api/notifications/${currentUser.id}`, renderData);
-        // } catch (error) {
-        //     console.error('Error sending data:', error);
-        // }
+        try {
+            const response = await axios.put(`http://localhost:8080/api/notifications/${currentUser.id}`, renderData);
+        } catch (error) {
+            console.error('Error sending data:', error);
+        }
     };
     const getDatas = () => {
-        // axios.get(`http://localhost:8080/api/notifications/${currentUser.id}`, {
-        //     params: {
-        //         type: type
-        //     }
-        // }).then(
-        //     response => {
-        //         findNotiNumber(response.data)
-        //         setRenderData(response.data);
-        //     }
-        // )
+        axios.get(`http://localhost:8080/api/notifications/${currentUser.id}`, {
+            params: {
+                type: type
+            }
+        }).then(
+            response => {
+                findNotiNumber(response.data)
+                setRenderData(response.data);
+            }
+        )
     };
 
     const findNotiNumber = (data) => {
@@ -180,7 +179,7 @@ export function Notification() {
                                                 alt={"avatar"}
                                                 src={`https://picsum.photos/50/50?random=${index}`}
                                             />
-                                        </div>
+                                        </div>  
                                         <div>
                                             <div className={"content"}>{notiItem.content}</div>
                                             <div className={"time"}>{notiItem.timestamp}</div>
@@ -225,13 +224,15 @@ export async function sendNotifications(
     roleReceiver,
     listReceiverId
 ) {
+    var date = new Date()
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const notificationInfo = {
         creatorId: creatorId || currentUser.id, // Nếu creatorId là null hoặc rỗng, gán giá trị là người dùng hiện tại
         content: content,
         listRoleReceiver: roleReceiver,
         listReceiverId: listReceiverId,
-        timeCreate: new Date().toISOString(),
+        timeCreate: date.toISOString(),
     }
     await axios.post('http://localhost:8080/api/notifications', notificationInfo)
 }

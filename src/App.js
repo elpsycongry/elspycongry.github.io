@@ -20,7 +20,7 @@ function App() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<AuthContext><HomePage /></AuthContext>} />
+                <Route path="/dashboard" element={<AuthContext><HomePage /></AuthContext>} />
                 <Route path="/users" element={<AuthContext><Users /></AuthContext>} />
                 <Route path="/intern" element={<AuthContext><MarkInternModal userID={1} /></AuthContext>} />
                 <Route path="/login" element={<AuthContext><Login /></AuthContext>} />
