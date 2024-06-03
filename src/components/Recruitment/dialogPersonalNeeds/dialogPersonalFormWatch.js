@@ -14,10 +14,10 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     const [tenhnology, setTenhnology] = useState([]);
     const hasRoleAdmin = () => {
-        return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_QLĐT");
+        return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_TM");
     };
     const hasRoleKSCL = () => {
-        return userRoles.some((role) => role.authority === "ROLE_KSCL");
+        return userRoles.some((role) => role.authority === "ROLE_QC");
     };
     // Dữ liệu fake
     const formData = useFormik({

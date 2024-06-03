@@ -36,7 +36,7 @@ function AuthContext({children}) {
         }
         {isAdmin && <div></div>}
         if (pathName === "/login") {
-            return <Navigate to="/"/>
+            return <Navigate to="/" />
         }
         if(pathName === "/dashboard") {
             if(!isAdmin && !isManager){

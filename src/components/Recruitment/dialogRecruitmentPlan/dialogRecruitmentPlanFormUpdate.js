@@ -226,7 +226,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
     { id: 11, text: ".NET" },
   ];
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_TM");
   };
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {

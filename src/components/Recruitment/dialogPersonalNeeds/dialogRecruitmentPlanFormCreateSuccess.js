@@ -19,7 +19,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const user = JSON.parse(localStorage.getItem("currentUser"))
   // Xử lý số lượng nhân sự
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_TM");
   };
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
     const futureDate = new Date(dateCreate);

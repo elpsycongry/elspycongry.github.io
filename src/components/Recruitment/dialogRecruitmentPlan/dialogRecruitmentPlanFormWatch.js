@@ -22,7 +22,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_HR");
   };
   const hasRoleKSCL = () => {
-    return userRoles.some((role) => role.authority === "ROLE_KSCL");
+    return userRoles.some((role) => role.authority === "ROLE_QC");
   };
   // Dữ liệu fake
   const formData = useFormik({

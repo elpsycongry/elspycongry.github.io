@@ -232,13 +232,13 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
     { id: 7, text: "Đã nhận việc" },
   ];
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_TM");
   };
   const hasRoleHR = () => {
     return userRoles.some((role) => role.authority === "ROLE_HR");
   };
   const hasRoleKSCL = () => {
-    return userRoles.some((role) => role.authority === "ROLE_KSCL");
+    return userRoles.some((role) => role.authority === "ROLE_QC");
   };
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {

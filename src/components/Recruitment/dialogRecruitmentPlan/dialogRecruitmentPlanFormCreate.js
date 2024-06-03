@@ -221,7 +221,7 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
 
   const [recuitments, setRecuitment] = useState([]);
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_TM");
   };
   console.log(hasRoleAdmin());
   useEffect(() => {
