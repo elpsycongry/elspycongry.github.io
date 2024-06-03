@@ -69,7 +69,6 @@ export default function DialogPersonalFormCreate({userRoles}) {
   const hasRoleAdmin = () => {
     return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_DM");
   };
-  console.log(hasRoleAdmin());
   const formData = useFormik({
     initialValues: {
       idUser: user.id,

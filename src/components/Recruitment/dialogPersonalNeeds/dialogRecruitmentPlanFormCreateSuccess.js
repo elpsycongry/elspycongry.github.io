@@ -42,9 +42,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({id, open, onClos
                 return false;
             }
         })
-        console.log(errNumberR);
         const hasErrNumber = errNumberR.some(item => item === true);
-        console.log(hasErrNumber);
         setErrNumber(hasErrNumber)
         //
         var hasErrOfPersonal;
@@ -94,7 +92,6 @@ export default function DialogRecruitmentPlanFormCreateSuccess({id, open, onClos
         } else {
             setDateErr(false);
         }
-        console.log(hasErrRecruitmentPlan)
 
         if (dateSet < futureDate || dateSet === "Invalid Date" || hasErrTech || hasErrNumberOutput || hasErrOfPersonal || hasErrRecruitmentPlan || hasErrNumber) {
             return false;
@@ -162,21 +159,21 @@ export default function DialogRecruitmentPlanFormCreateSuccess({id, open, onClos
                                 buttons: false,
                                 timer: 2000,
                             }).then(() => {
-                                console.log(res.data)
                                 sendNotifications(
                                     null,
                                     `Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,
                                     ['ROLE_DM'],
                                     null,
-                                    `/recruitment/recruitmentPlan?idPlan=${res.data.id}`
+                                    `/recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`
                                 ).then(sendNotifications(
                                         null,
                                         `Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,
-                                        ['ROLE_HR']),
-                                        null,
-                                        `/recruitment/recruitmentPlan?idPlan=${res.data.id}`
+                                        ['ROLE_HR'],
+                                    null,
+                                    `/recruitment/recruitmentPlan?idPlan=${res.data.id}`
+                                )).then(
+                                    window.location.href = "/recruitment/recruitmentPlan"
                                 )
-                                window.location.href = "/recruitment/recruitmentPlan";
                             });
                         });
                 } catch (error) {

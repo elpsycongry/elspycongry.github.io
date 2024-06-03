@@ -103,8 +103,6 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
             try {
                 const response = await axios.get(`http://localhost:8080/process/request/${id}`);
                 setSteps(response.data);
-                console.log("day la data");
-                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
@@ -465,6 +463,7 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
                 </DialogTitle>
             </Dialog>
             <DialogPersonalFormReason
+                data={formData}
                 nameNeedPlan={formData.values.recruitmentRequest.name}
                 idUser={id}
                 open={openFormReason}

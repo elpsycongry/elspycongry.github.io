@@ -143,8 +143,6 @@ export default function RecruitmentPlan() {
                 } else {
                     setShowError(false);
                 }
-                console.log(user);
-                console.log(1);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

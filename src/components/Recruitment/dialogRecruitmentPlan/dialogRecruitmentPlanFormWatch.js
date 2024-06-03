@@ -16,7 +16,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem, userRoles, checkId }) {
   const [tenhnology, setTenhnology] = useState([]);
-  console.log(checkId)
   const navigate = useNavigate();
   const hasRoleAdmin = () => {
     return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_HR");
@@ -79,11 +78,21 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
-              sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đang tuyển dụng`,['ROLE_DM'])
-              .then(sendNotifications(null,`Kế hoạch tuyển dụng ${formData.values.recruitmentPlan.name} vừa cập nhật trạng thái: Đã phê duyệt`,['ROLE_TM']))
-        
-            })
-            // window.location.href = "/recruitment/recruitmentPlan";
+            console.log('ok')
+              sendNotifications(
+                  null,
+                  `Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đang tuyển dụng`,['ROLE_DM'],
+                  null,
+                  `/recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`)
+              .then(sendNotifications(
+                  null,
+                  `Kế hoạch tuyển dụng ${formData.values.recruitmentPlan.name} vừa cập nhật trạng thái: Đã phê duyệt`,
+                  ['ROLE_TM'],
+                  null,
+                      `/recruitment/recruitmentPlan?idPlan=${formData.values.recruitmentPlan.id}`
+                  ))}).then(
+              // window.location.href = "/recruitment/recruitmentPlan"
+          )
           });
         } catch (error) {
         console.error('Error fetching approval:', error);
@@ -141,14 +150,12 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
       try {
         const response = await axios.get(`http://localhost:8080/process/plan/${id}`);
         setSteps(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
   }, []);
-  console.log(steps.requestId)
 
   const activeStep = steps.step;
   const deleteIcon = () => {
@@ -536,6 +543,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
         </DialogTitle>
       </Dialog>
       <DialogRecruitmentPlanFormReason
+          data={formData}
         requestPlanName={formData.values.recruitmentPlan.name}
         recruitmentRequestName={formData.values.recruitmentPlan.recruitmentRequest.name}
         idPlan={id}

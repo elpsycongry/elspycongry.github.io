@@ -26,7 +26,6 @@ export default function PersonalNeeds() {
     const queryParams = new URLSearchParams(location.search);
     const idPersonalNeeds = queryParams.get('idRequest');
 
-    console.log(idPersonalNeeds);
     const checkIdPersonal = () => {
         if (idPersonalNeeds !== null) {
             return true;
@@ -133,7 +132,6 @@ export default function PersonalNeeds() {
                 } else {
                     setShowError(false);
                 }
-                console.log(recuitments);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

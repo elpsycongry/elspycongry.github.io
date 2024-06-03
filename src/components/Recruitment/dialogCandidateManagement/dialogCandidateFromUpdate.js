@@ -194,7 +194,6 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
           setFinalResult(res.data.finalResult);
           const formatT = res.data.interviewTime;
           const dateNow = dayjs(formatT);
-          console.log(dateNow)
           setDate(dateNow);
           setFinalResult(res.data.finalResult);
         });
