@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
-import './trainingStats.css';
+import './recruitmentStats.css';
 
-const ExportButton = ({ month, quarter, year }) => {
+const ExportRecruitment = ({ month, quarter, year }) => {
   const user = JSON.parse(localStorage.getItem("currentUser"))
   const handleExport = async () => {
     // Tạo một biến thời gian hiện tại
@@ -23,13 +23,17 @@ const ExportButton = ({ month, quarter, year }) => {
     try {
       let endpoint;
       if (month == currentMonth & quarter == currentQuarter & year == currentYear) {
-        endpoint = 'http://localhost:8080/api/stats/exportExcelTrainingStatsAll';
+        endpoint = 'http://localhost:8080/api/recruitmentStats/exportExcel';
+        // console.log("In ra tat ca current excel");
       } else if (month !== 0) {
-        endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/monthExportExcel?month=${month}&year=${year}`;
+        endpoint = `http://localhost:8080/api/recruitmentStats/monthExportExcel?month=${month}&year=${year}`;
+        // console.log("In ra thang excel");
       } else if (quarter !== 0) {
-        endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/quarterExportExcel?quarter=${quarter}&year=${year}`;
+        endpoint = `http://localhost:8080/api/recruitmentStats/quarterExportExcel?quarter=${quarter}&year=${year}`;
+        // console.log("In ra quy excel");
       } else if (year !== 0) {
-        endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/year?year=${year}`;
+        endpoint = `http://localhost:8080/api/recruitmentStats/yearExportExcel?year=${year}`;
+        // console.log("In ra nam excel");
       } else {
         console.log("Không có endpoint hợp lệ tồn tại");
       }
@@ -42,7 +46,7 @@ const ExportButton = ({ month, quarter, year }) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'training_stats.xlsx');
+      link.setAttribute('download', 'recruitment_stats.xlsx');
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -66,4 +70,4 @@ const ExportButton = ({ month, quarter, year }) => {
   );
 };
 
-export default ExportButton;
+export default ExportRecruitment;

@@ -234,7 +234,7 @@ export default function Users() {
                         <DialogAddUserForm token={token} onAdd={handleFilterWithFields} />
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px', minHeight: '615px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px', minHeight: '650px' }}>
                     <div className="table-container-user" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px', height: '520px' }}>
                         <div className="table-user">
 
@@ -318,7 +318,7 @@ export default function Users() {
                     </div>
                 </div>
             </Box >
-            <div style={{ paddingTop: '36px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <div style={{ paddingTop: '30px', paddingBottom: '0px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
             {/* <Footer /> */}

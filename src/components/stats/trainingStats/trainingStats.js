@@ -32,12 +32,24 @@ function Copyright(props) {
 }
 
 export default function TrainingStats() {
+    // Tạo một biến thời gian hiện tại
+    const currentDate = new Date();
+
+    // Lấy tháng hiện tại (tháng trong JavaScript tính từ 0 đến 11)
+    const currentMonth = currentDate.getMonth() + 1;
+
+    // Lấy quý hiện tại
+    const currentQuarter = Math.floor(currentMonth / 3) + 1;
+
+    // Lấy năm hiện tại
+    const currentYear = currentDate.getFullYear();
+
     const [trainingStats, setTrainingStats] = useState([]);
     const [growthStatistics, setGrowthStatistics] = useState();
     const [maxGrowthStatistics, setMaxGrowthStatistics] = useState();
 
     const [activeStat, setActiveStat] = useState("stats1");
-    const [title, setTitle] = useState("Kết quả đào tạo tháng 5");
+    const [title, setTitle] = useState("Kết quả đào tạo tháng 6");
     const [titleStatistics, setTitleStatistics] = useState("Năm")
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
@@ -46,14 +58,19 @@ export default function TrainingStats() {
     const [active5, setActive5] = useState(false);
     const [active6, setActive6] = useState(false);
     const [active7, setActive7] = useState(true);
-
-    const currentYear = new Date().getFullYear();
     const [year, setYear] = useState(currentYear);
-    const [month, setMonth] = useState(0);
-    const [quarter, setQuarter] = useState(0)
+    const [month, setMonth] = useState(currentMonth);
+    const [quarter, setQuarter] = useState(currentQuarter);
+    console.log("Tháng: ", month);
+    console.log("Quý: ", quarter);
+    console.log("Năm: ", year);
+    console.log("Stats: ", activeStat);
     const handleClickStat = (event) => {
         const theValue = event.currentTarget.value;
         if (theValue === "stats3") {
+            setMonth(0)
+            setQuarter(0)
+            setYear(currentYear)
             axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=2024")
                 .then(res => {
                     setGrowthStatistics(res.data)
@@ -64,12 +81,15 @@ export default function TrainingStats() {
                 })
         }
         if (theValue === "stats1") {
-            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setTitle("Kết quả đào tạo tháng 6 năm 2024")
             setActive1(true)
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            setMonth(currentMonth)
+            setQuarter(currentQuarter)
+            setYear(currentYear)
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -81,7 +101,7 @@ export default function TrainingStats() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -125,12 +145,12 @@ export default function TrainingStats() {
         const theValue = event.currentTarget.value;
 
         if (theValue == 1) {
-            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setTitle("Kết quả đào tạo tháng 6 năm 2024")
             setActive1(true)
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -242,68 +262,23 @@ export default function TrainingStats() {
         return { name, points, growth }
     }
 
-    const subjects = [
-        createSubjects('Linux', 7.28, 6),
-        createSubjects('Git', 7.31, 9),
-        createSubjects('Docker', 7.34, 10),
-        createSubjects('Resful API', 7.08, 15),
-        createSubjects('Lavarel', 7.08, 16),
-    ]
-
-    const rows = [
-        createData('Thực tập sinh nhập học', 159, 6.0),
-        createData('Thực tập sinh tốt nghiệp', 237, 9.0),
-        createData('Thực tập sinh fail', 262, 16.0),
-        createData('Tỷ lệ pass/fail', 305, 3.7),
-        createData('Điểm tốt nghiệp trung bình', 356, 16.0),
-    ];
-
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     const handleYearChange = (event) => {
         setSelectedYear(event.target.value);
     };
 
-    // const handleExport = async () => {
-    //     try {
-    //       // Gửi yêu cầu tới endpoint /api/stats/export
-    //       const response = await axios.get('/api/stats/export', {
-    //         responseType: 'blob', // Để nhận dữ liệu dưới dạng blob
-    //       });
-
-    //       // Tạo URL từ blob
-    //       const url = window.URL.createObjectURL(new Blob([response.data]));
-
-    //       // Tạo một thẻ a để tải xuống
-    //       const link = document.createElement('a');
-    //       link.href = url;
-    //       link.setAttribute('download', 'stats.xlsx'); // Tên file muốn lưu
-    //       document.body.appendChild(link);
-    //       link.click();
-    //       document.body.removeChild(link);
-
-    //       enqueueSnackbar('Tải xuống thành công!', { variant: 'success' });
-    //     } catch (error) {
-    //       enqueueSnackbar('Tải xuống thất bại!', { variant: 'error' });
-    //     }
-    // };
-
     return (
         <>
             <Header></Header>
             <Navbar></Navbar>
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', height: '700px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', height: '800px' }}>
                 <Box m={2} style={{ display: 'flex' }}>
-                    <div style={{display: 'flex', width: '50%'}}>
-                        <svg style={{ width: 25, height: 25, color: 'rgba(0, 0, 0, 0.60)' }} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20v-6h3v6zm6 0V9h3v11zm6 0V4h3v16z" /></svg>
-                        <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', paddingTop: '2px' }}>Thống kê {'>'} Kết quả đào tạo</p>
-                    </div>
-                    <div style={{width: '50%', position: 'relative'}}>
-                        <ExportButton />
-                    </div>
+                    <svg style={{ width: 25, height: 25, color: 'rgba(0, 0, 0, 0.60)' }} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20v-6h3v6zm6 0V9h3v11zm6 0V4h3v16z" /></svg>
+                    <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', paddingTop: '2px' }}>Thống kê {'>'} Kết quả đào tạo</p>
                 </Box>
 
-                <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
+                <div style={{borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
                             <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning text-white " >Chỉ số</button>
@@ -324,7 +299,20 @@ export default function TrainingStats() {
                     <div className="main-content">
                         {activeStat === "stats1" && (
                             <div className="content-stat-1">
-                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>{title}</h3>
+                                <div className="box-title-and-button" style={{
+                                    display: 'flex', width: '100%', flexDirection: 'row'
+                                }}>
+                                    <div className="box-title-h3" style={{ width: '40%' }}>
+                                        {/* Thẻ h3 với title */}
+                                        <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>
+                                        {title}
+                                        </h3>
+                                    </div>
+                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                        {/* Nút excel */}
+                                        <ExportButton month={month} quarter={quarter} year={year}/>
+                                    </div>
+                                </div>
                                 <div style={{ width: '50%', marginBottom: '25px', fontSize: '18px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active1 ? (
                                         <button type="button" value="1" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
@@ -347,35 +335,40 @@ export default function TrainingStats() {
                                         <button type="button" value="4" onClick={handleClick} className="btn btn-stats-gray">Tất cả</button>
                                     }
                                 </div>
-                                <div style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '16px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)' }}>
-                                    <label>Số thực tập sinh nhập học:</label>
-                                    <label style={{ marginLeft: '200px' }}>{trainingStats.internsEnrolled} TTS</label>
-                                    <br></br>
-                                    <br></br>
-                                    <label>Số thực tập sinh tốt nghiệp:</label>
-                                    <label style={{ marginLeft: '197px' }}>{trainingStats.graduatingInterns} TTS</label>
-                                    <br></br>
-                                    <br></br>
-                                    <label>Số thực tập sinh fail:</label>
-                                    <label style={{ marginLeft: '248px' }}>{trainingStats.internsFailed} TTS</label>
-                                    <br></br>
-                                    <br></br>
-                                    <label>Tỷ lệ Pass/fail:</label>
-                                    <label style={{ marginLeft: '291px' }}>{trainingStats.rate}</label>
-                                    <br></br>
-                                    <br></br>
-                                    <label>Số thực tập sinh đang thực tập:</label>
-                                    <label style={{ marginLeft: '169px' }}>{trainingStats.internsCurrentlyPracticing} TTS</label>
-                                    <br></br>
-                                    <br></br>
-                                    <label>Số thực tập sinh nghỉ thực tập:</label>
-                                    <label style={{ marginLeft: '175px' }}>{trainingStats.internsQuitInternship} TTS</label>
-                                    <br></br>
-                                    <br></br>
-                                    <label>Điểm tốt nghiệp trung bình:</label>
-                                    <label style={{ marginLeft: '203px' }}>{trainingStats.averageGraduationScore}</label>
+                                <div style={{
+                                    display: 'flex', flexDirection: 'column', marginLeft: '10px', marginBottom: '0px',
+                                    fontSize: '16px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)'
+                                }}>
+                                    <div>
+                                        <label>Số thực tập sinh nhập học:</label>
+                                        <label style={{ marginLeft: '200px' }}>{trainingStats.internsEnrolled} TTS</label>
+                                        <br></br>
+                                        <br></br>
+                                        <label>Số thực tập sinh tốt nghiệp:</label>
+                                        <label style={{ marginLeft: '197px' }}>{trainingStats.graduatingInterns} TTS</label>
+                                        <br></br>
+                                        <br></br>
+                                        <label>Số thực tập sinh fail:</label>
+                                        <label style={{ marginLeft: '248px' }}>{trainingStats.internsFailed} TTS</label>
+                                        <br></br>
+                                        <br></br>
+                                        <label>Tỷ lệ Pass/fail:</label>
+                                        <label style={{ marginLeft: '291px' }}>{trainingStats.rate}</label>
+                                        <br></br>
+                                        <br></br>
+                                        <label>Số thực tập sinh đang thực tập:</label>
+                                        <label style={{ marginLeft: '169px' }}>{trainingStats.internsCurrentlyPracticing} TTS</label>
+                                        <br></br>
+                                        <br></br>
+                                        <label>Số thực tập sinh nghỉ thực tập:</label>
+                                        <label style={{ marginLeft: '175px' }}>{trainingStats.internsQuitInternship} TTS</label>
+                                        <br></br>
+                                        <br></br>
+                                        <label>Điểm tốt nghiệp trung bình:</label>
+                                        <label style={{ marginLeft: '203px' }}>{trainingStats.averageGraduationScore}</label>
+                                    </div>
                                 </div>
-                            </div>   
+                            </div>
                         )}
                         {activeStat === "stats2" && (
                             <div className="content-stat-2">
@@ -400,8 +393,20 @@ export default function TrainingStats() {
                         )}
                         {activeStat === "stats3" && (
                             <div className="content-stat-3">
-                                <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Thống kê tăng trưởng</h3>
-                                <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
+                                <div className="box-title-and-button" style={{
+                                    display: 'flex', width: '100%', flexDirection: 'row'
+                                }}>
+                                    <div className="box-title-h3" style={{ width: '40%' }}>
+                                        {/* Thẻ h3 với title */}
+                                        <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>
+                                            Thống kê tăng trưởng
+                                        </h3>
+                                    </div>
+                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                        {/* Nút excel */}
+                                        <ExportButton month={month} quarter={quarter} year={year} />
+                                    </div>
+                                </div>                                <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {active5 ? (
                                         <button type="button" value="5" onClick={handleClick} className="btn btn-warning text-white">Theo tháng</button>
                                     ) :
@@ -626,7 +631,7 @@ export default function TrainingStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '16px', paddingBottom:'16px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '16px', paddingBottom: '16px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}

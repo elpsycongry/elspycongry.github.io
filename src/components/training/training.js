@@ -264,7 +264,7 @@ export default function Training() {
                         </div>
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', minHeight: '615px', width: '99.7%', minWidth: '1745px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', minHeight: '650px', width: '99.7%', minWidth: '1745px' }}>
                     <div className="table-container">
                         <table className="table_training" style={{}}>
                             <div className="no-scrolling">
@@ -340,7 +340,7 @@ export default function Training() {
                     </div> */}
 
                 </div>
-                <div style={{ paddingTop: '47px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '30px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
             </Box>

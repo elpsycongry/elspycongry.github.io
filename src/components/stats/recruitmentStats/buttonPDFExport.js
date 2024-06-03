@@ -6,8 +6,10 @@ import ProcessedCVChart from "./processedCVChart";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import axios from 'axios';
+import { get } from 'lodash';
 const ButtonPDFExport = ({ listChartElem, year }) => {
     const [anchor, setAnchor] = React.useState(null);
+    const date = new Date();
     const [checkboxes, setCheckboxes] = React.useState({
         checkbox1: false,
         checkbox2: false,
@@ -41,7 +43,7 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                     const response = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=${year}`);
                     setTrainingCharts(response.data);
                     const response1 = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=2024`);
-                    setRecuitmentChart(response.data)
+                    setRecuitmentChart(response1.data)
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -66,21 +68,18 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
     const formSubmitHandler = async (e) => {
         e.preventDefault();
         const pdf = new jsPDF('p', 'mm', 'a4'); // Tạo một tài liệu PDF với kích thước A4;
-        // Tính toán kích thước và vị trí của ảnh để chèn vào tài liệu PDF
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const imgWidth = pdfWidth * 1; // 80% chiều rộng của trang PDF
         const imgX = (pdfWidth - imgWidth) / 2; // Canh giữa theo chiều ngang
-        // const imgY = (pdfHeight - imgHeight) / 1.3; // Canh giữa theo chiều dọc
         const imgY = 20;
-        // Thêm trang mới vào tài liệu PDF
 
         if (checkboxes.checkbox1 === true) {
             const canvas = await html2canvas(listChartElem()[0].current);
             const imgData = canvas.toDataURL('image/png');
             const imgHeight = (canvas.height * imgWidth) / canvas.width; // Tính toán chiều cao tương ứng
             pdf.setFontSize(12)
-            pdf.text('Line Chart', 93, 18);
-            // pdf.text('Parameters', 93, imgY + imgHeight + 15);
+            pdf.text('Intern recruitment chart in ' + year, 74, 18);
+            pdf.text('Intern recruitment parameters in ' + year, 71, imgY + imgHeight + 15);
             pdf.setFontSize(20)
             pdf.text('Statistical chart', 80, 10)
 
@@ -110,15 +109,20 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             });
         }
         if (checkboxes.checkbox2 === true) {
-            pdf.addPage()
+            listChartElem()[1].current.style.visibility = "visible";
+            if(checkboxes.checkbox1 === true){
+                pdf.addPage();
+            }
+            if(checkboxes.checkbox1 === false){
+                pdf.text('Statistical chart', 80, 10);
+            }
             const canvas1 = await html2canvas(listChartElem()[1].current);
             const imgData1 = canvas1.toDataURL('image/png');
-            // Nội dung trang mới
             pdf.setFontSize(12)
-            pdf.text('Line Chart', 93, 18);
+            pdf.text('Column chart of number of CVs processed in 2024', 60, 18);
+            pdf.text('Parameters of number of CVs processed in 2024', 62, imgY + 90);
             pdf.setFontSize(20)
-            pdf.text('Statistical chart', 80, 10)
-            pdf.addImage(imgData1, 'PNG', imgX, imgY, imgWidth, 80); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
+            pdf.addImage(imgData1, 'PNG', 21, imgY, imgWidth, 80); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
             pdf.autoTable({
                 head:[['Month' ,'Candidates Accept Interview', 'Candidates Reject Interview', 'Total']],
                 body: recruitmentChart.map((val, i) => [(i + 1) , val.candidatesInterview, val.candidatesDoNotInterview,val.candidatesInterview +  val.candidatesDoNotInterview]),
@@ -143,16 +147,19 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                 })
         }
         if (checkboxes.checkbox3 === true) {
-            pdf.addPage()
+            if(checkboxes.checkbox1 === true){
+                pdf.addPage()
+            }
+            if(checkboxes.checkbox1 === false){
+                pdf.text('Statistical chart', 80, 10);
+            }
             listChartElem()[2].current.style.visibility = "visible";
-            listChartElem()[3].current.style.visibility = "visible";
             const canvas2 = await html2canvas(listChartElem()[2].current);
             const imgData2 = canvas2.toDataURL('image/png');
-            // Nội dung trang mới
             pdf.setFontSize(12)
-            pdf.text('Line Chart', 93, 18);
+            pdf.text('Column chart of number of pass/fail in 2024', 68, 18);
+            pdf.text('Parameters of number of pass/fail in 2024', 68, imgY + 90);
             pdf.setFontSize(20)
-            pdf.text('Statistical chart', 80, 10)
             pdf.addImage(imgData2, 'PNG', 23, imgY, imgWidth, 80); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
             pdf.autoTable({
                 head:[['Month' ,'Candidates Pass', 'Candidates Fail', 'Total']],
@@ -178,14 +185,18 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                 })
         }
         if (checkboxes.checkbox4 === true) {
-            pdf.addPage()
+            listChartElem()[3].current.style.visibility = "visible";
+            if(checkboxes.checkbox1 === true){
+                pdf.addPage()            }
+            if(checkboxes.checkbox1 === false){
+                pdf.text('Statistical chart', 80, 10);
+            }
             const canvas3 = await html2canvas(listChartElem()[3].current);
             const imgData3 = canvas3.toDataURL('image/png');
-            // Nội dung trang mới
             pdf.setFontSize(12)
-            pdf.text('Line Chart', 93, 18);
+            pdf.text('Column chart of number of accept and reject job in 2024', 62, 18);
+            pdf.text('Parameters of number of accept and reject job in 2024', 62, imgY + 90);
             pdf.setFontSize(20)
-            pdf.text('Statistical chart', 80, 10)
             pdf.addImage(imgData3, 'PNG', 23, imgY, imgWidth, 80); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
 
             pdf.autoTable({
@@ -212,13 +223,13 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                 })
         }
 
-        pdf.save('chart.pdf'); // Tải xuống tài liệu PDF
+        pdf.save('chart/' + '/' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()  + '.pdf'); // Tải xuống tài liệu PDF
     };
 
     return (
         <div>
-            <button style={{ marginTop: '-30px', float: 'right' }} className='btn btn-success' aria-describedby={id} type="button" onClick={handleClick}>
-                Export File
+            <button style={{ marginTop: '-30px', float: 'right' }} className='btn btn-stats-green' aria-describedby={id} type="button" onClick={handleClick}>
+                Export File PDF
             </button>
             <BasePopup id={id} open={open} anchor={anchor}>
                 <PopupBody>
@@ -226,27 +237,27 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                         <form onSubmit={formSubmitHandler}>
                             <div>
                                 <label>
-                                Chọn biểu đồ:
+                                Chọn biểu đồ bạn muốn:
                                 </label>
                             </div>
                             <div>
                                 <input type="checkbox" id="checkbox1" checked={checkboxes.checkbox1} onChange={handleCheckboxChange} />
-                                <label style={{ marginLeft: 10 }}>Biểu đồ đường</label>
+                                <label style={{ marginLeft: 10, marginBottom: 5 }}>Biểu đồ đường</label>
                             </div>
                             <div>
                                 <input type="checkbox" id="checkbox2" checked={checkboxes.checkbox2} onChange={handleCheckboxChange} />
-                                <label style={{ marginLeft: 10 }}>Biểu đồ cột cv đã xử lý</label>
+                                <label style={{ marginLeft: 10, marginBottom: 5  }}>Biểu đồ cột cv đã xử lý</label>
                             </div>
                             <div>
                                 <input type="checkbox" id="checkbox3" checked={checkboxes.checkbox3} onChange={handleCheckboxChange} />
-                                <label style={{ marginLeft: 10 }}>Biểu đồ cột pass/fail</label>
+                                <label style={{ marginLeft: 10, marginBottom: 5  }}>Biểu đồ cột pass/fail</label>
                             </div>
                             <div>
                                 <input type="checkbox" id="checkbox4" checked={checkboxes.checkbox4} onChange={handleCheckboxChange} />
-                                <label style={{ marginLeft: 10 }}>Biểu đồ cột nhận việc</label>
+                                <label style={{ marginLeft: 10, marginBottom: 5  }}>Biểu đồ cột nhận việc</label>
                             </div>
                             <div >
-                                <button style={{width: '50%', height: '50%'}} className="btn btn-success" type="submit">Export</button>
+                                <button style={{marginLeft: 70}} className="btn btn-stats-green" type="submit">Export</button>
                             </div>
                         </form>
                     </div>
