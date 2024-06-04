@@ -119,7 +119,6 @@
 
 #formWatch .MuiPaper-root {
     width: 45%;
-    overflow: hidden;
 }
 
 .mw .MuiPaper-root {
@@ -642,6 +641,39 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 16px;
 }
 
+.btn-progress {
+    width: 100px;
+    line-height: 36px;
+    color: #ebebeb !important;
+}
+
+.btn-progress .css-1f773le-MuiButtonBase-root-MuiAccordionSummary-root {
+    min-height: 36px;
+}
+.span-progress{
+    border-radius: 4px !important;
+    background-color: #3165f3;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-progress .css-eqpfi5-MuiAccordionSummary-content {
+    margin: 0;
+    justify-content: center;
+}
+
+.progressDiv .MuiPaper-root {
+    min-width: 712px !important;
+}
+
+.progressDiv .css-1f773le-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded {
+    min-height: 36px;
+}
+
+.progressDiv .MuiAccordion-root {
+    box-shadow: none !important;
+}
+
 .input-disabled {
     position: relative;
 }
@@ -719,4 +751,9 @@ input[type="number"]::-webkit-outer-spin-button {
 .menuChild {
     position: absolute !important;
     left: -113px !important;
+}
+
+.center-tech{
+    display: flex;
+    justify-content: center;
 }

@@ -1,0 +1,22 @@
+<!-- CODE EDITOR -->
+<p>Xin ch&agrave;o {{to_name}},<br>{{from_name}} b&aacute;o c&aacute;o tiến độ tuyển dụng của {{name_personal_needs}} từ ng&agrave;y {{date_start}} đến {{date_end}}</p>
+<p>{{name_personal_needs}} :&nbsp;</p>
+<p>&nbsp; &nbsp;- Số ứng vi&ecirc;n y&ecirc;u cầu: {{intern_needs}}</p>
+<p>&nbsp; &nbsp;-Số ứng vi&ecirc;n cần b&agrave;n giao: {{intern_pass}}</p>
+<p>Đ&acirc;y l&agrave; chi tiết&nbsp;<br>CodeGym</p>
+
+
+
+
+<!-- DESIGN EDITOR -->
+Xin chào {{to_name}},
+{{from_name}} báo cáo tiến độ tuyển dụng của {{name_personal_needs}} từ ngày {{date_start}} đến {{date_end}}
+
+{{name_personal_needs}} : 
+
+   - Số ứng viên yêu cầu: {{intern_needs}}
+
+   -Số ứng viên cần bàn giao: {{intern_pass}}
+
+Đây là chi tiết 
+CodeGym
