@@ -17,9 +17,7 @@ const ExportButton = ({ month, quarter, year }) => {
 
     // Lấy năm hiện tại
     const currentYear = currentDate.getFullYear();
-    console.log(month);
-    console.log(quarter);
-    console.log(year);
+
     try {
       let endpoint;
       let filename;
