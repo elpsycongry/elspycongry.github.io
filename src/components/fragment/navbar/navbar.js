@@ -85,7 +85,6 @@ function Navbar() {
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
-
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -175,7 +174,6 @@ function Navbar() {
         },
         { id: 5, text: "Người dùng", IconText: GroupIcon, linkTo: `/users`, roles: ['ROLE_ADMIN'] }
     ]
-
     const [openChil, setOpenChil] = useState({});
     const handleClick = (id) => {
         setOpenChil(prev => ({ ...prev, [id]: !prev[id] }));
