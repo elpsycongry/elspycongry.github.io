@@ -1,56 +1,62 @@
 import axios from "axios";
-import {enqueueSnackbar} from "notistack";
-import {Navigate} from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
+import { Navigate } from "react-router-dom";
+import ClientPage from "../clientPage/clientPage";
+import Login from "../pages/login/login";
 
 // Check Token
-function AuthContext({children}) {
+function AuthContext({ children }) {
 
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
+    console.log(currentUser);
     if (currentUser === null) {
-        if (pathName !== "/login") {
-            return <Navigate to="/login"/>
+        if (pathName !== "/") {
+            if (pathName == "/login") {
+                return <Login />
+            }
+            return <Navigate to="/" />
         }
     } else {
         let roles = []
         currentUser.roles.forEach(element => {
             roles = [...roles, element.authority]
         });
-        const isAdmin = roles.find((role) => role === 'ROLE_ADMIN') 
-        const isManager = roles.find((role) => role === 'ROLE_TM') 
-        if (pathName === '/users'){
+        const isAdmin = roles.find((role) => role === 'ROLE_ADMIN')
+        const isManager = roles.find((role) => role === 'ROLE_TM')
+        if (pathName === '/users') {
             if (!isAdmin) {
-                return <Navigate to={"/"}/>
-            } 
+                return <Navigate to={"/"} />
+            }
         }
         if (pathName === "/training") {
             if (!isAdmin && !isManager) {
-                return <Navigate to={"/"}/>
-            } 
+                return <Navigate to={"/"} />
+            }
         }
         if (pathName === "/training/stats") {
-            if(!isAdmin){
+            if (!isAdmin) {
                 return <Navigate to="/" />
             }
         }
-        {isAdmin && <div></div>}
+        { isAdmin && <div></div> }
         if (pathName === "/login") {
             return <Navigate to="/" />
         }
-        if(pathName === "/dashboard") {
-            if(!isAdmin && !isManager){
+        if (pathName === "/dashboard") {
+            if (!isAdmin && !isManager) {
                 return <Navigate to="/" />
             }
         }
-        if(pathName === "/recruitment/stats") {
-            if(!isAdmin){
+        if (pathName === "/recruitment/stats") {
+            if (!isAdmin) {
                 return <Navigate to="/" />
             }
         }
 
     }
     if (children === undefined) {
-        return <Navigate to="/notFound"/>
+        return <Navigate to="/notFound" />
     }
     return (<>{children}</>)
 
@@ -59,14 +65,14 @@ function AuthContext({children}) {
 export function doLogout(navigate) {
     const user = JSON.parse(localStorage.getItem("currentUser"))
     if (user != null) {
-        axios.post("http://localhost:8080/logoutUser", {Authorization: `Bearer ${user.accessToken}`}).then(res => {
+        axios.post("http://localhost:8080/logoutUser", { Authorization: `Bearer ${user.accessToken}` }).then(res => {
             // enqueueSnackbar("Đăng xuất thành công", {variant: "success"});
         }).catch(e => {
             console.error(e)
             // enqueueSnackbar("Có lỗi xảy ra không thể đăng xuất", {variant: "error"});
         })
         localStorage.removeItem("currentUser");
-        navigate("/login")
+        navigate("/")
     }
 }
 
