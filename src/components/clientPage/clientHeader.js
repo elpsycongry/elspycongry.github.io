@@ -1,24 +1,14 @@
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem'
 import { styled, useTheme } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { doLogout } from "../checkToken/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logoCodeGym from '../../assets/image/CodeGym.jpg'
-import avatarDemo from '../../assets/image/boy_2.png'
-import { Notification } from "../Notification/notification";
 
-const settings = ['Đăng xuất'];
 const drawerWidth = 240;
-
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
