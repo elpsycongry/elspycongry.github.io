@@ -1,6 +1,7 @@
 import axios from "axios";
 import {enqueueSnackbar} from "notistack";
 import {Navigate} from "react-router-dom";
+import Register from "../pages/login/register";
 
 // Check Token
 function AuthContext({children}) {
@@ -10,6 +11,9 @@ function AuthContext({children}) {
     console.log(currentUser)
     if (currentUser === null) {
         if (pathName !== "/login") {
+            if (pathName == '/register') {
+                return <Register />
+            }
             return <Navigate to="/login"/>
         }
     } else {

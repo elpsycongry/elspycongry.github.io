@@ -3,9 +3,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -17,7 +18,7 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import { useState } from "react";
-
+import Link from 'axios';
 
 function Copyright(props) {
 
@@ -47,7 +48,7 @@ const EndAdorment = ({ visible, setVisible }) => {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-function Login() {
+function Register() {
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
@@ -57,7 +58,7 @@ function Login() {
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
-        axios.post("http://localhost:8080/login", data).then(
+        axios.post("http://localhost:8080/register", data).then(
             res => {
                 if (res.data.code === "401") {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
@@ -152,96 +153,75 @@ function Login() {
                         <img src={logoImage} style={{ width: '80px', height: '80px' }} />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Sign up
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="name"
-                            autoComplete="email"
-                            placeholder="Example123@gmail.com"
-
-                            inputRef={emailInput}
-                            onChange={(e) => checkEmail(e.currentTarget.value)}
-                            onFocus={() => {
-                                setShowMsg({ ...showMsg, showEmailError: true })
-                            }}
-                            error={showMsg.showEmailError && !flagValidate.validEmail}
-                            helperText={showMsg.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            // onInput = {(e) =>{
-                            //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4)
-                            // }}
-                            // inputProps={{maxLenght: 12}}
-                            name="password"
-                            label="Password"
-                            type={visible ? "password" : "text"}
-                            id="password"
-                            autoComplete="current-password"
-                            InputProps={{
-                                endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
-                            }}
-
-                            onFocus={() => {
-                                setShowMsg({ ...showMsg, showPassError: true })
-                            }}
-                            placeholder={"Example123"}
-                            inputRef={passwordInput}
-                            error={showMsg.showPassError && !flagValidate.validPass}
-                            onChange={(e) => checkPass(e.currentTarget.value)}
-                            helperText={showMsg.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
-                        />
-                        {flagValidate.showSuccesAlert
-                            &&
-                            <Alert style={{ marginTop: 5 }} severity="success">
-                                This is a success Alert.
-                            </Alert>
-                        }
-                        {flagValidate.showFailAlert
-                            &&
-                            <Alert style={{ marginTop: 5 }} severity="error">
-                                This is a success Alert.
-                            </Alert>
-                        }
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} >
+                                <TextField
+                                    autoComplete="given-name"
+                                    name="name"
+                                    required
+                                    fullWidth
+                                    id="name"
+                                    label="User Name"
+                                    autoFocus
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="phone"
+                                    label="Phone Number"
+                                    name="phone"
+                                    autoComplete="family-name"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="new-password"
+                                />
+                            </Grid>
+                        </Grid>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            disabled={validForm}
-                            ref={submitButton}
                         >
-                            Sign In
+                            Sign Up
                         </Button>
-
                     </Box>
                 </Box>
-
-                <Grid container justifyContent="flex-end">
-                    <Grid item>
-                        <Link href="/register">
-                            Don't have an account? Sign up
-                        </Link>
-                    </Grid>
-                </Grid>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginTop: '16px' }}>
+                    <Link  ariant="body2">
+                        Already have an account? Sign in
+                    </Link>
+                </Box>
 
                 <div style={{ marginTop: '-70px' }}>
                     <Copyright sx={{ mt: 36, mb: 4 }} />
                 </div>
-
             </Container>
-
         </ThemeProvider>
-
     )
 }
 
-export default Login;
+export default Register;

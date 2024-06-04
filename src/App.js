@@ -15,6 +15,7 @@ import PersonalNeeds from './components/Recruitment/personalNeeds';
 import CandidateManagement from './components/Recruitment/candidateManagement';
 import RecruitmentPlan from './components/Recruitment/recruitmentPlan';
 import axiosInstance from './components/checkToken/axiosInstance';
+import Register from './components/pages/login/register';
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/users" element={<AuthContext><Users /></AuthContext>} />
                 <Route path="/intern" element={<AuthContext><MarkInternModal userID={1} /></AuthContext>} />
                 <Route path="/login" element={<AuthContext><Login /></AuthContext>} />
+                <Route path="/register" element={<AuthContext><Register /></AuthContext>} />
                 <Route path="/notFound" element={<NotFoundPage />} />
                 <Route path="/training" element={<AuthContext><Training /></AuthContext>} />
                 <Route path="/training/stats" element={<AuthContext><TrainingStats /></AuthContext>} />

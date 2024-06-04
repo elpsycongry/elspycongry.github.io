@@ -32,6 +32,8 @@ import { MarkInternModal } from "../pages/InternPage/markInternModal";
 import { text } from "@fortawesome/fontawesome-svg-core";
 import { format } from 'date-fns';
 import { South } from "@mui/icons-material";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 function Copyright(props) {
     return (
@@ -102,8 +104,12 @@ export default function Training() {
         fetchListInternSelect(pagination);
     };
 
-    const handleRecruitmentPlan = (event) => {
-        setSelectedRecruitmentPlan(event.target.value);
+    const handleRecruitmentPlan = (event, newValue) => {
+        if (newValue === null) {
+            setSelectedRecruitmentPlan('');
+        } else {
+            setSelectedRecruitmentPlan(newValue);
+        }
         pagination.page = 0;
         fetchListInternSelect(pagination);
     };
@@ -164,7 +170,7 @@ export default function Training() {
             }
         }
     }
-   
+
     return (
         <>
             <Header />
@@ -244,22 +250,15 @@ export default function Training() {
                             </FormControl>
                             {/* Select recruitment plan */}
                             <FormControl className="select-form ml-10 status" sx={{ minWidth: 300 }}>
-                                <InputLabel className="top-left" id="demo-simple-small-label">Kế hoạch tuyển dụng</InputLabel>
-                                <Select 
-                                    sx={{ backgroundColor: 'white'}}
-                                    labelId="demo-simple-small-label"
-                                    className="select-edit "
-                                    id="demo-simple-select"
-                                    label="Kế hoạch tuyển dụng..."
-                                    value={selectedRecruitmentPlan}
+                                <Autocomplete
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    value={selectedRecruitmentPlan || ""}
                                     onChange={handleRecruitmentPlan}
-                                // onClick={handleFilterRole}
-                                >
-                                    <MenuItem value={""} >Tất cả</MenuItem>
-                                    {listRecruitmentPlan.map(item => (
-                                        <MenuItem value={item.name} key={item.id}>{item.name}</MenuItem>
-                                    ))}
-                                </Select>
+                                    options={listRecruitmentPlan.map((option) => option.name)}
+                                    sx={{ width: 300, borderRadius: "4px", background: "white" }}
+                                    renderInput={(params) => <TextField {...params} label="Recruitment Plan" />}
+                                />
                             </FormControl>
                         </div>
                     </div>
@@ -333,12 +332,6 @@ export default function Training() {
                             onChange={handlePageChange}
                         />
                     </div>
-
-
-                    {/* <div className=" bottom-0 position-absolute w-100 left-0" style={{ marginBottom: '20px' }}>
-                        <Pagination className="d-flex justify-content-center" />
-                    </div> */}
-
                 </div>
                 <div style={{ paddingTop: '47px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
