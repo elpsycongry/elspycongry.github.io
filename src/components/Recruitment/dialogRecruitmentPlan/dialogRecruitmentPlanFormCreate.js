@@ -202,8 +202,11 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
                 buttons: false,
                 timer: 2000,
               }).then(() => {
-                sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,['ROLE_DM'])
-                .then(sendNotifications(null,`Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,['ROLE_HR']))
+                // Không xóa cmt này
+                // sendNotifications(null,`Nhu cầu nhân sự <b>${recruitmentName}</b> vừa cập nhật trạng thái: <strong>Đã xác nhận</strong>`,['ROLE_DM'])
+                // .then(sendNotifications(null,`Có kế hoạch tuyển dụng mới: <b>${values.recruitmentPlan.name}</b> `,['ROLE_HR']))
+                sendNotifications(null,`Nhu cầu nhân sự <b>${formData.values.recruitmentPlan.recruitmentRequest.name}</b> vừa cập nhật trạng thái: <b>Đã xác nhận</b>`,['ROLE_DM'])
+                .then(sendNotifications(null,`Có kế hoạch tuyển dụng mới: <b>${formData.values.recruitmentPlan.name}</b> `,['ROLE_HR']))
                 .then(window.location.href = "/recruitment/recruitmentPlan");
               });
             });

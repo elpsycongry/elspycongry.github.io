@@ -111,7 +111,7 @@ export default function DialogPersonalFormCreate({userRoles}) {
               buttons: false,
               timer: 2000
             }).then(() => {
-              sendNotifications(null,`Có nhu cầu nhân sự mới: ${values.recruitmentRequest.name}`,['ROLE_TM'],null,`/recruitment/personalNeeds?idRequest=${res.data.id}`)
+              sendNotifications(null,`Có nhu cầu nhân sự mới: <b>${values.recruitmentRequest.name}</b>`,['ROLE_TM'],null,`/recruitment/personalNeeds?idRequest=${res.data.id}`)
               window.location.href = "/recruitment/personalNeeds";
             });
           });
