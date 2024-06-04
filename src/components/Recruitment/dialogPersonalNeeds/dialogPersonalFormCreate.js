@@ -69,7 +69,6 @@ export default function DialogPersonalFormCreate({userRoles}) {
   const hasRoleAdmin = () => {
     return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_DM");
   };
-  console.log(hasRoleAdmin());
   const formData = useFormik({
     initialValues: {
       idUser: user.id,
@@ -112,7 +111,7 @@ export default function DialogPersonalFormCreate({userRoles}) {
               buttons: false,
               timer: 2000
             }).then(() => {
-              sendNotifications(null,`Có nhu cầu nhân sự mới: ${values.recruitmentRequest.name}`,['ROLE_TM'])
+              sendNotifications(null,`Có nhu cầu nhân sự mới: ${values.recruitmentRequest.name}`,['ROLE_TM'],null,`/recruitment/personalNeeds?idRequest=${res.data.id}`)
               window.location.href = "/recruitment/personalNeeds";
             });
           });

@@ -7,7 +7,6 @@ function AuthContext({children}) {
 
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
-    console.log(currentUser)
     if (currentUser === null) {
         if (pathName !== "/login") {
             return <Navigate to="/login"/>

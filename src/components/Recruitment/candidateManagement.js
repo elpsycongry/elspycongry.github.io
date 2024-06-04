@@ -108,8 +108,6 @@ export default function CandidateManagement() {
     };
 
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
-        console.log(selectedStatus)
-        console.log(selectPlan);
         const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
@@ -158,9 +156,7 @@ export default function CandidateManagement() {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const res = await axios.get('http://localhost:8080/api/plansIntern')
                 setRecruitmentPlan(res.data.content);
-                console.log(recruitmentPlan);
             } catch (error) {
-                console.log(error);
             }
         }
     }
@@ -177,7 +173,6 @@ export default function CandidateManagement() {
         setIdUser(user.id);
         if (user != null) {
             try {
-                console.log(status)
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
@@ -190,7 +185,6 @@ export default function CandidateManagement() {
                 } else {
                     setShowError(false);
                 }
-                console.log(recuitments);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -231,7 +225,6 @@ export default function CandidateManagement() {
     const handleEnterChange = (event, value) => {
         if (event.key === "Enter" && event.target) {
             setInputValue(event.target.value)
-            console.log(event.target.value);
             setSelectPlan(event.target.value);
             handleSubmitSelectPlan(event.target.value, page);
         }

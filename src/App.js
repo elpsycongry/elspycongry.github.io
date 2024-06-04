@@ -21,6 +21,7 @@ function App() {
         <>
             <Routes>
                 <Route path="/dashboard" element={<AuthContext><HomePage /></AuthContext>} />
+                <Route path="/" element={<AuthContext><HomePage /></AuthContext>} />
                 <Route path="/users" element={<AuthContext><Users /></AuthContext>} />
                 <Route path="/intern" element={<AuthContext><MarkInternModal userID={1} /></AuthContext>} />
                 <Route path="/login" element={<AuthContext><Login /></AuthContext>} />
@@ -31,7 +32,6 @@ function App() {
                 <Route path="/recruitment/personalNeeds" element={<AuthContext><PersonalNeeds /></AuthContext>} />
                 <Route path="/recruitment/candidateManagement" element={<AuthContext><CandidateManagement /></AuthContext>} />
                 <Route path="/recruitment/recruitmentPlan" element={<AuthContext><RecruitmentPlan /></AuthContext>} />
-                <Route path="/" element={<Test />} />
             </Routes>
         </>
     );

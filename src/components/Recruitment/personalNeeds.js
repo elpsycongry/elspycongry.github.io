@@ -1,18 +1,9 @@
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ClearIcon from "@mui/icons-material/Clear";
-import {
-    Box,
-    Dialog,
-    DialogContent,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select
-} from "@mui/material";
+import {Box, Dialog, DialogContent, FormControl, IconButton, InputLabel, MenuItem, Select} from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
 import "../../assets/css/cssRecruitment/recruitment.css";
 import "../../assets/css/cssRecruitment/responsiveRecruitment.css";
@@ -27,15 +18,14 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import DialogPersonalFormCreate from "./dialogPersonalNeeds/dialogPersonalFormCreate";
 import DialogPersonalFormUpdate from "./dialogPersonalNeeds/dialogPersonalFormUpdate";
 import DialogPersonalFormWatch from "./dialogPersonalNeeds/dialogPersonalFormWatch";
-import { json, useLocation, useParams } from 'react-router-dom';
-import { set } from 'lodash';
+import {useLocation} from 'react-router-dom';
 
 
 export default function PersonalNeeds() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const idPersonalNeeds = queryParams.get('idRequest');
-    console.log(idPersonalNeeds);
+
     const checkIdPersonal = () => {
         if (idPersonalNeeds !== null) {
             return true;
@@ -142,7 +132,6 @@ export default function PersonalNeeds() {
                 } else {
                     setShowError(false);
                 }
-                console.log(recuitments);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -186,8 +175,7 @@ export default function PersonalNeeds() {
                     <Dialog
                         open={open}
                         onClose={handleClickPracticeClose}
-                        id="dialog"
-                    >
+                        id="dialog">
                         <DialogContent sx={{
                             p: 0,
                             position: 'relative'
@@ -265,12 +253,12 @@ export default function PersonalNeeds() {
                                         {item.status === "Bị từ chối bởi DET" || item.status === "Đã xác nhận" || item.status === "Đang tuyển dụng" || item.status === "Bị từ chối bởi DECAN" ? (
                                            <DialogPersonalFormUpdate id={item.id} check={true} userRoles={userLogin} idUser={idUSer} />
                                         ) : (
-                                            <DialogPersonalFormUpdate id={item.id} userRoles={userLogin} idUser={idUSer} />
+                                            <DialogPersonalFormUpdate id={item.id}  userRoles={userLogin} idUser={idUSer} />
                                         )}
                                     </td>
                                 </tr>
                             ))}
-                        </table>    
+                        </table>
                         {showError && <p>No Content</p>}
                         <div className=' position-absolute bottom-0  w-100 start-0 page align-item-center'>
                             <button className='first-button position-relative hover-btn-page btn-page' onClick={handleFristPage} disabled={currentPage === 1}>

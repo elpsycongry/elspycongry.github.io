@@ -38,7 +38,7 @@ const HomePage = () => {
     const navigate = useNavigate()
     const [personnelNeeds, setPersonnelNeeds] = React.useState(
         {
-            "approved": 0,
+            // "approved": 0,
             "awaitingApproval": 0,
             "approved": 0,
             "handedOver": 0
