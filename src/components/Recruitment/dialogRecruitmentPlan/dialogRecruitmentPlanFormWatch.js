@@ -78,9 +78,11 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
+            console.log(formData.values.recruitmentPlan.recruitmentRequest.name)
               sendNotifications(
                   null,
-                  `Nhu cầu nhân sự <b>${formData.values.recruitmentPlan.recruitmentRequest.name}</b> vừa cập nhật trạng thái: <b>Đang tuyển dụng</b>`,['ROLE_DM'],
+                  `Nhu cầu nhân sự <b>${formData.values.recruitmentPlan.recruitmentRequest.name}</b> vừa cập nhật trạng thái: <b>Đang tuyển dụng</b>`,
+                  ['ROLE_DM'],
                   null,
                   `/recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`)
               .then(sendNotifications(
@@ -89,10 +91,9 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                   ['ROLE_TM'],
                   null,
                       `/recruitment/recruitmentPlan?idPlan=${formData.values.recruitmentPlan.id}`
-                  ))}).then(
-              window.location.href = "/recruitment/recruitmentPlan"
-          )
-          });
+                  ))}).then(() => {
+                window.location.href = "/recruitment/recruitmentPlan"
+          })});
         } catch (error) {
         console.error('Error fetching approval:', error);
         // You can handle the error here, e.g., show a message to the user
