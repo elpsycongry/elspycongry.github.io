@@ -88,5 +88,13 @@ footer {
     padding-bottom: 2px;
 }
 
+.btn-codegym{
+    background-color: #E7E3E3;
+    color: black;
+}
 
+.btn-codegym:hover{
+    background-color: #282781;
+    color: #FFA500;
+}
 
