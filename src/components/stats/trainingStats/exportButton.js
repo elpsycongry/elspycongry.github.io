@@ -22,16 +22,23 @@ const ExportButton = ({ month, quarter, year }) => {
     console.log(year);
     try {
       let endpoint;
-      if (month == currentMonth & quarter == currentQuarter & year == currentYear) {
+      let filename;
+
+      if (month == currentMonth && quarter == currentQuarter && year == currentYear) {
         endpoint = 'http://localhost:8080/api/stats/exportExcelTrainingStatsAll';
+        filename = 'Chỉ số thống kê đào tạo toàn hệ thống.xlsx';
       } else if (month !== 0) {
         endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/monthExportExcel?month=${month}&year=${year}`;
+        filename = `Chỉ số thống kê đào tạo tháng ${month}.xlsx`;
       } else if (quarter !== 0) {
         endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/quarterExportExcel?quarter=${quarter}&year=${year}`;
+        filename = `Chỉ số thống kê đào tạo quý ${quarter}.xlsx`;
       } else if (year !== 0) {
         endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/year?year=${year}`;
+        filename = `Chỉ số thống kê đào tạo năm ${year}.xlsx`;
       } else {
         console.log("Không có endpoint hợp lệ tồn tại");
+        return;
       }
 
       axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
@@ -42,7 +49,7 @@ const ExportButton = ({ month, quarter, year }) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'training_stats.xlsx');
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
       link.remove();
