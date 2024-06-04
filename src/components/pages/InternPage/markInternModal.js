@@ -1,4 +1,4 @@
-import {createMuiTheme, Dialog, DialogContent, DialogTitle, FormControl, NativeSelect} from "@mui/material";
+import {Dialog, DialogContent, DialogTitle, FormControl, NativeSelect} from "@mui/material";
 import {useEffect, useRef, useState} from "react";
 import Button from "@mui/material/Button";
 import "./internpage.scss"
@@ -6,7 +6,6 @@ import DialogActions from "@mui/material/DialogActions";
 import axios from "axios";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCheck, faX} from "@fortawesome/free-solid-svg-icons";
-import target from "lodash/seq";
 import {useSnackbar} from "notistack";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import CreateIcon from "@mui/icons-material/Create";
@@ -18,7 +17,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import StyledEngineProvider from "@mui/material/StyledEngineProvider"
 import Tooltip from "@mui/material/Tooltip";
 
-import {createTheme, ThemeProvider, styled} from "@mui/material/styles";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 
 export function MarkInternModal({userID, updateFunction}) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
@@ -39,7 +39,7 @@ export function MarkInternModal({userID, updateFunction}) {
     };
 
     const [data, setData] = useState({
-        name: '', startDate: "", endDate: "", trainingState: '', isPass: null, scoreInTeam: null,
+        name: '', startDate: "2024-02-12", endDate: "", trainingState: '', isPass: null, scoreInTeam: null,
 
         subjects: [{
             name: "Git",
@@ -169,11 +169,12 @@ export function MarkInternModal({userID, updateFunction}) {
                 day++;
             }
         }
+
         if (day > 50) {
             passed.current = {...passed.current, scorePassed: false}
         }
+
         return (day > 50 ?
-            
             (<ThemeProvider theme={theme}>
                 <Tooltip
                     arrow
@@ -218,7 +219,6 @@ export function MarkInternModal({userID, updateFunction}) {
 
     // Tính kết quả thực tập theo điểm tổng kết và đánh giá team
     const fetchFinalResultPass = (finalScore, inTeamScore) => {
-        console.log('ok')
         // Set fail nếu training state là stop_training
         if (data.trainingState === 'stop_training') {
             setFinalResultPass(false)
@@ -236,6 +236,7 @@ export function MarkInternModal({userID, updateFunction}) {
             if (!isNaN(finalScore) && !isNaN(inTeamScore)) {
                 let isPass = parseFloat(((finalScore + inTeamScore) / 2).toFixed(2));
                 setFinalResultPass(isPass >= 7)
+
                 // Tự động cho đã hoàn thành nếu chấm điểm xong
                 // if (data.trainingState === 'training' || data.trainingState === null){
                 //     const currentDate = new Date().toISOString().split('T')[0];
@@ -268,17 +269,25 @@ export function MarkInternModal({userID, updateFunction}) {
     }, [open]);
 
     useEffect(() => {
-        setFinalScoreValue(parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length)
-            .toFixed(2))
-        fetchFinalResultPass(parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length)
-            .toFixed(2), data.scoreInTeam, false)
+        setFinalScoreValue(parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length).toFixed(2))
+
+        fetchFinalResultPass(
+            parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length)
+                .toFixed(2), data.scoreInTeam, false)
     }, [data]);
     // Handle submit
     const handleSubmit = (type) => {
+
         let sendData;
+        // Save ngày và kết quả thực tập pass hoặc fail
         if (finalResultPass !== null) {
             const currentDate = new Date().toISOString().split('T')[0];
             sendData = {...data, endDate: currentDate, isPass: finalResultPass};
+            if (finalResultPass) {
+                sendData = {...data, isPass: true}
+            } else {
+                sendData = {...data, isPass: false}
+            }
         } else {
             sendData = {...data}
         }
@@ -288,7 +297,7 @@ export function MarkInternModal({userID, updateFunction}) {
                 variant: "success", anchorOrigin: {horizontal: "right", vertical: "top"}
             })
             updateFunction()
-            if (type === 'saveCmt'){
+            if (type === 'saveCmt') {
                 return;
             }
             setOpen(false)
@@ -298,7 +307,7 @@ export function MarkInternModal({userID, updateFunction}) {
             });
         })
     }
-    
+
 
     const convertFormatDate = (dateString) => {
         const date = new Date(dateString)
@@ -323,6 +332,17 @@ export function MarkInternModal({userID, updateFunction}) {
             }
         }
     });
+    const [visibleT, setVisibleT] = useState(0)
+    const toggerCmtModal = (value) => {
+        if (value == visibleT) {
+            setVisibleT(0)
+        } else {
+            setVisibleT(value)
+        }
+    }
+    const checking = (value) => {
+        return value == visibleT;
+    }
 
     return (<>
         <RemoveRedEyeIcon
@@ -334,175 +354,221 @@ export function MarkInternModal({userID, updateFunction}) {
             className="color-blue white-div font-size-large hov"/>
         <CreateIcon onClick={() => {
             setOpen(true);
-
             setReadOnly(false)
         }} style={{width: '24px', height: '24px'}} className="hov color-orange pencil-btn font-size-medium"/>
-        <Dialog
+        <div className={"modal"}>
+            <Dialog
+                sx={{
+                    '& .MuiDialogContent-root': {
+                        paddingRight: '0',
+                        paddingTop: '0',
+                        paddingBottom: '0',
+                    },
+                    '& .MuiPaper-root': {
+                        position: 'relative',
+                        overflow: 'visible',
+                    }
 
-            sx={{
-                '& .MuiPaper-root': {
-                    overflow: 'visible',
-                }
-            }}
-            fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
-            <DialogTitle key={2} sx={{padding: "16px 24px 8px 29px", fontSize: '1.5rem'}}>Kết quả học
-                tập</DialogTitle>
+                }}
+                fullWidth maxWidth={'sm'} onClose={handleClose} open={open}>
+                <DialogTitle key={2} sx={{padding: "16px 24px 8px 23px", fontSize: '1.5rem'}}>Kết quả học
+                    tập</DialogTitle>
 
-            <DialogContent style={{overflow: "visible"}}>
-                <div key={3} className={"flex-col"}>
-                    <h6>Họ tên: {data.name}</h6>
-                    <div className={"flex-row"}>
-                        <p>Ngày bắt đầu: {convertFormatDate(data.startDate)}</p>
-                        <p style={{paddingRight: '18px'}}>
-                            Số ngày thực tập: {getBusinessDay(new Date(data.startDate), new Date(data.endDate))}
-                        </p>
+                {readOnly && (
+                    <div className={"dialog-close"}>
+                        <CloseIcon className={"dialog-close__btn"} onClick={() => {
+                            setOpen(false);
+                        }}/>
                     </div>
-                    <p>Ngày kết thúc: {data.endDate ? convertFormatDate(data.endDate) : "Chưa kết thúc"}</p>
-                </div>
-                {/*Modal body*/}
-                <div key={5} className={"table-score"}>
-                    <div className={"flex flex-row justify-content-between"}>
-                        <p className={"w110 tb l"}>Môn học</p>
-                        <p className={"tb"} id={"theory"}>Lý thuyết</p>
-                        <p className={"tb"}>Thực hành</p>
-                        <p className={"tb"}>Thái độ</p>
-                        <p className={"tb"}>Tổng</p>
+                )}
+                <DialogContent style={{overflow: "visible"}}>
+                    <div key={3} className={"flex-col"}>
+                        <h6>Họ tên: {data.name}</h6>
+                        <div className={"flex-row"}>
+                            <p>Ngày bắt đầu: {convertFormatDate(data.startDate)}</p>
+                            <p style={{paddingRight: '18px'}}>
+                                Số ngày thực tập: {getBusinessDay(new Date(data.startDate), new Date(data.endDate))}
+                            </p>
+                        </div>
+                        <p>Ngày kết thúc: {data.endDate ? convertFormatDate(data.endDate) : "Chưa kết thúc"}</p>
                     </div>
-                    {data.subjects.map((subject, index) => {
-                        return (<div className={"flex flex-row justify-content-between"}>
-                            <div className={"table-score__item tl w110"}>
-                                <Tippy
-                                    interactive
-                                    offset={[0, 45]}
-                                    animation={false}
-                                    trigger={'click'}
-                                    content={'test'}
-                                    render={() => (
-                                        <div className="comment-box">
-                                        <h5>Ghi chú môn {subject.name}</h5>
-                                        <textarea
-                                            maxLength={132}
-                                            className={readOnly ? "edit-comment" : "edit-comment"}
-                                            disabled={readOnly}
-                                            onChange={readOnly ? null : (e) => handleCommentChange(e, index)}
-                                            value={subject.comment.value}
-                                        />
-                                        {!readOnly && (
-                                            <button
-                                            disabled={inValidSave}
-                                            onClick={() => {handleSubmit('saveCmt')}}
-                                            className={"save-btn comment-btn"}>
-                                            LƯU GHI CHÚ
-                                        </button>)}
-                                    </div>)}
-                                    placement={'left'}>
-                                    {readOnly ?
-                                        <Tooltip title="Xem comment" disableInteractive={true}>
-                                            <InsertComment className={"add_icon"}/>
-                                        </Tooltip>
-                                        :
-                                        <Tooltip title="Thêm comment" disableInteractive={true}>
-                                            <AddComment className={"add_icon"}/>
-                                        </Tooltip>}
-                                </Tippy>
-                                {subject.name}
-                            </div>
+                    {/*Modal body*/}
+                    <div key={5} className={"table-score"}>
+                        <div className={"flex flex-row justify-content-between"}>
+                            <p className={"w110 tb l"}>Môn học</p>
+                            <p className={"tb"} id={"theory"}>Lý thuyết</p>
+                            <p className={"tb"}>Thực hành</p>
+                            <p className={"tb"}>Thái độ</p>
+                            <p className={"tb"}>Tổng</p>
+                        </div>
+                        {data.subjects.map((subject, index) => {
+                            return (<div className={"flex flex-row justify-content-between"}>
+                                <div className={"table-score__item tl w110"}>
+                                    <Tippy
+                                        onClickOutside={() => {
+                                            toggerCmtModal(0)
+                                        }}
+                                        visible={checking(index + 1)}
+                                        interactive
+                                        offset={[0, 45]}
+                                        animation={false}
+                                        content={'test'}
+                                        render={() => (
+                                            <div className="comment-box">
+                                                <h5>Ghi chú môn {subject.name}</h5>
+                                                <textarea
+                                                    maxLength={132}
+                                                    className={readOnly ? "edit-comment" : "edit-comment"}
+                                                    disabled={readOnly}
+                                                    onChange={readOnly ? null : (e) => handleCommentChange(e, index)}
+                                                    value={subject.comment.value}
+                                                />
+                                                {!readOnly && (
+                                                    <button
+                                                        disabled={inValidSave}
+                                                        onClick={() => {
+                                                            handleSubmit('saveCmt');
+                                                            toggerCmtModal(0)
+                                                        }}
+                                                        className={"save-btn comment-btn"}>
+                                                        LƯU GHI CHÚ
+                                                    </button>)}
+                                            </div>)}
+                                        placement={'left'}>
+                                        {readOnly ?
+                                            <Tooltip title="Xem comment" disableInteractive={true}>
+                                                <InsertComment className={"add_icon"} onClick={() => {
+                                                    toggerCmtModal(index + 1)
+                                                }}/>
+                                            </Tooltip>
+                                            :
+                                            <Tooltip title="Thêm comment" disableInteractive={true}>
+                                                <AddComment className={"add_icon"} onClick={() => {
+                                                    toggerCmtModal(index + 1)
+                                                }}/>
+                                            </Tooltip>}
+                                    </Tippy>
+                                    {subject.name}
+                                </div>
 
-                            <div className={"table-score__item"}>
-                                {readOnly ? subject.theoryScore : (<input
-                                    type={"number"}
-                                    onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
-                                    value={subject.theoryScore}
+                                <div className={"table-score__item"}>
+                                    {readOnly ? subject.theoryScore : (<input
+                                        type={"number"}
+                                        onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
+                                        value={subject.theoryScore}
+                                        onChange={(e) => {
+                                            handleTheoryScoreChange(e, index)
+                                        }}
+                                        className={"input-score "}/>)}
+                                </div>
+                                <div className={"table-score__item"}>
+                                    {readOnly ? subject.practiceScore : <input
+                                        disabled={readOnly}
+                                        onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
+                                        type={"number"}
+                                        value={subject.practiceScore}
+                                        onChange={(e) => {
+                                            handlePracticeScoreChange(e, index)
+                                        }}
+                                        className={readOnly ? "input-score" : "input-score"}/>}
+                                </div>
+                                <div className={"table-score__item"}>
+                                    {readOnly ? subject.attitudeScore : <input
+                                        onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
+                                        type={"number"}
+                                        value={subject.attitudeScore}
+                                        onChange={(e => handleAttitudeScoreChange(e, index))}
+                                        className={readOnly ? "input-score" : "input-score"}/>}
+                                </div>
+                                <div className={"table-score__item"}
+                                     style={{position: "relative"}}>{findTotal(subject.theoryScore, subject.practiceScore, subject.attitudeScore)}
+                                </div>
+                            </div>)
+                        })}
+
+                        <div className={"flex flex-row justify-content-between"}>
+                            <p className={"tb l"}>Tổng kết</p>
+                            <p className={"table-score__item tb"}>
+                                {finalScoreValue}
+                            </p>
+                        </div>
+                        <div className={"flex flex-row justify-content-between"}>
+                            <p className={"tl tb"}>Đánh giá trên team</p>
+                            <div className={"table-score__item "}>
+                                {readOnly ? <span className={"tb"}>{data.scoreInTeam}</span> : <input
                                     onChange={(e) => {
-                                        handleTheoryScoreChange(e, index)
+                                        handleScoreInTeamChange(e)
                                     }}
-                                    className={"input-score "}/>)}
-                            </div>
-                            <div className={"table-score__item"}>
-                                {readOnly ? subject.practiceScore : <input
-                                    disabled={readOnly}
                                     onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
                                     type={"number"}
-                                    value={subject.practiceScore}
-                                    onChange={(e) => {
-                                        handlePracticeScoreChange(e, index)
-                                    }}
-                                    className={readOnly ? "input-score" : "input-score"}/>}
+                                    value={data.scoreInTeam}
+                                    className={"input-score"}/>}
                             </div>
-                            <div className={"table-score__item"}>
-                                {readOnly ? subject.attitudeScore : <input
-                                    onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
-                                    type={"number"}
-                                    value={subject.attitudeScore}
-                                    onChange={(e => handleAttitudeScoreChange(e, index))}
-                                    className={readOnly ? "input-score" : "input-score"}/>}
-                            </div>
-                            <div className={"table-score__item"}
-                                 style={{position: "relative"}}>{findTotal(subject.theoryScore, subject.practiceScore, subject.attitudeScore)}
-                            </div>
-                        </div>)
-                    })}
+                        </div>
+                        <div className={"flex flex-row justify-content-between"}>
+                            <p className={"tb "}>Kết quả thực tập</p>
+                            <p className={"table-score__item tb"}>
+                                {finalResultPass === null ? "NA" : (finalResultPass ?
+                                    <span style={{color: "green"}}>Pass</span> :
+                                    <span style={{color: "red"}}>Fail</span>)}
+                            </p>
+                        </div>
 
-                    <div className={"flex flex-row justify-content-between"}>
-                        <p className={"tb l"}>Tổng kết</p>
-                        <p className={"table-score__item tb"}>
-                            {finalScoreValue}
-                        </p>
-                    </div>
-                    <div className={"flex flex-row justify-content-between"}>
-                        <p className={"tl tb"}>Đánh giá trên team</p>
-                        <div className={"table-score__item "}>
-                            {readOnly ? <span className={"tb"}>{data.scoreInTeam}</span> : <input
-                                onChange={(e) => {
-                                    handleScoreInTeamChange(e)
-                                }}
-                                onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()}
-                                type={"number"}
-                                value={data.scoreInTeam}
-                                className={"input-score"}/>}
+                        <div className={"flex flex-row justify-content-between"}>
+                            {readOnly ? (data.trainingState === null || data.trainingState === "training" || data.trainingState === "") ?
+                                    <div>Đang thực tập</div> : (data.trainingState === 'stop_training' ?
+                                        <div>Dừng thực tập</div> : <div>Đã hoàn thành</div>) :
+                                <FormControl sx={{width: '30%'}}>
+                                    <NativeSelect
+                                        disabled={readOnly}
+                                        value={data.trainingState}
+                                        onChange={handleTrainingStateChange}
+                                        inputProps={{
+                                            name: 'trainingState', id: 'uncontrolled-native',
+                                        }}>
+                                        <option value={'training'}>Đang thực tập</option>
+                                        <option value={'trained'}>Đã hoàn thành</option>
+                                        <option value={'stop_training'}>Dừng thực tập</option>
+                                    </NativeSelect>
+                                </FormControl>}
                         </div>
                     </div>
-                    <div className={"flex flex-row justify-content-between"}>
-                        <p className={"tb "}>Kết quả thực tập</p>
-                        <p className={"table-score__item tb"}>
-                            {finalResultPass === null ? "NA" : (finalResultPass ?
-                                <span style={{color: "green"}}>Pass</span> :
-                                <span style={{color: "red"}}>Fail</span>)}
-                        </p>
-                    </div>
+                </DialogContent>
+                <DialogActions sx={{display: "flex"}}>
+                    {readOnly ? (
+                            <button
+                                disabled={inValidSave}
+                                onClick={() => {
+                                    setOpen(false)
+                                }}
+                                className={"back-btn close"}>
+                                ĐÓNG
+                            </button>)
+                        :
+                        (<>
+                                <button
+                                    disabled={inValidSave}
+                                    onClick={() => {
+                                        setOpen(false)
+                                    }}
+                                    className={"back-btn"}>
+                                    HUỶ
+                                </button>
+                                <button
+                                    disabled={inValidSave}
+                                    onClick={() => {
+                                        handleSubmit()
+                                    }}
+                                    className={"save-btn"}>
+                                    LƯU
+                                </button>
+                            </>
+                        )
+                    }
+                </DialogActions>
+            </Dialog>
+        </div>
 
-                    <div className={"flex flex-row justify-content-between"}>
-                        {readOnly ? (data.trainingState === null || data.trainingState === "training" || data.trainingState === "") ?
-                            <div>Đang thực tập</div> : (data.trainingState === 'stop_training' ?
-                                <div>Dừng thực tập</div> : <div>Đã hoàn thành</div>) : <FormControl sx={{width: '30%'}}>
-                            <NativeSelect
-                                disabled={readOnly}
-                                value={data.trainingState}
-                                onChange={handleTrainingStateChange}
-                                inputProps={{
-                                    name: 'trainingState', id: 'uncontrolled-native',
-                                }}>
-                                <option value={'training'}>Đang thực tập</option>
-                                <option value={'trained'}>Đã hoàn thành</option>
-                                <option value={'stop_training'}>Dừng thực tập</option>
-                            </NativeSelect>
-                        </FormControl>}
-                    </div>
-                </div>
-            </DialogContent>
-            <DialogActions sx={{display: "flex"}}>
-                {!readOnly &&
-                    <button
-                        disabled={inValidSave}
-                        onClick={() => {
-                            handleSubmit()
-                        }}
-                        className={"save-btn"}>
-                        LƯU
-                    </button>
-                }
-            </DialogActions>
-        </Dialog>
         <Dialog
             open={openAlert}
             aria-labelledby="alert-dialog-title"

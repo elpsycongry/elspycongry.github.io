@@ -1,0 +1,15 @@
+.swal-button--confirm {
+    background-color: #3085d6 !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+    width: 80px;
+  }
+.wal-button--confirm:not([disabled]):hover {
+    background-color: #78cbf2;
+}
+  
+  .swal-button--cancel {
+    font-weight: bold !important;
+    font-size: 16px !important;
+  }

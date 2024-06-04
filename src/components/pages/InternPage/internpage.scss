@@ -1,8 +1,8 @@
 * {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -45,9 +45,9 @@ p {
   > div {
     margin-top: 10px;
   }
-    >div {
-        margin-top: 10px;
-    }
+  >div {
+    margin-top: 10px;
+  }
 
   p {
     min-width: 90px;
@@ -61,8 +61,7 @@ p {
     align-items: center;
     position: relative;
     .add_icon {
-      margin-right: 3px
-    ;
+      margin-right: 3px;
       font-size: 1rem;
       color: #0f6aff;
 
@@ -127,6 +126,20 @@ p {
 
 .css-ojb00g-MuiDialogActions-root {
   padding: 12px 12px 23px 12px !important;
+}
+.back-btn {
+  padding: 5px 20px;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  background-color: transparent;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+  }
+}
+.close {
+  padding: 6px 20px;
 }
 
 .save-btn {
@@ -199,6 +212,7 @@ p {
     width: 300px;
     height: 100px;
     overflow: auto;
+
     outline: #c5c5fd auto 1px;
     &:focus {
       outline-color: #5c5cfb;
@@ -208,9 +222,22 @@ p {
     }
   }
 }
+.dialog-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 4px;
 
+  .dialog-close__btn {
+    font-size: 1.7rem;
+  }
+  &:hover {
+    opacity: 0.7;
+    cursor: pointer;
+  }
+
+}
 .comment-box::after {
-
   content: "";
   display: block;
   position: absolute;
@@ -222,7 +249,9 @@ p {
   border-left: 10px solid #ffffff;
   border-bottom: 10px solid transparent;
   border-right: 10px solid transparent;
-
+}
+.modal .css-ypiqx9-MuiDialogContent-root {
+  padding-right: 0 !important;
 }
 //.css-87k0pl-MuiTypography-root-MuiDialogTitle-root {
 //  padding: 14px 24px 8px 25px !important;

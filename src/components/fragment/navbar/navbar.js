@@ -132,10 +132,10 @@ function Navbar() {
     }
 
     const listItems = [
-        { id: 1, text: "Trang chủ", IconText: HomeIcon, linkTo: `/`, roles: [] },
+        { id: 1, text: "Dashboard", IconText: HomeIcon, linkTo: `/dashboard`, roles: [] },
         { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
         {
-            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_HR'], children: [
+            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_ADMIN', 'ROLE_TM', 'ROLE_DM', 'ROLE_HR'], children: [
                 {
                     id: 1,
                     name: "Nhu cầu",
@@ -167,7 +167,7 @@ function Navbar() {
                 }, {
                     id: 3,
                     name: "Thống kê sau đào tạo",
-                    linkTo: "/recruitment/personalNeeds",
+                    linkTo: "/afterTraining/stats",
                 },
             ]
         },

@@ -7,7 +7,6 @@ function AuthContext({children}) {
 
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
-    console.log(currentUser)
     if (currentUser === null) {
         if (pathName !== "/login") {
             return <Navigate to="/login"/>
@@ -31,12 +30,22 @@ function AuthContext({children}) {
         }
         if (pathName === "/training/stats") {
             if(!isAdmin){
-                return <Navigate to={"/"}/>
+                return <Navigate to="/" />
             }
         }
         {isAdmin && <div></div>}
         if (pathName === "/login") {
-            return <Navigate to="/"/>
+            return <Navigate to="/" />
+        }
+        if(pathName === "/dashboard") {
+            if(!isAdmin && !isManager){
+                return <Navigate to="/" />
+            }
+        }
+        if(pathName === "/recruitment/stats") {
+            if(!isAdmin){
+                return <Navigate to="/" />
+            }
         }
 
     }

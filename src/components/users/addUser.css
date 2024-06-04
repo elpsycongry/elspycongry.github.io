@@ -1,0 +1,64 @@
+.wrapper-update ::-webkit-scrollbar {
+    width: 0;
+}
+
+.information-user{
+    font-size: 20px;
+    font-weight: 0;
+}
+
+.send-btn-add-user {
+    margin-top: 0;
+    width: 120px;
+    height: 36px;
+    font-size: 16px;
+    text-align: left;
+    background-color: #388738;
+    color: #fdfdfd;
+    border-radius: 3px;
+}
+
+.send-btn-add-user:hover{
+    background-color: #0dab0d;
+}
+
+.css-ahj2mt-MuiTypography-root{
+    font-size: 20px;
+}
+
+.cursor:hover {
+    cursor: pointer;
+}
+
+.form-add-user {
+    width: 590px;
+    height: 100%;
+    padding: 15px 29px 11px 5px;
+    overflow-y: auto; /* Thêm cuộn nếu nội dung vượt quá kích thước */
+}
+
+.form-label-input{
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.btn-container-user{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.add-title{
+    padding: 0;
+    padding-top: 10px;
+}
+
+.add-title {
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.roles-error {
+    color: red;
+    margin-top: 8px;
+  }

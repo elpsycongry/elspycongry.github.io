@@ -2,6 +2,10 @@
     width: 0;
 }
 
+.status .MuiInputBase-root {
+    height: 35px;
+}
+
 .table-container {
     width: 100%;
     table-layout: fixed;
@@ -90,17 +94,19 @@ div .table-container th {
 
 .training-name {
     text-align: center;
-    max-width: 60px;
+    min-width: 140px;
     flex: 1;
 }
 
 .training-total-days {
-    width: 140px;
+    padding: 8px;
+    width: 150px;
     text-align: center;
 }
 
 .team-score {
-    min-width: 140px;
+    padding: 8px;
+    width: 130px;
     text-align: center;
 }
 
@@ -142,4 +148,22 @@ table .table-training td {
     min-width: 140px;
     padding: 8px;
     text-align: center;
+}
+
+
+.position-p {
+    position: absolute;
+    top: 16px;
+}
+
+.w-184 {
+    width: 184px;
+}
+
+.w-124 {
+    width: 124px;
+}
+
+.w-84 {
+    width: 84px;
 }

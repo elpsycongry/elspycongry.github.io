@@ -13,15 +13,84 @@ import Navbar from '../../fragment/navbar/navbar';
 import Header from '../../fragment/header/header';
 import { Icon } from '@iconify/react';
 import './homePage.css';
+import axios from 'axios';
+import { Link } from '@mui/material';
 
 // const HomeIcon = () => {
 //     return (
 //         <Icon icon="fa:home" width="25" height="25" />
 //     )
 // }
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="/public">
+                Quản lý đào tạo
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
 
 const HomePage = () => {
     const navigate = useNavigate()
+    const [personnelNeeds, setPersonnelNeeds] = React.useState(
+        {
+            // "approved": 0,
+            "awaitingApproval": 0,
+            "approved": 0,
+            "handedOver": 0
+        }
+    );
+    const [recruitmentPlan, setRecuitmentPlan] = React.useState(
+        {
+            "totalRecruitmentPlan": 0,
+            "awaitingApproval": 0,
+            "approved": 0,
+            "Accomplished": 0
+        }
+    );
+    const [candidate, setCandidate] = React.useState({
+        "totalCandidate": 0,
+        "haveNotInterviewedYet": 0,
+        "candidatePass": 0,
+        "candidateFail": 0
+});
+    const [intern, setIntern] = React.useState({
+        "totalIntern": 0,
+        "internTraining": 0,
+        "internPass": 0,
+        "internFail": 0
+    });
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const user = JSON.parse(localStorage.getItem("currentUser"))
+            if (user != null) {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/dashboard/personnelNeeds`);
+                    setPersonnelNeeds(response.data)
+
+                    const response1 = await axios.get(`http://localhost:8080/api/dashboard/recruitmentPlan`);
+                    setRecuitmentPlan(response1.data)
+
+                    const response2 = await axios.get(`http://localhost:8080/api/dashboard/candidate`);
+                    setCandidate(response2.data)
+
+                    const response3 = await axios.get(`http://localhost:8080/api/dashboard/intern`);
+                    setIntern(response3.data)
+
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+        };
+
+        fetchData();
+    }, []);
     return (
         <>
             <Header />
@@ -29,7 +98,7 @@ const HomePage = () => {
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
                 <Box m={2} style={{ display: 'flex', marginBottom: '11px' }}>
                     <Icon icon="fa:home" width="24" height="24" style={{ color: 'rgba(0, 0, 0, 0.60)', paddingBottom: '6px' }} />
-                    <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Trang chủ</p>
+                    <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Dashboard</p>
                 </Box>
                 <Box>
                     <div className='large-div-container'>
@@ -40,10 +109,10 @@ const HomePage = () => {
                                     <h3 className='smaller-content-title'>Nhu cầu nhân sự</h3>
                                     <div className='smaller-content-data'>
                                         <div className='smaller-content-number'>
-                                            <p><strong>26</strong></p>
-                                            <p><strong>4</strong></p>
-                                            <p><strong>9</strong></p>
-                                            <p><strong>12</strong></p>
+                                            <p><strong>{personnelNeeds.personnelNeeds}</strong></p>
+                                            <p><strong>{personnelNeeds.awaitingApproval}</strong></p>
+                                            <p><strong>{personnelNeeds.approved}</strong></p>
+                                            <p><strong>{personnelNeeds.handedOver}</strong></p>
                                         </div>
                                         <div className='smaller-content-text'>
                                             <p>Tổng số nhu cầu nhân sự</p>
@@ -54,7 +123,7 @@ const HomePage = () => {
                                     </div>
                                 </div>
                                 <div className='smaller-icon-container'>
-                                    <Icon icon="fa:home" className='smaller-icon-container-icon' style={{height: '120px'}} />
+                                    <Icon icon="fa:home" className='smaller-icon-container-icon' style={{ height: '120px' }} />
                                 </div>
                             </div>
                         </div>
@@ -65,10 +134,10 @@ const HomePage = () => {
                                     <h3 className='smaller-content-title'>Kế hoạch tuyển dụng</h3>
                                     <div className='smaller-content-data'>
                                         <div className='smaller-content-number'>
-                                            <p><strong>21</strong></p>
-                                            <p><strong>0</strong></p>
-                                            <p><strong>18</strong></p>
-                                            <p><strong>3</strong></p>
+                                            <p><strong>{recruitmentPlan.totalRecruitmentPlan}</strong></p>
+                                            <p><strong>{recruitmentPlan.awaitingApproval}</strong></p>
+                                            <p><strong>{recruitmentPlan.approved}</strong></p>
+                                            <p><strong>{recruitmentPlan.accomplished}</strong></p>
                                         </div>
                                         <div className='smaller-content-text'>
                                             <p>Tổng số kế hoạch tuyển dụng</p>
@@ -92,10 +161,10 @@ const HomePage = () => {
                                     <h3 className='smaller-content-title'>Ứng viên</h3>
                                     <div className='smaller-content-data'>
                                         <div className='smaller-content-number'>
-                                            <p><strong>542</strong></p>
-                                            <p><strong>4</strong></p>
-                                            <p><strong>9</strong></p>
-                                            <p><strong>12</strong></p>
+                                            <p><strong>{candidate.totalCandidate}</strong></p>
+                                            <p><strong>{candidate.haveNotInterviewedYet}</strong></p>
+                                            <p><strong>{candidate.candidatePass}</strong></p>
+                                            <p><strong>{candidate.candidateFail}</strong></p>
                                         </div>
                                         <div className='smaller-content-text'>
                                             <p>Tổng số ứng viên</p>
@@ -117,10 +186,10 @@ const HomePage = () => {
                                     <h3 className='smaller-content-title'>Thực tập sinh</h3>
                                     <div className='smaller-content-data'>
                                         <div className='smaller-content-number'>
-                                            <p><strong>96</strong></p>
-                                            <p><strong>26</strong></p>
-                                            <p><strong>20</strong></p>
-                                            <p><strong>0</strong></p>
+                                            <p><strong>{intern.totalIntern}</strong></p>
+                                            <p><strong>{intern.internTraining}</strong></p>
+                                            <p><strong>{intern.internPass}</strong></p>
+                                            <p><strong>{intern.internFail}</strong></p>
                                         </div>
                                         <div className='smaller-content-text'>
                                             <p>Tổng số thực tập sinh</p>
@@ -138,6 +207,9 @@ const HomePage = () => {
                     </div>
                 </Box>
             </Box>
+            <div style={{ paddingTop: '70px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
+            </div>
         </>
     );
 };

@@ -1,22 +1,17 @@
 import { Breadcrumbs } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-export default function BreadCrumbs() {
+export default function BreadCrumbs({icon ,recruitment, personnelNeeds}) {
     return (
         <>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" href="/">
-                    MUI
+            <Breadcrumbs className="breadCrumbs"  separator={<NavigateNextIcon sx={{margin: 0}} fontSize="small" />} aria-label="breadcrumb">
+                <Link  className="text-decoration-none d-flex  align-item-center grey-text" underline="hover" color="inherit" href="/">
+                    {icon}    
+                    {recruitment}
                 </Link>
-                <Link
-                    underline="hover"
-                    color="inherit"
-                    href="/material-ui/getting-started/installation/"
-                >
-                    Core
-                </Link>
-                <Typography color="text.primary">Breadcrumbs</Typography>
+                <Typography className="grey-text">{personnelNeeds}</Typography>
             </Breadcrumbs>
         </>
     )

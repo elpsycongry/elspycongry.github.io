@@ -7,7 +7,7 @@
     font-weight: 0;
 }
 
-.send-btn {
+.send-btn-update-user {
     margin-top: 10px;
     width: 160px;
     height: 40px;
@@ -17,7 +17,7 @@
     border-radius: 3px;
 }
 
-.send-btn:hover{
+.send-btn-update-user:hover{
     background-color: #0dab0d;
 }
 
@@ -47,6 +47,6 @@
 
 .update-title{
     padding: 0;
-    padding-left: 30px;
+    padding-left: 23px;
     padding-top: 10px;
 }

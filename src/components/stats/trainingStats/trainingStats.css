@@ -1,0 +1,18 @@
+.btn-stats-gray{
+    background-color: #b2aeae;
+    color: white;
+}
+
+.btn-stats-gray:hover{
+    background-color: #b2aeae;
+}
+
+.btn-stats-green{
+    background-color: #419A00;
+    color: white;
+}
+
+.btn-stats-green:hover{
+    background-color: #388004;
+    color: white;
+}
