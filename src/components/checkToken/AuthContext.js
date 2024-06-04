@@ -12,6 +12,7 @@ function AuthContext({ children }) {
             return pathName === "/login" ? <Login /> : <Navigate to="/" />;
         }
     } else {
+        console.log('ok');
         const roles = currentUser.roles.map(role => role.authority);
         const isAdmin = roles.includes('ROLE_ADMIN');
         const isManager = roles.includes('ROLE_TM');
