@@ -19,7 +19,9 @@ function AuthContext({ children }) {
         const isDivisionManager = roles.includes('ROLE_DM');
         const isQualityController = roles.includes('ROLE_QC');
         const isHumanResource = roles.includes('ROLE_HR');
-
+        if (pathName === "/login") {
+            return <Navigate to="/dashboard" />;
+        }
         if (pathName === '/users' && !isAdmin) {
             return <Navigate to="/dashboard" />;
         }
@@ -30,7 +32,6 @@ function AuthContext({ children }) {
             return <Navigate to="/dashboard" />;
         }
     }
-
     return children ? <>{children}</> : <Navigate to="/notFound" />;
 }
 
@@ -50,6 +51,8 @@ export function doLogout(navigate) {
         });
 
         localStorage.removeItem("currentUser");
+        navigate("/");
+    } else {
         navigate("/");
     }
 }
