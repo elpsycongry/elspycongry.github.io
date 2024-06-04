@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
 import "../../assets/css/cssRecruitment/recruitment.css";
 import "../../assets/css/cssRecruitment/responsiveRecruitment.css";
@@ -36,6 +36,7 @@ export default function RecruitmentPlan() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const idPlan = queryParams.get('idPlan');
+    const recruitmentRequestData = useRef({});
     const checkIdPlan = () => {
         if (idPlan !== null) {
             return true;
@@ -73,6 +74,7 @@ export default function RecruitmentPlan() {
         event.preventDefault();
         try {
             const response = await axios.get(`http://localhost:8080/api/plans/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
+            console.log(response.data)
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -156,8 +158,9 @@ export default function RecruitmentPlan() {
         handlePagination(null, totalPages);
     }
 
+
     useEffect(() => {
-        getAll(page);
+         getAll(page);
     }, [page]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -167,6 +170,15 @@ export default function RecruitmentPlan() {
         setCurrentPage(value);
         getAll(value - 1);
     }
+
+    // Nếu có idPlan thì mở modal8
+    useEffect(() => {
+        if (idPlan){
+            axios.get(`http://localhost:8080/api/plans/${idPlan}`)
+                .then(res => {recruitmentRequestData.current= res.data.recruitmentPlan.recruitmentRequest })
+        }
+        }, []);
+
 
     return (
         <>
@@ -182,7 +194,6 @@ export default function RecruitmentPlan() {
                         <div className="d-flex align-items-center cursor-pointer" onClick={handleClickPracticeOpen}>
                             <p className="practice text-center mb-0 me-1">
                                 Quy trình tuyển dụng
-
                             </p>
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="#005B9F" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2m0 16a1 1 0 1 1 1-1a1 1 0 0 1-1 1m1-5.16V14a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1a1.5 1.5 0 1 0-1.5-1.5a1 1 0 0 1-2 0a3.5 3.5 0 1 1 4.5 3.34" /></svg>
                         </div>
@@ -294,7 +305,7 @@ export default function RecruitmentPlan() {
             </Box>
             <Footer />
             {idPlan !== null &&
-                <DialogRecruitmentPlanFormWatch checkId={checkIdPlan()} id={idPlan} check={true} userRoles={userLogin} />
+                <DialogRecruitmentPlanFormWatch checkId={checkIdPlan()} statusItem={recruitmentRequestData.current.status} reasonItem={recruitmentRequestData.current.reason} id={idPlan} check={true} userRoles={userLogin} />
             }
         </>
     );

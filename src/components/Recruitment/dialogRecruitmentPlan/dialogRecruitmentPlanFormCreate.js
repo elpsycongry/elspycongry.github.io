@@ -170,7 +170,6 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
       ],
     },
     onSubmit: async (values, { setSubmitting }) => {
-      // console.log(values);
       const personalneed = values.recruitmentPlan.recruitmentRequest.id;
       const nameRecruitmentPlan = values.recruitmentPlan.name;
       values.planDetails = [...tech];
@@ -223,7 +222,6 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
   const hasRoleAdmin = () => {
     return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_TM");
   };
-  console.log(hasRoleAdmin());
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("currentUser"));
     if (user != null) {
@@ -266,7 +264,6 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
       { type: "", numberOfPersonnelNeeded: "", numberOfOutputPersonnel: "" },
     ]);
   };
-  console.log(tech)
   const removeTech = (index) => {
     const updateTech = tech.filter((_, idx) => idx !== index);
     setTech(updateTech);
