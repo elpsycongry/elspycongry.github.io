@@ -14,7 +14,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem, userRoles, checkId }) {
+export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem, userRoles, checkId, idUser }) {
   const [tenhnology, setTenhnology] = useState([]);
   const navigate = useNavigate();
   const hasRoleAdmin = () => {
@@ -69,7 +69,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     const user = JSON.parse(localStorage.getItem("currentUser"));
     if (user != null) {
       try {
-        axios.put(`http://localhost:8080/api/plans/${id}/users/1`).then(() => {
+        axios.put(`http://localhost:8080/api/plans/${id}/users/${idUser}`).then(() => {
           setOpenForm(false);
           Swal.fire({
             position: "center",
@@ -105,6 +105,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     if (user != null) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
       axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
+        console.log(res.data);
         formData.setValues(res.data);
         const detail = res.data.planDetails;
         setTenhnology(detail);

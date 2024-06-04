@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './components/pages/login/login';
 import Users from './components/users/users';
@@ -10,15 +10,15 @@ import { MarkInternModal } from './components/pages/InternPage/markInternModal';
 import './assets/css/index.css';
 import TrainingStats from './components/stats/trainingStats/trainingStats';
 import RecruitmentStats from './components/stats/recruitmentStats/recruitmentStats';
-import Test from './components/Recruitment/test';
 import PersonalNeeds from './components/Recruitment/personalNeeds';
 import CandidateManagement from './components/Recruitment/candidateManagement';
 import RecruitmentPlan from './components/Recruitment/recruitmentPlan';
-import axiosInstance from './components/checkToken/axiosInstance';
+import Email from './components/fragment/email/email';
 
 function App() {
     return (
         <>
+            <Email />
             <Routes>
                 <Route path="/dashboard" element={<AuthContext><HomePage /></AuthContext>} />
                 <Route path="/" element={<AuthContext><HomePage /></AuthContext>} />

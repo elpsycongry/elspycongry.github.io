@@ -6,18 +6,19 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem'
-import {styled, useTheme} from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {doLogout} from "../../checkToken/AuthContext";
-import {useNavigate} from "react-router-dom";
+import AuthContext, { doLogout } from "../../checkToken/AuthContext";
+import { useNavigate } from "react-router-dom";
 import logoCodeGym from '../../../assets/image/logoCodeGym.png'
 import avatarDemo from '../../../assets/image/boy_2.png'
 import './header.css'
-import {Notification} from "../../Notification/notification";
+import { Notification } from "../../Notification/notification";
+import { useEffect } from 'react';
+import { useState } from 'react';
 
-const settings = ['Đăng xuất'];
 const drawerWidth = 240;
 
 
@@ -39,43 +40,65 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
+
 export default function Header() {
     // Notification
-
-
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
+    const [userRoles, setUserRoles] = useState([]);
+    useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    setUserRoles(user.roles);
+    },[])
+    
+    userRoles.map(item =>{
+        console.log(item.authority);
+    })
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
 
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
 
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
     const navigate = useNavigate();
+
+    const [anchorElRoles, setAnchorElRoles] = useState(null);
+
+    const handleRolesClick = (event) => {
+        setAnchorElRoles(event.currentTarget);
+    };
+
+    const handleRolesClose = () => {
+        setAnchorElRoles(null);
+    };
+
+    const openRoles = Boolean(anchorElRoles);
+
+    const rolesMenu = (
+        <Menu
+            id="basic-menu"
+            className='menuChild'
+            anchorEl={anchorElRoles}
+            open={openRoles}
+            onClose={handleRolesClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        >
+            {userRoles.map((item,index) => (
+                <MenuItem key={index}>
+                    <Typography textAlign="center">{item.authority}</Typography>
+                </MenuItem>
+            ))}
+        </Menu>
+    );
+
     return (
         <>
-            <AppBar position="fixed" sx={{ backgroundColor: 'orange'}}>
-                <Toolbar style={{padding: '0 4px'}}>
+            <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
+                <Toolbar style={{ padding: '0 4px' }}>
                     <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
                         <img src={logoCodeGym} style={{ width: '30px', height: '30px' }} />
                     </Avatar>
@@ -83,8 +106,8 @@ export default function Header() {
                         Hệ thống quản lý đào tạo
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
-                    <Box sx={{ marginRight: '10px', display: "flex", alignItems: 'center'} }>
-                      <Notification />
+                    <Box sx={{ marginRight: '10px', display: "flex", alignItems: 'center' }}>
+                        <Notification />
                     </Box>
                     <Tooltip title="Open settings">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -108,11 +131,13 @@ export default function Header() {
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
                     >
-                        {settings.map((setting) => (
-                            <MenuItem key={setting} onClick={() => { doLogout(navigate) }}>
-                                <Typography textAlign="center">{setting}</Typography>
-                            </MenuItem>
-                        ))}
+                        <MenuItem onClick={() => { doLogout(navigate) }}>
+                            <Typography textAlign="center">Đăng xuất</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={handleRolesClick}>
+                            <Typography textAlign="center">Vai trò</Typography>
+                        </MenuItem>
+                        {rolesMenu}
                     </Menu>
                 </Toolbar>
 

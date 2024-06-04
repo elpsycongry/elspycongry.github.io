@@ -125,6 +125,7 @@
 .mw .MuiPaper-root {
     min-width: 600px;
 }
+
 .mwQC .MuiPaper-root {
     min-width: 760px;
 }
@@ -643,62 +644,79 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .input-disabled {
     position: relative;
-  }
-  
-  .input-disabled:after {
-    content: "\f05e"; /* Unicode cho icon cấm */
-    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+}
+
+.input-disabled:after {
+    content: "\f05e";
+    /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free";
+    /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
-    color: #dc3545; /* Màu đỏ */
+    color: #dc3545;
+    /* Màu đỏ */
     position: absolute;
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
     cursor: not-allowed;
     display: none;
-  }
-  
-  .input-disabled:hover:after,
-  .input-disabled:focus:after {
+}
+
+.input-disabled:hover:after,
+.input-disabled:focus:after {
     display: block;
-  }
-  .input-container.input-disabled {
+}
+
+.input-container.input-disabled {
     position: relative;
-  }
-  
-  .input-container.input-disabled:after {
-    content: "\f05e"; /* Unicode cho icon cấm */
-    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+}
+
+.input-container.input-disabled:after {
+    content: "\f05e";
+    /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free";
+    /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
-    color: #dc3545; /* Màu đỏ */
+    color: #dc3545;
+    /* Màu đỏ */
     position: absolute;
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
     cursor: not-allowed;
     display: none;
-  }
-  
-  .input-container.input-disabled:hover:after {
+}
+
+.input-container.input-disabled:hover:after {
     display: block;
-  }
-  .select-container.input-disabled {
+}
+
+.select-container.input-disabled {
     position: relative;
-  }
-  
-  .select-container.input-disabled:after {
-    content: "\f05e"; /* Unicode cho icon cấm */
-    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+}
+
+.select-container.input-disabled:after {
+    content: "\f05e";
+    /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free";
+    /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
-    color: #dc3545; /* Màu đỏ */
+    color: #dc3545;
+    /* Màu đỏ */
     position: absolute;
-    top: 62%; /* Thay đổi giá trị này để di chuyển icon cấm */
+    top: 62%;
+    /* Thay đổi giá trị này để di chuyển icon cấm */
     right: 10px;
     transform: translateY(-50%);
     cursor: not-allowed;
     display: none;
-  }
-  
-  .select-container.input-disabled:hover:after {
+}
+
+.select-container.input-disabled:hover:after {
     display: block;
-  }
+}
+
+.menuChild {
+    position: absolute !important;
+    left: -113px !important;
+}

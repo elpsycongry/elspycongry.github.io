@@ -20,7 +20,6 @@ import AcceptJobCVChart from "./acceptJobCVChart";
 import './recruitmentStats.css'
 import ButtonPDFExport from "./buttonPDFExport";
 import ExportRecruitment from "./exportRecruitment";
-import * as XLSX from 'xlsx';
 import { Icon } from '@iconify/react';
 
 

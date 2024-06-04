@@ -4,6 +4,20 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+### `config .env`
+first, open [link](https://dashboard.emailjs.com/sign-in), then sign in, if you doesn't have an account, sign up now. In sidebar, select 'Email service', click 'Add new service' -> choose gmail then select connect account and create service(in there have Service ID). Next, select 'Email Templates', create new templates and create templates like: 
+![alt text](image.png) 
+or code in Html: 
+![alt text](image-1.png)
+and save (Template Id in here), finally, you can take 'Public Key' in  Account. 
+
+In project, create new file .env in project (file .env in big project)
+import three variable: 
+ - REACT_APP_API_SERVICE_ID = your Service ID
+ - REACT_APP_API_TEMPLATE_ID = your Template ID 
+ - REACT_APP_API_PUBLIC_KEY =  your Public Key
+ example: REACT_APP_API_SERVICE_ID = service_aswr1v7d
+
 In the project directory, you can run:
 ### `npm install`
 You must be run this to update package-lock.json before run start
