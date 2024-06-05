@@ -126,6 +126,7 @@ export default function RecruitmentPlan() {
     const [idUser, setIdUser] = useState();
     async function getAll(pageNumber) {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        console.log(user);
 
         if (user != null) {
             try {

@@ -108,7 +108,6 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     if (user != null) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
       axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
-        console.log(res.data);
         formData.setValues(res.data);
         const detail = res.data.planDetails;
         setTenhnology(detail);

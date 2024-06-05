@@ -18,6 +18,9 @@ import './header.css'
 import { Notification } from "../../Notification/notification";
 import { useEffect } from 'react';
 import { useState } from 'react';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import axios from 'axios';
 
 const drawerWidth = 240;
 
@@ -44,12 +47,22 @@ const AppBar = styled(MuiAppBar, {
 export default function Header() {
     // Notification
     const [userRoles, setUserRoles] = useState([]);
+    const [userLogin, setUserLogin] = useState({
+        name: '',
+        email: ''
+    });
     useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-    setUserRoles(user.roles);
-    },[])
-    
-    userRoles.map(item =>{
+        const user = JSON.parse(localStorage.getItem("currentUser"))
+        if(user != null){
+            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+            axios.get('http://localhost:8080/admin/users/view/'+ user.id).then(res =>{
+                setUserLogin(res.data);
+            })
+        }
+        setUserRoles(user.roles);
+    }, [])
+
+    userRoles.map(item => {
         console.log(item.authority);
     })
     const handleOpenUserMenu = (event) => {
@@ -87,7 +100,7 @@ export default function Header() {
             anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
             transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         >
-            {userRoles.map((item,index) => (
+            {userRoles.map((item, index) => (
                 <MenuItem key={index}>
                     <Typography textAlign="center">{item.authority}</Typography>
                 </MenuItem>
@@ -116,6 +129,7 @@ export default function Header() {
                         </IconButton>
                     </Tooltip>
                     <Menu
+                        className='menu'
                         sx={{ mt: '45px' }}
                         id="menu-appbar"
                         anchorEl={anchorElUser}
@@ -131,11 +145,26 @@ export default function Header() {
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
                     >
-                        <MenuItem onClick={() => { doLogout(navigate) }}>
-                            <Typography textAlign="center">Đăng xuất</Typography>
-                        </MenuItem>
+                        <div className='info-user  pe-2 ps-2 mt-2' style={{ height: '50px' }}>
+                            <div className='d-flex ms-2 align-item-center'>
+                                <Avatar className=' me-3' alt="Remy Sharp" src={avatarDemo} />
+                                <div className='d-flex flex-column'>
+                                    <span>{userLogin.name}</span>
+                                    <span>{userLogin.email}</span>
+                                </div>
+                            </div>
+                            <div>
+
+                            </div>
+                        </div>
+                        <hr className=''/>
                         <MenuItem onClick={handleRolesClick}>
+                            <ContactEmergencyIcon className='me-3' />
                             <Typography textAlign="center">Vai trò</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={() => { doLogout(navigate) }}>
+                            <LogoutIcon className='me-3'/>
+                            <Typography textAlign="center">Đăng xuất</Typography>
                         </MenuItem>
                         {rolesMenu}
                     </Menu>

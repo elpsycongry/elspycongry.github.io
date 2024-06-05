@@ -121,6 +121,12 @@
     width: 45%;
 }
 
+.menu .MuiPaper-root {
+        height: 20%;
+        width: 300px;
+}
+
+
 .mw .MuiPaper-root {
     min-width: 600px;
 }
@@ -650,7 +656,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .btn-progress .css-1f773le-MuiButtonBase-root-MuiAccordionSummary-root {
     min-height: 36px;
 }
-.span-progress{
+
+.span-progress {
     border-radius: 4px !important;
     background-color: #3165f3;
     width: 100%;
@@ -705,12 +712,9 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .input-container.input-disabled:after {
     content: "\f05e";
-    /* Unicode cho icon cấm */
     font-family: "Font Awesome 5 Free";
-    /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
     color: #dc3545;
-    /* Màu đỏ */
     position: absolute;
     top: 50%;
     right: 10px;
@@ -753,7 +757,8 @@ input[type="number"]::-webkit-outer-spin-button {
     left: -113px !important;
 }
 
-.center-tech{
+.center-tech {
     display: flex;
     justify-content: center;
 }
+

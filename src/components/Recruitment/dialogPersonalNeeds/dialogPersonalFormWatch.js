@@ -319,7 +319,6 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
                             ))
                         )}
-                        {formData.values.recruitmentRequest.status !== "Đã gửi" &&
                             <div className=" mt-0">
                                 <div className="col-md-12 mt-2 progressDiv">
                                     <Accordion>
@@ -466,7 +465,6 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                     </Accordion>
                                 </div>
                             </div>
-                        }
 
                     </form>
                 </DialogTitle>

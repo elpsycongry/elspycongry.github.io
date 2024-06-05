@@ -1,22 +1,30 @@
-<!-- CODE EDITOR -->
-<p>Xin ch&agrave;o {{to_name}},<br>{{from_name}} b&aacute;o c&aacute;o tiến độ tuyển dụng của {{name_personal_needs}} từ ng&agrave;y {{date_start}} đến {{date_end}}</p>
-<p>{{name_personal_needs}} :&nbsp;</p>
-<p>&nbsp; &nbsp;- Số ứng vi&ecirc;n y&ecirc;u cầu: {{intern_needs}}</p>
-<p>&nbsp; &nbsp;-Số ứng vi&ecirc;n cần b&agrave;n giao: {{intern_pass}}</p>
-<p>Đ&acirc;y l&agrave; chi tiết&nbsp;<br>CodeGym</p>
-
-
-
-
-<!-- DESIGN EDITOR -->
-Xin chào {{to_name}},
-{{from_name}} báo cáo tiến độ tuyển dụng của {{name_personal_needs}} từ ngày {{date_start}} đến {{date_end}}
-
-{{name_personal_needs}} : 
-
-   - Số ứng viên yêu cầu: {{intern_needs}}
-
-   -Số ứng viên cần bàn giao: {{intern_pass}}
-
-Đây là chi tiết 
-CodeGym
+<p>Xin ch&agrave;o <strong>{{to_name}}</strong>,<br><em>Aristotle</em>&nbsp;xin ph&eacute;p&nbsp;b&aacute;o c&aacute;o tiến độ tuyển dụng của <strong>{{name_personal_needs}}</strong> từ ng&agrave;y <strong>{{date_start}}</strong> đến <strong>{{date_end}}.</strong></p>
+<p><strong>{{name_personal_needs}}</strong> :&nbsp;</p>
+<ul>
+<li><em>Số thực tập sinh đầu v&agrave;o</em>: <strong>{{intern_needs}}</strong></li>
+<li><em>Số thực tập sinh đầu ra</em>: <strong>{{intern_need_hand_over}}</strong></li>
+</ul>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 78.7451%; height: 86px;" border="1"><colgroup><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.642%;"></colgroup>
+<tbody>
+<tr style="height: 37px;">
+<td style="text-align: center;"><strong>Tổng số ứng vi&ecirc;n</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n pass</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n fail</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n đang thực tập</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n kh&ocirc;ng nhận việc</strong></td>
+<td style="text-align: center;">&nbsp;<strong>Số ứng vi&ecirc;n đ&atilde; b&agrave;n giao</strong></td>
+</tr>
+<tr style="height: 49px;">
+<td style="text-align: center;">{{total_intern}}</td>
+<td style="text-align: center;">{{pass_intern}}</td>
+<td style="text-align: center;">{{fail_intern}}</td>
+<td style="text-align: center;">{{trainning_intern}}</td>
+<td style="text-align: center;">{{not_trainning_intern}}</td>
+<td style="text-align: center;">{{hand_over_intern}}</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><a href="http://localhost:3000/recruitment/personalNeeds?idRequest={{link_progress}}">Xem chi tiết quy tr&igrave;nh</a></p>
+<p><br>Xin cảm ơn!</p>
