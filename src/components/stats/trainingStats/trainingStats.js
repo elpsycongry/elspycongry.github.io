@@ -49,7 +49,7 @@ export default function TrainingStats() {
     const [maxGrowthStatistics, setMaxGrowthStatistics] = useState();
 
     const [activeStat, setActiveStat] = useState("stats1");
-    const [title, setTitle] = useState("Kết quả đào tạo tháng 5");
+    const [title, setTitle] = useState("Kết quả đào tạo tháng 6");
     const [titleStatistics, setTitleStatistics] = useState("Năm")
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
@@ -81,7 +81,7 @@ export default function TrainingStats() {
                 })
         }
         if (theValue === "stats1") {
-            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setTitle("Kết quả đào tạo tháng 6 năm 2024")
             setActive1(true)
             setActive2(false)
             setActive3(false)
@@ -89,7 +89,7 @@ export default function TrainingStats() {
             setMonth(currentMonth)
             setQuarter(currentQuarter)
             setYear(currentYear)
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -101,7 +101,7 @@ export default function TrainingStats() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -145,12 +145,12 @@ export default function TrainingStats() {
         const theValue = event.currentTarget.value;
 
         if (theValue == 1) {
-            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setTitle("Kết quả đào tạo tháng 6 năm 2024")
             setActive1(true)
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=5&year=2024")
+            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -262,22 +262,6 @@ export default function TrainingStats() {
         return { name, points, growth }
     }
 
-    const subjects = [
-        createSubjects('Linux', 7.28, 6),
-        createSubjects('Git', 7.31, 9),
-        createSubjects('Docker', 7.34, 10),
-        createSubjects('Resful API', 7.08, 15),
-        createSubjects('Lavarel', 7.08, 16),
-    ]
-
-    const rows = [
-        createData('Thực tập sinh nhập học', 159, 6.0),
-        createData('Thực tập sinh tốt nghiệp', 237, 9.0),
-        createData('Thực tập sinh fail', 262, 16.0),
-        createData('Tỷ lệ pass/fail', 305, 3.7),
-        createData('Điểm tốt nghiệp trung bình', 356, 16.0),
-    ];
-
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     const handleYearChange = (event) => {
@@ -288,13 +272,13 @@ export default function TrainingStats() {
         <>
             <Header></Header>
             <Navbar></Navbar>
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', height: '700px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)', height: '800px' }}>
                 <Box m={2} style={{ display: 'flex' }}>
                     <svg style={{ width: 25, height: 25, color: 'rgba(0, 0, 0, 0.60)' }} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20v-6h3v6zm6 0V9h3v11zm6 0V4h3v16z" /></svg>
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', paddingTop: '2px' }}>Thống kê {'>'} Kết quả đào tạo</p>
                 </Box>
 
-                <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
+                <div style={{borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
                             <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning text-white " >Chỉ số</button>

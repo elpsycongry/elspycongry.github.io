@@ -29,9 +29,21 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import DialogRecruitmentPlanFormWatch from './dialogRecruitmentPlan/dialogRecruitmentPlanFormWatch';
 import DialogRecruitmentPlanFormUpdate from './dialogRecruitmentPlan/dialogRecruitmentPlanFormUpdate';
+import { useLocation } from 'react-router-dom';
 
 
 export default function RecruitmentPlan() {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const idPlan = queryParams.get('idPlan');
+    const checkIdPlan = () => {
+        if (idPlan !== null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const [open, setOpen] = useState(false);
     const handleClickPracticeOpen = () => {
         setOpen(true);
@@ -110,11 +122,15 @@ export default function RecruitmentPlan() {
             console.error('Error searching by status:', error);
         }
     };
-
+    const [userLogin, setUserLogin] = useState([]);
+    const [idUser, setIdUser] = useState();
     async function getAll(pageNumber) {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+
         if (user != null) {
             try {
+                setUserLogin(user.roles);
+                setIdUser(user.id);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
@@ -127,8 +143,6 @@ export default function RecruitmentPlan() {
                 } else {
                     setShowError(false);
                 }
-                console.log(user);
-                console.log(1);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -157,7 +171,7 @@ export default function RecruitmentPlan() {
     return (
         <>
             <Header />
-            <Navbar breadCrumb={"Kế hoạch tuyển dụng"}  nameList={"Tuyển dụng"}/>
+            <Navbar breadCrumb={"Kế hoạch tuyển dụng"} nameList={"Tuyển dụng"} />
             <Box component="main" sx={{ minWidth: '1096px', flexGrow: 1, p: 2, marginTop: '64px', marginLeft: '64px' }}>
                 <BreadCrumbs recruitment="Tuyển dụng" personnelNeeds="Kế hoạch tuyển dụng" icon={<BusinessCenterIcon sx={{ marginBottom: '5px', marginRight: '2px' }} />} />
                 <div className="content-recruiment position-relative">
@@ -222,8 +236,7 @@ export default function RecruitmentPlan() {
                                     </Select>
                                 </FormControl>
                             </div>
-
-                            <DialogRecruitmentPlanFormCreate />
+                            <DialogRecruitmentPlanFormCreate userRoles={userLogin} />
 
                         </div>
 
@@ -251,15 +264,16 @@ export default function RecruitmentPlan() {
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} />
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} userRoles={userLogin} />
                                         ) : (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} />
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} statusItem={item.status} userRoles={userLogin} />
                                         )}
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
 
-                                            <DialogRecruitmentPlanFormUpdate id={item.id} check={true} />
+                                            <DialogRecruitmentPlanFormUpdate id={item.id} check={true} userRoles={userLogin} idUser={idUser} />
+
                                         ) : (
-                                            <DialogRecruitmentPlanFormUpdate id={item.id} />
+                                            <DialogRecruitmentPlanFormUpdate id={item.id} userRoles={userLogin} idUser={idUser} />
                                         )}
                                     </td>
                                 </tr>
@@ -267,18 +281,22 @@ export default function RecruitmentPlan() {
                         </table>
                         {showError && <p>No Content</p>}
                         <div className=' position-absolute bottom-0  w-100 start-0 page align-item-center'>
-                            <button className='first-button position-relative hover-btn-page btn-page'onClick={handleFristPage} disabled={currentPage === 1}> 
-                                <KeyboardDoubleArrowLeftIcon className='icon-page position-absolute'/>
-                                </button>
-                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination}  className=' d-flex justify-content-center ' />
+                            <button className='first-button position-relative hover-btn-page btn-page' onClick={handleFristPage} disabled={currentPage === 1}>
+                                <KeyboardDoubleArrowLeftIcon className='icon-page position-absolute' />
+                            </button>
+                            <Pagination count={totalPages} page={currentPage} onChange={handlePagination} className=' d-flex justify-content-center ' />
                             <button className='first-button position-relative hover-btn-page btn-page' onClick={handleLastPage} disabled={currentPage === totalPages}>
-                                <KeyboardDoubleArrowRightIcon className='icon-page position-absolute'/>
-                                </button>
+                                <KeyboardDoubleArrowRightIcon className='icon-page position-absolute' />
+                            </button>
                         </div>
                     </div>
                 </div>
             </Box>
             <Footer />
+            {idPlan !== null &&
+                <DialogRecruitmentPlanFormWatch checkId={checkIdPlan()} id={idPlan} check={true} userRoles={userLogin} />
+            }
         </>
     );
+
 }

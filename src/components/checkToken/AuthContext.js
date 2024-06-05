@@ -1,77 +1,63 @@
 import axios from "axios";
-import {enqueueSnackbar} from "notistack";
-import {Navigate} from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
+import { Navigate } from "react-router-dom";
+import Login from "../pages/login/login";
 import Register from "../pages/login/register";
 
-// Check Token
-function AuthContext({children}) {
-
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+function AuthContext({ children }) {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const pathName = window.location.pathname;
-    console.log(currentUser)
-    if (currentUser === null) {
-        if (pathName !== "/login") {
-            if (pathName == '/register') {
-                return <Register />
+
+    if (!currentUser) {
+        if (pathName !== "/") {
+            if (pathName === "/register") {
+                return <Register/>
+            } else{
+                return pathName === "/login" ? <Login /> : <Navigate to="/" />;
             }
-            return <Navigate to="/login"/>
         }
     } else {
-        let roles = []
-        currentUser.roles.forEach(element => {
-            roles = [...roles, element.authority]
-        });
-        const isAdmin = roles.find((role) => role === 'ROLE_ADMIN') 
-        const isManager = roles.find((role) => role === 'ROLE_TM') 
-        if (pathName === '/users'){
-            if (!isAdmin) {
-                return <Navigate to={"/"}/>
-            } 
-        }
-        if (pathName === "/training") {
-            if (!isAdmin && !isManager) {
-                return <Navigate to={"/"}/>
-            } 
-        }
-        if (pathName === "/training/stats") {
-            if(!isAdmin){
-                return <Navigate to="/" />
-            }
-        }
-        {isAdmin && <div></div>}
+        const roles = currentUser.roles.map(role => role.authority);
+        const isAdmin = roles.includes('ROLE_ADMIN');
+        const isManager = roles.includes('ROLE_TM');
+        const isDivisionManager = roles.includes('ROLE_DM');
+        const isQualityController = roles.includes('ROLE_QC');
+        const isHumanResource = roles.includes('ROLE_HR');
         if (pathName === "/login") {
-            return <Navigate to="/"/>
+            return <Navigate to="/dashboard" />;
         }
-        if(pathName === "/dashboard") {
-            if(!isAdmin && !isManager){
-                return <Navigate to="/" />
-            }
+        if (pathName === '/users' && !isAdmin) {
+            return <Navigate to="/dashboard" />;
         }
-        if(pathName === "/recruitment/stats") {
-            if(!isAdmin){
-                return <Navigate to="/" />
-            }
+        if (pathName === "/training" && !isAdmin && !isManager) {
+            return <Navigate to="/dashboard" />;
         }
-
+        if ((pathName === "/training/stats" || pathName === "/recruitment/stats") && !isAdmin) {
+            return <Navigate to="/dashboard" />;
+        }
     }
-    if (children === undefined) {
-        return <Navigate to="/notFound"/>
-    }
-    return (<>{children}</>)
-
+    return children ? <>{children}</> : <Navigate to="/notFound" />;
 }
 
 export function doLogout(navigate) {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-    if (user != null) {
-        axios.post("http://localhost:8080/logoutUser", {Authorization: `Bearer ${user.accessToken}`}).then(res => {
-            // enqueueSnackbar("Đăng xuất thành công", {variant: "success"});
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (user) {
+        axios.post("http://localhost:8080/logoutUser", {}, {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`
+            }
+        }).then(() => {
+            enqueueSnackbar("Đăng xuất thành công", { variant: "success" });
         }).catch(e => {
-            console.error(e)
-            // enqueueSnackbar("Có lỗi xảy ra không thể đăng xuất", {variant: "error"});
-        })
+            console.error(e);
+            enqueueSnackbar("Có lỗi xảy ra không thể đăng xuất", { variant: "error" });
+        });
+
         localStorage.removeItem("currentUser");
-        navigate("/login")
+        navigate("/");
+    } else {
+        navigate("/");
     }
 }
 

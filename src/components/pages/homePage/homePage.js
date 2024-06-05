@@ -14,18 +14,31 @@ import Header from '../../fragment/header/header';
 import { Icon } from '@iconify/react';
 import './homePage.css';
 import axios from 'axios';
+import { Link } from '@mui/material';
 
 // const HomeIcon = () => {
 //     return (
 //         <Icon icon="fa:home" width="25" height="25" />
 //     )
 // }
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="/public">
+                Quản lý đào tạo
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
 
 const HomePage = () => {
     const navigate = useNavigate()
     const [personnelNeeds, setPersonnelNeeds] = React.useState(
         {
-            "approved": 0,
+            // "approved": 0,
             "awaitingApproval": 0,
             "approved": 0,
             "handedOver": 0
@@ -85,7 +98,7 @@ const HomePage = () => {
             <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
                 <Box m={2} style={{ display: 'flex', marginBottom: '11px' }}>
                     <Icon icon="fa:home" width="24" height="24" style={{ color: 'rgba(0, 0, 0, 0.60)', paddingBottom: '6px' }} />
-                    <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Trang chủ</p>
+                    <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Dashboard</p>
                 </Box>
                 <Box>
                     <div className='large-div-container'>
@@ -194,6 +207,9 @@ const HomePage = () => {
                     </div>
                 </Box>
             </Box>
+            <div style={{ paddingTop: '70px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                    <Copyright sx={{ maxWidth: '100%' }} />
+            </div>
         </>
     );
 };

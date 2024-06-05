@@ -74,8 +74,8 @@ export default function Header() {
     const navigate = useNavigate();
     return (
         <>
-            <AppBar position="fixed" sx={{ backgroundColor: 'orange' }}>
-                <Toolbar>
+            <AppBar position="fixed" sx={{ backgroundColor: 'orange'}}>
+                <Toolbar style={{padding: '0 4px'}}>
                     <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
                         <img src={logoCodeGym} style={{ width: '30px', height: '30px' }} />
                     </Avatar>

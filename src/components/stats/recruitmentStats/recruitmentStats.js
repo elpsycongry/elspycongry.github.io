@@ -1,7 +1,7 @@
 import { Box, Button, ButtonGroup, Dialog, DialogContent, IconButton, Link, Typography } from "@mui/material";
 import Header from "../../fragment/header/header";
 import Navbar from "../../fragment/navbar/navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import Footer from "../../fragment/footer/footer";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,9 +18,11 @@ import ProcessedCVChart from "./processedCVChart";
 import PassFailCVChart from "./passFailCVChart";
 import AcceptJobCVChart from "./acceptJobCVChart";
 import './recruitmentStats.css'
+import ButtonPDFExport from "./buttonPDFExport";
 import ExportRecruitment from "./exportRecruitment";
 import * as XLSX from 'xlsx';
 import { Icon } from '@iconify/react';
+
 
 
 function Copyright(props) {
@@ -54,7 +56,7 @@ export default function RecruitmentStats() {
     const [year, setYear] = useState(currentYear);
     const [month, setMonth] = useState(currentMonth);
     const [quarter, setQuarter] = useState(currentQuarter)
-    const [title, setTitle] = useState("Kết quả tuyển dụng tháng 5");
+    const [title, setTitle] = useState("Kết quả tuyển dụng tháng 6");
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
     const [active3, setActive3] = useState(false);
@@ -62,12 +64,10 @@ export default function RecruitmentStats() {
     const [active5, setActive5] = useState(false);
     const [active6, setActive6] = useState(false);
     const [active7, setActive7] = useState(true);
-
-    //Kiem tra thong tin ngay, thang, nam va stats
-    console.log("Tháng: ", month);
-    console.log("Quý: ", quarter);
-    console.log("Năm: ", year);
-    console.log("Stats: ", activeStat);
+    const pdfRef = useRef(null);
+    const pdfRef1 = useRef(null);
+    const pdfRef2 = useRef(null);
+    const pdfRef3 = useRef(null);
 
     const handleClickStat = (event) => {
         const theValue = event.currentTarget.value;
@@ -78,7 +78,6 @@ export default function RecruitmentStats() {
             axios.get("http://localhost:8080/api/recruitmentStats/year?year=2024")
                 .then(res => {
                     setGrowthStatistics(res.data)
-                    console.log(growthStatistics);
                 })
             axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
                 .then(res1 => {
@@ -87,7 +86,7 @@ export default function RecruitmentStats() {
 
         }
         if (theValue === "stats1") {
-            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setTitle("Kết quả đào tạo tháng 6 năm 2024")
             setActive1(true)
             setActive2(false)
             setActive3(false)
@@ -95,7 +94,7 @@ export default function RecruitmentStats() {
             setMonth(currentMonth)
             setQuarter(currentQuarter)
             setYear(currentYear)
-            axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
+            axios.get("http://localhost:8080/api/recruitmentStats/month?month=6")
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
@@ -113,7 +112,7 @@ export default function RecruitmentStats() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
+            axios.get("http://localhost:8080/api/recruitmentStats/month?month=6")
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
@@ -155,12 +154,12 @@ export default function RecruitmentStats() {
         const theValue = event.currentTarget.value;
 
         if (theValue == 1) {
-            setTitle("Kết quả đào tạo tháng 5 năm 2024")
+            setTitle("Kết quả đào tạo tháng 6 năm 2024")
             setActive1(true)
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/recruitmentStats/month?month=5")
+            axios.get("http://localhost:8080/api/recruitmentStats/month?month=6")
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
@@ -266,6 +265,10 @@ export default function RecruitmentStats() {
         return { name, quantity, growth };
     }
 
+    const listChartElem = () => {
+        return [pdfRef, pdfRef1, pdfRef2, pdfRef3];
+    }
+
     const rows = [
         createData('Số CV mới', 159, 6.0),
         createData('Số CV phỏng vấn', 237, 9.0),
@@ -297,7 +300,7 @@ export default function RecruitmentStats() {
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Thống kê {'>'} Kết quả tuyển dụng</p>
                 </Box>
 
-                <div style={{ minHeight: '660px', borderRadius: '10px' }} className="content-recruiment">
+                <div style={{borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
                             <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning text-white">Chỉ số</button>
@@ -397,6 +400,7 @@ export default function RecruitmentStats() {
                             <div className="content-stat-2">
                                 {/* line */}
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '0px' }}>Biểu đồ</h3>
+                                <ButtonPDFExport listChartElem={listChartElem} year={selectedYear} />
                                 <div style={{ width: '100%', height: '60%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                                     <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
                                         <Typography style={{ fontSize: '20px', paddingRight: '5px' }}>Biểu đồ tuyển dụng thực tập sinh trong năm</Typography>
@@ -409,13 +413,13 @@ export default function RecruitmentStats() {
                                             })}
                                         </select>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'center' }} ref={pdfRef}>
                                         <RecruitmentStatsChart year={selectedYear} />
                                     </div>
                                 </div>
 
-                                {/* column */}
                                 <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>Biểu đồ cột</h3>
+
                                 <div style={{ width: '50%', marginBottom: '25px' }} className="btn-group" role="group" aria-label="Basic outlined example">
                                     {activeColumnChart === "col1" ? (
                                         <button type="button" value="col1" onClick={handleClickColumnChart} className="btn btn-warning text-white">Số lượng CV đã xử lý</button>
@@ -448,6 +452,24 @@ export default function RecruitmentStats() {
                                         <AcceptJobCVChart />
                                     </div>
                                 )}
+                                <div style={{ width: '100%', height: '490px', position: "fixed", left: "0px"}} ref={pdfRef1}>
+                                    <ProcessedCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center', display: 'none' }}>
+                                    <ProcessedCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', position: "fixed", left: "0px"}} ref={pdfRef2}>
+                                    <PassFailCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center', display: 'none' }}>
+                                    <PassFailCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', position: "fixed", left: "0px"}} ref={pdfRef3}>
+                                <AcceptJobCVChart />
+                                </div>
+                                <div style={{ width: '100%', height: '490px', display: 'flex', justifyContent: 'center', display: 'none' }}>
+                                <AcceptJobCVChart />
+                                </div>
                             </div>
                         )}
                         {activeStat === "stats3" && (

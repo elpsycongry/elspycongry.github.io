@@ -12,55 +12,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 
 export default function ProcessedCVChartCVChart() {
     const pdfRef = useRef(null); 
-    const downloadPDF = async () =>{
-        const canvas = await html2canvas(pdfRef.current);
-        const imgData = canvas.toDataURL('image/png');
-        
-        
-        const pdf = new jsPDF('p', 'mm', 'a4'); // Tạo một tài liệu PDF với kích thước A4
-    ;
-        
-        // Tính toán kích thước và vị trí của ảnh để chèn vào tài liệu PDF
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = pdfWidth * 1; // 80% chiều rộng của trang PDF
-        const imgHeight = (canvas.height * imgWidth) / canvas.width; // Tính toán chiều cao tương ứng
-        const imgX = (pdfWidth - imgWidth) / 2; // Canh giữa theo chiều ngang
-        // const imgY = (pdfHeight - imgHeight) / 1.3; // Canh giữa theo chiều dọc
-        const imgY = 20;
-        pdf.setFontSize(12)
-        pdf.text('Column Chart', 93, 18);
-        pdf.text('Parameters', 93, imgY + imgHeight + 15);
-        pdf.setFontSize(20)
-        pdf.text('Chart Processed CV', 75, 10)
-        
-        pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
-
-        pdf.autoTable({
-            head:[['Month' ,'Candidates Accept Interview', 'Candidates Reject Interview', 'Total']],
-            body: recruitmentChart.map((val, i) => [(i + 1) , val.candidatesInterview, val.candidatesDoNotInterview,val.candidatesInterview +  val.candidatesDoNotInterview]),
-            startY: imgY + imgHeight + 20, // Vị trí y cho bảng, sau ảnh
-            styles: {
-                halign: 'center',
-                cellWidth: 'wrap',
-                lineColor: [0, 0, 0],  // Set border color (black)
-                lineWidth: 0.1,        // Set border width
-            },
-            headStyles: {
-                halign: 'center',
-                fillColor: [255, 255, 255], // Background color for the header
-                textColor: [0, 0, 0],       // Text color for the header
-                lineWidth: 0.1,             // Border width for the header
-                lineColor: [0, 0, 0]        // Border color for the header
-            },
-            bodyStyles: {
-                lineWidth: 0.1,             // Border width for the body
-                lineColor: [0, 0, 0]        // Border color for the body
-            }
-            })
-        
-        pdf.save('chart.pdf'); // Tải xuống tài liệu PDF
-    }
     const [recruitmentChart, setRecuitmentChart] = useState(new Array(12).fill({
         candidatesInterview: 0,
         candidatesDoNotInterview: 0,
@@ -209,7 +160,6 @@ export default function ProcessedCVChartCVChart() {
 
     return (
         <Box sx={{ height: 1, padding: 2, width: "80%" }} ref={pdfRef}>
-            <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button>
             <Bar data={data} options={options} plugins={[totalPlugin]} />
             <p style={{ 
                 textAlign: 'center', 
@@ -218,7 +168,7 @@ export default function ProcessedCVChartCVChart() {
                 paddingTop: '10px',
                 color: 'red' 
             }}>
-                *( Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
+                ( *Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
             </p>
         </Box>
     );

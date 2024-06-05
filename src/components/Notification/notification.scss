@@ -6,7 +6,7 @@
 
   background-color: white;
   width: 400px;
-  height: 400px;
+  height: 410px;
   border-radius: 5px;
   box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.5);
   color: black;
@@ -26,6 +26,7 @@
 
       .title {
         margin: 0;
+        margin-bottom: 5px;
         font-size: 22px;
         font-weight: 600;
       }
@@ -53,7 +54,7 @@
 
     .body {
       overflow-y: scroll;
-      max-height: 310px;
+      max-height: 320px;
 
       /* width */
       &::-webkit-scrollbar {
@@ -119,7 +120,7 @@
         }
 
         &:hover {
-          //cursor: pointer;
+          cursor: pointer;
           background-color: #efeeee;
         }
       }

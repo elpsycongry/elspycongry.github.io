@@ -3,10 +3,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -18,14 +17,12 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import { useState } from "react";
-import Link from 'axios';
 
 function Copyright(props) {
-
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="/public">
+            <Link color="inherit" href="/">
                 Quản lý đào tạo
             </Link>{' '}
             {new Date().getFullYear()}
@@ -60,16 +57,15 @@ function Register() {
         formData.forEach((value, key) => data[key] = value);
         axios.post("http://localhost:8080/register", data).then(
             res => {
-                if (res.data.code === "401") {
-                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                }
-                if (res.data.code === "200") {
+                if (res.data.code === "400" || res.data.code === "409") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    navigate("/users")
-                }
-                if (res.data.code === "202") {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                }
+
+                if (res.data.code === "201") {
+                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                    enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    navigate("/login")
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
@@ -84,21 +80,48 @@ function Register() {
 
     // Validation
     const [flagValidate, setFlagValidate] = React.useState({
+        validName: false,
+        validPhone: false,
         validEmail: false,
         validPass: false,
         validSubmit: true,
+        nameError: "Tên không được để trống",
+        phoneError: "Số điện thoại không được để trống",
         emailError: "Email không được để trống",
         passwordError: "Mật khẩu không được để trống",
     })
 
     const [showMsg, setShowMsg] = React.useState({
+        showNameError: false,
+        showPhoneError: false,
         showEmailError: false,
         showPassError: false,
         showUserNotFoundError: false,
         showSuccesAlert: false,
         showFailAlert: false,
-    })
+    });
 
+    // Hàm kiểm tra name
+    let checkName = (value) => {
+        let patternName = /^[\p{L}\p{M}\s.'-]+$/u
+        if (value.match(patternName)) {
+            setFlagValidate({ ...flagValidate, validName: true })
+        } else if (value === "") {
+            setFlagValidate({ ...flagValidate, validName: false, nameError: "Tên không được để trống" })
+        }
+    }
+
+    // Hàm kiểm tra phone
+    let checkPhone = (value) => {
+        let patternPhone = /^(0[3|5|7|8|9])+([0-9]{8})$/
+        if (value.match(patternPhone)) {
+            setFlagValidate({ ...flagValidate, validPhone: true })
+        } else if (value === "") {
+            setFlagValidate({ ...flagValidate, validPhone: false, phoneError: "Số điện thoại không được để trống" })
+        } else {
+            setFlagValidate({ ...flagValidate, validPhone: false, phoneError: "Không đúng định dạng số điện thoại" })
+        }
+    }
 
     // Hàm kiểm tra email
     let checkEmail = (value) => {
@@ -106,7 +129,7 @@ function Register() {
         if (value.match(patternEmail)) {
             setFlagValidate({ ...flagValidate, validEmail: true })
         } else if (value === "") {
-            setFlagValidate({ ...flagValidate, validEmail: false, emailError: "Email không được bỏ trống" })
+            setFlagValidate({ ...flagValidate, validEmail: false, emailError: "Email không được để trống" })
         } else {
             setFlagValidate({ ...flagValidate, validEmail: false, emailError: "Không đúng định dạng email" })
         }
@@ -133,9 +156,12 @@ function Register() {
     const validForm = Object.values(flagValidate).some(value => !value);
 
     // Tạo các ref dể lấy giá trị của input nếu cần
+    const nameInput = React.useRef();
+    const phoneInput = React.useRef();
     const emailInput = React.useRef();
     const passwordInput = React.useRef();
     const submitButton = React.useRef();
+
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -155,63 +181,102 @@ function Register() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} >
                                 <TextField
-                                    autoComplete="given-name"
-                                    name="name"
-                                    required
-                                    fullWidth
-                                    id="name"
+                                    autoComplete="given-name" required fullWidth autoFocus
                                     label="User Name"
-                                    autoFocus
+                                    name='name'
+                                    inputRef={nameInput}
+                                    onChange={(e) => checkName(e.currentTarget.value)}
+                                    onFocus={() => {
+                                        setShowMsg({ ...showMsg, showNameError: true })
+                                    }}
+                                    error={showMsg.showNameError && !flagValidate.validName}
+                                    helperText={showMsg.showNameError && !flagValidate.validName ? flagValidate.nameError : null}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    required
-                                    fullWidth
-                                    id="phone"
+                                    autoComplete="phone" required fullWidth autoFocus
                                     label="Phone Number"
-                                    name="phone"
-                                    autoComplete="family-name"
+                                    name='phone'
+                                    inputRef={phoneInput}
+                                    onChange={(e) => checkPhone(e.currentTarget.value)}
+                                    onFocus={() => {
+                                        setShowMsg({ ...showMsg, showPhoneError: true })
+                                    }}
+                                    error={showMsg.showPhoneError && !flagValidate.validPhone}
+                                    helperText={showMsg.showPhoneError && !flagValidate.validPhone ? flagValidate.phoneError : null}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    required
-                                    fullWidth
-                                    id="email"
+                                    autoComplete="email" required fullWidth autoFocus
                                     label="Email Address"
                                     name="email"
-                                    autoComplete="email"
+                                    inputRef={emailInput}
+                                    onChange={(e) => checkEmail(e.currentTarget.value)}
+                                    onFocus={() => {
+                                        setShowMsg({ ...showMsg, showEmailError: true })
+                                    }}
+                                    error={showMsg.showEmailError && !flagValidate.validEmail}
+                                    helperText={showMsg.showEmailError && !flagValidate.validEmail ? flagValidate.emailError : null}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    margin="normal"
                                     required
                                     fullWidth
                                     name="password"
                                     label="Password"
-                                    type="password"
+                                    type={visible ? "password" : "text"}
                                     id="password"
-                                    autoComplete="new-password"
+                                    autoComplete="current-password"
+                                    InputProps={{
+                                        endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
+                                    }}
+
+                                    onFocus={() => {
+                                        setShowMsg({ ...showMsg, showPassError: true })
+                                    }}
+                                    placeholder={"Example123"}
+                                    inputRef={passwordInput}
+                                    error={showMsg.showPassError && !flagValidate.validPass}
+                                    onChange={(e) => checkPass(e.currentTarget.value)}
+                                    helperText={showMsg.showPassError && !flagValidate.validPass ? flagValidate.passwordError : null}
                                 />
                             </Grid>
                         </Grid>
+                        {flagValidate.showSuccesAlert
+                            &&
+                            <Alert style={{ marginTop: 5 }} severity="success">
+                                This is a success Alert.
+                            </Alert>
+                        }
+                        {flagValidate.showFailAlert
+                            &&
+                            <Alert style={{ marginTop: 5 }} severity="error">
+                                This is a success Alert.
+                            </Alert>
+                        }
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={validForm}
+                            ref={submitButton}
                         >
                             Sign Up
                         </Button>
+
                     </Box>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginTop: '16px' }}>
-                    <Link  ariant="body2">
+                    <Link ariant="body2">
                         Already have an account? Sign in
                     </Link>
                 </Box>

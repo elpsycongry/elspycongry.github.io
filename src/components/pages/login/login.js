@@ -5,7 +5,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -17,8 +16,6 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import { useState } from "react";
-
-
 function Copyright(props) {
 
     return (
@@ -65,9 +62,9 @@ function Login() {
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    navigate("/users")
+                    navigate("/dashboard")
                 }
-                if (res.data.code === "202") {
+                if(res.data.code === "202"){
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
@@ -221,26 +218,13 @@ function Login() {
                         >
                             Sign In
                         </Button>
-
                     </Box>
                 </Box>
-
-                <Grid container justifyContent="flex-end">
-                    <Grid item>
-                        <Link href="/register">
-                            Don't have an account? Sign up
-                        </Link>
-                    </Grid>
-                </Grid>
-
-                <div style={{ marginTop: '-70px' }}>
-                    <Copyright sx={{ mt: 36, mb: 4 }} />
+                <div style={{marginTop: '-70px'}}>
+                <Copyright sx={{ mt: 36, mb: 4 }} />
                 </div>
-
             </Container>
-
         </ThemeProvider>
-
     )
 }
 

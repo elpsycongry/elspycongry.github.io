@@ -41,9 +41,6 @@ export default function DialogUpdateUserForm({ userId, onUpdate }) {
             password: Yup.string()
             .matches(/^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[a-zA-Z0-9]).{8,}$/, 'Mật khẩu phải có ít nhất 8 ký tự và có ít nhất 1 ký tự đặc biệt')
             .required('Mật khẩu không được bỏ trống'),
-            roles: Yup.array()
-                .min(1, 'Phải chọn ít nhất một vai trò')
-                .required('Phải chọn ít nhất một vai trò'),
         }),
         validate: async (values) => {
             const errors = {};

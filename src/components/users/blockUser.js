@@ -11,7 +11,7 @@ import axios from "axios";
 import swal from 'sweetalert'; 
 import './blockUser.css';
 
-export default function BlockUser({ userId, status, onUpdate }) {
+export default function  BlockUser({ userId, status, onUpdate }) {
     const [isBlocked, setIsBlocked] = React.useState(status);
   
     const blockUserWithId = async () => {

@@ -29,6 +29,13 @@ import './users.css'
 import DialogUpdateUserForm from "./updateUser";
 import BlockUser from "./blockUser";
 import DialogAddUserForm from "./addUser";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import ToggleButton from '@mui/material/ToggleButton';
+import swal from 'sweetalert';
+import './blockUser.css';
+import { every } from "lodash";
+
 
 export default function Users() {
 
@@ -47,6 +54,7 @@ export default function Users() {
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
+    const [selectedState, setSelectedState] = useState('');
     const previousRolef = useRef('');
     const [pagination, setPagination] = useState({
         page: 0,
@@ -57,8 +65,14 @@ export default function Users() {
     useEffect(() => {
         handleFilterWithFields(pagination);
         fetchListRoleSelect();
-    }, [selectedRole])
+    }, [selectedRole, selectedState]);
 
+    const listState = [
+        { id: 0, name: "Tất cả", state: "all" },
+        { id: 1, name: "Đang chờ duyệt", state: "await" },
+        { id: 2, name: "Đã duyệt và hoạt động", state: "action" },
+        { id: 3, name: "Đã bị chặn", state: "block" }
+    ]
 
     // const fetchListRoleSelect = async () => {
     const fetchListRoleSelect = async () => {
@@ -86,6 +100,12 @@ export default function Users() {
 
     };
 
+    const handleStateChange = (event) => {
+        setSelectedState(event.target.value);
+        pagination.page = 0;
+        handleFilterWithFields(pagination);
+    }
+
     const handlePageChange = (event, value) => {
         setPagination(prev => {
             const newPagination = { ...prev, page: value - 1 };
@@ -99,8 +119,9 @@ export default function Users() {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
             try {
+                console.log(selectedState);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
+                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}&state=${selectedState}`)
                     .then((res) => {
                         setListUser(res.data.content);
                         setPagination({
@@ -115,6 +136,45 @@ export default function Users() {
         }
     };
 
+    const blockUserWithId = async (userId, isBlocked, userState) => {
+        if (userState == true) {
+            swal({
+                title: "Bạn có chắc chắn?",
+                text: isBlocked ? "Người dùng không thực hiện bất kỳ tác vụ nào!" : "Người dùng sẽ có thể thực hiện các tác vụ!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(async (willDelete) => {
+                if (willDelete) {
+                    try {
+                        const user = JSON.parse(localStorage.getItem("currentUser"));
+                        if (user != null) {
+                            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                            await axios.post(`http://localhost:8080/admin/block/${userId}`, { isBlocked });
+                            handleFilterWithFields();
+                            swal(isBlocked ? "Đã chặn quyền truy cập người dùng!" : "Đã bỏ chặn quyền truy cập người dùng!", {
+                                icon: "success",
+                                dangerMode: true
+                            });
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        swal("Đã xảy ra lỗi khi xử lý yêu cầu!", {
+                            icon: "error",
+                        });
+                    }
+                } else {
+                    swal("Không có thay đổi nào được lưu!");
+                }
+            });
+        } else {
+            swal("Người dùng chưa được cấp quyền truy cập!", {
+                icon: "error",
+              });
+        }
+        
+    };
+
     function Copyright(props) {
         return (
             <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -127,6 +187,8 @@ export default function Users() {
             </Typography>
         );
     }
+
+
 
     return (
         <>
@@ -226,6 +288,24 @@ export default function Users() {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                    <FormControl className="select-form ml-10 status" sx={{ minWidth: '300px' }}>
+                                        <InputLabel className="top-left" id="demo-simple-small-label">
+                                            Trạng thái...</InputLabel>
+                                        <Select
+                                            sx={{ backgroundColor: 'white'}}
+                                            labelId="demo-simple-small-label"
+                                            className="select-edit"
+                                            id="demo-simple-select"
+                                            label="Trạng thái..."
+                                            value={selectedState}
+                                            onChange={handleStateChange}
+                                        // onClick={handleFilterRole}
+                                        >
+                                            {listState.map(item => (
+                                                <MenuItem value={item.state} key={item.id}>{item.name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </div>
                             </div>
                         </div>
@@ -234,7 +314,7 @@ export default function Users() {
                         <DialogAddUserForm token={token} onAdd={handleFilterWithFields} />
                     </div>
                 </div>
-                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px', minHeight: '615px' }}>
+                <div className="content-recruiment position-relative" style={{ borderRadius: '10px', marginTop: '20px', minHeight: '650px' }}>
                     <div className="table-container-user" style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px', height: '520px' }}>
                         <div className="table-user">
 
@@ -254,8 +334,12 @@ export default function Users() {
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
                                         <td style={{ padding: '8px' }} className="user-name">
-                                            <Tooltip title={item.name} arrow>
-                                                <span className="user-name">{item.name}</span>
+                                            <Tooltip title={item.status ? "Đã cấp quyền" : "Chờ xác nhận"} placement="right-end" arrow>
+                                                {item.state == true ? (
+                                                    <span className="user-name">{item.name}</span>
+                                                ) : (
+                                                    <span className="user-name" style={{ color: 'orange' }}>{" ! " + item.name}</span>
+                                                )}
                                             </Tooltip>
                                         </td>
                                         <td>{item.email}</td>
@@ -275,17 +359,22 @@ export default function Users() {
                                             )}
                                         </td>
                                         <td>
-                                            <Tooltip title={item.status ? "Được phép truy cập" : "Không được phép truy cập"}>
-                                                <div>
-                                                    <BlockUser
-                                                        inputProps={{ 'aria-label': 'controlled' }}
-                                                        token={token}
-                                                        userId={item.id}
-                                                        status={item.status}
-                                                        onUpdate={handleFilterWithFields}
-                                                    />
-                                                </div>
-                                            </Tooltip>
+                                            <ToggleButton
+                                                value="check"
+                                                selected={item.status}
+                                                onClick={() => blockUserWithId(item.id, item.status, item.state)}
+                                                style={{
+                                                    backgroundColor: item.status && item.state ? "green" : "gray",
+                                                    color: "white",
+                                                    marginLeft: "5px",
+                                                    width: "10px",
+                                                    height: "10px",
+                                                    borderRadius: "50%",
+                                                }}
+                                            >
+                                                {item.status && item.state ? <CheckIcon /> : <CloseIcon sx={{ bgcolor: 'gray', borderRadius: '100%' }} />}
+                                            </ToggleButton>
+
                                         </td>
                                         <td className="user-actions">
                                             {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
@@ -318,7 +407,7 @@ export default function Users() {
                     </div>
                 </div>
             </Box >
-            <div style={{ paddingTop: '36px', paddingBottom: '10px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <div style={{ paddingTop: '30px', paddingBottom: '0px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
             {/* <Footer /> */}

@@ -16,62 +16,12 @@ import {
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import ButtonPDFExport from './buttonPDFExport';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, ChartDataLabels);
 
 export default function RecruitmentStatsChart({ year }) {
     const pdfRef = useRef(null); 
-    const downloadPDF = async () =>{
-        const canvas = await html2canvas(pdfRef.current);
-        const imgData = canvas.toDataURL('image/png');
-        
-        
-        const pdf = new jsPDF('p', 'mm', 'a4'); // Tạo một tài liệu PDF với kích thước A4
-    ;
-        
-        // Tính toán kích thước và vị trí của ảnh để chèn vào tài liệu PDF
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = pdfWidth * 1; // 80% chiều rộng của trang PDF
-        const imgHeight = (canvas.height * imgWidth) / canvas.width; // Tính toán chiều cao tương ứng
-        const imgX = (pdfWidth - imgWidth) / 2; // Canh giữa theo chiều ngang
-        // const imgY = (pdfHeight - imgHeight) / 1.3; // Canh giữa theo chiều dọc
-        const imgY = 20;
-        pdf.setFontSize(12)
-        pdf.text('Line Chart', 93, 18);
-        pdf.text('Parameters', 93, imgY + imgHeight + 15);
-        pdf.setFontSize(20)
-        pdf.text('Statistical chart', 80, 10)
-        
-        pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
-
-        pdf.autoTable({
-            head:[['Month' ,'CV', 'Interview', 'Candidates Accept Interview', 'Candidates Reject Interview', 'Candidates Pass', "Candidates Fail", "Candidates Accept Job"]],
-            body: trainingCharts.map((val, i) => [(i + 1) , val.totalCV, val.totalInterviewCV, val.candidatesInterview, val.candidatesDoNotInterview, val.candidatesPass, val.candidatesFail, val.candidatesAcceptJob]),
-            startY: imgY + imgHeight + 20, // Vị trí y cho bảng, sau ảnh
-            styles: {
-                halign: 'center',
-                tableLineWidth: 0.1,
-                tableLineColor: 'black'
-            },
-            headStyles: {
-                halign: 'center',
-                fillColor: [255, 255, 255],
-                textColor: [0, 0, 0],
-                fontStyle: 'bold',
-                lineWidth: 0.1,
-                lineColor: 'black'
-            },
-            bodyStyles: {
-                lineWidth: 0.1,
-                lineColor: 'black'
-            }
-        });
-
-        
-        pdf.save('chart.pdf'); // Tải xuống tài liệu PDF
-    }
-
     const [trainingCharts, setTrainingCharts] = useState(new Array(12).fill({
         totalCV: 0,
         totalInterviewCV: 0,
@@ -239,7 +189,9 @@ export default function RecruitmentStatsChart({ year }) {
 
     return (
         <Box sx={{ width: '80%', height: '585px', padding: 2 }}  ref={pdfRef}>
-            <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button>
+            {/* <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button> */}
+            {/* <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success'>Download PDF</button> */}
+            {/* <ButtonPDFExport/> */}
             <div style={{ width: '100%', height: '100%' }}>
                 <Line data={data} options={options} />
             </div>
@@ -253,7 +205,7 @@ export default function RecruitmentStatsChart({ year }) {
                 paddingTop: '10px',
                 color: 'red' 
             }}>
-                *( Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
+                ( *Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
             </p>
         </Box>
     );

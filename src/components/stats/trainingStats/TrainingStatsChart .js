@@ -22,7 +22,7 @@ import { head, size } from 'lodash';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 export default function TrainingStatsChart({ year }) {
-
+    const date = new Date();
     const pdfRef = useRef(null); 
     const downloadPDF = async () =>{
         const canvas = await html2canvas(pdfRef.current);
@@ -41,10 +41,10 @@ export default function TrainingStatsChart({ year }) {
         // const imgY = (pdfHeight - imgHeight) / 1.3; // Canh giữa theo chiều dọc
         const imgY = 20;
         pdf.setFontSize(12)
-        pdf.text('Line Chart', 93, 18);
-        pdf.text('Parameters', 93, imgY + imgHeight + 15);
+        pdf.text('Intern training line chart in 2024', 73, 18);
+        pdf.text('Intern training parameters', 73, imgY + imgHeight + 15);
         pdf.setFontSize(20)
-        pdf.text('Statistical chart', 80, 10)
+        pdf.text('Intern training chart in 2024', 65, 10)
         
         pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
 
@@ -72,7 +72,7 @@ export default function TrainingStatsChart({ year }) {
             })
 
         
-        pdf.save('chart.pdf'); // Tải xuống tài liệu PDF
+            pdf.save('chart/' + '/' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()  + '.pdf'); // Tải xuống tài liệu PDF
     }
     const [trainingCharts, setTrainingCharts] = useState([
         {
@@ -362,7 +362,7 @@ export default function TrainingStatsChart({ year }) {
 
     return (
         <Box sx={{ width: '80%', height: '585px', padding: 2 }} ref={pdfRef}>
-            <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-success' onClick={downloadPDF}>Download PDF</button>
+            <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-stats-green' onClick={downloadPDF}>Export PDF</button>
             <div style={{ width: '100%', height: '100%' }}>
                 <Line  data={data} options={options} />
             </div>
