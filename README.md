@@ -9,10 +9,12 @@ Open [link](https://dashboard.emailjs.com/sign-in), then sign in, if you doesn't
 In sidebar:
  - Select 'Email service' -> click 'Add new service' -> choose gmail then select connect account and create service(in there have Service ID)
  - Select 'Email Templates' -> create new templates -> create templates, template like :
+
  main form: 
+
 ![alt text](image/image1.png)
 
- Edit Content -> Code Editor code in Html :
+ Edit Content -> Code Editor code in Html (we have form template in formEmailJs.txt) :
 
 ![alt text](image/image.png)
 
@@ -31,6 +33,7 @@ import three variable:
  - REACT_APP_API_PUBLIC_KEY =  your Public Key
  
  Example: REACT_APP_API_SERVICE_ID = service_aswr1v7d
+
  Note: `if u changes some of ID or key, u must turn off your project and run again !!!`
 
 
@@ -70,32 +73,3 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
