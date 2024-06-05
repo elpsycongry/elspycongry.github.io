@@ -21,7 +21,7 @@ export function NotificationItem({id, content, timestamp, clickIn, index, isRead
                 />
             </div>
             <div>
-                <div className={"content"}>{content}</div>
+                <div className={"content"} dangerouslySetInnerHTML={{__html: content}}></div>
                 <div className={"time"}>{timestamp}</div>
             </div>
             {!isRead && (

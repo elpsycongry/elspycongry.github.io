@@ -26,7 +26,7 @@ export default function DialogPersonalFormReason({nameNeedPlan,data, idUser, ope
                     buttons: false,
                     timer: 2000
                 }).then(() => {
-                    sendNotifications(null,`Nhu cầu nhân sự ${nameNeedPlan} bị từ chối bởi DET`,['ROLE_DM'],null,`/recruitment/personalNeeds?idRequest=${data.values.recruitmentRequest.id}`)
+                    sendNotifications(null,`Nhu cầu nhân sự <b>${nameNeedPlan}</b> bị từ chối bởi <b>Quản lý đào tạo</b>`,['ROLE_DM','ROLE_TM'],null,`/recruitment/personalNeeds?idRequest=${data.values.recruitmentRequest.id}`)
                     window.location.href = "/recruitment/personalNeeds";
                 });
             });

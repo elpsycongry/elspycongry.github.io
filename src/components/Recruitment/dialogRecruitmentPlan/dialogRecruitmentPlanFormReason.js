@@ -34,7 +34,7 @@ export default function DialogRecruitmentPlanFormReason({
                         `/recruitment/personalNeeds?idRequest=${data.values.recruitmentPlan.recruitmentRequest.id}`)
                         .then(sendNotifications(
                             null,
-                            `Kế hoạch tuyển dụng ${requestPlanName} vừa cập nhật trạng thái: Bị từ chối `,
+                            `Kế hoạch tuyển dụng <b>${requestPlanName}</b> vừa cập nhật trạng thái: <b>Bị từ chối</b> `,
                             ['ROLE_TM'],
                             null,
                             `/recruitment/recruitmentPlan?idPlan=${data.values.recruitmentPlan.id}`))

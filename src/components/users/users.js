@@ -68,10 +68,9 @@ export default function Users() {
     }, [selectedRole, selectedState]);
 
     const listState = [
-        { id: 0, name: "Tất cả", state: "all" },
-        { id: 1, name: "Đang chờ duyệt", state: "await" },
-        { id: 2, name: "Đã duyệt và hoạt động", state: "action" },
-        { id: 3, name: "Đã bị chặn", state: "block" }
+        { id: 1, text: "Đang chờ duyệt", name: "await" },
+        { id: 2, text: "Đã duyệt và hoạt động", name: "action" },
+        { id: 3, text: "Đã bị chặn", name: "block" }
     ]
 
     // const fetchListRoleSelect = async () => {
@@ -88,7 +87,7 @@ export default function Users() {
 
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
-        if (selectedRole != "") {
+        if (selectedRole !== "") {
             setPagination.page = 0;
         }
     };
@@ -119,7 +118,7 @@ export default function Users() {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
             try {
-                console.log(selectedState);
+                console.log("2. Ngoài: " + selectedState);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}&state=${selectedState}`)
                     .then((res) => {
@@ -137,7 +136,7 @@ export default function Users() {
     };
 
     const blockUserWithId = async (userId, isBlocked, userState) => {
-        if (userState == true) {
+        if (userState === true) {
             swal({
                 title: "Bạn có chắc chắn?",
                 text: isBlocked ? "Người dùng không thực hiện bất kỳ tác vụ nào!" : "Người dùng sẽ có thể thực hiện các tác vụ!",
@@ -170,9 +169,9 @@ export default function Users() {
         } else {
             swal("Người dùng chưa được cấp quyền truy cập!", {
                 icon: "error",
-              });
+            });
         }
-        
+
     };
 
     function Copyright(props) {
@@ -289,20 +288,25 @@ export default function Users() {
                                         </Select>
                                     </FormControl>
                                     <FormControl className="select-form ml-10 status" sx={{ minWidth: '300px' }}>
-                                        <InputLabel className="top-left" id="demo-simple-small-label">
-                                            Trạng thái...</InputLabel>
+                                        <InputLabel className="top-left" id="demo-simple-small-label">Trạng thái người dùng...</InputLabel>
                                         <Select
-                                            sx={{ backgroundColor: 'white'}}
+                                            sx={{
+                                                // height: '30px',
+                                                // paddingTop: '0px',
+                                                // paddingBottom: '0px',
+                                                backgroundColor: 'white'
+                                            }}
                                             labelId="demo-simple-small-label"
-                                            className="select-edit"
+                                            className="select-edit "
                                             id="demo-simple-select"
-                                            label="Trạng thái..."
+                                            label="Trạng thái thực tập..."
                                             value={selectedState}
                                             onChange={handleStateChange}
-                                        // onClick={handleFilterRole}
                                         >
+
+                                            <MenuItem value={""} >Tất cả</MenuItem>
                                             {listState.map(item => (
-                                                <MenuItem value={item.state} key={item.id}>{item.name}</MenuItem>
+                                                <MenuItem value={item.name} key={item.id}>{item.text}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -335,7 +339,7 @@ export default function Users() {
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
                                         <td style={{ padding: '8px' }} className="user-name">
                                             <Tooltip title={item.status ? "Đã cấp quyền" : "Chờ xác nhận"} placement="right-end" arrow>
-                                                {item.state == true ? (
+                                                {item.state === true ? (
                                                     <span className="user-name">{item.name}</span>
                                                 ) : (
                                                     <span className="user-name" style={{ color: 'orange' }}>{" ! " + item.name}</span>
