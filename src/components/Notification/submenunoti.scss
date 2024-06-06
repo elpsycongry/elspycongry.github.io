@@ -1,0 +1,59 @@
+.setting-container {
+  min-width: 200px;
+  min-height: 50px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 34px 0 rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 10px 0 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  position: relative;
+  margin-right: 15px;
+
+  .setting-items {
+    .setting-item {
+      display: flex;
+      padding: 8px;
+      border-radius: 4px;
+      max-height: 36px;
+
+      .icon {
+        font-size: 20px;
+        margin-right: 8px;
+      }
+      &:hover {
+        cursor: pointer;
+        background-color: #efeeee;
+      }
+    }
+  }
+
+  &::after {
+    content: "";
+
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -8px;
+    border-radius: 0 5px 0 0;
+    right: 0;
+    border-left: 10px solid transparent;
+    border-bottom: 10px solid #ffffff;
+  }
+}
+
+.setting-icon {
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  &:hover{
+
+      cursor: pointer;
+      background-color: #e4e6eb;
+      border-radius: 50%;
+    }
+}
