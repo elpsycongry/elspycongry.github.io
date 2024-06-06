@@ -53,7 +53,7 @@ export default function Header() {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get('http://localhost:8080/admin/users/view/' + user.id).then(res => {
+            axios.get('http://localhost:8080/roles/users/view/' + user.id).then(res => {
                 setUserLogin(res.data);
             });
             setUserRoles(user.roles);
