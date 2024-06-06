@@ -211,10 +211,10 @@ export default function DialogRecruitmentPlanFormCreate({userRoles}) {
                                             sendNotifications(
                                                 null,
                                                 `Có kế hoạch tuyển dụng mới: <b>${formData.values.recruitmentPlan.name}</b> `,
-                                                ['ROLE_HR']),
+                                                ['ROLE_HR'],
                                             null,
                                             `/recruitment/recruitmentPlan?idPlan=${formData.values.recruitmentPlan.id}`
-                                        ))
+                                        )))
                                 window.location.href = "/recruitment/recruitmentPlan"
                             });
                         });
