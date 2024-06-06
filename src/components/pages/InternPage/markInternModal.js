@@ -283,7 +283,11 @@ export function MarkInternModal({ userID, updateFunction }) {
     }, [open]);
 
     useEffect(() => {
-        setFinalScoreValue(parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length).toFixed(2))
+        if ((parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length).toFixed(2)) === 'NaN') {
+            setFinalScoreValue('NA')
+        } else {
+            setFinalScoreValue(parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length).toFixed(2))
+        }
 
         fetchFinalResultPass(
             parseFloat(finalScore.current.reduce((a, b) => a + b, 0) / finalScore.current.length)
