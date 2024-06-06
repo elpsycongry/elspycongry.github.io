@@ -13,9 +13,11 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import { useState } from "react";
+import { useEffect } from 'react';
+import { elements } from 'chart.js';
 function Copyright(props) {
 
     return (
@@ -45,6 +47,23 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function Login() {
+    
+    const [local, setLocal] = useState('')
+    useEffect(() => {
+        const storedLocation = localStorage.getItem('currentLocation');
+        try {
+            const parsedLocation = JSON.parse(storedLocation);
+            setLocal(parsedLocation) // In ra đối tượng JavaScript đã phân tích
+        } catch (error) {
+            console.error(error); // In ra lỗi nếu có
+        }
+    }, []);
+    const localCheck = local.split('=');
+    const localPath = localCheck[0];
+    const number = localCheck[1];
+    console.log(localPath);
+
+
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
@@ -62,9 +81,13 @@ function Login() {
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    navigate("/users")
+                    if(localPath === "/recruitment/personalNeeds?idRequest" || localPath === "/recruitment/recruitmentPlan?idPlan"){
+                        navigate(local);
+                    } else{
+                        navigate("/users")
+                    }
                 }
-                if(res.data.code === "202"){
+                if (res.data.code === "202") {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
@@ -220,8 +243,8 @@ function Login() {
                         </Button>
                     </Box>
                 </Box>
-                <div style={{marginTop: '-70px'}}>
-                <Copyright sx={{ mt: 36, mb: 4 }} />
+                <div style={{ marginTop: '-70px' }}>
+                    <Copyright sx={{ mt: 36, mb: 4 }} />
                 </div>
             </Container>
         </ThemeProvider>

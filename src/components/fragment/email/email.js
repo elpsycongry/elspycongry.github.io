@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import emailjs from '@emailjs/browser';
 
 export default function Email() {
-    const [dataSend, setDataSend] = useState([
+    const [dataSendPersonalNeed, setDataSendPersonalNeed] = useState([
         {
             toEmail: 'tronglai301@gmail.com',
             toName: 'Trọng',
@@ -18,22 +18,6 @@ export default function Email() {
             handOverIntern: 3,
             failIntern: 3,
             notTrainningIntern: 3
-        },
-        {
-            toEmail: 'nguyenhoanggiaminh24@gmail.com',
-            toName: 'Minh',
-            internNeeds: 4,
-            internNeedHandOver: 1,
-            namePersonalNeeds: 'Nhu cầu nhân sự tháng 6',
-            dateStart: '12/03/2024',
-            dateEnd: '12/04/2024',
-            totalIntern: 20,
-            passIntern: 15,
-            trainningIntern: 10,
-            handOverIntern: 3,
-            failIntern: 3,
-            notTrainningIntern: 3,
-            linkProgress: 13
         },
         {
             toEmail: 'gabynexo221@gmail.com',
@@ -52,14 +36,57 @@ export default function Email() {
             linkProgress: 13
         }
     ]);
-    console.log(dataSend)
-    const serviceId = process.env.REACT_APP_API_SERVICE_ID;
-    const templateId = process.env.REACT_APP_API_TEMPLATE_ID;
+    const [dataSendRecruitmentPlan, setDataSendRecruitmentPlan] = useState([
+        {
+            toEmail: 'vantuanvuong69@gmail.com',
+            toName: 'Tuấn',
+            internNeeds: 4,
+            internNeedHandOver: 1,
+            nameRecuitmentPlan: 'Kế hoạch tuyển dụng tháng 6',
+            linkProgress: 2,
+            dateStart: '12/03/2024',
+            dateEnd: '12/04/2024',
+            totalIntern: 20,
+            passIntern: 15,
+            trainningIntern: 10,
+            handOverIntern: 3,
+            failIntern: 3,
+            notTrainningIntern: 3
+        }
+    ]);
+    console.log(dataSendRecruitmentPlan)
+    const serviceId = process.env.REACT_APP_API_SERVICE_ID ;
+    const templateIdRecruitmentPLan = process.env.REACT_APP_API_TEMPLATE_RECRUITMENT_PLAN_ID ;
+    const templateIdPersonalNeed = process.env.REACT_APP_API_TEMPLATE_PERSONAL_NEED_ID;
     const publicKey = process.env.REACT_APP_API_PUBLIC_KEY;
-    console.log(templateId);
     const intervalRef = useRef(null);
-
-    const sendEmail = (item) => {
+ 
+    const sendEmailRecuitmentPlan = (item) => {
+        const templateParamsRcruitmentPLan = {
+            to_email: item.toEmail,
+            to_name: item.toName,
+            intern_needs: item.internNeeds,
+            intern_need_hand_over: item.internNeedHandOver,
+            name_recruitment_plan: item.nameRecuitmentPlan,
+            link_progress: item.linkProgress,
+            date_start: item.dateStart,
+            date_end: item.dateEnd,
+            total_intern: item.totalIntern,
+            pass_intern: item.passIntern,
+            trainning_intern: item.trainningIntern,
+            hand_over_intern: item.handOverIntern,
+            fail_intern: item.failIntern,
+            not_trainning_intern: item.notTrainningIntern
+        }
+        emailjs.send(serviceId, templateIdRecruitmentPLan, templateParamsRcruitmentPLan, publicKey).then(
+            (response) => {
+                console.log('Success!', response);
+            }, (error) => {
+                console.log(error.text);
+            }
+        )
+    }
+    const sendEmailPersonalneed = (item) => {
         const templateParams = {
             to_email: item.toEmail,
             to_name: item.toName,
@@ -67,6 +94,7 @@ export default function Email() {
             intern_needs: item.internNeeds,
             intern_need_hand_over: item.internNeedHandOver,
             name_personal_needs: item.namePersonalNeeds,
+            link_progress: item.linkProgress,
             date_start: item.dateStart,
             date_end: item.dateEnd,
             total_intern: item.totalIntern,
@@ -75,11 +103,8 @@ export default function Email() {
             hand_over_intern: item.handOverIntern,
             fail_intern: item.failIntern,
             not_trainning_intern: item.notTrainningIntern,
-            link_progress: item.linkProgress,
-
         }
-
-        emailjs.send(serviceId, templateId, templateParams, publicKey).then(
+        emailjs.send(serviceId, templateIdPersonalNeed, templateParams, publicKey).then(
             (response) => {
                 console.log('Success!', response);
             }, (error) => {
@@ -87,6 +112,12 @@ export default function Email() {
             }
         )
     }
+
+    const sendEmail = () =>{
+        sendEmailRecuitmentPlan();
+        sendEmailPersonalneed();
+    }
+  
     useEffect(() => {
         const dayNow = new Date();
         const dayCheck = dayNow.getDay();
@@ -94,17 +125,24 @@ export default function Email() {
         const monthCheck = dayNow.getMonth() + 1;
         const hoursCheck = dayNow.getHours();
 
-        if (dayCheck === 5 && hoursCheck === 16 ) {
-            dataSend.map(item => {
-                sendEmail(item);
+        if (dayCheck === 5 && hoursCheck === 16) {
+            dataSendPersonalNeed.map(item => {
+                sendEmailPersonalneed(item);
+            })
+            dataSendRecruitmentPlan.map(item => {
+                sendEmailRecuitmentPlan(item);
             })
         }
+        // send check
 
-        // Test send email uncommand to run
-        // dataSend.map(item => {
-        //     console.log(item);
-        //     sendEmail(item);
+        // dataSendPersonalNeed.map(item => {
+        //     sendEmailPersonalneed(item);
         // })
+        // dataSendRecruitmentPlan.map(item => {
+        //     sendEmailRecuitmentPlan(item);
+        // })
+
+
 
 
         intervalRef.current = setInterval(sendEmail, 24 * 60 * 60 * 1000);

@@ -15,6 +15,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, reasonItem, userRoles, checkId, idUser }) {
   const [tenhnology, setTenhnology] = useState([]);
@@ -25,6 +26,11 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
   const hasRoleKSCL = () => {
     return userRoles.some((role) => role.authority === "ROLE_QC");
   };
+  
+  const [dropProgress, setDropProgress] = useState(true);
+  const clickProgress = () =>{
+    setDropProgress(!dropProgress);
+  }
   // Dữ liệu fake
   const formData = useFormik({
     initialValues: {
@@ -123,6 +129,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
   };
   const handleClickFormClose = () => {
     setOpenForm(false);
+    setDropProgress(true);
   };
 
   // Xử lý dialog
@@ -180,6 +187,8 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
       return true;
     }
   }
+
+
   return (
     <>
       <Tooltip title="Xem chi tiết">
@@ -380,25 +389,27 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                     htmlFor="time"
                     style={{ color: "#6F6F6F" }}
                     className=" form-label fs-20 mb-0 p-0 btn-progress"
+                    onClick={clickProgress}
                   >
-                    <span className="span-progress">
+                    <span className="span-progress position-relative">
                       Quy trình
+                      <KeyboardArrowUpIcon className={`Icon-Keyboard ${dropProgress? '' : 'active'} position-absolute`} />
                     </span>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <div className="col-md-12 d-flex">
-                      <div className="col-md-4 d-flex flex-column mw-200">
-                        <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Khởi tạo nhu cầu nhân sự</span>
+                    <div className="col-md-12 d-flex justify-content-center">
+                      <div className="col-md-4 d-flex flex-column mw-300">
+                        <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Khởi tạo nhu cầu nhân sự</span>
                         <div style={{ height: '24px' }}></div>
-                        <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DET xác nhận</span>
+                        <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">DET xác nhận</span>
                         <div style={{ height: '24px' }}></div>
-                        <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DCAN xác nhận</span>
+                        <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">DCAN xác nhận</span>
                         <div style={{ height: '24px' }}></div>
-                        <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Tuyển dụng</span>
+                        <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Tuyển dụng</span>
                         <div style={{ height: '24px' }}></div>
-                        <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Đào tạo</span>
+                        <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Đào tạo</span>
                         <div style={{ height: '24px' }}></div>
-                        <span className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Bàn giao nhân sự</span>
+                        <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Bàn giao nhân sự</span>
                       </div>
                       <div className="col-md-6">
                         <Stepper activeStep={activeStep} orientation="vertical">
@@ -493,7 +504,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                 <div className="col-md-6 mt-2">
                   <button
                     type="button"
-                    className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
+                    className="btn btn-danger w-100 bg-clr-danger btn-edit denied stop"
                     onClick={handleCloseWatchOpenReason}
                   >
                     Từ chối
@@ -503,7 +514,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                   <button
                     type="button"
                     onClick={approve}
-                    className="btn-edit btn btn-success w-98 bg-clr-success"
+                    className="btn-edit btn btn-success w-98 bg-clr-success success"
                   >
                     Phê duyệt
                   </button>

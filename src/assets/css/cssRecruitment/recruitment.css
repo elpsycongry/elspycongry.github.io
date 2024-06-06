@@ -122,8 +122,9 @@
 }
 
 .menu .MuiPaper-root {
-        height: 20%;
-        width: 300px;
+    overflow: hidden;
+    height: 20%;
+    width: 300px;
 }
 
 
@@ -137,6 +138,9 @@
 
 .mw-200 {
     min-width: 200px;
+}
+.mw-300 {
+    min-width: 300px;
 }
 
 .select-form .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
@@ -339,6 +343,9 @@ input[type="number"]::-webkit-outer-spin-button {
 .w-600 {
     width: 600px;
 }
+.lh-24{
+    line-height: 24px;
+}
 
 .w-250 {
     width: 220px;
@@ -375,6 +382,9 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .fs-14 {
     font-size: 14px !important;
+}
+.fs-18 {
+    font-size: 18px !important;
 }
 
 .fs-1_5em {
@@ -531,6 +541,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .namePersonal {
+    margin-bottom: 0.5rem;
     margin-top: 4px;
     font-size: 16px;
     font-weight: 200;
@@ -612,11 +623,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .svg-size span svg {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .svg-size-err span svg {
-    transform: scale(1.13);
+    transform: scale(1.5);
     transform-origin: center;
     color: red !important;
 }
@@ -635,6 +646,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .svg-size span {
+    font-size: 16px;
     width: 32px;
     height: 24px;
     justify-content: center;
@@ -648,7 +660,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .btn-progress {
-    width: 100px;
+    width: 115px;
     line-height: 36px;
     color: #ebebeb !important;
 }
@@ -661,7 +673,30 @@ input[type="number"]::-webkit-outer-spin-button {
     border-radius: 4px !important;
     background-color: #3165f3;
     width: 100%;
-    text-align: center;
+    padding-left: 5px;
+    transition: 0.2s ease;
+}
+
+.span-progress:hover {
+    background-color: #1444c8;
+    transition: 0.2s ease;
+}
+
+.Icon-Keyboard {
+    top: 6px;
+    transform: rotate(180Deg);
+    transition: transform 0.3sG ease
+}
+
+.active {
+    transform: rotate(0);
+    transition: transform 0.3s ease
+}
+.denied:hover{
+    background-color: #ff0000 !important;
+}
+.success:hover{
+    background-color: #49a903 !important;
 }
 
 .btn-progress .css-eqpfi5-MuiAccordionSummary-content {
@@ -761,4 +796,3 @@ input[type="number"]::-webkit-outer-spin-button {
     display: flex;
     justify-content: center;
 }
-

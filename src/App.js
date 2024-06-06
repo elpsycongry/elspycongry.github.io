@@ -29,7 +29,7 @@ function App() {
                 <Route path="/training" element={<AuthContext><Training /></AuthContext>} />
                 <Route path="/training/stats" element={<AuthContext><TrainingStats /></AuthContext>} />
                 <Route path="/recruitment/stats" element={<AuthContext><RecruitmentStats /></AuthContext>} />
-                <Route path="/recruitment/personalNeeds" element={<AuthContext><PersonalNeeds /></AuthContext>} />
+                <Route path="/recruitment/personalNeeds" element={<AuthContext><PersonalNeeds  /></AuthContext>} />
                 <Route path="/recruitment/candidateManagement" element={<AuthContext><CandidateManagement /></AuthContext>} />
                 <Route path="/recruitment/recruitmentPlan" element={<AuthContext><RecruitmentPlan /></AuthContext>} />
             </Routes>

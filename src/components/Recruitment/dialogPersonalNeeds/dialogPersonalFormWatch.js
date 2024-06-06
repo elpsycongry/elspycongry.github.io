@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DialogPersonalFormReason from "./dialogPersonalFormReason";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import axios from "axios";
 import { useFormik } from "formik";
 import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess";
@@ -21,6 +22,10 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     const hasRoleKSCL = () => {
         return userRoles.some((role) => role.authority === "ROLE_QC");
     };
+    const [dropProgress, setDropProgress] = useState(true);
+    const clickProgress = () => {
+        setDropProgress(!dropProgress);
+    }
     // Dữ liệu fake
     const formData = useFormik({
         initialValues: {
@@ -43,6 +48,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     });
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        console.log(user);
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios
@@ -64,6 +70,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
         setOpenForm(true);
     };
     const handleClickFormClose = () => {
+        setDropProgress(true);
         setOpenForm(false);
     };
 
@@ -319,152 +326,148 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
                             ))
                         )}
-                            <div className=" mt-0">
-                                <div className="col-md-12 mt-2 progressDiv">
-                                    <Accordion>
-                                        <AccordionSummary
-                                            htmlFor="time"
-                                            style={{ color: "#6F6F6F" }}
-                                            className=" form-label fs-20 mb-0 p-0 btn-progress"
-                                        >
-                                            <span className="span-progress">
-                                                Quy trình
-                                            </span>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <div className="col-md-12 d-flex">
-                                                <div className="col-md-4 d-flex flex-column mw-200">
-                                                    <span
-                                                        className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Khởi tạo nhu cầu nhân sự</span>
-                                                    <div style={{ height: '24px' }}></div>
-                                                    <span
-                                                        className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DET xác nhận</span>
-                                                    <div style={{ height: '24px' }}></div>
-                                                    <span
-                                                        className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DCAN xác nhận</span>
-                                                    <div style={{ height: '24px' }}></div>
-                                                    <span
-                                                        className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Tuyển dụng</span>
-                                                    <div style={{ height: '24px' }}></div>
-                                                    <span
-                                                        className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Đào tạo</span>
-                                                    <div style={{ height: '24px' }}></div>
-                                                    <span
-                                                        className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Bàn giao nhân sự</span>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <Stepper activeStep={activeStep} orientation="vertical">
-                                                        <Step>
-                                                            <StepLabel className="ws-nowrap svg-size"><span
-                                                                className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator}
-                                                                <span className="fs-16">{steps.requestName}</span></span>
-                                                            </StepLabel>
-                                                        </Step>
-                                                        <Step>
-                                                            <StepLabel
-                                                                StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''}
-                                                                className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
-                                                                {checkDet() ?
-                                                                    steps.detAccept === "true" || steps.detAccept === true ?
-                                                                        <span
-                                                                            className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link
-                                                                                to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`}
-                                                                                className="a-progress cursor-pointer">{steps.planName}</Link></span>
-                                                                        :
-                                                                        steps.decanAccept === "false" || steps.decanAccept === false ?
-                                                                            <span
-                                                                                className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
-                                                                            :
-                                                                            <span
-                                                                                className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
-
-                                                                    :
+                        <div className=" mt-0">
+                            <div className="col-md-12 mt-2 progressDiv">
+                                <Accordion>
+                                    <AccordionSummary
+                                        htmlFor="time"
+                                        style={{ color: "#6F6F6F" }}
+                                        className=" form-label fs-20 mb-0 p-0 btn-progress"
+                                        onClick={clickProgress}
+                                    >
+                                        <span className="span-progress position-relative">
+                                            Quy trình
+                                            <KeyboardArrowUpIcon className={`Icon-Keyboard ${dropProgress ? '' : 'active'} position-absolute`} />
+                                        </span>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div className="col-md-12 d-flex justify-content-center">
+                                            <div className="col-md-4 d-flex flex-column mw-300">
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Khởi tạo nhu cầu nhân sự</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">DET xác nhận</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">DCAN xác nhận</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Tuyển dụng</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Đào tạo</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Bàn giao nhân sự</span>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <Stepper activeStep={activeStep} orientation="vertical">
+                                                    <Step>
+                                                        <StepLabel className="ws-nowrap svg-size"><span
+                                                            className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator}
+                                                            <span className="fs-16">{steps.requestName}</span></span>
+                                                        </StepLabel>
+                                                    </Step>
+                                                    <Step>
+                                                        <StepLabel
+                                                            StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''}
+                                                            className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
+                                                            {checkDet() ?
+                                                                steps.detAccept === "true" || steps.detAccept === true ?
                                                                     <span
-                                                                        className="d-flex flex-column align-items-start mt-12"><a
-                                                                            className="a-progress"></a></span>
-                                                                }
-                                                            </StepLabel>
-
-                                                        </Step>
-                                                        <Step>
-                                                            <StepLabel
-                                                                StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''}
-                                                                className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
-                                                                {checkDecan() ?
-                                                                    steps.decanAccept === "true" || steps.decanAccept === true ?
-                                                                        <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a
-                                                                            className="a-progress"></a></span>
-                                                                        :
+                                                                        className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link
+                                                                            to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`}
+                                                                            className="a-progress cursor-pointer">{steps.planName}</Link></span>
+                                                                    :
+                                                                    steps.decanAccept === "false" || steps.decanAccept === false ?
                                                                         <span
                                                                             className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                        :
+                                                                        <span
+                                                                            className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+
+                                                                :
+                                                                <span
+                                                                    className="d-flex flex-column align-items-start mt-12"><a
+                                                                        className="a-progress"></a></span>
+                                                            }
+                                                        </StepLabel>
+
+                                                    </Step>
+                                                    <Step>
+                                                        <StepLabel
+                                                            StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''}
+                                                            className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
+                                                            {checkDecan() ?
+                                                                steps.decanAccept === "true" || steps.decanAccept === true ?
+                                                                    <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a
+                                                                        className="a-progress"></a></span>
                                                                     :
                                                                     <span
-                                                                        className="d-flex flex-column align-items-start mt-12"><a
-                                                                            className="a-progress"></a></span>
-                                                                }
+                                                                        className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                :
+                                                                <span
+                                                                    className="d-flex flex-column align-items-start mt-12"><a
+                                                                        className="a-progress"></a></span>
+                                                            }
 
+                                                        </StepLabel>
+                                                    </Step>
+                                                    <Step>
+                                                        {steps.step >= 3 ?
+                                                            steps.applicants === 0 ?
+                                                                <StepLabel
+                                                                    className="ws-nowrap svg-size svg-size-none"><span
+                                                                        className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants}
+                                                                        <a className="a-progress"></a></span> </StepLabel>
+
+                                                                :
+                                                                <StepLabel className="ws-nowrap svg-size"><span
+                                                                    className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants}
+                                                                    <Link
+                                                                        to={`/recruitment/candidateManagement?planName=${steps.planName}`}
+                                                                        className="a-progress cursor-pointer">Xem kết quả tuyển dụng</Link></span>
+                                                                </StepLabel>
+                                                            :
+                                                            <StepLabel className="ws-nowrap svg-size"><span
+                                                                className="d-flex flex-column align-items-start"> <a></a></span>
                                                             </StepLabel>
-                                                        </Step>
-                                                        <Step>
-                                                            {steps.step >= 3 ?
-                                                                steps.applicants === 0 ?
-                                                                    <StepLabel
-                                                                        className="ws-nowrap svg-size svg-size-none"><span
-                                                                            className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants}
-                                                                            <a className="a-progress"></a></span> </StepLabel>
-
-                                                                    :
-                                                                    <StepLabel className="ws-nowrap svg-size"><span
-                                                                        className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants}
-                                                                        <Link
-                                                                            to={`/recruitment/candidateManagement?planName=${steps.planName}`}
-                                                                            className="a-progress cursor-pointer">Xem kết quả tuyển dụng</Link></span>
-                                                                    </StepLabel>
+                                                        }
+                                                    </Step>
+                                                    <Step>
+                                                        {steps.step >= 4 ?
+                                                            steps.training === 0 ?
+                                                                <StepLabel className={`ws-nowrap svg-size svg-size-none `}>
+                                                                    <span
+                                                                        className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training}
+                                                                        <a className="a-progress"></a></span>
+                                                                </StepLabel>
                                                                 :
                                                                 <StepLabel className="ws-nowrap svg-size"><span
-                                                                    className="d-flex flex-column align-items-start"> <a></a></span>
+                                                                    className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training}
+                                                                    <Link
+                                                                        to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`}
+                                                                        className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span>
                                                                 </StepLabel>
-                                                            }
-                                                        </Step>
-                                                        <Step>
-                                                            {steps.step >= 4 ?
-                                                                steps.training === 0 ?
-                                                                    <StepLabel className={`ws-nowrap svg-size svg-size-none `}>
-                                                                        <span
-                                                                            className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training}
-                                                                            <a className="a-progress"></a></span>
-                                                                    </StepLabel>
-                                                                    :
-                                                                    <StepLabel className="ws-nowrap svg-size"><span
-                                                                        className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training}
-                                                                        <Link
-                                                                            to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`}
-                                                                            className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span>
-                                                                    </StepLabel>
-                                                                :
-                                                                <StepLabel className="ws-nowrap svg-size"><span
-                                                                    className="d-flex flex-column align-items-start"> <a></a></span>
-                                                                </StepLabel>
-                                                            }
-                                                        </Step>
-                                                        <Step>
-                                                            {steps.step >= 5 ?
-                                                                <StepLabel className="ws-nowrap svg-size"><span
-                                                                    className="d-flex flex-column align-items-start">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự <a
-                                                                        className="a-progress"></a></span> </StepLabel>
-                                                                :
-                                                                <StepLabel className="ws-nowrap svg-size"><span
-                                                                    className="d-flex flex-column align-items-start"> <a></a></span>
-                                                                </StepLabel>
-                                                            }
-                                                        </Step>
-                                                    </Stepper>
-                                                </div>
+                                                            :
+                                                            <StepLabel className="ws-nowrap svg-size"><span
+                                                                className="d-flex flex-column align-items-start"> <a></a></span>
+                                                            </StepLabel>
+                                                        }
+                                                    </Step>
+                                                    <Step>
+                                                        {steps.step >= 5 ?
+                                                            <StepLabel className="ws-nowrap svg-size"><span
+                                                                className="d-flex flex-column align-items-start">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự <a
+                                                                    className="a-progress"></a></span> </StepLabel>
+                                                            :
+                                                            <StepLabel className="ws-nowrap svg-size"><span
+                                                                className="d-flex flex-column align-items-start"> <a></a></span>
+                                                            </StepLabel>
+                                                        }
+                                                    </Step>
+                                                </Stepper>
                                             </div>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                </div>
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
                             </div>
+                        </div>
 
                     </form>
                 </DialogTitle>

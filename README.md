@@ -10,15 +10,23 @@ In sidebar:
  - Select 'Email service' -> click 'Add new service' -> choose gmail then select connect account and create service(in there have Service ID)
  - Select 'Email Templates' -> create new templates -> create templates, template like :
 
- main form: 
+ main form (Images are for illustration purposes only): 
 
 ![alt text](image/image1.png)
 
- Edit Content -> Code Editor code in Html (we have form template in formEmailJs.txt) :
+ Edit Content -> Code Editor code in Html (we have form template in formEmailJs.txt), create to template, one for recruitment plan, one for personal need:
 
 ![alt text](image/image.png)
 
 Then you click apply changes -> save (take Template ID in settings).
+ 
+ + Change data in Subject is your name web and to email is {{to_email}}
+    
+    ex: 
+
+![alt text](image.png)
+
+![alt text](image-1.png)
 
  - You can take 'Public Key' in  Account. 
 
@@ -29,7 +37,8 @@ In project, create new file .env in project (file .env in big project) ex:
 import three variable: 
 
  - REACT_APP_API_SERVICE_ID = your Service ID
- - REACT_APP_API_TEMPLATE_ID = your Template ID 
+ - REACT_APP_API_TEMPLATE_PERSONAL_NEED_ID = your Template PN ID
+ - REACT_APP_API_TEMPLATE_RECRUITMENT_PLAN_ID = your Template RP ID
  - REACT_APP_API_PUBLIC_KEY =  your Public Key
  
  Example: REACT_APP_API_SERVICE_ID = service_aswr1v7d
