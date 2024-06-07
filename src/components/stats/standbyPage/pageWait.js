@@ -10,7 +10,8 @@ import { Alert, IconButton, InputAdornment } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import logoImage from '../../../assets/image/logoCodeGym.png';
-
+import './pageWait.css';
+ 
 
 function Copyright(props) {
 
@@ -58,11 +59,15 @@ function PageWait() {
                         <img src={logoImage} style={{ width: '80px', height: '80px' }} />
                     </Avatar>
                     <Typography variant="h2" style={{ paddingTop: '40px'}}>Chờ đến khi admin phê duyệt</Typography>
+                    <div class="form-link">
+                            <span>Quay về trang đăng nhập? <a href="http://localhost:3000/login" class="link signup-link">Sign in</a></span>
+                     </div>
                 </Box>
-                <div style={{ marginTop: '-70px' }}>
-                    <Copyright sx={{ mt: 36, mb: 4 }} />
-                </div>
+              
             </Container>
+            <div style={{ marginTop: '-70px' }}>
+                    <Copyright sx={{ mt: 36, mb: 4 }} />
+            </div>
         </ThemeProvider>
     )
 }

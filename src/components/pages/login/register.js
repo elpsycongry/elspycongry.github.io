@@ -213,7 +213,7 @@ function Register() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs" style={{ paddingTop: '140px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <Container component="main" maxWidth="xs" style={{display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <CssBaseline />
                 <Box
                     sx={{
