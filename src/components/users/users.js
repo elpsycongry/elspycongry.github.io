@@ -10,45 +10,31 @@ import {
     Link, Switch,
     Tooltip
 } from "@mui/material";
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
-// import "../../assets/css/cssRecruitment/recruitment.css";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.css"
 import ClearIcon from '@mui/icons-material/Clear';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import CreateIcon from '@mui/icons-material/Create';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
 import './users.css'
 import DialogUpdateUserForm from "./updateUser";
-import BlockUser from "./blockUser";
 import DialogAddUserForm from "./addUser";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ToggleButton from '@mui/material/ToggleButton';
 import swal from 'sweetalert';
 import './blockUser.css';
-import { every } from "lodash";
+import ReportIcon from '@mui/icons-material/Report';
 
 
 export default function Users() {
-
-    const location = useLocation();
-    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const handleClickPracticeOpen = () => {
-        setOpen(true);
-    }
     const handleClickPracticeClose = () => {
         setOpen(false);
     }
-    const [status, setStatus] = useState('');
     const [token, setToken] = useState("")
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
@@ -118,7 +104,6 @@ export default function Users() {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
             try {
-                console.log("2. Ngoài: " + selectedState);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}&state=${selectedState}`)
                     .then((res) => {
@@ -187,8 +172,6 @@ export default function Users() {
         );
     }
 
-
-
     return (
         <>
             <Header />
@@ -197,14 +180,6 @@ export default function Users() {
                 <div style={{ display: 'flex' }}>
                     <div>
                         <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '10px' }}>
-                            {/* <Breadcrumbs
-                        aria-label='breadcrumb'
-                        separator={<NavigateNextIcon fontSize="small" />}>
-                        <Link underline="hover" href='#'>Home</Link>
-                        <Link underline="hover" href='#'>Catalog</Link>
-                        <Link underline="hover" href='#'>Access</Link>
-                        <Typography color='text.primary'><GroupIcon /> Users</Typography>
-                    </Breadcrumbs> */}
                             <GroupIcon style={{ paddingBottom: '3px', color: 'rgba(0, 0, 0, 0.60)' }} />
                             <p style={{
                                 color: 'rgba(0, 0, 0, 0.60)',
@@ -266,20 +241,13 @@ export default function Users() {
                                         <InputLabel className="top-left" id="demo-simple-small-label">
                                             Vai trò...</InputLabel>
                                         <Select
-                                            sx={{
-                                                // height: '30px',
-                                                // paddingTop: '0px',
-                                                // paddingBottom: '0px',
-                                                backgroundColor: 'white',
-                                                // width: '300px'
-                                            }}
+                                            sx={{ backgroundColor: 'white'}}
                                             labelId="demo-simple-small-label"
                                             className="select-edit"
                                             id="demo-simple-select"
                                             label="Vai trò..."
                                             value={selectedRole}
                                             onChange={handleRoleChange}
-                                        // onClick={handleFilterRole}
                                         >
                                             <MenuItem value={""} >Tất cả</MenuItem>
                                             {listRoleSelect.map(item => (
@@ -290,12 +258,7 @@ export default function Users() {
                                     <FormControl className="select-form ml-10 status" sx={{ minWidth: '300px' }}>
                                         <InputLabel className="top-left" id="demo-simple-small-label">Trạng thái người dùng...</InputLabel>
                                         <Select
-                                            sx={{
-                                                // height: '30px',
-                                                // paddingTop: '0px',
-                                                // paddingBottom: '0px',
-                                                backgroundColor: 'white'
-                                            }}
+                                            sx={{ backgroundColor: 'white'}}
                                             labelId="demo-simple-small-label"
                                             className="select-edit "
                                             id="demo-simple-select"
@@ -337,12 +300,24 @@ export default function Users() {
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
-                                        <td style={{ padding: '8px' }} className="user-name">
+                                        <td style={{ padding: '8px' }}>
                                             <Tooltip title={item.status ? "Đã cấp quyền" : "Chờ xác nhận"} placement="right-end" arrow>
                                                 {item.state === true ? (
-                                                    <span className="user-name">{item.name}</span>
+                                                    <span>
+                                                        {item.name}
+                                                    </span>
                                                 ) : (
-                                                    <span className="user-name" style={{ color: 'orange' }}>{" ! " + item.name}</span>
+                                                    
+                                                    <span style={{ color: 'orange' }}>
+                                                        <ReportIcon style={{
+                                                        width: "32px",
+                                                        height: "32px",
+                                                        borderRadius: "50%",
+                                                        fontSize: "24px",
+                                                        marginRight: "8px"
+                                                    }} />
+                                                        {item.name}
+                                                    </span>
                                                 )}
                                             </Tooltip>
                                         </td>
@@ -368,7 +343,7 @@ export default function Users() {
                                                 selected={item.status}
                                                 onClick={() => blockUserWithId(item.id, item.status, item.state)}
                                                 style={{
-                                                    backgroundColor: item.status && item.state ? "green" : "gray",
+                                                    backgroundColor: item.status && item.state ? "green" : "red",
                                                     color: "white",
                                                     marginLeft: "5px",
                                                     width: "10px",
@@ -376,13 +351,11 @@ export default function Users() {
                                                     borderRadius: "50%",
                                                 }}
                                             >
-                                                {item.status && item.state ? <CheckIcon /> : <CloseIcon sx={{ bgcolor: 'gray', borderRadius: '100%' }} />}
+                                                {item.status && item.state ? <CheckIcon /> : <CloseIcon sx={{ bgcolor: 'red', borderRadius: '100%' }} />}
                                             </ToggleButton>
 
                                         </td>
                                         <td className="user-actions">
-                                            {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-
                                             <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />
 
                                         </td>
@@ -390,15 +363,6 @@ export default function Users() {
                                 ))}
                             </tbody>
                         </div>
-
-                        {/* <Stack spacing={1} style={{marginTop: '190px', alignItems: 'center', alignItems: 'center', marginTop: '50px' }}>
-                            <Pagination
-                                count={Math.ceil(pagination.totalElements / pagination.size)}
-                                page={pagination.page + 1}
-                                shape="rounded"
-                                onChange={handlePageChange}
-                            />
-                        </Stack> */}
                     </div>
 
                     <div className="position-absolute w-100" style={{ bottom: '12px' }}>
@@ -414,12 +378,6 @@ export default function Users() {
             <div style={{ paddingTop: '30px', paddingBottom: '0px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
-            {/* <Footer /> */}
-            {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                    <Copyright sx={{ maxWidth: '100%' }} />
-                </div> */}
-            {/* </Box > */}
-            {/* <Footer /> */}
         </>
     );
 }

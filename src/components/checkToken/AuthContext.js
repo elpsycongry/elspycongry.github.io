@@ -3,6 +3,7 @@ import { enqueueSnackbar } from "notistack";
 import { Navigate } from "react-router-dom";
 import Login from "../pages/login/login";
 import Register from "../pages/login/register";
+import PageWait from "../stats/standbyPage/pageWait";
 
 // Context xác thực người dùng
 function AuthContext({ children }) {
@@ -31,9 +32,6 @@ function AuthContext({ children }) {
         const status = currentUser.status;
         const state = currentUser.state;
        
-       
-       
-        
         // Điều hướng người dùng đã đăng nhập đến trang dashboard nếu họ cố gắng truy cập trang đăng nhập
         if (pathName === "/login" && state == true && status == true) {
             return <Navigate to="/dashboard" />;
