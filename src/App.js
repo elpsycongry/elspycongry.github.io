@@ -16,6 +16,7 @@ import RecruitmentPlan from './components/Recruitment/recruitmentPlan';
 import axiosInstance from './components/checkToken/axiosInstance';
 import Register from './components/pages/login/register';
 import ClientPage from './components/clientPage/clientPage';
+import './assets/css/responsive.css'
 
 function App() {
     return (

@@ -131,11 +131,11 @@ p {
   padding: 5px 20px;
   border-radius: 2px;
   font-size: 0.9rem;
-  background-color: transparent;
+  background-color: #cccccc;
 
   &:hover {
     cursor: pointer;
-    background-color: #f0f0f0;
+    background-color: #afacac;
   }
 }
 .close {
@@ -156,12 +156,13 @@ p {
   }
 
   &:disabled {
-    cursor: default;
-    border: 1px solid #999999;
-    background-color: #cccccc;
-    color: #666666;
+    cursor: url('/assets/image/icons8-unavailable-20.png'), not-allowed ;
+    border: 1px solid #cccccc;
+    background-color: #cccccc !important;
+    color: #666666 !important;
   }
 }
+
 
 .tb {
   font-weight: 600;

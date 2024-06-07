@@ -36,10 +36,10 @@ export default function CandidateManagement() {
     const queryParams = new URLSearchParams(location.search);
     const planName = queryParams.get('planName') || '';
     const status = queryParams.get('status') || '';
-    
+
     const CustomPopper = styled(Popper)({
         '& .MuiAutocomplete-listbox': {
-            maxHeight: '255px',
+            maxHeight: '150px',
             backgroundColor: '#f0f0f0',
             // Chỉnh chiều cao tối đa
         },
@@ -108,6 +108,8 @@ export default function CandidateManagement() {
     };
 
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
+        console.log(selectedStatus)
+        console.log(selectPlan);
         const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
@@ -154,9 +156,11 @@ export default function CandidateManagement() {
         if (user != null) {
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                const res = await axios.get('http://localhost:8080/api/plansIntern')
-                setRecruitmentPlan(res.data.content);
+                const res = await axios.get('http://localhost:8080/api/plans')
+                console.log(res.data)
+                setRecruitmentPlan(res.data);
             } catch (error) {
+                console.log(error);
             }
         }
     }
@@ -173,6 +177,7 @@ export default function CandidateManagement() {
         setIdUser(user.id);
         if (user != null) {
             try {
+                console.log(status)
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
@@ -185,6 +190,7 @@ export default function CandidateManagement() {
                 } else {
                     setShowError(false);
                 }
+                console.log(recuitments);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -225,6 +231,7 @@ export default function CandidateManagement() {
     const handleEnterChange = (event, value) => {
         if (event.key === "Enter" && event.target) {
             setInputValue(event.target.value)
+            console.log(event.target.value);
             setSelectPlan(event.target.value);
             handleSubmitSelectPlan(event.target.value, page);
         }
@@ -301,22 +308,6 @@ export default function CandidateManagement() {
                                             ))}
                                     </Select>
                                 </FormControl>
-{/* <<<<<<< HEAD
-                                <FormControl className="ml-10 select-form" sx={{ minWidth: 300 }}>
-                                    <InputLabel htmlFor="grouped-select">Kế hoạch tuyển dụng</InputLabel>
-                                    <Select defaultValue=""
-                                        id="grouped-select"
-                                        label="Kế hoạch tuyển dụng..."
-                                        onChange={handlePlanChange}
-                                        value={selectPlan}
-                                        className="select-edit grey-text"
-                                    >
-                                        <MenuItem value={""} onClick={handleSubmitSelectPlan}>Kế hoạch tuyển dụng</MenuItem>
-                                        {
-                                            Array.isArray(recruitmentPlan) && recruitmentPlan.map(item => (
-                                                <MenuItem value={item.name} key={item.name} onClick={handleSubmitSelectPlan}>{item.name}</MenuItem>
-                                            ))
-======= */}
                                 <Autocomplete
                                     className='ml-10 select-form auto-complete'
                                     disablePortal
@@ -330,7 +321,6 @@ export default function CandidateManagement() {
                                             setInputValue(event.target.value);
                                         } else {
                                             setInputValue(value);
-
                                         }
                                     }}
                                     onKeyPress={handleEnterChange}
@@ -381,7 +371,7 @@ export default function CandidateManagement() {
                                     <td className="text-center">{item.status || "N/A"}</td>
                                     <td className="text-right p-tricklord">
                                         <DialogCandidateFromWatch id={item.id} />
-                                        <DialogCandidateFromUpdate id={item.id} userRoles={userLogin}  />
+                                        <DialogCandidateFromUpdate id={item.id} userRoles={userLogin} />
                                     </td>
                                 </tr>
                             ))}

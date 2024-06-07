@@ -136,7 +136,7 @@ export default function DialogAddUserForm({ token, onAdd }) {
         // onClick={() => setOpen(true)}
         <>
             <Tooltip title="Thêm người dùng" arrow>
-                <button className="btn btn-success" style={{ position: 'absolute', bottom: '0', right: '0' }} onClick={() => setOpen(true)}>
+                <button className="btn btn-stats-green" style={{ position: 'absolute', bottom: '0', right: '0' }} onClick={() => setOpen(true)}>
                     <PersonAddIcon sx={{ marginRight: '8px' }} />
                     Thêm người dùng
                 </button>

@@ -1,0 +1,52 @@
+/* PC & Laptop */
+.client-page-video-div {
+    background-color: white;
+    margin-top: 64px;
+    width: 100%;
+    height: 873.6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.client-page-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Mobile: width < 740px */
+@media only screen and (max-width: 46.1875em) {
+    .client-page-video-div {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: normal;
+        padding-top: 80px;
+        background-color: #FFA500;
+    }
+
+    .client-page-video {
+        width: 100%;
+        height: 40%;
+        object-fit: cover;
+    }
+}
+
+/* Tablet: width >= 740px and < 1024px */
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .client-page-video-div {
+        width: 100%;
+        height: 70vh; /* Adjust the height for better tablet view */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .client-page-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}

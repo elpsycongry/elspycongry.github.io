@@ -77,6 +77,7 @@ export default function Training() {
         fetchListRecruitmentPlan();
         fetchListInternSelect(pagination);
     }
+
     useEffect(() => {
         fetchListSubjectSelect();
         fetchListRecruitmentPlan();
@@ -140,7 +141,6 @@ export default function Training() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             try {
-                console.log("ID: " + selectedRecruitmentPlan);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 axios.get(`http://localhost:8080/api/interns/searchValue?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}&recruitmentPlan=${selectedRecruitmentPlan}`).then((res) => {
                     setListIntern(res.data.content);
