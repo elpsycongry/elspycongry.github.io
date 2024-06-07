@@ -47,7 +47,12 @@ function Copyright(props) {
 }
 
 export default function Training() {
+
     const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const planName = queryParams.get('planName') || '';
+    // const status = queryParams.get('status') || '';
+    // const location = useLocation();
 
     const [open, setOpen] = useState(false);
 

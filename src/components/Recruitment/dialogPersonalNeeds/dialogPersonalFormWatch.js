@@ -441,7 +441,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                                 <StepLabel className="ws-nowrap svg-size"><span
                                                                     className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training}
                                                                     <Link
-                                                                        to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`}
+                                                                        to={`/training?&planName=${steps.planName}`}
                                                                         className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span>
                                                                 </StepLabel>
                                                             :

@@ -31,12 +31,7 @@ import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandida
 import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
 import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
 import { useLocation } from 'react-router-dom';
-export default function CandidateManagement() {
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const planName = queryParams.get('planName') || '';
-    const status = queryParams.get('status') || '';
-    
+export default function CandidateManagement() {    
     const CustomPopper = styled(Popper)({
         '& .MuiAutocomplete-listbox': {
             maxHeight: '255px',
