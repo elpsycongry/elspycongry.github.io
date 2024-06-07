@@ -17,6 +17,9 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import { useState } from "react";
+import { useGoogleLogin } from '@react-oauth/google';
+import './login.css';
+import GoogleIcon from '@mui/icons-material/Google';
 
 function Copyright(props) {
     return (
@@ -152,6 +155,7 @@ function Register() {
     }
 
 
+
     // Disabled submit nếu một trong các flag là false
     const validForm = Object.values(flagValidate).some(value => !value);
 
@@ -162,6 +166,50 @@ function Register() {
     const passwordInput = React.useRef();
     const submitButton = React.useRef();
 
+
+    const registerAccountGoogle = useGoogleLogin({
+        onSuccess: async (response) => {
+
+            try {
+                // Lấy access token
+                const { access_token } = response;
+
+                // Sử dụng access token để lấy thông tin người dùng từ Google
+                const userInfo = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                });
+                const dataGoogle = {
+                    name: userInfo.data.name,
+                    phone: "",
+                    email: userInfo.data.email,
+                    password: userInfo.data.email,
+                };
+                console.log(dataGoogle);
+                axios.post("http://localhost:8080/register", dataGoogle).then(
+                    res => {
+                        if (res.data.code === "400" || res.data.code === "409") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                        }
+
+                        if (res.data.code === "201") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            navigate("/login")
+                        }
+                        setFlagValidate({ ...flagValidate, validSubmit: true })
+                    }
+                ).catch(reason => {
+                    enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+                    setFlagValidate({ ...flagValidate, validSubmit: true })
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -227,14 +275,13 @@ function Register() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type={visible ? "password" : "text"}
-                                    id="password"
-                                    autoComplete="current-password"
+                                   required
+                                   fullWidth
+                                   name="password"
+                                   label="Password"
+                                   type={visible ? "password" : "text"}
+                                   id="password"
+                                   autoComplete="current-password"
                                     InputProps={{
                                         endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
                                     }}
@@ -262,23 +309,17 @@ function Register() {
                                 This is a success Alert.
                             </Alert>
                         }
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={validForm}
-                            ref={submitButton}
-                        >
+                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, padding: "8px 0px", fontWeight: 600 }} disabled={validForm} ref={submitButton}>
                             Sign Up
                         </Button>
-
+                        <div class="form-link">
+                            <span>Already have an account? <a href="http://localhost:3000/login" class="link login-link">Login</a></span>
+                        </div>
+                        <div class="line" sx={{ mt: 2 }}></div>
+                        <Button fullWidth sx={{ mt: 2, mb: 2, fontWeight: 800 }} variant="outlined" startIcon={<GoogleIcon />} size='medium' onClick={() => registerAccountGoogle()}>
+                            Register with Google
+                        </Button>
                     </Box>
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginTop: '16px' }}>
-                    <Link ariant="body2">
-                        Already have an account? Sign in
-                    </Link>
                 </Box>
 
                 <div style={{ marginTop: '-70px' }}>

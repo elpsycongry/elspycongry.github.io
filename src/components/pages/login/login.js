@@ -16,6 +16,13 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import { useState } from "react";
+import { GoogleLogin } from '@react-oauth/google';
+// import { jwtDecode } from "jwt-decode";
+import { useGoogleLogin } from '@react-oauth/google';
+import { Password } from '@mui/icons-material';
+import './login.css';
+import GoogleIcon from '@mui/icons-material/Google';
+
 function Copyright(props) {
 
     return (
@@ -54,6 +61,7 @@ function Login() {
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
+        console.log(data);
         axios.post("http://localhost:8080/login", data).then(
             res => {
                 if (res.data.code === "401") {
@@ -64,8 +72,10 @@ function Login() {
                     enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                     navigate("/dashboard")
                 }
-                if(res.data.code === "202"){
+                if (res.data.code === "202") {
+                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    navigate("/pageWait")
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
@@ -133,6 +143,51 @@ function Login() {
     const passwordInput = React.useRef();
     const submitButton = React.useRef();
 
+    const loginAccountGoogle = useGoogleLogin({
+        onSuccess: async (response) => {
+
+            try {
+                // Lấy access token
+                const { access_token } = response;
+
+                // Sử dụng access token để lấy thông tin người dùng từ Google
+                const userInfo = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                });
+                const dataGoogle = {
+                    email: userInfo.data.email,
+                    password: userInfo.data.email
+                };
+                console.log(dataGoogle);
+                axios.post("http://localhost:8080/login", dataGoogle).then(
+                    res => {
+                        if (res.data.code === "401") {
+                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                        }
+                        if (res.data.code === "200") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            navigate("/dashboard")
+                        }
+                        if (res.data.code === "202") {
+                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                        }
+                        setFlagValidate({ ...flagValidate, validSubmit: true })
+                    }
+                ).catch(reason => {
+                    enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+                    setFlagValidate({ ...flagValidate, validSubmit: true })
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
+
+
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs" style={{ paddingTop: '140px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
@@ -158,7 +213,7 @@ function Login() {
                             fullWidth
                             id="email"
                             label="Email Address"
-                            name="name"
+                            name="email"
                             autoComplete="email"
                             placeholder="Example123@gmail.com"
 
@@ -174,10 +229,6 @@ function Login() {
                             margin="normal"
                             required
                             fullWidth
-                            // onInput = {(e) =>{
-                            //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4)
-                            // }}
-                            // inputProps={{maxLenght: 12}}
                             name="password"
                             label="Password"
                             type={visible ? "password" : "text"}
@@ -190,7 +241,7 @@ function Login() {
                             onFocus={() => {
                                 setShowMsg({ ...showMsg, showPassError: true })
                             }}
-                            placeholder={"Example123"}
+                            placeholder={"Example0123"}
                             inputRef={passwordInput}
                             error={showMsg.showPassError && !flagValidate.validPass}
                             onChange={(e) => checkPass(e.currentTarget.value)}
@@ -208,20 +259,23 @@ function Login() {
                                 This is a success Alert.
                             </Alert>
                         }
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={validForm}
-                            ref={submitButton}
-                        >
+                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 2,  padding: "8px 0px", fontWeight: 600}} disabled={validForm} ref={submitButton}>
                             Sign In
+                        </Button>
+                        <div class="form-link">
+                            <span>Don't have an account? <a href="http://localhost:3000/register" class="link signup-link">Sign up</a></span>
+                        </div>
+
+
+                        <div class="line" sx={{ mt: 2 }}></div>
+
+                        <Button fullWidth sx={{ mt: 2, mb: 2, fontWeight: 800}} variant="outlined" startIcon={<GoogleIcon />} size='medium' onClick={() => loginAccountGoogle()}>
+                            Login with Google
                         </Button>
                     </Box>
                 </Box>
-                <div style={{marginTop: '-70px'}}>
-                <Copyright sx={{ mt: 36, mb: 4 }} />
+                <div style={{ marginTop: '-70px' }}>
+                    <Copyright sx={{ mt: 36, mb: 4 }} />
                 </div>
             </Container>
         </ThemeProvider>

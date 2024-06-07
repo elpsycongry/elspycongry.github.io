@@ -1,0 +1,40 @@
+.form-link{
+    text-align: center;
+    margin-top: 10px;
+}
+.form-link span,
+.form-link a{
+    font-size: 14px;
+    font-weight: 400;
+    color: #232836;
+}
+.form-link a{
+    color: #0171d3;
+    text-decoration: none;
+}
+.form-content-link a:hover{
+    text-decoration: underline;
+}
+
+.line{
+    position: relative;
+    height: 1px;
+    width: 100%;
+    margin: 25px 0;
+    background-color: rgb(143, 134, 134);
+ }
+.line::before{
+    content: 'Or';
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    font-size: 20;
+    line-height: 1.334;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(231, 227, 227);
+    color: rgb(60, 57, 57);
+    padding: 0 15px;
+}
+

@@ -126,8 +126,7 @@ export default function Training() {
     //API danh sách môn học
     const fetchListSubjectSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
-        console.log("handled")
-        if (user != null) {
+         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/api/interns/subject").then((res) => {
                 setListSubjectSelect(res.data);
@@ -140,11 +139,9 @@ export default function Training() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             try {
-                console.log("ID: " + selectedRecruitmentPlan);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 axios.get(`http://localhost:8080/api/interns/searchValue?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}&recruitmentPlan=${selectedRecruitmentPlan}`).then((res) => {
                     setListIntern(res.data.content);
-                    console.log(res.data.content);
                     setPagination({
                         ...newPagination,
                         totalElements: res.data.totalElements,

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './components/pages/login/login';
-import Users from './components/users/users';
+import Register from './components/pages/login/register';
+import PageWait from './components/stats/standbyPage/pageWait';
+ import Users from './components/users/users';
 import AuthContext from './components/checkToken/AuthContext';
 import NotFoundPage from './components/pages/NotFoundPage/notFoundPage';
 import Training from './components/training/training';
@@ -14,7 +16,6 @@ import PersonalNeeds from './components/Recruitment/personalNeeds';
 import CandidateManagement from './components/Recruitment/candidateManagement';
 import RecruitmentPlan from './components/Recruitment/recruitmentPlan';
 import axiosInstance from './components/checkToken/axiosInstance';
-import Register from './components/pages/login/register';
 import ClientPage from './components/clientPage/clientPage';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/intern" element={<AuthContext><MarkInternModal userID={1} /></AuthContext>} />
                 <Route path="/login" element={<AuthContext><Login /></AuthContext>} />
                 <Route path="/register" element={<AuthContext><Register /></AuthContext>} />
+                <Route path="/pageWait" element={<AuthContext><PageWait /></AuthContext>} />
                 <Route path="/notFound" element={<NotFoundPage />} />
                 <Route path="/training" element={<AuthContext><Training /></AuthContext>} />
                 <Route path="/training/stats" element={<AuthContext><TrainingStats /></AuthContext>} />

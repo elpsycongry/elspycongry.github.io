@@ -3,6 +3,7 @@ import { enqueueSnackbar } from "notistack";
 import { Navigate } from "react-router-dom";
 import Login from "../pages/login/login";
 import Register from "../pages/login/register";
+import PageWait from "../stats/standbyPage/pageWait";
 
 function AuthContext({ children }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -23,7 +24,9 @@ function AuthContext({ children }) {
         const isDivisionManager = roles.includes('ROLE_DM');
         const isQualityController = roles.includes('ROLE_QC');
         const isHumanResource = roles.includes('ROLE_HR');
-        if (pathName === "/login") {
+        const status = currentUser.status;
+        const state = currentUser.state;
+        if (pathName === "/login" && state == true && status == true) {
             return <Navigate to="/dashboard" />;
         }
         if (pathName === '/users' && !isAdmin) {
@@ -34,6 +37,9 @@ function AuthContext({ children }) {
         }
         if ((pathName === "/training/stats" || pathName === "/recruitment/stats") && !isAdmin) {
             return <Navigate to="/dashboard" />;
+        }
+        if (pathName === '/pageWait' && state == false) {
+            return <Navigate to="/pageWait" />;
         }
     }
     return children ? <>{children}</> : <Navigate to="/notFound" />;
