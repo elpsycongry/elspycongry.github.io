@@ -17,15 +17,20 @@ export default function Email() {
         emailApi();
     }, [])
 
+    // Đang giới hạn số lượng mỗi template là 5 tin nhắn
     const check = () => {
         const recruitmentPlan = [];
         const personalNeed = [];
+        var a = 0;
+        var b = 0;
         toSend.forEach(item => {
             console.log(item.isRequest);
-            if (item.isRequest === 0) {
+            if (item.isRequest === 0 && a < 5) {
+                a++;
                 recruitmentPlan.push(item);
             }
-            if (item.isRequest === 1) {
+            if (item.isRequest === 1 && b < 5) {
+                b++;
                 personalNeed.push(item);
             }
         })
@@ -39,29 +44,29 @@ export default function Email() {
     }, [toSend])
 
 
-    console.log(dataSendRecruitmentPlan)
     console.log(dataSendPersonalNeed)
+    console.log(dataSendRecruitmentPlan)
     const serviceId = process.env.REACT_APP_API_SERVICE_ID;
     const templateIdRecruitmentPLan = process.env.REACT_APP_API_TEMPLATE_RECRUITMENT_PLAN_ID;
     const templateIdPersonalNeed = process.env.REACT_APP_API_TEMPLATE_PERSONAL_NEED_ID;
     const publicKey = process.env.REACT_APP_API_PUBLIC_KEY;
     const intervalRef = useRef(null);
-    const sendEmailBoth = (item,template) => {
+    const sendEmailBoth = (item, template) => {
         const templateParamsRcruitmentPLan = {
             to_email: item.toEmail,
             to_name: item.toName,
             intern_needs: item.internNeeds,
             intern_need_hand_over: item.internNeedHandOver,
-            name_recruitment_plan: item.namePersonalNeeds,
+            name_personal_needs: item.namePersonalNeeds,
             link_progress: item.linkProgress,
             date_start: item.dateStart,
             date_end: item.dateEnd,
             total_intern: item.totalIntern,
             pass_intern: item.passIntern,
-            trainning_intern: item.trainningIntern,
+            trainning_intern: item.trainingIntern,
             hand_over_intern: item.handOverIntern,
             fail_intern: item.failIntern,
-            not_trainning_intern: item.notTrainningIntern
+            not_trainning_intern: item.notTrainingIntern
         }
         emailjs.send(serviceId, template, templateParamsRcruitmentPLan, publicKey).then(
             (response) => {
@@ -71,93 +76,45 @@ export default function Email() {
             }
         )
     }
-
-    const sendEmailRecuitmentPlan = (item) => {
-        const templateParamsRcruitmentPLan = {
-            to_email: item.toEmail,
-            to_name: item.toName,
-            intern_needs: item.internNeeds,
-            intern_need_hand_over: item.internNeedHandOver,
-            name_recruitment_plan: item.namePersonalNeeds,
-            link_progress: item.linkProgress,
-            date_start: item.dateStart,
-            date_end: item.dateEnd,
-            total_intern: item.totalIntern,
-            pass_intern: item.passIntern,
-            trainning_intern: item.trainningIntern,
-            hand_over_intern: item.handOverIntern,
-            fail_intern: item.failIntern,
-            not_trainning_intern: item.notTrainningIntern
+    const sendEmailsSequentially = async (data, templateId) => {
+        const delay = 1000; // thời gian chờ giữa các email (ms)
+        for (const item of data) {
+            await sendEmailBoth(item, templateId);
+            await new Promise(resolve => setTimeout(resolve, delay));
         }
-        emailjs.send(serviceId, templateIdRecruitmentPLan, templateParamsRcruitmentPLan, publicKey).then(
-            (response) => {
-                console.log('Success!', response);
-            }, (error) => {
-                console.log(error.text);
-            }
-        )
-    }
-    const sendEmailPersonalneed = (item) => {
-        const templateParams = {
-            to_email: item.toEmail,
-            to_name: item.toName,
-            emailCc: item.emailCc,
-            intern_needs: item.internNeeds,
-            intern_need_hand_over: item.internNeedHandOver,
-            name_personal_needs: item.namePersonalNeeds,
-            link_progress: item.linkProgress,
-            date_start: item.dateStart,
-            date_end: item.dateEnd,
-            total_intern: item.totalIntern,
-            pass_intern: item.passIntern,
-            trainning_intern: item.trainningIntern,
-            hand_over_intern: item.handOverIntern,
-            fail_intern: item.failIntern,
-            not_trainning_intern: item.notTrainningIntern,
-        }
-        emailjs.send(serviceId, templateIdPersonalNeed, templateParams, publicKey).then(
-            (response) => {
-                console.log('Success!', response);
-            }, (error) => {
-                console.log(error.text);
-            }
-        )
-    }
-
-    const sendEmail = () => {
-        sendEmailRecuitmentPlan();
-        sendEmailPersonalneed();
-    }
-
+    };
     useEffect(() => {
         const dayNow = new Date();
         const dayCheck = dayNow.getDay();
-        const dateCheck = dayNow.getDate();
-        const monthCheck = dayNow.getMonth() + 1;
         const hoursCheck = dayNow.getHours();
+        const sendPersonalNeedEmails = () => {
+            return sendEmailsSequentially(dataSendPersonalNeed, templateIdPersonalNeed);
+        };
+        const sendRecruitmentPlanEmails = () => {
+            return sendEmailsSequentially(dataSendRecruitmentPlan, templateIdRecruitmentPLan);
+        };
+        // Demo check
 
-        if (dayCheck === 5 && hoursCheck === 16) {
-            dataSendPersonalNeed.map(item => {
-                sendEmailPersonalneed(item);
-            })
-            dataSendRecruitmentPlan.map(item => {
-                sendEmailRecuitmentPlan(item);
-            })
+        // if (hoursCheck === 12) {
+        //     sendPersonalNeedEmails()
+        //         .then(() => sendRecruitmentPlanEmails())
+        //         .catch(error => {
+        //             console.error('Error sending emails:', error);
+        //         });
+        // }
+        
+        // Check vào 4h chiều thứ 6 hàng tuần
+        if (dayCheck === 5 && hoursCheck === 13) {
+            // sendPersonalNeedEmails()
+            //     .then(() => sendRecruitmentPlanEmails())
+            //     .catch(error => {
+            //         console.error('Error sending emails:', error);
+            //     });
         }
-        // send check
-
-        // dataSendPersonalNeed.map(item => {
-        //     sendEmailBoth(item,templateIdPersonalNeed);
-        // })
-
-        // dataSendRecruitmentPlan.map(item => {
-        //     sendEmailBoth(item,templateIdRecruitmentPLan);
-        // })
-  
-        intervalRef.current = setInterval(sendEmail, 24 * 60 * 60 * 1000);
+        intervalRef.current = setInterval(sendEmailBoth, 24 * 60 * 60 * 1000);
         return () => clearInterval(intervalRef.current);
 
     }, [])
-    
+
     return null;
 }
