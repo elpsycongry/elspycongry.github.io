@@ -2,6 +2,8 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { Navigate } from "react-router-dom";
 import Login from "../pages/login/login";
+import Register from "../pages/login/register";
+import PageWait from "../stats/standbyPage/pageWait";
 
 // Context xác thực người dùng
 function AuthContext({ children }) {
@@ -12,8 +14,12 @@ function AuthContext({ children }) {
     if (!currentUser) {
         // Nếu chưa đăng nhập và đường dẫn không phải là trang chủ
         if (pathName !== "/") {
-            // Nếu đường dẫn là trang đăng nhập, trả về component Login, nếu không thì chuyển hướng đến trang chủ
-            return pathName === "/login" ? <Login /> : <Navigate to="/" />;
+            if (pathName === "/register") {
+                return <Register/>
+            } else{
+                return pathName === "/login" ? <Login /> : <Navigate to="/" />;
+            }
+
         }
     } else {
         // Nếu đã đăng nhập
@@ -23,9 +29,11 @@ function AuthContext({ children }) {
         const isDivisionManager = roles.includes('ROLE_DM'); // Kiểm tra xem người dùng có vai trò quản lý bộ phận hay không
         const isQualityController = roles.includes('ROLE_QC'); // Kiểm tra xem người dùng có vai trò kiểm soát chất lượng hay không
         const isHumanResource = roles.includes('ROLE_HR'); // Kiểm tra xem người dùng có vai trò nhân sự hay không
-        
+        const status = currentUser.status;
+        const state = currentUser.state;
+       
         // Điều hướng người dùng đã đăng nhập đến trang dashboard nếu họ cố gắng truy cập trang đăng nhập
-        if (pathName === "/login") {
+        if (pathName === "/login" && state == true && status == true) {
             return <Navigate to="/dashboard" />;
         }
         // Nếu người dùng không phải admin, ngăn họ truy cập trang quản lý người dùng
@@ -39,6 +47,10 @@ function AuthContext({ children }) {
         // Nếu người dùng không phải admin, ngăn họ truy cập các trang thống kê
         if ((pathName === "/training/stats" || pathName === "/recruitment/stats") && !isAdmin) {
             return <Navigate to="/dashboard" />;
+        }
+        //Người dùng đăng nhập tài khoản và vào trang chờ xác nhận từ Admin
+        if (pathName === '/pageWait' && state == false) {
+            return <Navigate to="/pageWait" />;
         }
     }
     // Trả về các children nếu không có vấn đề gì, nếu không chuyển hướng đến trang không tìm thấy

@@ -10,43 +10,37 @@ import {
     Link, Switch,
     Tooltip
 } from "@mui/material";
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Footer from "../fragment/footer/footer";
 import Header from "../fragment/header/header";
 import Navbar from "../fragment/navbar/navbar";
-// import "../../assets/css/cssRecruitment/recruitment.css";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.css"
 import ClearIcon from '@mui/icons-material/Clear';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import CreateIcon from '@mui/icons-material/Create';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import axios from "axios";
 import './users.css'
 import DialogUpdateUserForm from "./updateUser";
-import BlockUser from "./blockUser";
 import DialogAddUserForm from "./addUser";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import ToggleButton from '@mui/material/ToggleButton';
+import swal from 'sweetalert';
+import './blockUser.css';
+import ReportIcon from '@mui/icons-material/Report';
+
 
 export default function Users() {
-
-    const location = useLocation();
-    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const handleClickPracticeOpen = () => {
-        setOpen(true);
-    }
     const handleClickPracticeClose = () => {
         setOpen(false);
     }
-    const [status, setStatus] = useState('');
     const [token, setToken] = useState("")
     const [listRoleSelect, setListRoleSelect] = useState([])
     const [listUser, setListUser] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
+    const [selectedState, setSelectedState] = useState('');
     const previousRolef = useRef('');
     const [pagination, setPagination] = useState({
         page: 0,
@@ -57,8 +51,13 @@ export default function Users() {
     useEffect(() => {
         handleFilterWithFields(pagination);
         fetchListRoleSelect();
-    }, [selectedRole])
+    }, [selectedRole, selectedState]);
 
+    const listState = [
+        { id: 1, text: "Đang chờ duyệt", name: "await" },
+        { id: 2, text: "Đã duyệt và hoạt động", name: "action" },
+        { id: 3, text: "Đã bị chặn", name: "block" }
+    ]
 
     // const fetchListRoleSelect = async () => {
     const fetchListRoleSelect = async () => {
@@ -74,7 +73,7 @@ export default function Users() {
 
     const handleChangeSearch = (event) => {
         setSearchTerm(event.target.value);
-        if (selectedRole != "") {
+        if (selectedRole !== "") {
             setPagination.page = 0;
         }
     };
@@ -85,6 +84,12 @@ export default function Users() {
         handleFilterWithFields(pagination);
 
     };
+
+    const handleStateChange = (event) => {
+        setSelectedState(event.target.value);
+        pagination.page = 0;
+        handleFilterWithFields(pagination);
+    }
 
     const handlePageChange = (event, value) => {
         setPagination(prev => {
@@ -100,7 +105,7 @@ export default function Users() {
         if (user != null) {
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}`)
+                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}&state=${selectedState}`)
                     .then((res) => {
                         setListUser(res.data.content);
                         setPagination({
@@ -113,6 +118,45 @@ export default function Users() {
                 console.log(error);
             }
         }
+    };
+
+    const blockUserWithId = async (userId, isBlocked, userState) => {
+        if (userState === true) {
+            swal({
+                title: "Bạn có chắc chắn?",
+                text: isBlocked ? "Người dùng không thực hiện bất kỳ tác vụ nào!" : "Người dùng sẽ có thể thực hiện các tác vụ!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(async (willDelete) => {
+                if (willDelete) {
+                    try {
+                        const user = JSON.parse(localStorage.getItem("currentUser"));
+                        if (user != null) {
+                            axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                            await axios.post(`http://localhost:8080/admin/block/${userId}`, { isBlocked });
+                            handleFilterWithFields();
+                            swal(isBlocked ? "Đã chặn quyền truy cập người dùng!" : "Đã bỏ chặn quyền truy cập người dùng!", {
+                                icon: "success",
+                                dangerMode: true
+                            });
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        swal("Đã xảy ra lỗi khi xử lý yêu cầu!", {
+                            icon: "error",
+                        });
+                    }
+                } else {
+                    swal("Không có thay đổi nào được lưu!");
+                }
+            });
+        } else {
+            swal("Người dùng chưa được cấp quyền truy cập!", {
+                icon: "error",
+            });
+        }
+
     };
 
     function Copyright(props) {
@@ -136,14 +180,6 @@ export default function Users() {
                 <div style={{ display: 'flex' }}>
                     <div>
                         <Box m={2} style={{ display: 'flex', marginBottom: '8px', marginTop: '10px' }}>
-                            {/* <Breadcrumbs
-                        aria-label='breadcrumb'
-                        separator={<NavigateNextIcon fontSize="small" />}>
-                        <Link underline="hover" href='#'>Home</Link>
-                        <Link underline="hover" href='#'>Catalog</Link>
-                        <Link underline="hover" href='#'>Access</Link>
-                        <Typography color='text.primary'><GroupIcon /> Users</Typography>
-                    </Breadcrumbs> */}
                             <GroupIcon style={{ paddingBottom: '3px', color: 'rgba(0, 0, 0, 0.60)' }} />
                             <p style={{
                                 color: 'rgba(0, 0, 0, 0.60)',
@@ -205,24 +241,35 @@ export default function Users() {
                                         <InputLabel className="top-left" id="demo-simple-small-label">
                                             Vai trò...</InputLabel>
                                         <Select
-                                            sx={{
-                                                // height: '30px',
-                                                // paddingTop: '0px',
-                                                // paddingBottom: '0px',
-                                                backgroundColor: 'white',
-                                                // width: '300px'
-                                            }}
+                                            sx={{ backgroundColor: 'white'}}
                                             labelId="demo-simple-small-label"
                                             className="select-edit"
                                             id="demo-simple-select"
                                             label="Vai trò..."
                                             value={selectedRole}
                                             onChange={handleRoleChange}
-                                        // onClick={handleFilterRole}
                                         >
                                             <MenuItem value={""} >Tất cả</MenuItem>
                                             {listRoleSelect.map(item => (
                                                 <MenuItem value={item.id} key={item.id}>{item.display_name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl className="select-form ml-10 status" sx={{ minWidth: '300px' }}>
+                                        <InputLabel className="top-left" id="demo-simple-small-label">Trạng thái người dùng...</InputLabel>
+                                        <Select
+                                            sx={{ backgroundColor: 'white'}}
+                                            labelId="demo-simple-small-label"
+                                            className="select-edit "
+                                            id="demo-simple-select"
+                                            label="Trạng thái thực tập..."
+                                            value={selectedState}
+                                            onChange={handleStateChange}
+                                        >
+
+                                            <MenuItem value={""} >Tất cả</MenuItem>
+                                            {listState.map(item => (
+                                                <MenuItem value={item.name} key={item.id}>{item.text}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -253,9 +300,15 @@ export default function Users() {
                                 {listUser.map((item, index) => (
                                     <tr className="grey-text count-tr" key={item.id}>
                                         <td className="user-id">{index + 1 + pagination.page * pagination.size}</td>
-                                        <td style={{ padding: '8px' }} className="user-name">
-                                            <Tooltip title={item.name} arrow>
-                                                <span className="user-name">{item.name}</span>
+                                        <td style={{ padding: '8px' }}>
+                                            <Tooltip title={item.status ? "Đã cấp quyền" : "Chờ xác nhận"} placement="right-end" arrow>
+                                                {item.state === true ? (
+                                                    <span> {item.name}</span>
+                                                ) : (
+                                                    <span style={{ color: '#ec9d00' }}>
+                                                        {item.name}
+                                                    </span>
+                                                )}
                                             </Tooltip>
                                         </td>
                                         <td>{item.email}</td>
@@ -271,25 +324,39 @@ export default function Users() {
                                                     ))
                                                 )
                                             ) : (
-                                                'Hiện tại chưa có vai trò'
+                                                "Đang chờ phê duyệt"
                                             )}
                                         </td>
                                         <td>
-                                            <Tooltip title={item.status ? "Được phép truy cập" : "Không được phép truy cập"}>
-                                                <div>
-                                                    <BlockUser
-                                                        inputProps={{ 'aria-label': 'controlled' }}
-                                                        token={token}
-                                                        userId={item.id}
-                                                        status={item.status}
-                                                        onUpdate={handleFilterWithFields}
-                                                    />
-                                                </div>
-                                            </Tooltip>
+                                        {item.state === true ? ( ""
+                                                ) : (
+                                                       <ReportIcon style={{
+                                                        width: "32px",
+                                                        height: "32px",
+                                                        color: '#ec9d00',
+                                                        borderRadius: "100%",
+                                                        fontSize: "24px",
+                                                        marginRight: "8px"}}
+                                                        />
+                                                )}
+                                            <ToggleButton
+                                                value="check"
+                                                selected={item.status}
+                                                onClick={() => blockUserWithId(item.id, item.status, item.state)}
+                                                style={{
+                                                    backgroundColor: item.status && item.state ? "green" : "red",
+                                                    color: "white",
+                                                    marginLeft: "5px",
+                                                    width: "10px",
+                                                    height: "10px",
+                                                    borderRadius: "50%",
+                                                }}
+                                            >
+                                                {item.status && item.state ? <CheckIcon /> : <CloseIcon sx={{ bgcolor: 'red', borderRadius: '100%' }} />}
+                                            </ToggleButton>
+
                                         </td>
                                         <td className="user-actions">
-                                            {/* <RemoveRedEyeIcon className="color-blue white-div font-size-large" /> */}
-
                                             <DialogUpdateUserForm token={token} userId={item.id} onUpdate={handleFilterWithFields} />
 
                                         </td>
@@ -297,15 +364,6 @@ export default function Users() {
                                 ))}
                             </tbody>
                         </div>
-
-                        {/* <Stack spacing={1} style={{marginTop: '190px', alignItems: 'center', alignItems: 'center', marginTop: '50px' }}>
-                            <Pagination
-                                count={Math.ceil(pagination.totalElements / pagination.size)}
-                                page={pagination.page + 1}
-                                shape="rounded"
-                                onChange={handlePageChange}
-                            />
-                        </Stack> */}
                     </div>
 
                     <div className="position-absolute w-100" style={{ bottom: '12px' }}>
@@ -321,12 +379,6 @@ export default function Users() {
             <div style={{ paddingTop: '30px', paddingBottom: '0px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <Copyright sx={{ maxWidth: '100%' }} />
             </div>
-            {/* <Footer /> */}
-            {/* <div style={{ paddingTop: '50px', paddingBottom: '20px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                    <Copyright sx={{ maxWidth: '100%' }} />
-                </div> */}
-            {/* </Box > */}
-            {/* <Footer /> */}
         </>
     );
 }

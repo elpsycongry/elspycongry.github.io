@@ -1,22 +1,16 @@
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import React, { useState } from 'react';
 import {
-    Button,
-    Checkbox,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    FormControlLabel,
-    FormGroup,
-    TextField,
-    Tooltip
+    Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography,
+    TextField, FormGroup, FormControlLabel, Checkbox, Button, Tooltip
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { useSnackbar } from 'notistack';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
 import * as Yup from 'yup';
-import '../../assets/css/cssRecruitment/recruitment.css';
 import './addUser.css';
+import '../../assets/css/cssRecruitment/recruitment.css';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export default function DialogAddUserForm({ token, onAdd }) {
     const [open, setOpen] = useState(false);
@@ -30,7 +24,7 @@ export default function DialogAddUserForm({ token, onAdd }) {
             phone: "",
             password: "",
             roles: [],
-            status: true
+            status: false
         },
         validationSchema: Yup.object({
             name: Yup.string()
@@ -46,11 +40,8 @@ export default function DialogAddUserForm({ token, onAdd }) {
                 'Số điện thoại không hợp lệ'
             ),
             password: Yup.string()
-            .matches(/^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[a-zA-Z0-9]).{8,}$/, 'Mật khẩu phải có ít nhất 8 ký tự và có ít nhất 1 ký tự đặc biệt')
+            .matches( /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/g, 'Mật khẩu phải có ít nhất 8 ký tự và có ít nhất 1 ký tự đặc biệt')
             .required('Mật khẩu không được bỏ trống'),
-            roles: Yup.array()
-                .min(1, 'Phải chọn ít nhất một vai trò')
-                .required('Phải chọn ít nhất một vai trò'),
         }),
         validate: async (values) => {
             const errors = {};
