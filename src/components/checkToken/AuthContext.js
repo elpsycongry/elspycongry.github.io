@@ -1,14 +1,16 @@
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
-import { Navigate } from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import Login from "../pages/login/login";
 import Register from "../pages/login/register";
 import PageWait from "../stats/standbyPage/pageWait";
+import {useEffect} from "react";
 
 // Context xác thực người dùng
 function AuthContext({ children }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser")); // Lấy thông tin người dùng hiện tại từ localStorage
     const pathName = window.location.pathname; // Lấy đường dẫn hiện tại
+    const navigate = useNavigate()
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     if (!currentUser) {
@@ -19,9 +21,18 @@ function AuthContext({ children }) {
             } else{
                 return pathName === "/login" ? <Login /> : <Navigate to="/" />;
             }
-
         }
     } else {
+        // console.log(currentUser)
+        axios.get(`http://localhost:8080/api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
+                console.log(res)
+        }
+        ).catch(e => {
+            localStorage.removeItem("currentUser"); // Xóa thông tin người dùng khỏi localStorage
+            window.location.href= 'http://localhost:3000/';
+           // doLogout(navigate)
+        })
+
         // Nếu đã đăng nhập
         const roles = currentUser.roles.map(role => role.authority); // Lấy danh sách vai trò của người dùng
         const isAdmin = roles.includes('ROLE_ADMIN'); // Kiểm tra xem người dùng có vai trò admin hay không
@@ -31,7 +42,7 @@ function AuthContext({ children }) {
         const isHumanResource = roles.includes('ROLE_HR'); // Kiểm tra xem người dùng có vai trò nhân sự hay không
         const status = currentUser.status;
         const state = currentUser.state;
-       
+
         // Điều hướng người dùng đã đăng nhập đến trang dashboard nếu họ cố gắng truy cập trang đăng nhập
         if (pathName === "/login" && state == true && status == true) {
             return <Navigate to="/dashboard" />;
@@ -53,6 +64,7 @@ function AuthContext({ children }) {
             return <Navigate to="/pageWait" />;
         }
     }
+
     // Trả về các children nếu không có vấn đề gì, nếu không chuyển hướng đến trang không tìm thấy
     return children ? <>{children}</> : <Navigate to="/notFound" />;
 }
@@ -69,10 +81,8 @@ export function doLogout(navigate) {
                 Authorization: `Bearer ${user.accessToken}` // Thêm token vào header
             }
         }).then(() => {
-            enqueueSnackbar("Đăng xuất thành công", { variant: "success" }); // Hiển thị thông báo thành công
         }).catch(e => {
             console.error(e); // In lỗi ra console
-            enqueueSnackbar("Có lỗi xảy ra không thể đăng xuất", { variant: "error" }); // Hiển thị thông báo lỗi
         });
 
         localStorage.removeItem("currentUser"); // Xóa thông tin người dùng khỏi localStorage
@@ -81,5 +91,6 @@ export function doLogout(navigate) {
         navigate("/"); // Nếu không có người dùng, điều hướng trực tiếp đến trang chủ
     }
 }
+
 
 export default AuthContext;
