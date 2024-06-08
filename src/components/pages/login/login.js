@@ -61,7 +61,6 @@ function Login() {
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
-        console.log(data);
         axios.post("http://localhost:8080/login", data).then(
             res => {
                 if (res.data.code === "401") {
@@ -74,8 +73,7 @@ function Login() {
                 }
                 if (res.data.code === "202") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    navigate("/pageWait")
+                    navigate("/pageWait", {state: {data}})
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
@@ -158,7 +156,7 @@ function Login() {
                 });
                 const dataGoogle = {
                     email: userInfo.data.email,
-                    password: userInfo.data.email
+                    password: "Email0" + userInfo.data.email
                 };
                 console.log(dataGoogle);
                 axios.post("http://localhost:8080/login", dataGoogle).then(
@@ -173,6 +171,8 @@ function Login() {
                         }
                         if (res.data.code === "202") {
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            navigate("/pageWait", {state: {dataGoogle}})
+
                         }
                         setFlagValidate({ ...flagValidate, validSubmit: true })
                     }

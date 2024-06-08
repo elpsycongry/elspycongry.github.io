@@ -184,7 +184,7 @@ function Register() {
                     name: userInfo.data.name,
                     phone: "",
                     email: userInfo.data.email,
-                    password: userInfo.data.email,
+                    password: "Email0" + userInfo.data.email,
                 };
                 console.log(dataGoogle);
                 axios.post("http://localhost:8080/register", dataGoogle).then(

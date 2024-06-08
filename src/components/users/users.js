@@ -303,19 +303,9 @@ export default function Users() {
                                         <td style={{ padding: '8px' }}>
                                             <Tooltip title={item.status ? "Đã cấp quyền" : "Chờ xác nhận"} placement="right-end" arrow>
                                                 {item.state === true ? (
-                                                    <span>
-                                                        {item.name}
-                                                    </span>
+                                                    <span> {item.name}</span>
                                                 ) : (
-                                                    
-                                                    <span style={{ color: 'orange' }}>
-                                                        <ReportIcon style={{
-                                                        width: "32px",
-                                                        height: "32px",
-                                                        borderRadius: "50%",
-                                                        fontSize: "24px",
-                                                        marginRight: "8px"
-                                                    }} />
+                                                    <span style={{ color: '#ec9d00' }}>
                                                         {item.name}
                                                     </span>
                                                 )}
@@ -334,10 +324,21 @@ export default function Users() {
                                                     ))
                                                 )
                                             ) : (
-                                                'Hiện tại chưa có vai trò'
+                                                "Đang chờ phê duyệt"
                                             )}
                                         </td>
                                         <td>
+                                        {item.state === true ? ( ""
+                                                ) : (
+                                                       <ReportIcon style={{
+                                                        width: "32px",
+                                                        height: "32px",
+                                                        color: '#ec9d00',
+                                                        borderRadius: "100%",
+                                                        fontSize: "24px",
+                                                        marginRight: "8px"}}
+                                                        />
+                                                )}
                                             <ToggleButton
                                                 value="check"
                                                 selected={item.status}

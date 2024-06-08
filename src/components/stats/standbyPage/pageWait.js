@@ -9,9 +9,15 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Alert, IconButton, InputAdornment } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import './pageWait.css';
- 
+import { useEffect } from "react";
+
+import './pageWait.css';
+import { useSnackbar } from 'notistack';
+
 
 function Copyright(props) {
 
@@ -42,7 +48,40 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function PageWait() {
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate()
+    const {state} = useLocation();
+    const {data} = state;
 
+    useEffect(() => {
+        loginAccount()
+    });
+
+    const loginAccount = async () => {
+        try {
+            console.log("PageWait");
+            console.log(data)
+            axios.post("http://localhost:8080/login", data).then(
+                res => {
+                    if (res.data.code === "401") {
+                        enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    }
+                    if (res.data.code === "200") {
+                        localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                        enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                        navigate("/dashboard")
+                    }
+                    if (res.data.code === "202") {
+                        localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                    }
+                }
+            ).catch(reason => {
+                enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container style={{ paddingTop: '140px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
@@ -58,15 +97,15 @@ function PageWait() {
                     <Avatar style={{ width: '100px', height: '100px' }} sx={{ m: 1, bgcolor: '#282781' }}>
                         <img src={logoImage} style={{ width: '80px', height: '80px' }} />
                     </Avatar>
-                    <Typography variant="h2" style={{ paddingTop: '40px'}}>Chờ đến khi admin phê duyệt</Typography>
+                    <Typography variant="h2" style={{ paddingTop: '40px' }}>Tài khoản cần chờ admin phê duyệt!</Typography>
                     <div class="form-link">
-                            <span>Quay về trang đăng nhập? <a href="http://localhost:3000/login" class="link signup-link">Sign in</a></span>
-                     </div>
+                        <span>Quay về trang đăng nhập? <a href="http://localhost:3000/login" class="link signup-link">Sign in</a></span>
+                    </div>
                 </Box>
-              
+
             </Container>
             <div style={{ marginTop: '-70px' }}>
-                    <Copyright sx={{ mt: 36, mb: 4 }} />
+                <Copyright sx={{ mt: 36, mb: 4 }} />
             </div>
         </ThemeProvider>
     )
