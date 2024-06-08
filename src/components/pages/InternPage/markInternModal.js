@@ -19,6 +19,8 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import { set } from "lodash";
+import { ClearIcon } from "@mui/x-date-pickers";
 
 export function MarkInternModal({ userID, updateFunction }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
@@ -31,6 +33,7 @@ export function MarkInternModal({ userID, updateFunction }) {
     const [finalScoreValue, setFinalScoreValue] = useState();
     const [finalResultPass, setFinalResultPass] = useState(null);
     const [inValidSave, setInV21alidSave] = useState(false);
+    const [checkNumberOfRecruitment, setCheckNumberOfRecruitment] = useState(false)
     // alert
     const [openAlert, setOpenAlert] = useState(false);
     const handleClose = () => {
@@ -220,6 +223,11 @@ export function MarkInternModal({ userID, updateFunction }) {
     // Tính kết quả thực tập theo điểm tổng kết và đánh giá team
     const fetchFinalResultPass = (finalScore, inTeamScore) => {
         // Set fail nếu training state là stop_training
+        if (data.isPass != null) {
+            setFinalResultPass(data.isPass)
+            return
+        }
+
         if (data.trainingState === 'stop_training') {
             setFinalResultPass(false)
             return
@@ -262,9 +270,15 @@ export function MarkInternModal({ userID, updateFunction }) {
 
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
+        axios.get('http://localhost:8080/api/interns/checkNumberOfRecruitment?id=' + userID).then(res1 => {
+            if (res1.data === "enough") {
+                setCheckNumberOfRecruitment(true)
+            }
+        })
         axios.get(`http://localhost:8080/api/interns/?id=${userID}`).then(res => {
             checkCommentSubject(res.data)
             setData(res.data)
+            setFinalResultPass(data.isPass)
         })
     }, [open]);
 
@@ -558,14 +572,30 @@ export function MarkInternModal({ userID, updateFunction }) {
                                 className={"back-btn"}>
                                 HUỶ
                             </button>
-                            <button
-                                disabled={inValidSave}
-                                onClick={() => {
-                                    handleSubmit()
-                                }}
-                                className={"save-btn"}>
-                                LƯU
-                            </button>
+                            {checkNumberOfRecruitment === true ? (
+                                <Tooltip arrow
+                                placement={'top'}
+                                title="Kế hoạch tuyển dụng này đã hoàn thành">
+                                    <button 
+                                        disabled
+                                        onClick={() => {
+                                            handleSubmit()
+                                        }}
+                                        className={"save-btn"}>
+                                        LƯU
+                                    </button>
+                                </Tooltip>
+                                
+
+                            ) :
+                                <button
+                                    onClick={() => {
+                                        handleSubmit()
+                                    }}
+                                    className={"save-btn"}>
+                                    LƯU
+                                </button>
+                            }
                         </>
                         )
                     }

@@ -15,7 +15,6 @@ export function SubmenuNotification({markAllReaded}) {
     return (
         <>
             <Tippy
-
                 animation={false}
                 onClickOutside={toggle}
                 visible={open}
@@ -24,7 +23,7 @@ export function SubmenuNotification({markAllReaded}) {
                 render={(...attrs) =>
                     <div className={'setting-container'}>
                         <div className={"setting-items"}>
-                            <div className={'setting-item'} onClick={markAllReaded}><Done className={'icon'} />Đánh dấu tất cả là đã đọc</div>
+                            <div className={'setting-item'} onClick={() => {markAllReaded(); toggle()}}><Done className={'icon'} />Đánh dấu tất cả là đã đọc</div>
                         </div>
                     </div>
                 }

@@ -1,0 +1,57 @@
+.header-toolbar {
+    padding: 0 4px;
+}
+
+.header-logo {
+    width: 30px;
+    height: 30px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.header-link {
+    text-decoration: none;
+    margin-right: 10px;
+    margin-top: 10px;
+    height: 100%;
+}
+
+.btn-codegym {
+    background-color: #E7E3E3;
+    color: black;
+    width: 160px;
+    margin-right: 10px;
+}
+
+.btn-codegym:hover {
+    background-color: #282781;
+    color: #FFA500;
+}
+
+/* Mobile-specific styles */
+.header-toolbar-mobile {
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-title-mobile {
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.header-buttons-mobile {
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+}
+
+.header-link {
+    width: 180px;
+    text-align: center;
+    margin-right: 0;
+    margin-bottom: 8px;
+}

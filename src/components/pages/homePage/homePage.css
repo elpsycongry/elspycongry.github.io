@@ -18,7 +18,7 @@
 .smaller-div-container {
     display: flex;
     justify-content: space-between;
-    height: 100%;
+    height: 330px;
     padding: 30px;
 }
 
@@ -46,14 +46,17 @@
 .smaller-icon-container {
     width: 200px;
     height: 100%;
+    position: relative;
 }
 
 .smaller-icon-container-icon {
     width: 60%;
     height: 60%;
     color: white;
-    margin-top: 150px;
     float: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 .first-div {
@@ -70,4 +73,78 @@
 
 .fourth-div {
     background-color: green;
+}
+
+.box-change-dashboard{
+    margin-left: 64px;
+}
+
+/* Mobile: width < 740px */
+@media only screen and (max-width: 46.1875em) {
+    .small-div-container {
+        width: 100%; /* Full width on mobile */
+        height: auto; /* Auto height to fit content */
+    }
+
+    .smaller-div-container {
+        flex-direction: column; /* Stack content vertically */
+        padding: 15px; /* Reduce padding */
+        width: 100%;
+        justify-content: center;
+    }
+
+    .smaller-content, .smaller-icon-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .smaller-icon-container-icon {
+        justify-content: center;
+    }
+
+    .smaller-content-data {
+        padding-left: 0; /* Remove left padding */
+        padding-top: 10px; /* Adjust top padding */
+        justify-content: center;
+        padding: 10px;
+        text-wrap: nowrap;
+    }
+
+    .box-change-dashboard{
+        margin-left: 35px;
+    }
+
+    .large-div-container {
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        flex-direction: column;
+    }
+}
+
+/* Tablet: width >= 740px and < 1024px */
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .small-div-container {
+        width: 45%; /* Adjust width for tablet */
+        height: auto; /* Auto height to fit content */
+    }
+
+    .smaller-div-container {
+        padding: 20px; /* Adjust padding */
+    }
+
+    .smaller-content, .smaller-icon-container {
+        width: 50%; /* Adjust width */
+        height: 130px;
+    }
+
+    .smaller-content-data {
+        padding-left: 15px; /* Adjust left padding */
+        padding-top: 10px; /* Adjust top padding */
+        justify-content: center;
+        padding: 27px;
+        text-wrap: nowrap;
+    }
 }

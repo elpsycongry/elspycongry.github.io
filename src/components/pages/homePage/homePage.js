@@ -1,14 +1,7 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
-import logoImage from '../../../assets/image/logoCodeGym.png'
-import { doLogout } from "../../checkToken/AuthContext";
 import Navbar from '../../fragment/navbar/navbar';
 import Header from '../../fragment/header/header';
 import { Icon } from '@iconify/react';
@@ -16,11 +9,6 @@ import './homePage.css';
 import axios from 'axios';
 import { Link } from '@mui/material';
 
-// const HomeIcon = () => {
-//     return (
-//         <Icon icon="fa:home" width="25" height="25" />
-//     )
-// }
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -57,7 +45,7 @@ const HomePage = () => {
         "haveNotInterviewedYet": 0,
         "candidatePass": 0,
         "candidateFail": 0
-});
+    });
     const [intern, setIntern] = React.useState({
         "totalIntern": 0,
         "internTraining": 0,
@@ -95,7 +83,7 @@ const HomePage = () => {
         <>
             <Header />
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', marginLeft: '64px', bgcolor: 'rgb(231, 227, 227)' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, marginTop: '57px', bgcolor: 'rgb(231, 227, 227)' }} className='box-change-dashboard'>
                 <Box m={2} style={{ display: 'flex', marginBottom: '11px' }}>
                     <Icon icon="fa:home" width="24" height="24" style={{ color: 'rgba(0, 0, 0, 0.60)', paddingBottom: '6px' }} />
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)' }}>Dashboard</p>
@@ -123,7 +111,7 @@ const HomePage = () => {
                                     </div>
                                 </div>
                                 <div className='smaller-icon-container'>
-                                    <Icon icon="fa:home" className='smaller-icon-container-icon' style={{ height: '120px' }} />
+                                    <Icon icon="ri:user-voice-fill" className='smaller-icon-container-icon' />
                                 </div>
                             </div>
                         </div>
@@ -208,7 +196,7 @@ const HomePage = () => {
                 </Box>
             </Box>
             <div style={{ paddingTop: '70px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                    <Copyright sx={{ maxWidth: '100%' }} />
+                <Copyright sx={{ maxWidth: '100%' }} />
             </div>
         </>
     );
