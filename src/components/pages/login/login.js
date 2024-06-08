@@ -143,7 +143,6 @@ function Login() {
 
     const loginAccountGoogle = useGoogleLogin({
         onSuccess: async (response) => {
-
             try {
                 // Lấy access token
                 const { access_token } = response;
