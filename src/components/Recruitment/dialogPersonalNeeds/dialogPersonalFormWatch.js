@@ -396,7 +396,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                             <StepLabel className={`ws-nowrap svg-size  ${steps.intern !== steps.totalIntern ? 'svg-size-none' : ''}`}>
                                                                 <span className="d-flex flex-column align-items-start mt-12">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
                                                                     {steps.intern !== 0 ?
-                                                                        <Link to={``} className="a-progress cursor-pointer">Xem nhân sự</Link>
+                                                                        <Link to={`/training?&planName=${steps.planName}&is_pass=Pass`} className="a-progress cursor-pointer">Xem nhân sự</Link>
                                                                         :
                                                                         <Link className="a-progress"></Link>
                                                                     }
