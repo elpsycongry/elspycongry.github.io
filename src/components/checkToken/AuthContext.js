@@ -1,28 +1,36 @@
 import axios from "axios";
-import { enqueueSnackbar } from "notistack";
-import { Navigate } from "react-router-dom";
+import {enqueueSnackbar} from "notistack";
+import {Navigate, useNavigate} from "react-router-dom";
 import Login from "../pages/login/login";
 import Register from "../pages/login/register";
 import PageWait from "../stats/standbyPage/pageWait";
+import {useEffect} from "react";
 
 // Context xác thực người dùng
-function AuthContext({ children }) {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser")); // Lấy thông tin người dùng hiện tại từ localStorage
-    const pathName = window.location.pathname; // Lấy đường dẫn hiện tại
+function AuthContext({children}) {
 
-    // Kiểm tra xem người dùng đã đăng nhập hay chưa
-    if (!currentUser) {
-        // Nếu chưa đăng nhập và đường dẫn không phải là trang chủ
-        if (pathName !== "/") {
-            if (pathName === "/register") {
-                return <Register/>
-            } else{
-                return pathName === "/login" ? <Login /> : <Navigate to="/" />;
-            }
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+    const pathName = window.location.pathname;
 
+    if (currentUser === null) {
+        if (pathName !== "/login" && pathName !== "/register") {
+            console.log('redirect')
+            return <Navigate to="/login"/>
         }
     } else {
-        // Nếu đã đăng nhập
+        axios.get(`http://localhost:8080/api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
+                console.log(res)
+            }
+        ).catch(e => {
+            axios.post("http://localhost:8080/logoutUser", {}, {
+                headers: {
+                    Authorization: `Bearer ${currentUser.accessToken}` // Thêm token vào header
+                }
+            })
+            localStorage.removeItem("currentUser");
+            window.location.href= 'http://localhost:3000/';
+        })
+
         const roles = currentUser.roles.map(role => role.authority); // Lấy danh sách vai trò của người dùng
         const isAdmin = roles.includes('ROLE_ADMIN'); // Kiểm tra xem người dùng có vai trò admin hay không
         const isManager = roles.includes('ROLE_TM'); // Kiểm tra xem người dùng có vai trò quản lý hay không
@@ -31,29 +39,33 @@ function AuthContext({ children }) {
         const isHumanResource = roles.includes('ROLE_HR'); // Kiểm tra xem người dùng có vai trò nhân sự hay không
         const status = currentUser.status;
         const state = currentUser.state;
-       
-        // Điều hướng người dùng đã đăng nhập đến trang dashboard nếu họ cố gắng truy cập trang đăng nhập
-        if (pathName === "/login" && state == true && status == true) {
-            return <Navigate to="/dashboard" />;
+
+        if (pathName === '/') {
+                return <Navigate to={"/dashboard"}/>
         }
-        // Nếu người dùng không phải admin, ngăn họ truy cập trang quản lý người dùng
+        if (pathName === '/users') {
+            if (!isAdmin) {
+                return <Navigate to={"/dashboard"}/>
+            }
+        }
+        if (pathName === "/training") {
+            if (!isAdmin && !isManager) {
+                return <Navigate to={"/dashboard"}/>
+            }
+        }
         if (pathName === '/users' && !isAdmin) {
-            return <Navigate to="/dashboard" />;
+            return <Navigate to="/dashboard"/>;
         }
-        // Nếu người dùng không phải admin hoặc quản lý, ngăn họ truy cập trang đào tạo
-        if (pathName === "/training" && !isAdmin && !isManager) {
-            return <Navigate to="/dashboard" />;
+        if (pathName === "/training/stats") {
+            if (!isAdmin) {
+                return <Navigate to={"/"}/>
+            }
         }
-        // Nếu người dùng không phải admin, ngăn họ truy cập các trang thống kê
-        if ((pathName === "/training/stats" || pathName === "/recruitment/stats") && !isAdmin) {
-            return <Navigate to="/dashboard" />;
+        if (pathName === "/login") {
+            return <Navigate to="/dashboard"/>
         }
-        //Người dùng đăng nhập tài khoản và vào trang chờ xác nhận từ Admin
-        if (pathName === '/pageWait' && state == false) {
-            return <Navigate to="/pageWait" />;
-        }
+
     }
-    // Trả về các children nếu không có vấn đề gì, nếu không chuyển hướng đến trang không tìm thấy
     return children ? <>{children}</> : <Navigate to="/notFound" />;
 }
 
@@ -69,10 +81,8 @@ export function doLogout(navigate) {
                 Authorization: `Bearer ${user.accessToken}` // Thêm token vào header
             }
         }).then(() => {
-            enqueueSnackbar("Đăng xuất thành công", { variant: "success" }); // Hiển thị thông báo thành công
         }).catch(e => {
             console.error(e); // In lỗi ra console
-            enqueueSnackbar("Có lỗi xảy ra không thể đăng xuất", { variant: "error" }); // Hiển thị thông báo lỗi
         });
 
         localStorage.removeItem("currentUser"); // Xóa thông tin người dùng khỏi localStorage
@@ -81,5 +91,6 @@ export function doLogout(navigate) {
         navigate("/"); // Nếu không có người dùng, điều hướng trực tiếp đến trang chủ
     }
 }
+
 
 export default AuthContext;

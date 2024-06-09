@@ -9,10 +9,12 @@ import './notification.scss'
 import {useEffect, useRef, useState} from "react";
 import {Tooltip} from "@mui/material";
 import axios from "axios";
-import {NotificationsNone, NotificationsPaused} from "@mui/icons-material";
+import {MoreVert, NotificationsNone, NotificationsPaused} from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 import {NotificationItem} from "./notificationItem";
 import {useNavigate} from "react-router-dom";
+import {SubmenuNotification} from "./submenuNotification";
+
 
 export function Notification() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
@@ -27,54 +29,54 @@ export function Notification() {
 
     const [renderData, setRenderData] = useState(
         [
-            //     {
-            //         id: 1,
-            //         content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
-            //         timestamp: "1 phút trước",
-            //         link: "",
-            //         isRead: false,
-            //     }, {
-            //     id: 2,
-            //     content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
-            //     timestamp: "1 giờ trước",
-            //     isRead: false,
-            //     link: '/'
-            // }, {
-            //     id: 3,
-            //     content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
-            //     timestamp: "5 giây trước",
-            //     isRead: false,
-            // }, {
-            //     id: 4,
-            //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            //     timestamp: "3 ngày trước",
-            //     isRead: true,
-            // }, {
-            //     id: 5,
-            //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            //     timestamp: "5 ngày trước",
-            //     isRead: true,
-            // }, {
-            //     id: 6,
-            //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            //     timestamp: "5 ngày trước",
-            //     isRead: true,
-            // }, {
-            //     id: 7,
-            //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            //     timestamp: "5 ngày trước",
-            //     isRead: true,
-            // }, {
-            //     id: 8,
-            //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            //     timestamp: "5 ngày trước",
-            //     isRead: true,
-            // }, {
-            //     id: 9,
-            //     content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
-            //     timestamp: "5 ngày trước",
-            //     isRead: true,
-            // },
+                {
+                    id: 1,
+                    content: "Nhu cầu nhân sự abc xyz vừa bị từ chối",
+                    timestamp: "1 phút trước",
+                    link: "",
+                    isRead: false,
+                }, {
+                id: 2,
+                content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Bị từ chối bởi DET. ",
+                timestamp: "1 giờ trước",
+                isRead: false,
+                link: '/'
+            }, {
+                id: 3,
+                content: "Nhu cầu nhân sự tháng 3 vừa cập nhật trạng thái: Đang tuyển dụng",
+                timestamp: "5 giây trước",
+                isRead: false,
+            }, {
+                id: 4,
+                content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+                timestamp: "3 ngày trước",
+                isRead: true,
+            }, {
+                id: 5,
+                content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+                timestamp: "5 ngày trước",
+                isRead: true,
+            }, {
+                id: 6,
+                content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+                timestamp: "5 ngày trước",
+                isRead: true,
+            }, {
+                id: 7,
+                content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+                timestamp: "5 ngày trước",
+                isRead: true,
+            }, {
+                id: 8,
+                content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+                timestamp: "5 ngày trước",
+                isRead: true,
+            }, {
+                id: 9,
+                content: "Nhu cầu nhân sự abc xyz vừa bị tử chối",
+                timestamp: "5 ngày trước",
+                isRead: true,
+            },
         ]
     );
     const navigate = useNavigate();
@@ -105,6 +107,13 @@ export function Notification() {
         renderData[index].isRead = true
         await setRenderData([...renderData])
     }
+    // const markAllReaded = async () => {
+    //     renderData.map((item) => {
+    //         item.isRead = true
+    //     })
+    //     await setRenderData([...renderData])
+    // }
+
 
     useEffect(() => {
         if (renderData) {
@@ -142,19 +151,20 @@ export function Notification() {
     }
     return (
         <Tippy
-
             placement={"bottom-end"}
             onClickOutside={() => {
                 sendDatas().then(handleToggle)
             }}
-
             visible={open}
             interactive
             render={() => (
                 <div className={"notification-container"}>
                     <div className={"wrapper"}>
                         <div className={"header"}>
-                            <h4 className={"title"}>Thông báo</h4>
+                            <div className={'top-header'}>
+                                <h4 className={"title"}>Thông báo</h4>
+                                {/*<SubmenuNotification markAllReaded={markAllReaded}/>*/}
+                            </div>
                             <div className={"btns"}>
                                 <div
                                     className={type === 'all' ? 'btn selected' : 'btn '}
@@ -211,7 +221,6 @@ export function Notification() {
                     :
                     <NotificationsNone sx={{fontSize: '35px'}}/>
                 }
-
             </StyledIconWrapper>
         </Tippy>
     )
@@ -230,7 +239,7 @@ export async function sendNotifications(
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const notificationInfo = {
-        creatorId: creatorId || currentUser.id, // Nếu creatorId là null hoặc rỗng, gán giá trị là người dùng hiện tại
+        creatorId: creatorId , // Nếu creatorId là null hoặc rỗng, gán giá trị là người dùng hiện tại
         content: content,
         listRoleReceiver: roleReceiver,
         listReceiverId: listReceiverId,

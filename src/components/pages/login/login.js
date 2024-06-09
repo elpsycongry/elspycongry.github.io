@@ -136,14 +136,13 @@ function Login() {
     // Disabled submit nếu một trong các flag là false
     const validForm = Object.values(flagValidate).some(value => !value);
 
-    // Tạo các ref dể lấy giá trị của input nếu cần
+    // Tạo các ref dể lấy giá trị của input
     const emailInput = React.useRef();
     const passwordInput = React.useRef();
     const submitButton = React.useRef();
 
     const loginAccountGoogle = useGoogleLogin({
         onSuccess: async (response) => {
-
             try {
                 // Lấy access token
                 const { access_token } = response;
