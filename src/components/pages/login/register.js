@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useGoogleLogin } from '@react-oauth/google';
 import './login.css';
 import GoogleIcon from '@mui/icons-material/Google';
+import {sendNotifications} from "../../Notification/notification";
 
 function Copyright(props) {
     return (
@@ -61,7 +62,7 @@ function Register() {
         axios.post("http://localhost:8080/register", data).then(
             res => {
                 if (res.data.code === "400" || res.data.code === "409") {
-                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                    // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
 
@@ -182,21 +183,27 @@ function Register() {
                 });
                 const dataGoogle = {
                     name: userInfo.data.name,
-                    phone: "",
+                    phone: "PhoneEmail",
                     email: userInfo.data.email,
                     password: "Email0" + userInfo.data.email,
                 };
-                console.log(dataGoogle);
                 axios.post("http://localhost:8080/register", dataGoogle).then(
                     res => {
+                        console.log(res.status)
                         if (res.data.code === "400" || res.data.code === "409") {
-                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                         }
 
-                        if (res.data.code === "201") {
-                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                        if (res.status == 200 || res.status == 201) {
+                            // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                             enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            sendNotifications(
+                                null,
+                                `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
+                                ['ROLE_ADMIN'],
+                                null,
+                                `/users?idUser=${res.data.id}`)
                             navigate("/login")
                         }
                         setFlagValidate({ ...flagValidate, validSubmit: true })
