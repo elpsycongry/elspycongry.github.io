@@ -1,0 +1,140 @@
+.notificateIcon:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+.notification-container {
+
+  background-color: white;
+  width: 400px;
+  height: 410px;
+  border-radius: 5px;
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.5);
+  color: black;
+
+  .wrapper {
+    overflow-y: scroll;
+
+    .header {
+      padding: 13px 5px 5px 13px;
+      border-bottom: 1px solid rgba(0,0,0,0.2);
+      color: black;
+      min-height: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      justify-content: center;
+
+      .title {
+        margin: 0;
+        margin-bottom: 5px;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .btns {
+        display: flex;
+        margin-top: 5px;
+
+        .btn {
+          font-size: 0.9rem;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-weight: 600;
+          margin-right: 6px;
+          &:hover {
+            background-color: #ffecc8;
+          }
+          &.selected {
+            background-color: #ffecc8;
+            color: #fea400;
+          }
+        }
+      }
+    }
+
+    .body {
+      overflow-y: scroll;
+      max-height: 320px;
+
+      /* width */
+      &::-webkit-scrollbar {
+        width: 7px;
+        margin-right: 2px ;
+      }
+
+      /* Track */
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background: #818181;
+        border-radius: 15px;
+      }
+
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: #696868;
+      }
+      .noti-item {
+        padding: 5px 35px 5px 15px;
+        position: relative;
+        word-break: break-word;
+        text-wrap: wrap;
+        text-align: justify;
+        line-height: 1.2;
+        min-height: 60px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .avatar {
+          width: 40px;
+          height: 40px;
+          margin-right: 8px;
+        }
+        .read-doc {
+          position: absolute;
+          right: 12px;
+          top: 40%;
+          background-color: #0f6aff;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          padding: 5px;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        .content{
+
+        }
+
+        .time{
+          font-size: 0.9rem;
+          padding-left: 2px;
+          color: #696767;
+        }
+
+        &:hover {
+          cursor: pointer;
+          background-color: #efeeee;
+        }
+      }
+    }
+  }
+}
+
+.noti-placeholder {
+  font-size: 1.2rem;
+  padding-top: 40px;
+  text-align: center;
+  color: #727171;
+  .icon .MuiSvgIcon-root {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+}

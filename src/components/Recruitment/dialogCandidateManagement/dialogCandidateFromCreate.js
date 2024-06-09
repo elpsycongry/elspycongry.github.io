@@ -187,6 +187,7 @@ export default function DialogCandidateFormCreate({userRoles}) {
                 buttons: false,
                 timer: 1000,
               }).then(() => {
+                
                 window.location.href = "/recruitment/candidateManagement";
               });
             });

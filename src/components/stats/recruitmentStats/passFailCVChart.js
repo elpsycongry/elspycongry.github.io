@@ -1,26 +1,50 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Box } from '@mui/material';
 import { size } from 'lodash';
+import axios from 'axios';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 export default function PassFailCVChart() {
+    const pdfRef = useRef(null); 
+    const [recruitmentChart, setRecuitmentChart] = useState(new Array(12).fill({
+        candidatesPass: 0,
+        candidatesFail: 0,
+    }));
+    useEffect(() => {
+        const fetchData = async () => {
+            const user = JSON.parse(localStorage.getItem("currentUser"))
+            if (user != null) {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=2024`);
+                    setRecuitmentChart(response.data)
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+        };
+
+        fetchData();
+    }, []);
     const data = {
         labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         datasets: [
             {
                 label: 'Ứng viên PASS',
-                data: [2, 3, 4, 0, 5, 0, 0, 0, 0, 0, 0, 0],
+                data: recruitmentChart.map(item => item.candidatesPass),
                 backgroundColor: 'rgba(75, 75, 75, 0.6)',
                 borderColor: 'rgba(75, 75, 75, 1)',
                 borderWidth: 1
             },
             {
                 label: 'Ứng viên FAIL',
-                data: [7, 29, 39, 6, 55, 0, 10, 0, 0, 0, 0, 0],
+                data: recruitmentChart.map(item => item.candidatesFail),
                 backgroundColor: 'rgba(54, 162, 235, 0.6)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -72,8 +96,12 @@ export default function PassFailCVChart() {
             legend: {
                 position: 'bottom',
                 labels: {
+                    usePointStyle: true,
+                    pointStyle: 'shape',
+                    padding: 30,
                     font: {
-                        size: 20,
+                        size: 18,
+                        weight: 700
                     }
                 }
             },
@@ -131,8 +159,17 @@ export default function PassFailCVChart() {
     };
 
     return (
-        <Box sx={{ height: 1, padding: 2, width: "80%" }}>
+        <Box sx={{ height: 1, padding: 2, width: "80%" }} ref={pdfRef}>
             <Bar data={data} options={options} plugins={[totalPlugin]} />
+            <p style={{ 
+                textAlign: 'center', 
+                fontFamily: 'sans-serif', 
+                fontStyle: 'italic', 
+                paddingTop: '10px',
+                color: 'red' 
+            }}>
+                ( *Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
+            </p>
         </Box>
     );
 }

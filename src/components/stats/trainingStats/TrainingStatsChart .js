@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable'
+// import PDFDocument from '@react-pdf/renderer'
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import {
     Chart as ChartJS,
@@ -13,10 +17,63 @@ import {
     Filler
 } from 'chart.js';
 import axios from 'axios';
+import { head, size } from 'lodash';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 export default function TrainingStatsChart({ year }) {
+    const date = new Date();
+    const pdfRef = useRef(null); 
+    const downloadPDF = async () =>{
+        const canvas = await html2canvas(pdfRef.current);
+        const imgData = canvas.toDataURL('image/png');
+        
+        
+        const pdf = new jsPDF('p', 'mm', 'a4'); // Tạo một tài liệu PDF với kích thước A4
+    ;
+        
+        // Tính toán kích thước và vị trí của ảnh để chèn vào tài liệu PDF
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pdfWidth * 1; // 80% chiều rộng của trang PDF
+        const imgHeight = (canvas.height * imgWidth) / canvas.width; // Tính toán chiều cao tương ứng
+        const imgX = (pdfWidth - imgWidth) / 2; // Canh giữa theo chiều ngang
+        // const imgY = (pdfHeight - imgHeight) / 1.3; // Canh giữa theo chiều dọc
+        const imgY = 20;
+        pdf.setFontSize(12)
+        pdf.text('Intern training line chart in 2024', 73, 18);
+        pdf.text('Intern training parameters', 73, imgY + imgHeight + 15);
+        pdf.setFontSize(20)
+        pdf.text('Intern training chart in 2024', 65, 10)
+        
+        pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
+
+        pdf.autoTable({
+            head:[['Month' ,'Intern Enrolled', 'Intern Graduate', 'Intern Fail', 'Intern Leave']],
+            body: trainingCharts.map((val, i) => [(i + 1) , val.internsEnrolled, val.graduatingInterns, val.internsFailed, val.internsQuitInternship]),
+            startY: imgY + imgHeight + 20, // Vị trí y cho bảng, sau ảnh
+            styles: {
+                halign: 'center',
+                cellWidth: 'wrap',
+                lineColor: [0, 0, 0],  // Set border color (black)
+                lineWidth: 0.1,        // Set border width
+            },
+            headStyles: {
+                halign: 'center',
+                fillColor: [255, 255, 255], // Background color for the header
+                textColor: [0, 0, 0],       // Text color for the header
+                lineWidth: 0.1,             // Border width for the header
+                lineColor: [0, 0, 0]        // Border color for the header
+            },
+            bodyStyles: {
+                lineWidth: 0.1,             // Border width for the body
+                lineColor: [0, 0, 0]        // Border color for the body
+            }
+            })
+
+        
+            pdf.save('chart/' + '/' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()  + '.pdf'); // Tải xuống tài liệu PDF
+    }
     const [trainingCharts, setTrainingCharts] = useState([
         {
             "averageGraduationScore": 0,
@@ -128,8 +185,7 @@ export default function TrainingStatsChart({ year }) {
         }
     ]);
     const [hiddenDatasets, setHiddenDatasets] = useState([]);
-    console.log(year);
-    console.log(trainingCharts);
+
     useEffect(() => {
         const fetchData = async () => {
             const user = JSON.parse(localStorage.getItem("currentUser"))
@@ -138,8 +194,6 @@ export default function TrainingStatsChart({ year }) {
                 try {
                     const response = await axios.get("http://localhost:8080/api/stats/trainingCharts/year?year=" + year);
                     setTrainingCharts(response.data);
-                    console.log(response.data);
-                    console.log(trainingCharts);
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -243,7 +297,7 @@ export default function TrainingStatsChart({ year }) {
                     usePointStyle: true,
                     pointStyle: 'shape',
                     font: {
-                        size: 20,
+                        size: 18,
                         weight: 700
                     },
                     padding: 30,
@@ -307,13 +361,24 @@ export default function TrainingStatsChart({ year }) {
     };
 
     return (
-        <Box sx={{ width: '80%', height: '490px', padding: 2 }}>
+        <Box sx={{ width: '80%', height: '585px', padding: 2 }} ref={pdfRef}>
+            <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-stats-green' onClick={downloadPDF}>Export PDF</button>
             <div style={{ width: '100%', height: '100%' }}>
-                <Line data={data} options={options} />
+                <Line  data={data} options={options} />
             </div>
             <div>
                 {hiddenDatasets.join(', ')}
             </div>
+            <p style={{ 
+                textAlign: 'center', 
+                fontFamily: 'sans-serif', 
+                fontStyle: 'italic', 
+                paddingTop: '10px',
+                color: 'red' 
+            }}>
+                *( Vui lòng click vào các chú thích trên khi bạn muốn ẩn/ hiện dữ liệu )
+            </p>
+            
         </Box>
     );
 }

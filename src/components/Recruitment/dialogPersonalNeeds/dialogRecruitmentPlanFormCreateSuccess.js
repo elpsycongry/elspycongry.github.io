@@ -7,6 +7,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import axios from "axios";
 import swal from "sweetalert";
 import { useFormik } from "formik";
+import { sendNotifications } from "../../Notification/notification";
 
 export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClose ,userRoles}) {
   const [dateErr, setDateErr] = useState(false);
@@ -18,7 +19,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
   const user = JSON.parse(localStorage.getItem("currentUser"))
   // Xử lý số lượng nhân sự
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_TM");
   };
   const checkValid = (dateSet, techArr, dateCreate, nameRecruitmentPlan) => {
     const futureDate = new Date(dateCreate);
@@ -161,6 +162,8 @@ export default function DialogRecruitmentPlanFormCreateSuccess({ id, open, onClo
                 buttons: false,
                 timer: 2000,
               }).then(() => {
+                sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,['ROLE_DM'])
+                .then(sendNotifications(null,`Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,['ROLE_HR']))
                 window.location.href = "/recruitment/recruitmentPlan";
               });
             });

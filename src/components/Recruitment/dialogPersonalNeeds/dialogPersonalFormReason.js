@@ -9,11 +9,11 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import swal from "sweetalert";
+import { sendNotifications } from "../../Notification/notification";
 
 
-export default function DialogPersonalFormReason({ idUser, open, onClose }) {
+export default function DialogPersonalFormReason({nameNeedPlan,data, idUser, open, onClose }) {
     const [reason, setReason] = useState('');
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -26,6 +26,7 @@ export default function DialogPersonalFormReason({ idUser, open, onClose }) {
                     buttons: false,
                     timer: 2000
                 }).then(() => {
+                    sendNotifications(null,`Nhu cầu nhân sự ${nameNeedPlan} bị từ chối bởi DET`,['ROLE_DM'],null,`/recruitment/personalNeeds?idRequest=${data.values.recruitmentRequest.id}`)
                     window.location.href = "/recruitment/personalNeeds";
                 });
             });

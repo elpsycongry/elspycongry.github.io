@@ -8,8 +8,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ToggleButton from '@mui/material/ToggleButton';
 import axios from "axios";
-import swal from 'sweetalert';
-
+import swal from 'sweetalert'; 
+import './blockUser.css';
 
 export default function BlockUser({ userId, status, onUpdate }) {
     const [isBlocked, setIsBlocked] = React.useState(status);
@@ -32,6 +32,7 @@ export default function BlockUser({ userId, status, onUpdate }) {
               setIsBlocked(!isBlocked);
               swal(isBlocked ? "Đã chặn quyền truy cập người dùng!" : "Đã bỏ chặn quyền truy cập người dùng!", {
                 icon: "success",
+                dangerMode: true
               });
             }
           } catch (error) {
@@ -61,7 +62,7 @@ export default function BlockUser({ userId, status, onUpdate }) {
             borderRadius: "50%",
           }}
         >
-          {isBlocked ? <CheckIcon /> : <CloseIcon sx={{bgcolor: 'red', borderRadius: '100%'}} />}
+          {isBlocked ? <CheckIcon /> : <CloseIcon sx={{bgcolor: 'gray', borderRadius: '100%'}} />}
         </ToggleButton>
       </React.Fragment>
     );

@@ -8,6 +8,7 @@ import axios from "axios";
 import swal from "sweetalert";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { sendNotifications } from "../../Notification/notification";
 
 export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
   const [dateErr, setDateErr] = useState(false);
@@ -201,7 +202,9 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
                 buttons: false,
                 timer: 2000,
               }).then(() => {
-                window.location.href = "/recruitment/recruitmentPlan";
+                sendNotifications(null,`Nhu cầu nhân sự ${formData.values.recruitmentPlan.recruitmentRequest.name} vừa cập nhật trạng thái: Đã xác nhận`,['ROLE_DM'])
+                .then(sendNotifications(null,`Có kế hoạch tuyển dụng mới: ${formData.values.recruitmentPlan.name} `,['ROLE_HR']))
+                .then(window.location.href = "/recruitment/recruitmentPlan");
               });
             });
         } catch (error) {
@@ -218,7 +221,7 @@ export default function DialogRecruitmentPlanFormCreate({ userRoles }) {
 
   const [recuitments, setRecuitment] = useState([]);
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_TM");
   };
   console.log(hasRoleAdmin());
   useEffect(() => {

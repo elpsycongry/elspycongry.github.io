@@ -51,9 +51,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
         return false;
       }
     })
-    console.log(errNumberR);
     const hasErrNumber = errNumberR.some(item => item === true);
-    console.log(hasErrNumber);
     setErrNumber(hasErrNumber)
     //
     var hasErrOfPersonal;
@@ -149,7 +147,6 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
     },
     onSubmit: async (values, { setSubmitting }) => {
       values.idUser = idUser;
-      console.log(values.recruitmentPlan.recruitmentRequest.id);
       const personalneed = values.recruitmentPlan.recruitmentRequest.id;
       const nameRecruitmentPlan = values.recruitmentPlan.name;
       if (values.recruitmentPlan.dateRecruitmentEnd === '') {
@@ -226,7 +223,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
     { id: 11, text: ".NET" },
   ];
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_QLĐT");
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_TM");
   };
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {

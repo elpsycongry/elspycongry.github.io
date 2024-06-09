@@ -107,7 +107,7 @@ export default function DialogPersonalFormUpdate({ id, check,userRoles,idUser })
         console.log(values);
         try {
           await axios.put("http://localhost:8080/api/recruitmentRequests/" + id, values).then(res => {
-            swal(" cập nhật nhu cầu nhân sự thành công", {
+            swal("cập nhật nhu cầu nhân sự thành công", {
               icon: "success",
               buttons: false,
               timer: 2000

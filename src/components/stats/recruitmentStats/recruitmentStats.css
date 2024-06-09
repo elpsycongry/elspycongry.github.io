@@ -4,5 +4,6 @@
 }
 
 .btn-stats-gray:hover{
-    background-color: #b2aeae;
+    background-color: #a59e9e;
+    color: #ffc107 !important;
 }
