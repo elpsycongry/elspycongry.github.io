@@ -189,13 +189,13 @@ function Register() {
                 };
                 axios.post("http://localhost:8080/register", dataGoogle).then(
                     res => {
-                        console.log(res.status)
+                        console.log(res)
                         if (res.data.code === "400" || res.data.code === "409") {
                             // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                         }
 
-                        if (res.status == 200) {
+                        else if (res.status == 200) {
                             // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                             // enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                             sendNotifications(
