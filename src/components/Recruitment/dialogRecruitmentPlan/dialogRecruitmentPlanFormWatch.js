@@ -26,9 +26,9 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
   const hasRoleKSCL = () => {
     return userRoles.some((role) => role.authority === "ROLE_QC");
   };
-  
+
   const [dropProgress, setDropProgress] = useState(true);
-  const clickProgress = () =>{
+  const clickProgress = () => {
     setDropProgress(!dropProgress);
   }
   // Dữ liệu fake
@@ -393,7 +393,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                   >
                     <span className="span-progress position-relative">
                       Quy trình
-                      <KeyboardArrowUpIcon className={`Icon-Keyboard ${dropProgress? '' : 'active'} position-absolute`} />
+                      <KeyboardArrowUpIcon className={`Icon-Keyboard ${dropProgress ? '' : 'active'} position-absolute`} />
                     </span>
                   </AccordionSummary>
                   <AccordionDetails>
@@ -470,9 +470,19 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                           </Step>
                           <Step>
                             {steps.step >= 5 ?
-                              <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự <a className="a-progress"></a></span> </StepLabel>
+                              <StepLabel className={`ws-nowrap svg-size  ${steps.intern !== steps.totalIntern ? 'svg-size-none' : ''}`}>
+                                <span className="d-flex flex-column align-items-start mt-12">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
+                                  {steps.intern !== 0 ?
+                                    <Link to={``} className="a-progress cursor-pointer">Xem nhân sự</Link>
+                                    :
+                                    <Link className="a-progress"></Link>
+                                  }
+                                </span>
+                              </StepLabel>
                               :
-                              <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
+                              <StepLabel className="ws-nowrap svg-size"><span
+                                className="d-flex flex-column align-items-start"> <a></a></span>
+                              </StepLabel>
                             }
                           </Step>
                         </Stepper>

@@ -110,6 +110,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/process/request/${id}`);
+                console.log(response.data);
                 setSteps(response.data);
             } catch (error) {
                 console.error(error);
@@ -392,9 +393,15 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                     </Step>
                                                     <Step>
                                                         {steps.step >= 5 ?
-                                                            <StepLabel className="ws-nowrap svg-size"><span
-                                                                className="d-flex flex-column align-items-start">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự <a
-                                                                    className="a-progress"></a></span> </StepLabel>
+                                                            <StepLabel className={`ws-nowrap svg-size  ${steps.intern !== steps.totalIntern ? 'svg-size-none' : ''}`}>
+                                                                <span className="d-flex flex-column align-items-start mt-12">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
+                                                                    {steps.intern !== 0 ?
+                                                                        <Link to={``} className="a-progress cursor-pointer">Xem nhân sự</Link>
+                                                                        :
+                                                                        <Link className="a-progress"></Link>
+                                                                    }
+                                                                </span>
+                                                            </StepLabel>
                                                             :
                                                             <StepLabel className="ws-nowrap svg-size"><span
                                                                 className="d-flex flex-column align-items-start"> <a></a></span>
@@ -468,7 +475,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
                             ))
                         )}
-                   
+
 
                     </form>
                 </DialogTitle>

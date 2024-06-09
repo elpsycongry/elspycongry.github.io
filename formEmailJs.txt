@@ -6,7 +6,7 @@ change data in To email is {{to_email}}
 
 
 
-<p>Xin ch&agrave;o <strong>{{to_name}}</strong>,<br><em>Aristotle</em> b&aacute;o c&aacute;o tiến độ tuyển dụng của nhu cầu '<strong>{{name_personal_needs}}'</strong> từ ng&agrave;y <strong>{{date_start}}</strong> đến <strong>{{date_end}}.</strong></p>
+<p>Xin ch&agrave;o <strong>{{to_name}}</strong>,<br><em>Aristotle</em> b&aacute;o c&aacute;o tiến độ tuyển dụng của nhu cầu "<strong>{{name_personal_needs}}"</strong> từ ng&agrave;y <strong>{{date_start}}</strong> đến <strong>{{date_end}}.</strong></p>
 <p>T&ecirc;n nhu cầu:<strong> {{name_personal_needs}}</strong> :&nbsp;</p>
 <ul>
 <li><em>Số thực tập sinh đầu v&agrave;o</em>: <strong>{{intern_needs}}</strong></li>
@@ -43,7 +43,7 @@ change data in To email is {{to_email}}
 
 
 
-<p>Xin ch&agrave;o <strong>{{to_name}}</strong>,<br><em>Aristotle</em> b&aacute;o c&aacute;o tiến độ tuyển dụng của kế hoạch '<strong>{{name_personal_needs}}'</strong> từ ng&agrave;y <strong>{{date_start}}</strong> đến <strong>{{date_end}}.</strong></p>
+<p>Xin ch&agrave;o <strong>{{to_name}}</strong>,<br><em>Aristotle</em> b&aacute;o c&aacute;o tiến độ tuyển dụng của kế hoạch "<strong>{{name_personal_needs}}"</strong> từ ng&agrave;y <strong>{{date_start}}</strong> đến <strong>{{date_end}}.</strong></p>
 <p>T&ecirc;n kế hoạch:<strong> {{name_personal_needs}}</strong>&nbsp;</p>
 <ul>
 <li><em>Số thực tập sinh đầu v&agrave;o</em>: <strong>{{intern_needs}}</strong></li>

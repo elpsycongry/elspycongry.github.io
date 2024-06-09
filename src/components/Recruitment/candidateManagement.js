@@ -31,7 +31,12 @@ import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandida
 import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
 import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
 import { useLocation } from 'react-router-dom';
-export default function CandidateManagement() {
+export default function CandidateManagement() {  
+    
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const planName = queryParams.get('planName') || '';
+  
     const CustomPopper = styled(Popper)({
         '& .MuiAutocomplete-listbox': {
             maxHeight: '255px',
@@ -54,7 +59,7 @@ export default function CandidateManagement() {
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [recruitmentPlan, setRecruitmentPlan] = useState([]);
-    const [selectPlan, setSelectPlan] = useState('');
+    const [selectPlan, setSelectPlan] = useState(planName);
     const [currentPage, setCurrentPage] = useState(1);
 
 
@@ -149,9 +154,11 @@ export default function CandidateManagement() {
         if (user != null) {
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                const res = await axios.get('http://localhost:8080/api/plansIntern')
-                setRecruitmentPlan(res.data.content);
+                const res = await axios.get('http://localhost:8080/api/plans')
+                console.log(res.data)
+                setRecruitmentPlan(res.data);
             } catch (error) {
+                console.log(error);
             }
         }
     }
@@ -294,8 +301,7 @@ export default function CandidateManagement() {
                                             ))}
                                     </Select>
                                 </FormControl>
-
-                                <Autocomplete
+                                 <Autocomplete
                                     className='ml-10 select-form auto-complete'
                                     disablePortal
                                     id="combo-box-demo"
@@ -308,7 +314,6 @@ export default function CandidateManagement() {
                                             setInputValue(event.target.value);
                                         } else {
                                             setInputValue(value);
-
                                         }
                                     }}
                                     onKeyPress={handleEnterChange}

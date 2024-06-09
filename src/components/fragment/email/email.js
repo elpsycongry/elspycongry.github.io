@@ -94,13 +94,12 @@ export default function Email() {
             return sendEmailsSequentially(dataSendRecruitmentPlan, templateIdRecruitmentPLan);
         };
         // Demo check
-
-        if (hoursCheck === 10) {
-            sendPersonalNeedEmails()
-                .then(() => sendRecruitmentPlanEmails())
-                .catch(error => {
-                    console.error('Error sending emails:', error);
-                });
+        if (hoursCheck === 19) {
+            // sendPersonalNeedEmails()
+            //     .then(() => sendRecruitmentPlanEmails())
+            //     .catch(error => {
+            //         console.error('Error sending emails:', error);
+            //     });
         }
         
         // Check vào 4h chiều thứ 6 hàng tuần
