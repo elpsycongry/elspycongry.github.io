@@ -50,11 +50,11 @@ export default function CandidateManagement() {
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const [recuitments, setRecuitment] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState(status);
+    const [selectedStatus, setSelectedStatus] = useState();
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [recruitmentPlan, setRecruitmentPlan] = useState([]);
-    const [selectPlan, setSelectPlan] = useState(planName);
+    const [selectPlan, setSelectPlan] = useState();
     const [currentPage, setCurrentPage] = useState(1);
 
 
@@ -195,8 +195,6 @@ export default function CandidateManagement() {
 
     useEffect(() => {
         getAll(page)
-        setSelectedStatus(status);
-        setSelectPlan(planName);
     }, [page]);
 
     const handlePagination = (event, value) => {

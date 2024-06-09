@@ -266,66 +266,6 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                 {formData.values.recruitmentRequest.status}
                             </p>
                         </div>
-                        {/* {!hasRoleKSCL() ? */}
-                        {formData.values.recruitmentRequest.status ===
-                            "Bị từ chối bởi DET" ? (
-                            <div className="col-md-12 mt-2 d-flex ">
-                                <label
-                                    htmlFor="time"
-                                    style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
-                                    className="form-label fs-20 me-2"
-                                >
-                                    Lý do:
-                                </label>
-                                <textarea
-                                    readOnly
-                                    className="form-control resize pt-2 "
-                                    style={{ color: "#838383" }}
-                                    value={formData.values.recruitmentRequest.reason}>
-                                </textarea>
-                            </div>
-                        ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" || formData.values.recruitmentRequest.status === "Đang tuyển dụng" ? ("") :
-                            (formData.values.recruitmentRequest.status === "Bị từ chối bởi DECAN" ? (
-                                <div className="col-md-12 mt-2 d-flex ">
-                                    <label
-                                        htmlFor="time"
-                                        style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
-                                        className="form-label fs-20 me-2">
-
-                                        Lý do:
-                                    </label>
-                                    <textarea
-                                        readOnly
-                                        className="form-control resize pt-2 "
-                                        style={{ color: "#838383" }}
-                                        value={formData.values.recruitmentRequest.reason}
-                                    ></textarea>
-                                </div>
-                            ) : (
-                                hasRoleAdmin() && (
-                                    <div className="col-md-12 mt-0 d-flex">
-                                        <div className="col-md-3 mt-2">
-                                            <button
-                                                type="button"
-                                                className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
-                                                onClick={handleCloseWatchOpenReason}
-                                            >
-                                                Từ chối
-                                            </button>
-                                        </div>
-                                        <div className="col-md-9 mt-2 ms-2">
-                                            <button
-                                                type="button"
-                                                className=" btn-edit btn btn-success w-98   bg-clr-success"
-                                                onClick={handleCloseWatchOpenCreate}>
-                                                Khởi tạo kế hoạch tuyển dụng
-                                            </button>
-                                        </div>
-                                    </div>
-                                )
-
-                            ))
-                        )}
                         <div className=" mt-0">
                             <div className="col-md-12 mt-2 progressDiv">
                                 <Accordion>
@@ -468,6 +408,67 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                 </Accordion>
                             </div>
                         </div>
+                        {/* {!hasRoleKSCL() ? */}
+                        {formData.values.recruitmentRequest.status ===
+                            "Bị từ chối bởi DET" ? (
+                            <div className="col-md-12 mt-2 d-flex ">
+                                <label
+                                    htmlFor="time"
+                                    style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                                    className="form-label fs-20 me-2"
+                                >
+                                    Lý do:
+                                </label>
+                                <textarea
+                                    readOnly
+                                    className="form-control resize pt-2 "
+                                    style={{ color: "#838383" }}
+                                    value={formData.values.recruitmentRequest.reason}>
+                                </textarea>
+                            </div>
+                        ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" || formData.values.recruitmentRequest.status === "Đang tuyển dụng" ? ("") :
+                            (formData.values.recruitmentRequest.status === "Bị từ chối bởi DECAN" ? (
+                                <div className="col-md-12 mt-2 d-flex ">
+                                    <label
+                                        htmlFor="time"
+                                        style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                                        className="form-label fs-20 me-2">
+
+                                        Lý do:
+                                    </label>
+                                    <textarea
+                                        readOnly
+                                        className="form-control resize pt-2 "
+                                        style={{ color: "#838383" }}
+                                        value={formData.values.recruitmentRequest.reason}
+                                    ></textarea>
+                                </div>
+                            ) : (
+                                hasRoleAdmin() && (
+                                    <div className="col-md-12 mt-0 d-flex">
+                                        <div className="col-md-3 mt-2">
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
+                                                onClick={handleCloseWatchOpenReason}
+                                            >
+                                                Từ chối
+                                            </button>
+                                        </div>
+                                        <div className="col-md-9 mt-2 ms-2">
+                                            <button
+                                                type="button"
+                                                className=" btn-edit btn btn-success w-98   bg-clr-success"
+                                                onClick={handleCloseWatchOpenCreate}>
+                                                Khởi tạo kế hoạch tuyển dụng
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+
+                            ))
+                        )}
+                   
 
                     </form>
                 </DialogTitle>

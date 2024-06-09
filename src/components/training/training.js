@@ -51,8 +51,6 @@ export default function Training() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const planName = queryParams.get('planName') || '';
-    // const status = queryParams.get('status') || '';
-    // const location = useLocation();
 
     const [open, setOpen] = useState(false);
 
@@ -69,7 +67,7 @@ export default function Training() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTrainingState, setSelectedTrainingState] = useState('');
     const [listRecruitmentPlan, setListRecruitmentPlan] = useState([]);
-    const [selectedRecruitmentPlan, setSelectedRecruitmentPlan] = useState('');
+    const [selectedRecruitmentPlan, setSelectedRecruitmentPlan] = useState(planName);
     const [pagination, setPagination] = useState({
         page: 0,
         size: 10,
@@ -148,6 +146,7 @@ export default function Training() {
                         ...newPagination,
                         totalElements: res.data.totalElements,
                     });
+                    setSelectedRecruitmentPlan(planName);
                 });
             } catch (error) {
                 console.log(error);
@@ -163,6 +162,7 @@ export default function Training() {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 axios.get("http://localhost:8080/api/interns/recruitment_plan").then((res) => {
                     setListRecruitmentPlan(res.data);
+                    
                 });
             } catch (error) {
                 console.log(error);
