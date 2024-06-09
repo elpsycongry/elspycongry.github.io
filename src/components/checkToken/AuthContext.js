@@ -13,10 +13,13 @@ function AuthContext({children}) {
     const pathName = window.location.pathname;
 
     if (currentUser === null) {
+        if (pathName === '/') {
+            return children
+        }
         if (pathName !== "/login" && pathName !== "/register") {
-            console.log('redirect')
             return <Navigate to="/login"/>
         }
+        // return <Navigate to="/"/>
     } else {
         axios.get(`http://localhost:8080/api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
                 console.log(res)
