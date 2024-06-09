@@ -51,6 +51,7 @@ export default function Training() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const planName = queryParams.get('planName') || '';
+    const is_pass = queryParams.get('is_pass') || '';
 
     const [open, setOpen] = useState(false);
 
@@ -148,6 +149,11 @@ export default function Training() {
                     });
                     setSelectedRecruitmentPlan(planName);
                 });
+                let filteredData = response.data.content;
+                if (is_pass === 'Pass') {
+                    filteredData = filteredData.filter(item => item.pass === true);
+                }
+                setListIntern(filteredData);
             } catch (error) {
                 console.log(error);
             }
@@ -162,14 +168,14 @@ export default function Training() {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 axios.get("http://localhost:8080/api/interns/recruitment_plan").then((res) => {
                     setListRecruitmentPlan(res.data);
-                    
+
                 });
             } catch (error) {
                 console.log(error);
             }
         }
     }
-   
+
     return (
         <>
             <Header />
@@ -250,8 +256,8 @@ export default function Training() {
                             {/* Select recruitment plan */}
                             <FormControl className="select-form ml-10 status" sx={{ minWidth: 300 }}>
                                 <InputLabel className="top-left" id="demo-simple-small-label">Kế hoạch tuyển dụng</InputLabel>
-                                <Select 
-                                    sx={{ backgroundColor: 'white'}}
+                                <Select
+                                    sx={{ backgroundColor: 'white' }}
                                     labelId="demo-simple-small-label"
                                     className="select-edit "
                                     id="demo-simple-select"
@@ -280,14 +286,6 @@ export default function Training() {
 
                                     <th className="training-total-days">Số ngày thực tập</th>
                                 </tr>
-                                {listInter.map((item, index) => (
-                                    <tr className="grey-text count-tr" key={item.id}>
-                                        <td className="training-id" style={{ padding: '8px' }}>{index + 1 + pagination.page * pagination.size}</td>
-                                        <td><span className="training-name">{item.internName}</span></td>
-                                        <td>{format(new Date(item.startDate), 'dd-MM-yyyy')}</td>
-                                        <td>{item.numberDate}</td>
-                                    </tr>
-                                ))}
                             </div>
                             <div className="wrapper">
                                 <tr style={{ alignItems: 'center', fontSize: '25px' }} className="grey-text">
