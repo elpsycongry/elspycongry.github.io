@@ -161,6 +161,7 @@ function Login() {
                 console.log(dataGoogle);
                 axios.post("http://localhost:8080/login", dataGoogle).then(
                     res => {
+                        console.log(res.data.code);
                         if (res.data.code === "401") {
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                         }
@@ -170,7 +171,9 @@ function Login() {
                             navigate("/dashboard")
                         }
                         if (res.data.code === "202") {
-                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                           localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
+                            // enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                             navigate("/pageWait", {state: {dataGoogle}})
 
                         }

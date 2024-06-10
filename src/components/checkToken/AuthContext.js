@@ -8,8 +8,8 @@ import {useEffect} from "react";
 
 // Context xác thực người dùng
 function AuthContext({children}) {
-
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+    const localUser = localStorage.getItem("currentUser");
+    const currentUser = JSON.parse(localUser === 'undefined' ? null : localUser)
     const pathName = window.location.pathname;
     if (currentUser === null) {
         if (pathName === '/') {
@@ -80,6 +80,7 @@ function AuthContext({children}) {
 
 // Hàm đăng xuất
  export async function doLogout(navigate) {
+
     const user = JSON.parse(localStorage.getItem("currentUser")); // Lấy thông tin người dùng hiện tại từ localStorage
 
     // Kiểm tra xem người dùng có tồn tại không

@@ -61,14 +61,17 @@ function Register() {
         formData.forEach((value, key) => data[key] = value);
         axios.post("http://localhost:8080/register", data).then(
             res => {
-                if (res.data.code === "400" || res.data.code === "409") {
-                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                if (res.data.code) {
+                    if (res.data.code === "400" || res.data.code === "409") {
+                        // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                        enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    }        
                 }
-
-                else if (res.status == 201) {
+            
+                else if (res.status == 200) {
+                    console.log(res);
                     // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    enqueueSnackbar("Đăng ký thành công, chờ xác nhận", { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                     sendNotifications(
                         null,
                         `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
@@ -79,10 +82,12 @@ function Register() {
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
-        ).catch(reason => {
+        )
+        .catch(reason => {
             enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
             setFlagValidate({ ...flagValidate, validSubmit: true })
-        })
+        }
+    )
     };
 
     // Ép buộc component re-render
@@ -195,24 +200,28 @@ function Register() {
                 };
                 axios.post("http://localhost:8080/register", dataGoogle).then(
                     res => {
-                        if (res.data.code === "400" || res.data.code === "409") {
-                            // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                        }
-
-                        else if (res.status == 201) {
-                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                            enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                            sendNotifications(
-                                null,
-                                `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
-                                ['ROLE_ADMIN'],
-                                null,
-                                `/users?idUser=${res.data.id}`)
-                            navigate("/login")
-                        }
-                        setFlagValidate({ ...flagValidate, validSubmit: true })
-                    }
+                console.log(res);
+                if (res.data.code) {
+                    if (res.data.code === "400" || res.data.code === "409") {
+                        localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                        enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    }        
+                }
+                
+                else if (res.status == 200) {
+                    console.log(res);
+                    // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                    enqueueSnackbar("Đăng ký thành công, chờ xác nhận", { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    sendNotifications(
+                        null,
+                        `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
+                        ['ROLE_ADMIN'],
+                        null,
+                        `/users?idUser=${res.data.id}`)
+                    navigate("/login")
+                }
+                setFlagValidate({ ...flagValidate, validSubmit: true })
+            }
                 ).catch(reason => {
                     enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
                     setFlagValidate({ ...flagValidate, validSubmit: true })
