@@ -145,7 +145,7 @@ export default function Header() {
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
                     >
-                        <div className='info-user  pe-2 ps-2 mt-2' style={{ height: '50px' }}>
+                        <div className='info-user pe-3 ps-2 mt-2' style={{ height: '50px' }}>
                             <div className='d-flex ms-2 align-item-center'>
                                 <Avatar className=' me-3' alt="Remy Sharp" src={avatarDemo} />
                                 <div className='d-flex flex-column'>

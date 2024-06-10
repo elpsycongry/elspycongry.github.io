@@ -24,15 +24,12 @@ export default function Email() {
     const check = () => {
         const recruitmentPlan = [];
         const personalNeed = [];
-        var a = 0;
-        var b = 0;
+       
         toSend.forEach(item => {
-            if (item.isRequest === 1 && a < 5) {
-                a++;
+            if (item.isRequest === 0) {
                 recruitmentPlan.push(item);
             }
-            if (item.isRequest === 0 && b < 5) {
-                b++;
+            if (item.isRequest === 1 ) {
                 personalNeed.push(item);
             }
         })
@@ -102,7 +99,7 @@ export default function Email() {
             console.log(minutesCheck);
             console.log(emailSentRef)
             // Kiểm tra gửi email vào phút thứ 50
-            if (hoursCheck === 10 && minutesCheck === 42 && !emailSentRef.current) {
+            if (hoursCheck === 14 && minutesCheck === 5 && !emailSentRef.current) {
                 sendPersonalNeedEmails()
                     .then(() => sendRecruitmentPlanEmails())
                     .then(() => {

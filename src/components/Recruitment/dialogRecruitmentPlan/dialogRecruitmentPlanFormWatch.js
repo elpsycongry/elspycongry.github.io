@@ -127,6 +127,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
       });
     }
   }, []);
+
   // const testId = [useState()]
 
   // Xử lý mở form
@@ -166,7 +167,13 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/process/plan/${id}`);
-        setSteps(response.data);
+        setSteps(prevSteps => {
+          const updatedSteps = response.data;
+          if (updatedSteps.intern === updatedSteps.totalIntern && updatedSteps.intern > 0) {
+            updatedSteps.step = 7;
+          }
+          return updatedSteps;
+        });
       } catch (error) {
         console.error(error);
       }

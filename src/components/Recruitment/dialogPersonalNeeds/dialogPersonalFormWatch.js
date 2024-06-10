@@ -119,13 +119,24 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
             try {
                 const response = await axios.get(`http://localhost:8080/process/request/${id}`);
                 console.log(response.data);
-                setSteps(response.data);
+                setSteps(prevSteps => {
+                    const updatedSteps = response.data;
+                    if (updatedSteps.intern === updatedSteps.totalIntern && updatedSteps.intern > 0) {
+                        updatedSteps.step = 7;
+                    }
+                    return updatedSteps;
+                });
             } catch (error) {
                 console.error(error);
             }
         };
         fetchData();
     }, []);
+
+
+
+
+
     const checkDecan = () => {
         if (steps.decanAccept === null || steps.decanAccept === "") {
             return false;
@@ -307,13 +318,16 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                             <div className="col-md-6">
                                                 <Stepper activeStep={activeStep} orientation="vertical">
                                                     <Step>
-                                                        <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <Link to={`/recruitment/personalNeeds?idRequest=${steps.requestId}`} className="a-progress cursor-pointer">{steps.requestName}</Link></span> </StepLabel>
+                                                        <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <span className="fs-16">{steps.requestName}</span></span> </StepLabel>
                                                     </Step>
                                                     <Step>
                                                         <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
                                                             {checkDet() ?
                                                                 steps.detAccept === "true" || steps.detAccept === true ?
-                                                                    <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <span className="fs-16">{steps.planName}</span></span>
+                                                                    <span
+                                                                        className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link
+                                                                            to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`}
+                                                                            className="a-progress cursor-pointer">{steps.planName}</Link></span>
                                                                     :
                                                                     steps.decanAccept === "false" || steps.decanAccept === false ?
                                                                         <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
@@ -439,21 +453,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                             </div>
                         ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" || formData.values.recruitmentRequest.status === "Đang tuyển dụng" ? ("") :
                             (formData.values.recruitmentRequest.status === "Bị từ chối bởi DECAN" ? (
-                                <div className="col-md-12 mt-2 d-flex ">
-                                    <label
-                                        htmlFor="time"
-                                        style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
-                                        className="form-label fs-20 me-2">
-
-                                        Lý do:
-                                    </label>
-                                    <textarea
-                                        readOnly
-                                        className="form-control resize pt-2 "
-                                        style={{ color: "#838383" }}
-                                        value={formData.values.recruitmentRequest.reason}
-                                    ></textarea>
-                                </div>
+                              <></>
                             ) : (
                                 hasRoleAdmin() && (
                                     <div className="col-md-12 mt-0 d-flex">
