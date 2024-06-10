@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import emailjs from '@emailjs/browser';
 import axios from 'axios';
+import {sendNotifications} from "../../Notification/notification";
 
 export default function Email() {
     const [toSend, setToSend] = useState([]);
@@ -16,6 +17,7 @@ export default function Email() {
         })
 
     }
+
     useEffect(() => {
         emailApi();
     }, [])
@@ -46,8 +48,6 @@ export default function Email() {
     }, [toSend])
 
 
-    console.log(dataSendPersonalNeed)
-    console.log(dataSendRecruitmentPlan)
     const serviceId = process.env.REACT_APP_API_SERVICE_ID;
     const templateIdRecruitmentPLan = process.env.REACT_APP_API_TEMPLATE_RECRUITMENT_PLAN_ID;
     const templateIdPersonalNeed = process.env.REACT_APP_API_TEMPLATE_PERSONAL_NEED_ID;
@@ -71,6 +71,7 @@ export default function Email() {
         }
         emailjs.send(serviceId, template, templateParamsRcruitmentPLan, publicKey).then(
             (response) => {
+
                 console.log('Success!', response);
             }, (error) => {
                 console.log(error.text);
@@ -84,8 +85,30 @@ export default function Email() {
             await new Promise(resolve => setTimeout(resolve, delay));
         }
     };
+
+    const sendNotificationToUser = async () => {
+        dataSendRecruitmentPlan.map((item) => {
+            sendNotifications(
+                null,
+                `Bạn vửa có email mới từ kế hoạch tuyển dụng <b>${item.namePersonalNeeds}</b>`,
+                null,
+                null,
+                "https://mail.google.com/",
+                [item.toEmail])
+        })
+        dataSendPersonalNeed.map((item) => {
+            sendNotifications(
+                null,
+                `Bạn vửa có email mới từ nhu cầu <b>${item.namePersonalNeeds}</b>`,
+                null,
+                null,
+                "https://mail.google.com/",
+                [item.toEmail]
+            )
+        })
+    }
+
     useEffect(() => {
-      
         const checkAndSendEmails = () => {
             const dayNow = new Date();
             const hoursCheck = dayNow.getHours();
@@ -99,12 +122,11 @@ export default function Email() {
                 return sendEmailsSequentially(dataSendRecruitmentPlan, templateIdRecruitmentPLan);
             };
 
-            console.log(minutesCheck);
-            console.log(emailSentRef)
             // Kiểm tra gửi email vào phút thứ 50
             if (hoursCheck === 14 && minutesCheck === 5 && !emailSentRef.current) {
                 sendPersonalNeedEmails()
                     .then(() => sendRecruitmentPlanEmails())
+                    .then(sendNotificationToUser)
                     .then(() => {
                         emailSentRef.current = true;
                         if (intervalRef.current) {

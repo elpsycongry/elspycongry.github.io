@@ -194,7 +194,7 @@ export function Notification() {
                                         timestamp={notiItem.timestamp}
                                         clickIn={() => {
                                             markReaded(index).then(sendDatas().then(() => {
-                                                if (notiItem.link) {
+                                                if (notiItem.link !== '/https://mail.google.com/') {
                                                     window.location.href = `http://localhost:3000${notiItem.link}`
                                                 }
                                             }))
@@ -233,18 +233,20 @@ export async function sendNotifications(
     content,
     roleReceiver,
     listReceiverId,
-    link
+    link,
+    listReceiverEmail,
 ) {
     var date = new Date()
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const notificationInfo = {
-        creatorId: creatorId , // Nếu creatorId là null hoặc rỗng, gán giá trị là người dùng hiện tại
+        creatorId: creatorId ,
         content: content,
         listRoleReceiver: roleReceiver,
         listReceiverId: listReceiverId,
         timeCreate: date.toISOString(),
         link: link,
+        listReceiverEmail: listReceiverEmail,
     }
     await axios.post('http://localhost:8080/api/notifications', notificationInfo)
 }
