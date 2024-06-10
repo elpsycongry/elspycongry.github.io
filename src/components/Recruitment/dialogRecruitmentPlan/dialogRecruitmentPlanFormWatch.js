@@ -21,11 +21,18 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
   const [tenhnology, setTenhnology] = useState([]);
   const navigate = useNavigate();
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_HR");
+    return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_TM");
   };
   const hasRoleKSCL = () => {
     return userRoles.some((role) => role.authority === "ROLE_QC");
   };
+  const hasRoleDM = () => {
+    return userRoles.some((role) => role.authority === "ROLE_DM");
+  };
+  const hasRoleHR = () => {
+    return userRoles.some((role) => role.authority === "ROLE_HR");
+  };
+  const shouldShowLink = !(hasRoleHR() || hasRoleDM());
 
   const [dropProgress, setDropProgress] = useState(true);
   const clickProgress = () => {
@@ -449,31 +456,65 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                           <Step>
                             {steps.step >= 3 ?
                               steps.applicants === 0 ?
-                                <StepLabel className="ws-nowrap svg-size svg-size-none"><span className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants} <a className="a-progress"></a></span> </StepLabel>
+                                <StepLabel
+                                  className="ws-nowrap svg-size svg-size-none"><span
+                                    className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants}
+                                    <a className="a-progress"></a></span> </StepLabel>
+
                                 :
-                                <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants} <Link to={`/recruitment/candidateManagement?planName=${steps.planName}`} className="a-progress cursor-pointer" >Xem kết quả tuyển dụng</Link></span> </StepLabel>
+                                <StepLabel className="ws-nowrap svg-size"><span
+                                  className={`d-flex flex-column align-items-start ${!hasRoleDM() ? 'mt-12 test' : ''}`}>Số lượng ứng viên ứng tuyển: {steps.applicants}
+                                  {!hasRoleDM() ?
+                                    <Link
+                                      to={`/recruitment/candidateManagement?planName=${steps.planName}`}
+                                      className="a-progress cursor-pointer">Xem kết quả tuyển dụng</Link>
+                                    :
+                                    <Link
+                                      className="a-progress">
+                                    </Link>
+                                  }
+                                </span>
+                                </StepLabel>
                               :
-                              <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
+                              <StepLabel className="ws-nowrap svg-size"><span
+                                className="d-flex flex-column align-items-start"> <a></a></span>
+                              </StepLabel>
                             }
                           </Step>
                           <Step>
                             {steps.step >= 4 ?
                               steps.training === 0 ?
-                                <StepLabel className={`ws-nowrap svg-size svg-size-none `} >
-                                  <span className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training} <a className="a-progress"></a></span>
+                                <StepLabel className={`ws-nowrap svg-size svg-size-none `}>
+                                  <span
+                                    className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training}
+                                    <a className="a-progress"></a></span>
                                 </StepLabel>
                                 :
-                                <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training} <Link to={`/training?&planName=${steps.planName}`} className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span> </StepLabel>
+                                <StepLabel className="ws-nowrap svg-size"><span
+                                  className={`d-flex flex-column align-items-start ${shouldShowLink ? 'mt-12' : ''}`}>Số lượng TTS tham gia đào tạo: {steps.training}
+                                  {shouldShowLink ?
+                                    <Link
+                                      to={`/training?&planName=${steps.planName}`}
+                                      className="a-progress cursor-pointer">Xem kết quả đào tạo</Link>
+                                    :
+                                    <Link
+                                      className="a-progress"></Link>
+                                  }
+                                </span>
+                                </StepLabel>
                               :
-                              <StepLabel className="ws-nowrap svg-size"><span className="d-flex flex-column align-items-start"> <a></a></span> </StepLabel>
+                              <StepLabel className="ws-nowrap svg-size"><span
+                                className="d-flex flex-column align-items-start"> <a></a></span>
+                              </StepLabel>
                             }
                           </Step>
                           <Step>
                             {steps.step >= 5 ?
                               <StepLabel className={`ws-nowrap svg-size  ${steps.intern !== steps.totalIntern ? 'svg-size-none' : ''}`}>
-                                <span className="d-flex flex-column align-items-start mt-12">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
+                                <span className={`d-flex flex-column align-items-start ${shouldShowLink ? 'mt-12' : ''}`}>Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
                                   {steps.intern !== 0 ?
-                                    <Link to={``} className="a-progress cursor-pointer">Xem nhân sự</Link>
+                                    shouldShowLink &&
+                                    <Link to={`/training?&planName=${steps.planName}&is_pass=Pass`} className="a-progress cursor-pointer">Xem nhân sự</Link>
                                     :
                                     <Link className="a-progress"></Link>
                                   }

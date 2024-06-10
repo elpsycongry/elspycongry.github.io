@@ -6,6 +6,9 @@ export default function Email() {
     const [toSend, setToSend] = useState([]);
     const [dataSendPersonalNeed, setDataSendPersonalNeed] = useState([]);
     const [dataSendRecruitmentPlan, setDataSendRecruitmentPlan] = useState([]);
+    const intervalRef = useRef(null);
+    const emailSentRef = useRef(false);
+    const timeoutRef = useRef(null);
 
     const emailApi = () => {
         axios.get('http://localhost:8080/api/send/').then(res => {
@@ -24,12 +27,11 @@ export default function Email() {
         var a = 0;
         var b = 0;
         toSend.forEach(item => {
-            console.log(item.isRequest);
-            if (item.isRequest === 0 && a < 5) {
+            if (item.isRequest === 1 && a < 5) {
                 a++;
                 recruitmentPlan.push(item);
             }
-            if (item.isRequest === 1 && b < 5) {
+            if (item.isRequest === 0 && b < 5) {
                 b++;
                 personalNeed.push(item);
             }
@@ -50,7 +52,6 @@ export default function Email() {
     const templateIdRecruitmentPLan = process.env.REACT_APP_API_TEMPLATE_RECRUITMENT_PLAN_ID;
     const templateIdPersonalNeed = process.env.REACT_APP_API_TEMPLATE_PERSONAL_NEED_ID;
     const publicKey = process.env.REACT_APP_API_PUBLIC_KEY;
-    const intervalRef = useRef(null);
     const sendEmailBoth = (item, template) => {
         const templateParamsRcruitmentPLan = {
             to_email: item.toEmail,
@@ -84,36 +85,62 @@ export default function Email() {
         }
     };
     useEffect(() => {
-        const dayNow = new Date();
-        const dayCheck = dayNow.getDay();
-        const hoursCheck = dayNow.getHours();
-        const sendPersonalNeedEmails = () => {
-            return sendEmailsSequentially(dataSendPersonalNeed, templateIdPersonalNeed);
-        };
-        const sendRecruitmentPlanEmails = () => {
-            return sendEmailsSequentially(dataSendRecruitmentPlan, templateIdRecruitmentPLan);
-        };
-        // Demo check
-        if (hoursCheck === 19) {
-            // sendPersonalNeedEmails()
-            //     .then(() => sendRecruitmentPlanEmails())
-            //     .catch(error => {
-            //         console.error('Error sending emails:', error);
-            //     });
-        }
-        
-        // Check vào 4h chiều thứ 6 hàng tuần
-        if (dayCheck === 5 && hoursCheck === 13) {
-            // sendPersonalNeedEmails()
-            //     .then(() => sendRecruitmentPlanEmails())
-            //     .catch(error => {
-            //         console.error('Error sending emails:', error);
-            //     });
-        }
-        intervalRef.current = setInterval(sendEmailBoth, 24 * 60 * 60 * 1000);
-        return () => clearInterval(intervalRef.current);
+      
+        const checkAndSendEmails = () => {
+            const dayNow = new Date();
+            const hoursCheck = dayNow.getHours();
+            const minutesCheck = dayNow.getMinutes();
 
-    }, [])
+            const sendPersonalNeedEmails = () => {
+                return sendEmailsSequentially(dataSendPersonalNeed, templateIdPersonalNeed);
+            };
+
+            const sendRecruitmentPlanEmails = () => {
+                return sendEmailsSequentially(dataSendRecruitmentPlan, templateIdRecruitmentPLan);
+            };
+
+            console.log(minutesCheck);
+            console.log(emailSentRef)
+            // Kiểm tra gửi email vào phút thứ 50
+            if (hoursCheck === 10 && minutesCheck === 42 && !emailSentRef.current) {
+                sendPersonalNeedEmails()
+                    .then(() => sendRecruitmentPlanEmails())
+                    .then(() => {
+                        emailSentRef.current = true;
+                        if (intervalRef.current) {
+                            clearInterval(intervalRef.current);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi gửi email:', error);
+                    });
+            }
+        };
+
+        // Thiết lập interval để kiểm tra mỗi phút
+        intervalRef.current = setInterval(checkAndSendEmails, 60 * 1000);
+        // Hàm để đặt lại emailSentRef sau 24 giờ
+        const resetEmailSentRef = () => {
+            emailSentRef.current = false;
+            console.log('Email sent flag reset');
+        };
+
+        // Thiết lập timeout để reset emailSentRef sau 24 giờ
+        const resetTimeout = () => {
+            setTimeout(resetEmailSentRef,  30 * 1000);
+        };
+
+        // Gọi resetTimeout ngay khi component mount
+        resetTimeout();
+
+        // Dọn dẹp interval khi component bị unmount
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, []);
+
 
     return null;
 }
