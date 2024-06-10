@@ -58,10 +58,10 @@ const ExportRecruitment = ({ month, quarter, year }) => {
   return (
     <button
       className="btn btn-stats-green"
-      style={{ position: 'absolute', left: '0', width: '123px', marginTop: '22px', marginLeft: '53px' }}
+      style={{ position: 'absolute', right: '0', width: '123px', marginTop: '22px' }}
       onClick={handleExport}
     >
-      <span style={{ paddingRight: '5px' }}>Excel</span>
+      <span style={{ paddingRight: '5px', paddingTop: '3px' }}>Excel</span>
       <Icon
         icon="mdi:microsoft-excel"
         style={{ width: '25px', height: '25px' }}

@@ -197,7 +197,7 @@ function Login() {
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: '146px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -277,9 +277,13 @@ function Login() {
                         </Button>
                     </Box>
                 </Box>
-                <div style={{ marginTop: '-70px' }}>
-                    <Copyright sx={{ mt: 36, mb: 4 }} />
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ position: 'fixed', bottom: '20px' }}>
+                        <Copyright sx={{ mt: 36, mb: 4, marginTop: '0px', marginBottom: '0px' }} />
+                    </div>
                 </div>
+                
             </Container>
         </ThemeProvider>
     )
