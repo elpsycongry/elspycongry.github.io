@@ -73,7 +73,7 @@ function Login() {
                 }
                 if (res.data.code === "202") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    navigate("/pageWait", {state: {data}})
+                    navigate("/pageWait", { state: data });
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
@@ -170,9 +170,8 @@ function Login() {
                             navigate("/dashboard")
                         }
                         if (res.data.code === "202") {
-                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                            navigate("/pageWait", {state: {dataGoogle}})
-
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            navigate("/pageWait", { state: dataGoogle });
                         }
                         setFlagValidate({ ...flagValidate, validSubmit: true })
                     }

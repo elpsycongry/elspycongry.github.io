@@ -3,13 +3,13 @@ import { enqueueSnackbar } from "notistack";
 import { Navigate } from "react-router-dom";
 import Login from "../pages/login/login";
 import Register from "../pages/login/register";
-import PageWait from "../stats/standbyPage/pageWait";
+import PageWait from "../standbyPage/pageWait";
 
 // Context xác thực người dùng
 function AuthContext({ children }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser")); // Lấy thông tin người dùng hiện tại từ localStorage
     const pathName = window.location.pathname; // Lấy đường dẫn hiện tại
-
+    console.log(currentUser);
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
     if (!currentUser) {
         // Nếu chưa đăng nhập và đường dẫn không phải là trang chủ
@@ -19,7 +19,6 @@ function AuthContext({ children }) {
             } else{
                 return pathName === "/login" ? <Login /> : <Navigate to="/" />;
             }
-
         }
     } else {
         // Nếu đã đăng nhập

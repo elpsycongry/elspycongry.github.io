@@ -11,13 +11,10 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import logoImage from '../../../assets/image/logoCodeGym.png';
+import logoImage from '../../assets/image/logoCodeGym.png';
 import './pageWait.css';
 import { useEffect } from "react";
-
-import './pageWait.css';
 import { useSnackbar } from 'notistack';
-
 
 function Copyright(props) {
 
@@ -50,9 +47,12 @@ const defaultTheme = createTheme();
 function PageWait() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
-    const {state} = useLocation();
-    const {data} = state;
-
+    // const {state} = useLocation();
+    // const {data} = state;
+    const {data} = {
+        email: "",
+        password: ""
+    }
     useEffect(() => {
         loginAccount()
     });
