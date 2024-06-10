@@ -330,7 +330,7 @@ export default function RecruitmentStats() {
                                             {title}
                                         </h3>
                                     </div>
-                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                    <div className="box-button-excel" style={{ width: '188.97px', position: 'relative' }}>
                                         {/* Nút excel */}
                                         {/* <ExportRecruitment /> */}
                                         <ExportRecruitment month={month} quarter={quarter} year={year} />
@@ -483,7 +483,7 @@ export default function RecruitmentStats() {
                                             Thống kê tăng trưởng
                                         </h3>
                                     </div>
-                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                    <div className="box-button-excel" style={{ width: '188.97px', position: 'relative' }}>
                                         {/* Nút excel */}
                                         <ExportRecruitment month={month} quarter={quarter} year={year} />
                                     </div>

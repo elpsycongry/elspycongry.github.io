@@ -18,6 +18,7 @@ import {
 } from 'chart.js';
 import axios from 'axios';
 import { head, size } from 'lodash';
+import { Icon } from '@iconify/react';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -362,7 +363,7 @@ export default function TrainingStatsChart({ year }) {
 
     return (
         <Box sx={{ width: '80%', height: '585px', padding: 2 }} ref={pdfRef}>
-            <button style={{marginTop: '-75px', float: 'right'}} className='btn btn-stats-green' onClick={downloadPDF}>Export PDF</button>
+            <button style={{marginTop: '-75px', float: 'right', marginRight: '15px'}} className='btn btn-stats-pdf' onClick={downloadPDF}>Xuất file PDF <Icon icon="ant-design:file-pdf-filled" /></button>
             <div style={{ width: '100%', height: '100%' }}>
                 <Line  data={data} options={options} />
             </div>

@@ -127,7 +127,7 @@ export default function Training() {
     //API danh sách môn học
     const fetchListSubjectSelect = async () => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
-         if (user != null) {
+        if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get("http://localhost:8080/api/interns/subject").then((res) => {
                 setListSubjectSelect(res.data);
@@ -331,11 +331,13 @@ export default function Training() {
                         />
                     </div>
                 </div>
-                <div style={{ paddingTop: '30px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+
+                {/* Footer */}
+                <div style={{ paddingTop: '25px', paddingBottom: '28px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
+
             </Box>
-            {/* <Footer /> */}
         </>
     )
 }

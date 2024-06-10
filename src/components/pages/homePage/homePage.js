@@ -195,9 +195,13 @@ const HomePage = () => {
                     </div>
                 </Box>
             </Box>
-            <div style={{ paddingTop: '70px', paddingBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                <Copyright sx={{ maxWidth: '100%' }} />
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ position: 'fixed', bottom: '20px' }}>
+                    <Copyright sx={{ mt: 36, mb: 4, marginTop: '0px', marginBottom: '0px' }} />
+                </div>
             </div>
+            
         </>
     );
 };

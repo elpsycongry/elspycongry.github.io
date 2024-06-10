@@ -49,7 +49,7 @@ export default function TrainingStats() {
     const [maxGrowthStatistics, setMaxGrowthStatistics] = useState();
 
     const [activeStat, setActiveStat] = useState("stats1");
-    const [title, setTitle] = useState("Kết quả đào tạo tháng 6");
+    const [title, setTitle] = useState(`Kết quả đào tạo tháng ${currentMonth}`);
     const [titleStatistics, setTitleStatistics] = useState("Năm")
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
@@ -278,7 +278,7 @@ export default function TrainingStats() {
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', paddingTop: '2px' }}>Thống kê {'>'} Kết quả đào tạo</p>
                 </Box>
 
-                <div style={{borderRadius: '10px' }} className="content-recruiment">
+                <div style={{ borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
                             <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning text-white " >Chỉ số</button>
@@ -305,12 +305,12 @@ export default function TrainingStats() {
                                     <div className="box-title-h3" style={{ width: '40%' }}>
                                         {/* Thẻ h3 với title */}
                                         <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>
-                                        {title}
+                                            {title}
                                         </h3>
                                     </div>
-                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                    <div className="box-button-excel" style={{ width: '188.97px', position: 'relative' }}>
                                         {/* Nút excel */}
-                                        <ExportButton month={month} quarter={quarter} year={year}/>
+                                        <ExportButton month={month} quarter={quarter} year={year} />
                                     </div>
                                 </div>
                                 <div style={{ width: '50%', marginBottom: '25px', fontSize: '18px' }} className="btn-group" role="group" aria-label="Basic outlined example">
@@ -402,7 +402,7 @@ export default function TrainingStats() {
                                             Thống kê tăng trưởng
                                         </h3>
                                     </div>
-                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                    <div className="box-button-excel" style={{ width: '188.97px', position: 'relative' }}>
                                         {/* Nút excel */}
                                         <ExportButton month={month} quarter={quarter} year={year} />
                                     </div>
@@ -631,7 +631,7 @@ export default function TrainingStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '16px', paddingBottom: '16px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '25px', paddingBottom: '28px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}
