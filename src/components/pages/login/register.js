@@ -20,7 +20,7 @@ import { useState } from "react";
 import { useGoogleLogin } from '@react-oauth/google';
 import './login.css';
 import GoogleIcon from '@mui/icons-material/Google';
-import {sendNotifications} from "../../Notification/notification";
+import { sendNotifications } from "../../Notification/notification";
 
 function Copyright(props) {
     return (
@@ -65,9 +65,9 @@ function Register() {
                     if (res.data.code === "400" || res.data.code === "409") {
                         // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                         enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    }        
+                    }
                 }
-            
+
                 else if (res.status == 200) {
                     console.log(res);
                     // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
@@ -83,11 +83,11 @@ function Register() {
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
         )
-        .catch(reason => {
-            enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
-            setFlagValidate({ ...flagValidate, validSubmit: true })
-        }
-    )
+            .catch(reason => {
+                enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+                setFlagValidate({ ...flagValidate, validSubmit: true })
+            }
+            )
     };
 
     // Ép buộc component re-render
@@ -200,28 +200,28 @@ function Register() {
                 };
                 axios.post("http://localhost:8080/register", dataGoogle).then(
                     res => {
-                console.log(res);
-                if (res.data.code) {
-                    if (res.data.code === "400" || res.data.code === "409") {
-                        localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                        enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    }        
-                }
-                
-                else if (res.status == 200) {
-                    console.log(res);
-                    // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar("Đăng ký thành công, chờ xác nhận", { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    sendNotifications(
-                        null,
-                        `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
-                        ['ROLE_ADMIN'],
-                        null,
-                        `/users?idUser=${res.data.id}`)
-                    navigate("/login")
-                }
-                setFlagValidate({ ...flagValidate, validSubmit: true })
-            }
+                        console.log(res);
+                        if (res.data.code) {
+                            if (res.data.code === "400" || res.data.code === "409") {
+                                localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                                enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            }
+                        }
+
+                        else if (res.status == 200) {
+                            console.log(res);
+                            // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            enqueueSnackbar("Đăng ký thành công, chờ xác nhận", { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            sendNotifications(
+                                null,
+                                `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
+                                ['ROLE_ADMIN'],
+                                null,
+                                `/users?idUser=${res.data.id}`)
+                            navigate("/login")
+                        }
+                        setFlagValidate({ ...flagValidate, validSubmit: true })
+                    }
                 ).catch(reason => {
                     enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
                     setFlagValidate({ ...flagValidate, validSubmit: true })
@@ -234,11 +234,11 @@ function Register() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs" style={{display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <Container component="main" maxWidth="xs" style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: '146px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -296,13 +296,13 @@ function Register() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                   required
-                                   fullWidth
-                                   name="password"
-                                   label="Password"
-                                   type={visible ? "password" : "text"}
-                                   id="password"
-                                   autoComplete="current-password"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type={visible ? "password" : "text"}
+                                    id="password"
+                                    autoComplete="current-password"
                                     InputProps={{
                                         endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
                                     }}
@@ -343,8 +343,10 @@ function Register() {
                     </Box>
                 </Box>
 
-                <div style={{ marginTop: '-70px' }}>
-                    <Copyright sx={{ mt: 36, mb: 4 }} />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ position: 'fixed', bottom: '20px' }}>
+                        <Copyright sx={{ mt: 36, mb: 4, marginTop: '0px', marginBottom: '0px' }} />
+                    </div>
                 </div>
             </Container>
         </ThemeProvider>
