@@ -30,7 +30,7 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
   const [errRecruitmentPlan, setErrRecruitmentPlan] = useState(false);
   const [errStatus, setErrStatus] = useState(false);
   const [errFinalResult, setErrFinalResult] = useState(false);
-
+  const [phoneCheck,setPhoneCheck] = useState([]);
 
   // Xử lý số lượng nhân sự
   const checkValid = (fullName, email, phoneNumber, recruitmentPlan, status) => {
@@ -56,8 +56,18 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
     //   setErrFinalResult(false)
     // }
 
+    const checkPhone = () => {
+      return phoneCheck.some((item) => phoneNumber === item);
+    };
+
     var hasErrPhone;
-    if (!validPhone.test(phoneNumber) || phoneNumber === "") {
+    if (phoneNumber === "") {
+      setErrPhoneNumber(true);
+      hasErrPhone = true;
+    } else if (checkPhone()) {
+      setErrPhoneNumber(true);
+      hasErrPhone = true;
+    } else if (!validPhone.test(phoneNumber)) {
       setErrPhoneNumber(true);
       hasErrPhone = true;
     } else {
@@ -197,6 +207,11 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
           const dateNow = dayjs(formatT);
           setDate(dateNow);
           setFinalResult(res.data.finalResult);
+        });
+        axios
+        .get("http://localhost:8080/api/plansIntern/getAllInternsCheckUpdate/" + id)
+        .then((res) => {
+          setPhoneCheck(res.data);
         });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -894,7 +909,7 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
                 <div className="col-md-8  mt-0">
                   {errPhoneNumber && (
                     <p className="err-valid ws-nowrap ">
-                      Số điện thoại không hợp lệ
+                      Số điện thoại không hợp lệ hoặc trùng
                     </p>
                   )}
                 </div>
