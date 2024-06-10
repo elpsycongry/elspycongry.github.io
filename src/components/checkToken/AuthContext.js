@@ -74,6 +74,7 @@ export function doLogout(navigate) {
             console.error(e)
             // enqueueSnackbar("Có lỗi xảy ra không thể đăng xuất", {variant: "error"});
         })
+        localStorage.setItem('currentLocation', '');
         localStorage.removeItem("currentUser");
         navigate("/login")
     }

@@ -22,6 +22,14 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     const hasRoleKSCL = () => {
         return userRoles.some((role) => role.authority === "ROLE_QC");
     };
+    const hasRoleDM = () => {
+        return userRoles.some((role) => role.authority === "ROLE_DM");
+    };
+    const hasRoleHR = () => {
+        return userRoles.some((role) => role.authority === "ROLE_HR");
+    };
+    const shouldShowLink = !(hasRoleHR() || hasRoleDM());
+
     const [dropProgress, setDropProgress] = useState(true);
     const clickProgress = () => {
         setDropProgress(!dropProgress);
@@ -299,52 +307,34 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                             <div className="col-md-6">
                                                 <Stepper activeStep={activeStep} orientation="vertical">
                                                     <Step>
-                                                        <StepLabel className="ws-nowrap svg-size"><span
-                                                            className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator}
-                                                            <span className="fs-16">{steps.requestName}</span></span>
-                                                        </StepLabel>
+                                                        <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <Link to={`/recruitment/personalNeeds?idRequest=${steps.requestId}`} className="a-progress cursor-pointer">{steps.requestName}</Link></span> </StepLabel>
                                                     </Step>
                                                     <Step>
-                                                        <StepLabel
-                                                            StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''}
-                                                            className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
+                                                        <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
                                                             {checkDet() ?
                                                                 steps.detAccept === "true" || steps.detAccept === true ?
-                                                                    <span
-                                                                        className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link
-                                                                            to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`}
-                                                                            className="a-progress cursor-pointer">{steps.planName}</Link></span>
+                                                                    <span className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <span className="fs-16">{steps.planName}</span></span>
                                                                     :
                                                                     steps.decanAccept === "false" || steps.decanAccept === false ?
-                                                                        <span
-                                                                            className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                        <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
                                                                         :
-                                                                        <span
-                                                                            className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                        <span className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
 
                                                                 :
-                                                                <span
-                                                                    className="d-flex flex-column align-items-start mt-12"><a
-                                                                        className="a-progress"></a></span>
+                                                                <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
                                                             }
                                                         </StepLabel>
 
                                                     </Step>
                                                     <Step>
-                                                        <StepLabel
-                                                            StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''}
-                                                            className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
+                                                        <StepLabel StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
                                                             {checkDecan() ?
                                                                 steps.decanAccept === "true" || steps.decanAccept === true ?
-                                                                    <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a
-                                                                        className="a-progress"></a></span>
+                                                                    <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a className="a-progress"></a></span>
                                                                     :
-                                                                    <span
-                                                                        className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                    <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
                                                                 :
-                                                                <span
-                                                                    className="d-flex flex-column align-items-start mt-12"><a
-                                                                        className="a-progress"></a></span>
+                                                                <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
                                                             }
 
                                                         </StepLabel>
@@ -359,10 +349,17 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
                                                                 :
                                                                 <StepLabel className="ws-nowrap svg-size"><span
-                                                                    className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants}
-                                                                    <Link
-                                                                        to={`/recruitment/candidateManagement?planName=${steps.planName}`}
-                                                                        className="a-progress cursor-pointer">Xem kết quả tuyển dụng</Link></span>
+                                                                    className={`d-flex flex-column align-items-start ${!hasRoleDM() ? 'mt-12 test' : ''}`}>Số lượng ứng viên ứng tuyển: {steps.applicants}
+                                                                    {!hasRoleDM() ?
+                                                                        <Link
+                                                                            to={`/recruitment/candidateManagement?planName=${steps.planName}`}
+                                                                            className="a-progress cursor-pointer">Xem kết quả tuyển dụng</Link>
+                                                                        :
+                                                                        <Link
+                                                                            className="a-progress">
+                                                                        </Link>
+                                                                    }
+                                                                </span>
                                                                 </StepLabel>
                                                             :
                                                             <StepLabel className="ws-nowrap svg-size"><span
@@ -380,10 +377,16 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                                 </StepLabel>
                                                                 :
                                                                 <StepLabel className="ws-nowrap svg-size"><span
-                                                                    className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training}
-                                                                    <Link
-                                                                        to={`/training?&planName=${steps.planName}`}
-                                                                        className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span>
+                                                                    className={`d-flex flex-column align-items-start ${shouldShowLink ? 'mt-12' : ''}`}>Số lượng TTS tham gia đào tạo: {steps.training}
+                                                                    {shouldShowLink ?
+                                                                        <Link
+                                                                            to={`/training?&planName=${steps.planName}`}
+                                                                            className="a-progress cursor-pointer">Xem kết quả đào tạo</Link>
+                                                                        :
+                                                                        <Link
+                                                                            className="a-progress"></Link>
+                                                                    }
+                                                                </span>
                                                                 </StepLabel>
                                                             :
                                                             <StepLabel className="ws-nowrap svg-size"><span
@@ -394,8 +397,9 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
                                                     <Step>
                                                         {steps.step >= 5 ?
                                                             <StepLabel className={`ws-nowrap svg-size  ${steps.intern !== steps.totalIntern ? 'svg-size-none' : ''}`}>
-                                                                <span className="d-flex flex-column align-items-start mt-12">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
+                                                                <span className={`d-flex flex-column align-items-start ${shouldShowLink ? 'mt-12' : ''}`}>Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
                                                                     {steps.intern !== 0 ?
+                                                                        shouldShowLink &&
                                                                         <Link to={`/training?&planName=${steps.planName}&is_pass=Pass`} className="a-progress cursor-pointer">Xem nhân sự</Link>
                                                                         :
                                                                         <Link className="a-progress"></Link>
@@ -479,7 +483,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
 
                     </form>
                 </DialogTitle>
-            </Dialog>
+            </Dialog >
             <DialogPersonalFormReason
                 data={formData}
                 nameNeedPlan={formData.values.recruitmentRequest.name}
