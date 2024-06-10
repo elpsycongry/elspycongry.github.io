@@ -73,7 +73,7 @@ function Login() {
                 }
                 if (res.data.code === "202") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    navigate("/pageWait", { state: data });
+                    navigate("/pageWait", { state: {data} });
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
@@ -154,12 +154,12 @@ function Login() {
                         Authorization: `Bearer ${access_token}`
                     }
                 });
-                const dataGoogle = {
+                const data = {
                     email: userInfo.data.email,
                     password: "Email0" + userInfo.data.email
                 };
-                console.log(dataGoogle);
-                axios.post("http://localhost:8080/login", dataGoogle).then(
+                console.log(data);
+                axios.post("http://localhost:8080/login", data).then(
                     res => {
                         if (res.data.code === "401") {
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
@@ -171,7 +171,7 @@ function Login() {
                         }
                         if (res.data.code === "202") {
                             localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                            navigate("/pageWait", { state: dataGoogle });
+                            navigate("/pageWait", { state: {data} });
                         }
                         setFlagValidate({ ...flagValidate, validSubmit: true })
                     }

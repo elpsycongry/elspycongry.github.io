@@ -47,12 +47,8 @@ const defaultTheme = createTheme();
 function PageWait() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
-    // const {state} = useLocation();
-    // const {data} = state;
-    const {data} = {
-        email: "",
-        password: ""
-    }
+    const {state} = useLocation();
+    const {data} = state;
     useEffect(() => {
         loginAccount()
     });
