@@ -111,7 +111,7 @@ function PageWait() {
                 </Box>
 
             </Container>
-            <div style={{ marginTop: '-70px' }}>
+            <div style={{ marginTop: '420px' }}>
                 <Copyright sx={{ mt: 36, mb: 4 }} />
             </div>
         </ThemeProvider>

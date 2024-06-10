@@ -107,12 +107,12 @@ export function Notification() {
         renderData[index].isRead = true
         await setRenderData([...renderData])
     }
-    // const markAllReaded = async () => {
-    //     renderData.map((item) => {
-    //         item.isRead = true
-    //     })
-    //     await setRenderData([...renderData])
-    // }
+    const markAllReaded = async () => {
+        renderData.map((item) => {
+            item.isRead = true
+        })
+        await setRenderData([...renderData])
+    }
 
 
     useEffect(() => {
@@ -163,7 +163,7 @@ export function Notification() {
                         <div className={"header"}>
                             <div className={'top-header'}>
                                 <h4 className={"title"}>Thông báo</h4>
-                                {/*<SubmenuNotification markAllReaded={markAllReaded}/>*/}
+                                <SubmenuNotification markAllReaded={markAllReaded}/>
                             </div>
                             <div className={"btns"}>
                                 <div
