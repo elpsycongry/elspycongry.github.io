@@ -73,6 +73,7 @@ function Login() {
                 }
                 if (res.data.code === "202") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                    localStorage.setItem("pendingUser", JSON.stringify(data))
                     navigate("/pageWait", {state: {data}})
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
