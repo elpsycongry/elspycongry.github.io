@@ -66,9 +66,9 @@ function Register() {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
 
-                else if (res.status == 200) {
+                else if (res.status == 201) {
                     // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    // enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                     sendNotifications(
                         null,
                         `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
