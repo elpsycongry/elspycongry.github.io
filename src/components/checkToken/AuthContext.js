@@ -11,7 +11,6 @@ function AuthContext({children}) {
 
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
-
     if (currentUser === null) {
         if (pathName === '/') {
             return children
@@ -19,7 +18,7 @@ function AuthContext({children}) {
         if (pathName !== "/login" && pathName !== "/register") {
             return <Navigate to="/login"/>
         }
-        // return <Navigate to="/"/>
+    
     } else {
         axios.get(`http://localhost:8080/api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
                 console.log(res)
@@ -40,8 +39,14 @@ function AuthContext({children}) {
         const isDivisionManager = roles.includes('ROLE_DM'); // Kiểm tra xem người dùng có vai trò quản lý bộ phận hay không
         const isQualityController = roles.includes('ROLE_QC'); // Kiểm tra xem người dùng có vai trò kiểm soát chất lượng hay không
         const isHumanResource = roles.includes('ROLE_HR'); // Kiểm tra xem người dùng có vai trò nhân sự hay không
+        const isPending = currentUser.accessToken === 'Tài khoản của bạn chưa được xác nhận'
         const status = currentUser.status;
         const state = currentUser.state;
+
+        if (isPending && pathName!== "/pageWait" && pathName !== "/login") {
+            // window.location.pathname = "/pageWait"
+            return <Navigate to={"/pageWait"}/>
+        }
 
         if (pathName === '/') {
                 return <Navigate to={"/dashboard"}/>
@@ -64,22 +69,23 @@ function AuthContext({children}) {
                 return <Navigate to={"/"}/>
             }
         }
-        if (pathName === "/login") {
+        if (pathName === "/login" && !isPending) {
             return <Navigate to="/dashboard"/>
         }
+
 
     }
     return children ? <>{children}</> : <Navigate to="/notFound" />;
 }
 
 // Hàm đăng xuất
-export function doLogout(navigate) {
+ export async function doLogout(navigate) {
     const user = JSON.parse(localStorage.getItem("currentUser")); // Lấy thông tin người dùng hiện tại từ localStorage
 
     // Kiểm tra xem người dùng có tồn tại không
     if (user) {
         // Gửi yêu cầu đăng xuất đến server
-        axios.post("http://localhost:8080/logoutUser", {}, {
+         axios.post("http://localhost:8080/logoutUser", {}, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}` // Thêm token vào header
             }

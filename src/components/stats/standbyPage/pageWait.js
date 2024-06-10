@@ -15,8 +15,8 @@ import logoImage from '../../../assets/image/logoCodeGym.png';
 import './pageWait.css';
 import { useEffect } from "react";
 
-import './pageWait.css';
 import { useSnackbar } from 'notistack';
+import { doLogout } from '../../checkToken/AuthContext';
 
 
 function Copyright(props) {
@@ -51,15 +51,16 @@ function PageWait() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
     const {state} = useLocation();
-    const {data} = state;
+    const data = JSON.parse(localStorage.getItem("pendingUser"))
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
 
     useEffect(() => {
         loginAccount()
     });
 
     const loginAccount = async () => {
-        try {
-            console.log("PageWait");
+        try {   
+            console.log(currentUser);
             console.log(data)
             axios.post("http://localhost:8080/login", data).then(
                 res => {
@@ -82,6 +83,12 @@ function PageWait() {
             console.log(error);
         }
     }
+    
+
+    const handleDirectPage = () => {
+        doLogout(navigate).then(() => {navigate("/login")})
+    }
+    
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container style={{ paddingTop: '140px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
@@ -99,7 +106,7 @@ function PageWait() {
                     </Avatar>
                     <Typography variant="h2" style={{ paddingTop: '40px' }}>Tài khoản cần chờ admin phê duyệt!</Typography>
                     <div class="form-link">
-                        <span>Quay về trang đăng nhập? <a href="http://localhost:3000/login" class="link signup-link">Sign in</a></span>
+                        <span>Quay về trang đăng nhập? <a onClick={handleDirectPage} className="link_signup_link">Sign in</a></span>
                     </div>
                 </Box>
 
