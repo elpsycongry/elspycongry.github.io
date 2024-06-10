@@ -66,9 +66,15 @@ function Register() {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
 
-                if (res.data.code === "201") {
-                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                else if (res.status == 201) {
+                    // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    sendNotifications(
+                        null,
+                        `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
+                        ['ROLE_ADMIN'],
+                        null,
+                        `/users?idUser=${res.data.id}`)
                     navigate("/login")
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
