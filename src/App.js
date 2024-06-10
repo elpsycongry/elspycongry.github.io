@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './components/pages/login/login';
 import Register from './components/pages/login/register';
@@ -18,11 +18,13 @@ import RecruitmentPlan from './components/Recruitment/recruitmentPlan';
 import axiosInstance from './components/checkToken/axiosInstance';
 import ClientPage from './components/clientPage/clientPage';
 import './assets/css/responsive.css'
+import Email from './components/fragment/email/email';
 
 function App() {
 
     return (
         <>
+            <Email />
             <Routes>
                 <Route path="/dashboard" element={<AuthContext><HomePage /></AuthContext>} />
                 <Route path="/" element={<AuthContext><ClientPage /></AuthContext>} />
@@ -35,7 +37,7 @@ function App() {
                 <Route path="/training" element={<AuthContext><Training /></AuthContext>} />
                 <Route path="/training/stats" element={<AuthContext><TrainingStats /></AuthContext>} />
                 <Route path="/recruitment/stats" element={<AuthContext><RecruitmentStats /></AuthContext>} />
-                <Route path="/recruitment/personalNeeds" element={<AuthContext><PersonalNeeds /></AuthContext>} />
+                <Route path="/recruitment/personalNeeds" element={<AuthContext><PersonalNeeds  /></AuthContext>} />
                 <Route path="/recruitment/candidateManagement" element={<AuthContext><CandidateManagement /></AuthContext>} />
                 <Route path="/recruitment/recruitmentPlan" element={<AuthContext><RecruitmentPlan /></AuthContext>} />
             </Routes>

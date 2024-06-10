@@ -1,22 +1,23 @@
 import axios from "axios";
-import {enqueueSnackbar} from "notistack";
-import {Navigate, useNavigate} from "react-router-dom";
-import Login from "../pages/login/login";
-import Register from "../pages/login/register";
-import PageWait from "../stats/standbyPage/pageWait";
-import {useEffect} from "react";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
-// Context xác thực người dùng
-function AuthContext({children}) {
-    const localUser = localStorage.getItem("currentUser");
-    const currentUser = JSON.parse(localUser === 'undefined' ? null : localUser)
+
+// Check Token
+function AuthContext({ children }) {
+    const location = useLocation();
+    useEffect(() => {
+        const newLocation = location.pathname + location.search;
+        localStorage.setItem('currentLocation', JSON.stringify(newLocation)); // Lưu dữ liệu dưới dạng chuỗi JSON
+    }, [location]);
+    // 
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
     if (currentUser === null) {
-        if (pathName === '/') {
-            return children
-        }
-        if (pathName !== "/login" && pathName !== "/register") {
-            return <Navigate to="/login"/>
+        if (pathName !== "/login") {
+            return <Navigate to="/login" />
         }
     
     } else {
@@ -78,6 +79,7 @@ function AuthContext({children}) {
     return children ? <>{children}</> : <Navigate to="/notFound" />;
 }
 
+
 // Hàm đăng xuất
  export async function doLogout(navigate) {
 
@@ -94,7 +96,7 @@ function AuthContext({children}) {
         }).catch(e => {
             console.error(e); // In lỗi ra console
         });
-
+        localStorage.setItem('currentLocation', '');
         localStorage.removeItem("currentUser"); // Xóa thông tin người dùng khỏi localStorage
         navigate("/"); // Điều hướng người dùng đến trang chủ
     } else {

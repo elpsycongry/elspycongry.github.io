@@ -14,13 +14,14 @@ import { useFormik } from "formik";
 import { TimeField } from "@mui/x-date-pickers";
 import { validFullName, validEmail, validPhone } from "../regex/regex";
 
-export default function DialogCandidateFormCreate({userRoles}) {
+export default function DialogCandidateFormCreate({ userRoles }) {
   const [errName, setErrName] = useState(false);
   const [errEmail, setErrEmail] = useState(false);
   const [errPhoneNumber, setErrPhoneNumber] = useState(false);
   const [errRecruitmentPlan, setErrRecruitmentPlan] = useState(false);
   const [errStatus, setErrStatus] = useState(false);
   const [errFinalResult, setErrFinalResult] = useState(false);
+  const [phoneCheck, setPhoneCheck] = useState([]);
 
   // Xử lý số lượng nhân sự
   const checkValid = (
@@ -57,9 +58,18 @@ export default function DialogCandidateFormCreate({userRoles}) {
       hasErrFinalResult = false;
       setErrFinalResult(false);
     }
+    const checkPhone = () => {
+      return phoneCheck.some((item) => phoneNumber === item);
+    };
 
     var hasErrPhone;
-    if (!validPhone.test(phoneNumber) || phoneNumber === "") {
+    if (phoneNumber === "") {
+      setErrPhoneNumber(true);
+      hasErrPhone = true;
+    } else if (checkPhone()) {
+      setErrPhoneNumber(true);
+      hasErrPhone = true;
+    } else if (!validPhone.test(phoneNumber)) {
       setErrPhoneNumber(true);
       hasErrPhone = true;
     } else {
@@ -67,14 +77,14 @@ export default function DialogCandidateFormCreate({userRoles}) {
       hasErrPhone = false;
     }
 
-    var hasErrPhone;
-    if (!validPhone.test(phoneNumber) || phoneNumber === "") {
-      setErrPhoneNumber(true);
-      hasErrPhone = true;
-    } else {
-      setErrPhoneNumber(false);
-      hasErrPhone = false;
-    }
+    // var hasErrPhone;
+    // if (!validPhone.test(phoneNumber) || phoneNumber === "") {
+    //   setErrPhoneNumber(true);
+    //   hasErrPhone = true;
+    // } else {
+    //   setErrPhoneNumber(false);
+    //   hasErrPhone = false;
+    // }
 
     var hasErrRecruitmentPlan;
     if (
@@ -162,16 +172,16 @@ export default function DialogCandidateFormCreate({userRoles}) {
       const recruitmentPlan = values.recruitmentPlan.id;
       const status = values.status;
 
-      // checkValid(fullName, email, phoneNumber, recruitmentPlan, status, finalResult)
-      // setSubmitting(false);
-      // return;
+      checkValid(fullName, email, phoneNumber, recruitmentPlan);
+      setSubmitting(false);
+      return;
 
       if (
         !checkValid(
           fullName,
           email,
           phoneNumber,
-          recruitmentPlan,
+          recruitmentPlan
           // status
         )
       ) {
@@ -187,16 +197,18 @@ export default function DialogCandidateFormCreate({userRoles}) {
                 buttons: false,
                 timer: 1000,
               }).then(() => {
-                
                 window.location.href = "/recruitment/candidateManagement";
               });
             });
         } catch (error) {
-          swal("Thêm ứng viên thất bại , số lượng nhân sự kế hoạch này đã đầy", {
-            icon: "error",
-            buttons: false,
-            timer: 1000,
-          });
+          swal(
+            "Thêm ứng viên thất bại , số lượng nhân sự kế hoạch này đã đầy",
+            {
+              icon: "error",
+              buttons: false,
+              timer: 1000,
+            }
+          );
         }
       }
     },
@@ -205,15 +217,22 @@ export default function DialogCandidateFormCreate({userRoles}) {
   const [plansLoaded, setPlansLoaded] = useState(false);
   const [plans, setPlans] = useState([]);
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
+    const user = JSON.parse(localStorage.getItem("currentUser"));
     if (user != null) {
       try {
-        axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
+        axios.defaults.headers.common["Authorization"] =
+          "Bearer " + user.accessToken;
         axios.get("http://localhost:8080/api/plans").then((res) => {
           setPlans(res.data);
         });
+        axios
+          .get("http://localhost:8080/api/plansIntern/getAllInterns")
+          .then((res) => {
+            setPhoneCheck(res.data);
+            console.log(res.data);
+          });
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     }
   }, []);
@@ -250,7 +269,9 @@ export default function DialogCandidateFormCreate({userRoles}) {
     { id: 6, text: "Đã nhận việc" },
   ];
   const hasRoleAdmin = () => {
-    return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_HR");
+    return userRoles.some(
+      (role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_HR"
+    );
   };
   const [openForm, setOpenForm] = useState(false);
   const handleClickFormOpen = () => {
@@ -482,7 +503,7 @@ export default function DialogCandidateFormCreate({userRoles}) {
               <div className="col-md-8  mt-0">
                 {errPhoneNumber && (
                   <p className="err-valid ws-nowrap ">
-                    Số điện thoại không hợp lệ
+                    Số điện thoại đã trùng hoặc không hợp lệ
                   </p>
                 )}
               </div>
@@ -544,26 +565,26 @@ export default function DialogCandidateFormCreate({userRoles}) {
               >
                 <option value="default">Chọn kế hoạch tuyển dụng</option>
                 {plans
-  .filter((item) => item.status === "Đã xác nhận")
-  .map((item) =>
-    item.isFullManagement === true ? (
-      <option
-        className="cursor-pointer"
-        key={item.id}
-        value={item.id}
-      >
-        {item.name}
-      </option>
-    ) : (
-      <option
-        className="cursor-pointer"
-        key={item.id}
-        value={item.id}
-      >
-        {item.name}
-      </option>
-    )
-  )}
+                  .filter((item) => item.status === "Đã xác nhận")
+                  .map((item) =>
+                    item.isFullManagement === true ? (
+                      <option
+                        className="cursor-pointer"
+                        key={item.id}
+                        value={item.id}
+                      >
+                        {item.name}
+                      </option>
+                    ) : (
+                      <option
+                        className="cursor-pointer"
+                        key={item.id}
+                        value={item.id}
+                      >
+                        {item.name}
+                      </option>
+                    )
+                  )}
               </select>
               <div className="col-md-8  mt-0">
                 {errRecruitmentPlan && (
@@ -599,7 +620,7 @@ export default function DialogCandidateFormCreate({userRoles}) {
                   </select>
                 </div>
                 {/*  */}
-                {/* <div className="col-md-4 text-center mt-0 mb-2">
+            {/* <div className="col-md-4 text-center mt-0 mb-2">
                   <label
                     htmlFor="name"
                     className="form-label grey-text mb-0 ws-nowrap"
@@ -628,8 +649,8 @@ export default function DialogCandidateFormCreate({userRoles}) {
                   />
                 </div>
               </div> */}
-              {/*  */}
-              {/* <div className="col-md-12 mt-2">
+            {/*  */}
+            {/* <div className="col-md-12 mt-2">
                 <label
                   htmlFor="name"
                   className="form-label grey-text mb-0 ws-nowrap"
@@ -751,15 +772,15 @@ export default function DialogCandidateFormCreate({userRoles}) {
               </div>
             </div>  */}
             <div className=" text-right mt-0 d-flex align-item-flex-end justify-content-end mt-3">
-                <div className="send-child position-relative ">
-                  <button
-                    type="submit"
-                    className=" text-center align-item-center btn send-btn btn-success "
-                  >
-                    Lưu
-                  </button>
-                </div>
+              <div className="send-child position-relative ">
+                <button
+                  type="submit"
+                  className=" text-center align-item-center btn send-btn btn-success "
+                >
+                  Lưu
+                </button>
               </div>
+            </div>
             <div className="col-md-8  mt-0">
               {errStatus && (
                 <p className="err-valid ws-nowrap ">

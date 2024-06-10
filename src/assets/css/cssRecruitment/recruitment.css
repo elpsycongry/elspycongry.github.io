@@ -119,18 +119,28 @@
 
 #formWatch .MuiPaper-root {
     width: 45%;
-    overflow: hidden;
 }
+
+.menu .MuiPaper-root {
+    overflow: hidden;
+    height: 180px;
+    min-width: 300px;
+}
+
 
 .mw .MuiPaper-root {
     min-width: 600px;
 }
+
 .mwQC .MuiPaper-root {
-    min-width: 760px;
+    min-width: 780px;
 }
 
 .mw-200 {
     min-width: 200px;
+}
+.mw-300 {
+    min-width: 300px;
 }
 
 .select-form .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
@@ -333,6 +343,9 @@ input[type="number"]::-webkit-outer-spin-button {
 .w-600 {
     width: 600px;
 }
+.lh-24{
+    line-height: 24px;
+}
 
 .w-250 {
     width: 220px;
@@ -369,6 +382,9 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .fs-14 {
     font-size: 14px !important;
+}
+.fs-18 {
+    font-size: 18px !important;
 }
 
 .fs-1_5em {
@@ -525,6 +541,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .namePersonal {
+    margin-bottom: 0.5rem;
     margin-top: 4px;
     font-size: 16px;
     font-weight: 200;
@@ -606,11 +623,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .svg-size span svg {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .svg-size-err span svg {
-    transform: scale(1.13);
+    transform: scale(1.5);
     transform-origin: center;
     color: red !important;
 }
@@ -629,6 +646,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .svg-size span {
+    font-size: 16px;
     width: 32px;
     height: 24px;
     justify-content: center;
@@ -641,64 +659,140 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 16px;
 }
 
+.btn-progress {
+    width: 115px;
+    line-height: 36px;
+    color: #ebebeb !important;
+}
+
+.btn-progress .css-1f773le-MuiButtonBase-root-MuiAccordionSummary-root {
+    min-height: 36px;
+}
+
+.span-progress {
+    border-radius: 4px !important;
+    background-color: #3165f3;
+    width: 100%;
+    padding-left: 5px;
+    transition: 0.2s ease;
+}
+
+.span-progress:hover {
+    background-color: #1444c8;
+    transition: 0.2s ease;
+}
+
+.Icon-Keyboard {
+    top: 6px;
+    transform: rotate(180Deg);
+    transition: transform 0.3sG ease
+}
+
+.active {
+    transform: rotate(0);
+    transition: transform 0.3s ease
+}
+.denied:hover{
+    background-color: #ff0000 !important;
+}
+.success:hover{
+    background-color: #49a903 !important;
+}
+
+.btn-progress .css-eqpfi5-MuiAccordionSummary-content {
+    margin: 0;
+    justify-content: center;
+}
+
+.progressDiv .MuiPaper-root {
+    min-width: 712px !important;
+}
+
+.progressDiv .css-1f773le-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded {
+    min-height: 36px;
+}
+
+.progressDiv .MuiAccordion-root {
+    box-shadow: none !important;
+}
+
 .input-disabled {
     position: relative;
-  }
-  
-  .input-disabled:after {
-    content: "\f05e"; /* Unicode cho icon cấm */
-    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+}
+
+.input-disabled:after {
+    content: "\f05e";
+    /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free";
+    /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
-    color: #dc3545; /* Màu đỏ */
+    color: #dc3545;
+    /* Màu đỏ */
     position: absolute;
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
     cursor: not-allowed;
     display: none;
-  }
-  
-  .input-disabled:hover:after,
-  .input-disabled:focus:after {
+}
+
+.input-disabled:hover:after,
+.input-disabled:focus:after {
     display: block;
-  }
-  .input-container.input-disabled {
+}
+
+.input-container.input-disabled {
     position: relative;
-  }
-  
-  .input-container.input-disabled:after {
-    content: "\f05e"; /* Unicode cho icon cấm */
-    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+}
+
+.input-container.input-disabled:after {
+    content: "\f05e";
+    font-family: "Font Awesome 5 Free";
     font-weight: 900;
-    color: #dc3545; /* Màu đỏ */
+    color: #dc3545;
     position: absolute;
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
     cursor: not-allowed;
     display: none;
-  }
-  
-  .input-container.input-disabled:hover:after {
+}
+
+.input-container.input-disabled:hover:after {
     display: block;
-  }
-  .select-container.input-disabled {
+}
+
+.select-container.input-disabled {
     position: relative;
-  }
-  
-  .select-container.input-disabled:after {
-    content: "\f05e"; /* Unicode cho icon cấm */
-    font-family: "Font Awesome 5 Free"; /* Sử dụng thư viện Font Awesome */
+}
+
+.select-container.input-disabled:after {
+    content: "\f05e";
+    /* Unicode cho icon cấm */
+    font-family: "Font Awesome 5 Free";
+    /* Sử dụng thư viện Font Awesome */
     font-weight: 900;
-    color: #dc3545; /* Màu đỏ */
+    color: #dc3545;
+    /* Màu đỏ */
     position: absolute;
-    top: 62%; /* Thay đổi giá trị này để di chuyển icon cấm */
+    top: 62%;
+    /* Thay đổi giá trị này để di chuyển icon cấm */
     right: 10px;
     transform: translateY(-50%);
     cursor: not-allowed;
     display: none;
-  }
-  
-  .select-container.input-disabled:hover:after {
+}
+
+.select-container.input-disabled:hover:after {
     display: block;
-  }
+}
+
+.menuChild {
+    position: absolute !important;
+    left: -113px !important;
+}
+
+.center-tech {
+    display: flex;
+    justify-content: center;
+}

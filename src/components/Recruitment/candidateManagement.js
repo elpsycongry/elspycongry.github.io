@@ -31,7 +31,8 @@ import DialogCandidateFormCreate from "./dialogCandidateManagement/dialogCandida
 import DialogCandidateFromUpdate from "./dialogCandidateManagement/dialogCandidateFromUpdate";
 import DialogCandidateFromWatch from "./dialogCandidateManagement/dialogCandidateFromWatch";
 import { useLocation } from 'react-router-dom';
-export default function CandidateManagement() {
+export default function CandidateManagement() {  
+    
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const planName = queryParams.get('planName') || '';
@@ -55,7 +56,7 @@ export default function CandidateManagement() {
     const [valueRecuitments, setSearchName] = useState('');
     const [showError, setShowError] = useState(false);
     const [recuitments, setRecuitment] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState(status);
+    const [selectedStatus, setSelectedStatus] = useState('');
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [recruitmentPlan, setRecruitmentPlan] = useState([]);
@@ -206,8 +207,6 @@ export default function CandidateManagement() {
 
     useEffect(() => {
         getAll(page)
-        setSelectedStatus(status);
-        setSelectPlan(planName);
     }, [page]);
 
     const handlePagination = (event, value) => {
@@ -326,7 +325,12 @@ export default function CandidateManagement() {
                                     onKeyPress={handleEnterChange}
                                     onBlur={handleBlur}
                                     getOptionLabel={handleGetOptionLabel}
-                                    sx={{ width: 300 }}
+                                    sx={{
+                                        width: 300,
+                                        '& .MuiAutocomplete-clearIndicator': {
+                                            display: 'none'
+                                        }
+                                    }}
                                     renderInput={(params) => <TextField {...params} label="Kế hoạch tuyển dụng" />}
                                     filterOptions={(options, { inputValue }) => {
 
@@ -338,6 +342,43 @@ export default function CandidateManagement() {
                                     }}
                                     PopperComponent={CustomPopper} // Sử dụng Popper tùy chỉnh
                                 />
+                                {/* <Autocomplete
+                                    className='ml-10 select-form auto-complete'
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={recruitmentPlan}
+                                    onChange={handlePlanChange}
+                                    inputValue={inputValue}
+                                    value={selectPlan}
+                                    onInputChange={(event, value) => {
+                                        if (event && event.target) {
+                                            setInputValue(event.target.value);
+                                        } else {
+                                            setInputValue(value);
+                                        }
+                                    }}
+                                    onKeyPress={handleEnterChange}
+                                    onBlur={handleBlur}
+                                    getOptionLabel={handleGetOptionLabel}
+                                    sx={{
+                                        width: 300,
+                                        '& .MuiAutocomplete-clearIndicator': {
+                                            display: 'none'
+                                        }
+                                    }}
+                                    renderInput={(params) => <TextField {...params} label="Kế hoạch tuyển dụng" />}
+                                    filterOptions={(options, { inputValue }) => {
+                                        // Lọc các mục phù hợp với giá trị nhập vào, không tạo ra các mục trùng lặp
+                                        const filtered = options.filter(option =>
+                                            option.name.toLowerCase().includes(inputValue.toLowerCase())
+                                            && option.status === "Đã xác nhận"
+                                        );
+                                        // Sử dụng Set để loại bỏ các mục trùng lặp
+                                        return Array.from(new Set(filtered.map(option => option.name)))
+                                            .map(name => options.find(option => option.name === name));
+                                    }}
+                                    PopperComponent={CustomPopper} // Sử dụng Popper tùy chỉnh
+                                /> */}
                             </div>
                             <DialogCandidateFormCreate userRoles={userLogin} />
                         </div>

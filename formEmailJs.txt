@@ -1,0 +1,75 @@
+change data in To email is {{to_email}}
+
+
+
+`FORM PERSONAL NEED`
+
+
+
+<p>Xin ch&agrave;o <strong>{{to_name}}</strong>,<br><em>Aristotle</em> b&aacute;o c&aacute;o tiến độ tuyển dụng của nhu cầu "<strong>{{name_personal_needs}}"</strong> từ ng&agrave;y <strong>{{date_start}}</strong> đến <strong>{{date_end}}.</strong></p>
+<p>T&ecirc;n nhu cầu:<strong> {{name_personal_needs}}</strong> :&nbsp;</p>
+<ul>
+<li><em>Số thực tập sinh đầu v&agrave;o</em>: <strong>{{intern_needs}}</strong></li>
+<li><em>Số thực tập sinh đầu ra</em>: <strong>{{intern_need_hand_over}}</strong></li>
+</ul>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 78.7451%; height: 86px;" border="1"><colgroup><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.642%;"></colgroup>
+<tbody>
+<tr style="height: 37px;">
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n tham gia PV</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n pass</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n fail</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n đang thực tập</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n kh&ocirc;ng nhận việc</strong></td>
+<td style="text-align: center;">&nbsp;<strong>Số ứng vi&ecirc;n đ&atilde; b&agrave;n giao</strong></td>
+</tr>
+<tr style="height: 49px;">
+<td style="text-align: center;">{{total_intern}}</td>
+<td style="text-align: center;">{{pass_intern}}</td>
+<td style="text-align: center;">{{fail_intern}}</td>
+<td style="text-align: center;">{{trainning_intern}}</td>
+<td style="text-align: center;">{{not_trainning_intern}}</td>
+<td style="text-align: center;">{{hand_over_intern}}</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><a href="http://localhost:3000/recruitment/personalNeeds?idRequest={{link_progress}}">Xem chi tiết quy tr&igrave;nh</a></p>
+<p><br>Xin cảm ơn!</p>
+
+
+
+`FORM RECRUITMENT PLAN`
+
+
+
+<p>Xin ch&agrave;o <strong>{{to_name}}</strong>,<br><em>Aristotle</em> b&aacute;o c&aacute;o tiến độ tuyển dụng của kế hoạch "<strong>{{name_personal_needs}}"</strong> từ ng&agrave;y <strong>{{date_start}}</strong> đến <strong>{{date_end}}.</strong></p>
+<p>T&ecirc;n kế hoạch:<strong> {{name_personal_needs}}</strong>&nbsp;</p>
+<ul>
+<li><em>Số thực tập sinh đầu v&agrave;o</em>: <strong>{{intern_needs}}</strong></li>
+<li><em>Số thực tập sinh đầu ra</em>: <strong>{{intern_need_hand_over}}</strong></li>
+</ul>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 78.7451%; height: 86px;" border="1"><colgroup><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.716%;"><col style="width: 16.642%;"></colgroup>
+<tbody>
+<tr style="height: 37px;">
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n tham gia PV</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n pass</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n fail</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n đang thực tập</strong></td>
+<td style="text-align: center;"><strong>Số ứng vi&ecirc;n kh&ocirc;ng nhận việc</strong></td>
+<td style="text-align: center;">&nbsp;<strong>Số ứng vi&ecirc;n đ&atilde; b&agrave;n giao</strong></td>
+</tr>
+<tr style="height: 49px;">
+<td style="text-align: center;">{{total_intern}}</td>
+<td style="text-align: center;">{{pass_intern}}</td>
+<td style="text-align: center;">{{fail_intern}}</td>
+<td style="text-align: center;">{{trainning_intern}}</td>
+<td style="text-align: center;">{{not_trainning_intern}}</td>
+<td style="text-align: center;">{{hand_over_intern}}</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><a href="http://localhost:3000/recruitment/recruitmentPlan?idPlan={{link_progress}}">Xem chi tiết quy tr&igrave;nh</a></p>
+<p><br>Xin cảm ơn!</p>

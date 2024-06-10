@@ -13,9 +13,10 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
 import { useState } from "react";
+
 import { GoogleLogin } from '@react-oauth/google';
 // import { jwtDecode } from "jwt-decode";
 import { useGoogleLogin } from '@react-oauth/google';
@@ -23,6 +24,8 @@ import { Password } from '@mui/icons-material';
 import './login.css';
 import GoogleIcon from '@mui/icons-material/Google';
 
+import { useEffect } from 'react';
+import { elements } from 'chart.js';
 function Copyright(props) {
 
     return (
@@ -52,6 +55,23 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function Login() {
+    
+    const [local, setLocal] = useState('')
+    useEffect(() => {
+        const storedLocation = localStorage.getItem('currentLocation');
+        try {
+            const parsedLocation = JSON.parse(storedLocation);
+            setLocal(parsedLocation) // In ra đối tượng JavaScript đã phân tích
+        } catch (error) {
+            console.error(error); // In ra lỗi nếu có
+        }
+    }, []);
+    const localCheck = local.split('=');
+    const localPath = localCheck[0];
+    const number = localCheck[1];
+    console.log(localPath);
+
+
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
@@ -75,8 +95,12 @@ function Login() {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     localStorage.setItem("pendingUser", JSON.stringify(data))
                     navigate("/pageWait", {state: {data}})
+                    if(localPath === "/recruitment/personalNeeds?idRequest" || localPath === "/recruitment/recruitmentPlan?idPlan"){
+                        navigate(local);
+                    } else{
+                        navigate("/users")
+                    }
                 }
-                setFlagValidate({ ...flagValidate, validSubmit: true })
             }
         ).catch(reason => {
             enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
@@ -282,6 +306,7 @@ function Login() {
                     <div style={{ position: 'fixed', bottom: '20px' }}>
                         <Copyright sx={{ mt: 36, mb: 4, marginTop: '0px', marginBottom: '0px' }} />
                     </div>
+
                 </div>
                 
             </Container>
