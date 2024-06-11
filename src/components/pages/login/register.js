@@ -16,11 +16,12 @@ import axios from "axios";
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
+import logoGoogle from '../../../assets/image/google.png';
 import { useState } from "react";
 import { useGoogleLogin } from '@react-oauth/google';
 import './login.css';
 import GoogleIcon from '@mui/icons-material/Google';
-import {sendNotifications} from "../../Notification/notification";
+import { sendNotifications } from "../../Notification/notification";
 
 function Copyright(props) {
     return (
@@ -61,22 +62,33 @@ function Register() {
         formData.forEach((value, key) => data[key] = value);
         axios.post("http://localhost:8080/register", data).then(
             res => {
-                if (res.data.code === "400" || res.data.code === "409") {
-                    // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                if (res.data.code) {
+                    if (res.data.code === "400" || res.data.code === "409") {
+                        // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                        enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    }
                 }
 
-                if (res.data.code === "201") {
-                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                    enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                else if (res.status == 200) {
+                    console.log(res);
+                    // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                    enqueueSnackbar("Đăng ký thành công, chờ xác nhận", { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                    sendNotifications(
+                        null,
+                        `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
+                        ['ROLE_ADMIN'],
+                        null,
+                        `/users?idUser=${res.data.id}`)
                     navigate("/login")
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
             }
-        ).catch(reason => {
-            enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
-            setFlagValidate({ ...flagValidate, validSubmit: true })
-        })
+        )
+            .catch(reason => {
+                enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+                setFlagValidate({ ...flagValidate, validSubmit: true })
+            }
+            )
     };
 
     // Ép buộc component re-render
@@ -181,25 +193,39 @@ function Register() {
                         Authorization: `Bearer ${access_token}`
                     }
                 });
-                const data = {
+                const dataGoogle = {
                     name: userInfo.data.name,
-                    phone: "PhoneEmail",
+                    phone: "",
                     email: userInfo.data.email,
                     password: "Email0" + userInfo.data.email,
                 };
-                axios.post("http://localhost:8080/register", data).then(
+                console.log(dataGoogle);
+                axios.post("http://localhost:8080/loginGoogle", dataGoogle).then(
                     res => {
-                        console.log(res.status)
-                        if (res.data.code === "400" || res.data.code === "409") {
-                            // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                        if (res.data.code === "401") {
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
-
+                        }
+                        if (res.data.code === "200") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            navigate("/dashboard")
+                        }
+                        if (res.data.code === "201") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
+                            sendNotifications(
+                                null,
+                                `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
+                                ['ROLE_ADMIN'],
+                                null,
+                                `/users?idUser=${res.data.id}`)
+                            navigate("/pageWait", { state: { dataGoogle } })
                         }
 
-                        if (res.data.code === 200 || res.data.code == 201) {
-                            // localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                            enqueueSnackbar(res.data.msg, { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                            navigate("/login")
+                        if (res.data.code === "202") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
+                            navigate("/pageWait", { state: { dataGoogle } })
                         }
                         setFlagValidate({ ...flagValidate, validSubmit: true })
                     }
@@ -215,11 +241,11 @@ function Register() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs" style={{display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <Container component="main" maxWidth="xs" style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: '146px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -277,13 +303,13 @@ function Register() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                   required
-                                   fullWidth
-                                   name="password"
-                                   label="Password"
-                                   type={visible ? "password" : "text"}
-                                   id="password"
-                                   autoComplete="current-password"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type={visible ? "password" : "text"}
+                                    id="password"
+                                    autoComplete="current-password"
                                     InputProps={{
                                         endAdornment: <EndAdorment visible={visible} setVisible={setVisible} />
                                     }}
@@ -318,14 +344,17 @@ function Register() {
                             <span>Already have an account? <a href="http://localhost:3000/login" class="link login-link">Login</a></span>
                         </div>
                         <div class="line" sx={{ mt: 2 }}></div>
-                        <Button fullWidth sx={{ mt: 2, mb: 2, fontWeight: 800 }} variant="outlined" startIcon={<GoogleIcon />} size='medium' onClick={() => registerAccountGoogle()}>
-                            Register with Google
+                        <Button fullWidth sx={{ mt: 2, mb: 2, fontSize: "50", fontWeight: 550 }} variant="outlined" size='medium' onClick={() => registerAccountGoogle()}>
+                            <img src={logoGoogle} style={{ width: '35px', height: '35px' }} />
+                            Login with Google
                         </Button>
                     </Box>
                 </Box>
 
-                <div style={{ marginTop: '-70px' }}>
-                    <Copyright sx={{ mt: 36, mb: 4 }} />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ position: 'fixed', bottom: '20px' }}>
+                        <Copyright sx={{ mt: 36, mb: 4, marginTop: '0px', marginBottom: '0px' }} />
+                    </div>
                 </div>
             </Container>
         </ThemeProvider>

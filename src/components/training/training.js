@@ -255,7 +255,7 @@ export default function Training() {
                                     onChange={handleRecruitmentPlan}
                                     options={listRecruitmentPlan.map((option) => option.name)}
                                     sx={{ width: 300, borderRadius: "4px", background: "white" }}
-                                    renderInput={(params) => <TextField {...params} label="Recruitment Plan" />}
+                                    renderInput={(params) => <TextField {...params} label="Kế hoạch tuyển dụng..." />}
                                 />
                             </FormControl>
                         </div>

@@ -55,7 +55,8 @@ export default function Header() {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios.get('http://localhost:8080/roles/users/view/' + user.id).then(res => {
                 setUserLogin(res.data);
-            });
+            }).catch((e) => {
+                console.error(e)});
             setUserRoles(user.roles);
         }
     }, []);

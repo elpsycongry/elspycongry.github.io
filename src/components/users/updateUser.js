@@ -11,8 +11,8 @@ import * as Yup from 'yup';
 import './updateUser.css';
 import '../../assets/css/cssRecruitment/recruitment.css';
 
-export default function DialogUpdateUserForm({ userId, onUpdate }) {
-    const [open, setOpen] = useState(false);
+export default function DialogUpdateUserForm({ userId, onUpdate,defaultOpen = false }) {
+    const [open, setOpen] = useState(defaultOpen);
     const [roles, setRoles] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
 
