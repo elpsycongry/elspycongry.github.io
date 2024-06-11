@@ -182,13 +182,15 @@ function Login() {
                                 `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
                                 ['ROLE_ADMIN'],
                                 null,
-                                `/users?idUser=${res.data.id}`)
+                                `/users?idUser=${res.data.id}`);
+                            enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                             navigate("/pageWait", { state: { dataGoogle } })
                         }
 
                         if (res.data.code === "202") {
                             localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                             localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
+                            enqueueSnackbar('Đăng nhập thành công!', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                             navigate("/pageWait", { state: { dataGoogle } })
                         }
                         setFlagValidate({ ...flagValidate, validSubmit: true })
