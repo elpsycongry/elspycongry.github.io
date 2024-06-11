@@ -73,7 +73,7 @@ export default function TrainingStatsChart({ year }) {
             })
 
         
-            pdf.save('chart/' + '/' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()  + '.pdf'); // Tải xuống tài liệu PDF
+            pdf.save('chart/' + '/' + date.getDate() + '/' + (date.getMonth() + 1)  + '/' + date.getFullYear()  + '.pdf'); // Tải xuống tài liệu PDF
     }
     const [trainingCharts, setTrainingCharts] = useState([
         {

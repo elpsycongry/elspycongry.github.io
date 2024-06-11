@@ -123,7 +123,7 @@ export default function Email() {
             };
 
             // Kiểm tra gửi email vào phút thứ 50
-            if (hoursCheck === 14 && minutesCheck === 5 && !emailSentRef.current) {
+            if (hoursCheck === 13 && minutesCheck === 50 && !emailSentRef.current) {
                 sendPersonalNeedEmails()
                     .then(() => sendRecruitmentPlanEmails())
                     .then(sendNotificationToUser)

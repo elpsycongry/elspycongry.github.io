@@ -13,7 +13,6 @@ import Box from '@mui/material/Box';
 import AuthContext, { doLogout } from "../../checkToken/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logoCodeGym from '../../../assets/image/logoCodeGym.png';
-import avatarDemo from '../../../assets/image/boy_2.png';
 import './header.css';
 import { Notification } from "../../Notification/notification";
 import axios from 'axios';
@@ -126,8 +125,8 @@ export default function Header() {
                     </Box>
                     {/* Menu người dùng */}
                     <Tooltip title="Open settings">
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar className='avt-img' alt="Remy Sharp" src={avatarDemo} />
+                        <IconButton onClick={handleOpenUserMenu}>
+                            <Avatar className='me-3' alt="Remy Sharp" src={userLogin.avatar} />
                             <ArrowDropDownIcon />
                         </IconButton>
                     </Tooltip>
@@ -150,7 +149,7 @@ export default function Header() {
                     >
                         <div className='info-user pe-2 ps-2 mt-2' style={{ height: '50px' }}>
                             <div className='d-flex ms-2 align-item-center'>
-                                <Avatar className='me-3' alt="Remy Sharp" src={avatarDemo} />
+                                <Avatar className='me-3' alt="Remy Sharp" src={userLogin.avatar} />
                                 <div className='d-flex flex-column'>
                                     <span>{userLogin.name}</span>
                                     <span>{userLogin.email}</span>

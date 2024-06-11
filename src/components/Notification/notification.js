@@ -194,8 +194,12 @@ export function Notification() {
                                         timestamp={notiItem.timestamp}
                                         clickIn={() => {
                                             markReaded(index).then(sendDatas().then(() => {
-                                                if (notiItem.link !== '/https://mail.google.com/') {
-                                                    window.location.href = `http://localhost:3000${notiItem.link}`
+                                                if (notiItem.link) {
+                                                    if (notiItem.link.indexOf("mail.google.com") >= 0) {
+                                                        window.location.href = `https://mail.google.com/`
+                                                    } else  {
+                                                        window.location.href = `http://localhost:3000${notiItem.link}`
+                                                    }
                                                 }
                                             }))
                                         }}

@@ -45,14 +45,13 @@ function AuthContext({ children }) {
         const state = currentUser.state;
 
         if (isPending && pathName!== "/pageWait" && pathName !== "/login") {
-            // window.location.pathname = "/pageWait"
             return <Navigate to={"/pageWait"}/>
         }
 
         if (pathName === '/') {
                 return <Navigate to={"/dashboard"}/>
         }
-        if (pathName === '/users') {
+        if (pathName === '/users' || pathName === '/recruitment/stats') {
             if (!isAdmin) {
                 return <Navigate to={"/dashboard"}/>
             }
@@ -73,8 +72,6 @@ function AuthContext({ children }) {
         if (pathName === "/login" && !isPending) {
             return <Navigate to="/dashboard"/>
         }
-
-
     }
     return children ? <>{children}</> : <Navigate to="/notFound" />;
 }

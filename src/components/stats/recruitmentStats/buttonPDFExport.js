@@ -149,11 +149,12 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             })
         }
         if (checkboxes.checkbox3 === true) {
-            if (checkboxes.checkbox1 === true) {
+            if (checkboxes.checkbox2 === true) {
                 pdf.addPage()
             }
-            if (checkboxes.checkbox1 === false) {
-                pdf.text('Statistical chart', 80, 10);
+            
+            if (checkboxes.checkbox2 === false) {
+                pdf.text('Statistical chart', 90, 10);
             }
             listChartElem()[2].current.style.visibility = "visible";
             const canvas2 = await html2canvas(listChartElem()[2].current);
@@ -188,11 +189,11 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
         }
         if (checkboxes.checkbox4 === true) {
             listChartElem()[3].current.style.visibility = "visible";
-            if (checkboxes.checkbox1 === true) {
+            if (checkboxes.checkbox3 === true) {
                 pdf.addPage()
             }
-            if (checkboxes.checkbox1 === false) {
-                pdf.text('Statistical chart', 80, 10);
+            if (checkboxes.checkbox3 === false) {
+                pdf.text('Statistical chart', 90, 10);
             }
             const canvas3 = await html2canvas(listChartElem()[3].current);
             const imgData3 = canvas3.toDataURL('image/png');
@@ -261,7 +262,7 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                             </div>
                             <div >
 
-                                <button style={{ marginLeft: 70 }} className="btn btn-stats-pdf" type="submit">Xuất file PDF <Icon icon="ant-design:file-pdf-filled" /></button>
+                                <button style={{ marginLeft: 50 }} className="btn btn-stats-pdf" type="submit">Xuất file <Icon icon="ant-design:file-pdf-filled" /></button>
                             </div>
                         </form>
                     </div>
@@ -311,45 +312,5 @@ const PopupBody = styled('div')(
 `,
 );
 
-// const Button = styled('button')(
-//     ({ theme }) => `
-//   font-family: 'IBM Plex Sans', sans-serif;
-//   font-weight: 600;
-//   font-size: 0.875rem;
-//   line-height: 1.5;
-//   background-color: ${blue[500]};
-//   padding: 8px 16px;
-//   border-radius: 8px;
-//   color: white;
-//   transition: all 150ms ease;
-//   cursor: pointer;
-//   border: 1px solid ${blue[500]};
-//   box-shadow: 0 2px 1px ${theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(45, 45, 60, 0.2)'
-//         }, inset 0 1.5px 1px ${blue[400]}, inset 0 -2px 1px ${blue[600]};
-
-//   &:hover {
-//     background-color: ${blue[600]};
-//   }
-
-//   &:active {
-//     background-color: ${blue[700]};
-//     box-shadow: none;
-//   }
-
-//   &:focus-visible {
-//     box-shadow: 0 0 0 4px ${theme.palette.mode === 'dark' ? blue[300] : blue[200]};
-//     outline: none;
-//   }
-
-//   &.disabled {
-//     opacity: 0.4;
-//     cursor: not-allowed;
-//     box-shadow: none;
-//     &:hover {
-//       background-color: ${blue[500]};
-//     }
-//   }
-// `,
-// );
 
 export default ButtonPDFExport;

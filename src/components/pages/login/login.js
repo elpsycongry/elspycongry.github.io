@@ -69,7 +69,6 @@ function Login() {
     const localCheck = local.split('=');
     const localPath = localCheck[0];
     const number = localCheck[1];
-    console.log(localPath);
 
 
     const [visible, setVisible] = React.useState(true)
@@ -101,6 +100,10 @@ function Login() {
                         navigate("/users")
                     }
                 }
+                if(res.data.code === "203") {
+                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                }
+                setFlagValidate({...flagValidate, validSubmit: true})
             }
         ).catch(reason => {
             enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
@@ -195,9 +198,10 @@ function Login() {
                             navigate("/dashboard")
                         }
                         if (res.data.code === "202") {
+                            console.log(res.data);
                             localStorage.setItem("currentUser", JSON.stringify(res.data.data))
-                           localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
-                            // enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
+                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                             navigate("/pageWait", {state: {dataGoogle}})
 
                         }
