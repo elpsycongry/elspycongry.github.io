@@ -39,7 +39,7 @@ export default function TrainingStats() {
     const currentMonth = currentDate.getMonth() + 1;
 
     // Lấy quý hiện tại
-    const currentQuarter = Math.floor(currentMonth / 3) + 1;
+    const currentQuarter = Math.floor((currentMonth - 1)/ 3) + 1;
 
     // Lấy năm hiện tại
     const currentYear = currentDate.getFullYear();
@@ -49,7 +49,7 @@ export default function TrainingStats() {
     const [maxGrowthStatistics, setMaxGrowthStatistics] = useState();
 
     const [activeStat, setActiveStat] = useState("stats1");
-    const [title, setTitle] = useState("Kết quả đào tạo tháng 6");
+    const [title, setTitle] = useState(`Kết quả đào tạo tháng ${currentMonth} năm ${currentYear}`);
     const [titleStatistics, setTitleStatistics] = useState("Năm")
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
@@ -61,17 +61,17 @@ export default function TrainingStats() {
     const [year, setYear] = useState(currentYear);
     const [month, setMonth] = useState(currentMonth);
     const [quarter, setQuarter] = useState(currentQuarter);
-    console.log("Tháng: ", month);
-    console.log("Quý: ", quarter);
-    console.log("Năm: ", year);
-    console.log("Stats: ", activeStat);
     const handleClickStat = (event) => {
         const theValue = event.currentTarget.value;
         if (theValue === "stats3") {
+            setTitleStatistics("Năm")
+            setActive5(false)
+            setActive6(false)
+            setActive7(true)
             setMonth(0)
             setQuarter(0)
             setYear(currentYear)
-            axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=2024")
+            axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=${year}`)
                 .then(res => {
                     setGrowthStatistics(res.data)
                 })
@@ -81,7 +81,6 @@ export default function TrainingStats() {
                 })
         }
         if (theValue === "stats1") {
-            setTitle("Kết quả đào tạo tháng 6 năm 2024")
             setActive1(true)
             setActive2(false)
             setActive3(false)
@@ -89,7 +88,8 @@ export default function TrainingStats() {
             setMonth(currentMonth)
             setQuarter(currentQuarter)
             setYear(currentYear)
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
+            setTitle(`Kết quả đào tạo tháng ${currentMonth} năm ${currentYear}`)
+            axios.get(`http://localhost:8080/api/stats/trainingStats/month?month=${month}&year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -101,12 +101,12 @@ export default function TrainingStats() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
+            axios.get(`http://localhost:8080/api/stats/trainingStats/month?month=${month}&year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
             if (year > 12) {
-                axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=" + year)
+                axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=${year}`)
                     .then(res1 => {
                         setGrowthStatistics(res1.data)
                     })
@@ -115,7 +115,7 @@ export default function TrainingStats() {
                         setMaxGrowthStatistics(res1.data)
                     })
             } if (quarter != 0) {
-                axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithQuarter?quarter=" + quarter)
+                axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithQuarter?quarter=${quarter}&year=${currentYear}`)
                     .then(res4 => {
                         setGrowthStatistics(res4.data)
                     })
@@ -125,7 +125,7 @@ export default function TrainingStats() {
                     })
             }
             if (month != 0) {
-                axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithMonth?month=" + month)
+                axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithMonth?month=${month}&year=${currentYear}`)
                     .then(res3 => {
                         setGrowthStatistics(res3.data)
                     })
@@ -145,36 +145,36 @@ export default function TrainingStats() {
         const theValue = event.currentTarget.value;
 
         if (theValue == 1) {
-            setTitle("Kết quả đào tạo tháng 6 năm 2024")
+            setTitle(`Kết quả đào tạo tháng ${month} năm ${year}`)
             setActive1(true)
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/month?month=6&year=2024")
+            axios.get(`http://localhost:8080/api/stats/trainingStats/month?month=${month}&year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
         }
 
         if (theValue == 2) {
-            setTitle("Kết quả đào tạo quý 2 năm 2024")
+            setTitle(`Kết quả đào tạo quý ${currentQuarter}  năm ${currentYear}`)
             setActive1(false)
             setActive2(true)
             setActive3(false)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/quarter?quarter=2&year=2024")
+            axios.get(`http://localhost:8080/api/stats/trainingStats/quarter?quarter=${currentQuarter}&year=${currentYear}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
         }
 
         if (theValue == 3) {
-            setTitle("Kết quả đào tạo năm 2024")
+            setTitle(`Kết quả đào tạo năm ${year}`)
             setActive1(false)
             setActive2(false)
             setActive3(true)
             setActive4(false)
-            axios.get("http://localhost:8080/api/stats/trainingStats/year?year=2024")
+            axios.get(`http://localhost:8080/api/stats/trainingStats/year?year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -222,7 +222,7 @@ export default function TrainingStats() {
             setActive5(false)
             setActive6(false)
             setActive7(true)
-            axios.get("http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=2024")
+            axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=${year}`)
                 .then(res => {
                     setGrowthStatistics(res.data)
                 })
@@ -254,14 +254,6 @@ export default function TrainingStats() {
 
     };
 
-    function createData(name, quantity, growth) {
-        return { name, quantity, growth };
-    }
-
-    function createSubjects(name, points, growth) {
-        return { name, points, growth }
-    }
-
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     const handleYearChange = (event) => {
@@ -278,7 +270,7 @@ export default function TrainingStats() {
                     <p style={{ marginLeft: '10px', marginBottom: '0px', fontFamily: 'sans-serif', fontWeight: '550', color: 'rgba(0, 0, 0, 0.60)', paddingTop: '2px' }}>Thống kê {'>'} Kết quả đào tạo</p>
                 </Box>
 
-                <div style={{borderRadius: '10px' }} className="content-recruiment">
+                <div style={{ borderRadius: '10px' }} className="content-recruiment">
                     <div style={{ width: '100%' }} className="btn-group" role="group" aria-label="Basic outlined example">
                         {activeStat === "stats1" ? (
                             <button type="button" value="stats1" onClick={handleClickStat} className="btn btn-warning text-white " >Chỉ số</button>
@@ -305,12 +297,12 @@ export default function TrainingStats() {
                                     <div className="box-title-h3" style={{ width: '40%' }}>
                                         {/* Thẻ h3 với title */}
                                         <h3 style={{ marginLeft: '10px', fontFamily: 'sans-serif', color: 'rgba(0, 0, 0, 0.60)', marginTop: '25px', marginBottom: '25px' }}>
-                                        {title}
+                                            {title}
                                         </h3>
                                     </div>
-                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                    <div className="box-button-excel" style={{ width: '188.97px', position: 'relative' }}>
                                         {/* Nút excel */}
-                                        <ExportButton month={month} quarter={quarter} year={year}/>
+                                        <ExportButton month={month} quarter={quarter} year={year} />
                                     </div>
                                 </div>
                                 <div style={{ width: '50%', marginBottom: '25px', fontSize: '18px' }} className="btn-group" role="group" aria-label="Basic outlined example">
@@ -402,7 +394,7 @@ export default function TrainingStats() {
                                             Thống kê tăng trưởng
                                         </h3>
                                     </div>
-                                    <div className="box-button-excel" style={{ width: '40%', position: 'relative' }}>
+                                    <div className="box-button-excel" style={{ width: '188.97px', position: 'relative' }}>
                                         {/* Nút excel */}
                                         <ExportButton month={month} quarter={quarter} year={year} />
                                     </div>
@@ -631,7 +623,7 @@ export default function TrainingStats() {
                         )}
                     </div>
                 </div>
-                <div style={{ paddingTop: '16px', paddingBottom: '16px', width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                <div style={{ paddingTop: '25px', paddingBottom: '28px', width: '100%', height: '30px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     <Copyright sx={{ maxWidth: '100%' }} />
                 </div>
                 {/* <Footer /> */}

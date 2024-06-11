@@ -7,6 +7,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import axios from 'axios';
 import { get } from 'lodash';
+import { Icon } from '@iconify/react';
+
 const ButtonPDFExport = ({ listChartElem, year }) => {
     const [anchor, setAnchor] = React.useState(null);
     const date = new Date();
@@ -86,8 +88,8 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
 
             pdf.autoTable({
-                head:[['Month' ,'CV', 'Interview', 'Candidates Accept Interview', 'Candidates Reject Interview', 'Candidates Pass', "Candidates Fail", "Candidates Accept Job"]],
-                body: trainingCharts.map((val, i) => [(i + 1) , val.totalCV, val.totalInterviewCV, val.candidatesInterview, val.candidatesDoNotInterview, val.candidatesPass, val.candidatesFail, val.candidatesAcceptJob]),
+                head: [['Month', 'CV', 'Interview', 'Candidates Accept Interview', 'Candidates Reject Interview', 'Candidates Pass', "Candidates Fail", "Candidates Accept Job"]],
+                body: trainingCharts.map((val, i) => [(i + 1), val.totalCV, val.totalInterviewCV, val.candidatesInterview, val.candidatesDoNotInterview, val.candidatesPass, val.candidatesFail, val.candidatesAcceptJob]),
                 startY: imgY + imgHeight + 20, // Vị trí y cho bảng, sau ảnh
                 styles: {
                     halign: 'center',
@@ -110,10 +112,10 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
         }
         if (checkboxes.checkbox2 === true) {
             listChartElem()[1].current.style.visibility = "visible";
-            if(checkboxes.checkbox1 === true){
+            if (checkboxes.checkbox1 === true) {
                 pdf.addPage();
             }
-            if(checkboxes.checkbox1 === false){
+            if (checkboxes.checkbox1 === false) {
                 pdf.text('Statistical chart', 80, 10);
             }
             const canvas1 = await html2canvas(listChartElem()[1].current);
@@ -124,8 +126,8 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             pdf.setFontSize(20)
             pdf.addImage(imgData1, 'PNG', 21, imgY, imgWidth, 80); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
             pdf.autoTable({
-                head:[['Month' ,'Candidates Accept Interview', 'Candidates Reject Interview', 'Total']],
-                body: recruitmentChart.map((val, i) => [(i + 1) , val.candidatesInterview, val.candidatesDoNotInterview,val.candidatesInterview +  val.candidatesDoNotInterview]),
+                head: [['Month', 'Candidates Accept Interview', 'Candidates Reject Interview', 'Total']],
+                body: recruitmentChart.map((val, i) => [(i + 1), val.candidatesInterview, val.candidatesDoNotInterview, val.candidatesInterview + val.candidatesDoNotInterview]),
                 startY: imgY + 80 + 20, // Vị trí y cho bảng, sau ảnh
                 styles: {
                     halign: 'center',
@@ -144,14 +146,15 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                     lineWidth: 0.1,             // Border width for the body
                     lineColor: [0, 0, 0]        // Border color for the body
                 }
-                })
+            })
         }
         if (checkboxes.checkbox3 === true) {
-            if(checkboxes.checkbox1 === true){
+            if (checkboxes.checkbox2 === true) {
                 pdf.addPage()
             }
-            if(checkboxes.checkbox1 === false){
-                pdf.text('Statistical chart', 80, 10);
+            
+            if (checkboxes.checkbox2 === false) {
+                pdf.text('Statistical chart', 90, 10);
             }
             listChartElem()[2].current.style.visibility = "visible";
             const canvas2 = await html2canvas(listChartElem()[2].current);
@@ -162,8 +165,8 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             pdf.setFontSize(20)
             pdf.addImage(imgData2, 'PNG', 23, imgY, imgWidth, 80); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
             pdf.autoTable({
-                head:[['Month' ,'Candidates Pass', 'Candidates Fail', 'Total']],
-                body: recruitmentChart.map((val, i) => [(i + 1) , val.candidatesPass, val.candidatesFail,val.candidatesPass +  val.candidatesFail]),
+                head: [['Month', 'Candidates Pass', 'Candidates Fail', 'Total']],
+                body: recruitmentChart.map((val, i) => [(i + 1), val.candidatesPass, val.candidatesFail, val.candidatesPass + val.candidatesFail]),
                 startY: imgY + 80 + 20, // Vị trí y cho bảng, sau ảnh
                 styles: {
                     halign: 'center',
@@ -182,14 +185,15 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                     lineWidth: 0.1,             // Border width for the body
                     lineColor: [0, 0, 0]        // Border color for the body
                 }
-                })
+            })
         }
         if (checkboxes.checkbox4 === true) {
             listChartElem()[3].current.style.visibility = "visible";
-            if(checkboxes.checkbox1 === true){
-                pdf.addPage()            }
-            if(checkboxes.checkbox1 === false){
-                pdf.text('Statistical chart', 80, 10);
+            if (checkboxes.checkbox3 === true) {
+                pdf.addPage()
+            }
+            if (checkboxes.checkbox3 === false) {
+                pdf.text('Statistical chart', 90, 10);
             }
             const canvas3 = await html2canvas(listChartElem()[3].current);
             const imgData3 = canvas3.toDataURL('image/png');
@@ -200,8 +204,8 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             pdf.addImage(imgData3, 'PNG', 23, imgY, imgWidth, 80); // Chèn ảnh vào tài liệu PDF với kích thước và vị trí mới
 
             pdf.autoTable({
-                head:[['Month' ,'Candidates Accept Job', 'Candidates Reject Job', 'Total']],
-                body: recruitmentChart.map((val, i) => [(i + 1) , val.candidatesAcceptJob, val.candidatesRejectJob,val.candidatesAcceptJob +  val.candidatesRejectJob]),
+                head: [['Month', 'Candidates Accept Job', 'Candidates Reject Job', 'Total']],
+                body: recruitmentChart.map((val, i) => [(i + 1), val.candidatesAcceptJob, val.candidatesRejectJob, val.candidatesAcceptJob + val.candidatesRejectJob]),
                 startY: imgY + 80 + 20, // Vị trí y cho bảng, sau ảnh
                 styles: {
                     halign: 'center',
@@ -220,24 +224,24 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                     lineWidth: 0.1,             // Border width for the body
                     lineColor: [0, 0, 0]        // Border color for the body
                 }
-                })
+            })
         }
 
-        pdf.save('chart' + '/' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()  + '.pdf'); // Tải xuống tài liệu PDF
+        pdf.save('chart' + '/' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear() + '.pdf'); // Tải xuống tài liệu PDF
     };
 
     return (
         <div>
-            <button style={{ marginTop: '-30px', float: 'right' }} className='btn btn-stats-green' aria-describedby={id} type="button" onClick={handleClick}>
-                Export File PDF
+            <button style={{ marginTop: '-30px', float: 'right', marginRight: '220px' }} className='btn btn-stats-pdf' aria-describedby={id} type="button" onClick={handleClick}>
+                Xuất file PDF <Icon icon="ant-design:file-pdf-filled" />
             </button>
             <BasePopup id={id} open={open} anchor={anchor}>
                 <PopupBody>
-                    <div style={{width: '200px'}}>
+                    <div style={{ width: '200px' }}>
                         <form onSubmit={formSubmitHandler}>
                             <div>
                                 <label>
-                                Chọn biểu đồ bạn muốn:
+                                    Chọn biểu đồ bạn muốn:
                                 </label>
                             </div>
                             <div>
@@ -246,18 +250,19 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
                             </div>
                             <div>
                                 <input type="checkbox" id="checkbox2" checked={checkboxes.checkbox2} onChange={handleCheckboxChange} />
-                                <label style={{ marginLeft: 10, marginBottom: 5  }}>Biểu đồ cột cv đã xử lý</label>
+                                <label style={{ marginLeft: 10, marginBottom: 5 }}>Biểu đồ cột cv đã xử lý</label>
                             </div>
                             <div>
                                 <input type="checkbox" id="checkbox3" checked={checkboxes.checkbox3} onChange={handleCheckboxChange} />
-                                <label style={{ marginLeft: 10, marginBottom: 5  }}>Biểu đồ cột pass/fail</label>
+                                <label style={{ marginLeft: 10, marginBottom: 5 }}>Biểu đồ cột pass/fail</label>
                             </div>
                             <div>
                                 <input type="checkbox" id="checkbox4" checked={checkboxes.checkbox4} onChange={handleCheckboxChange} />
-                                <label style={{ marginLeft: 10, marginBottom: 5  }}>Biểu đồ cột nhận việc</label>
+                                <label style={{ marginLeft: 10, marginBottom: 5 }}>Biểu đồ cột nhận việc</label>
                             </div>
                             <div >
-                                <button style={{marginLeft: 70}} className="btn btn-stats-green" type="submit">Export</button>
+
+                                <button style={{ marginLeft: 50 }} className="btn btn-stats-pdf" type="submit">Xuất file <Icon icon="ant-design:file-pdf-filled" /></button>
                             </div>
                         </form>
                     </div>
@@ -307,45 +312,5 @@ const PopupBody = styled('div')(
 `,
 );
 
-// const Button = styled('button')(
-//     ({ theme }) => `
-//   font-family: 'IBM Plex Sans', sans-serif;
-//   font-weight: 600;
-//   font-size: 0.875rem;
-//   line-height: 1.5;
-//   background-color: ${blue[500]};
-//   padding: 8px 16px;
-//   border-radius: 8px;
-//   color: white;
-//   transition: all 150ms ease;
-//   cursor: pointer;
-//   border: 1px solid ${blue[500]};
-//   box-shadow: 0 2px 1px ${theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(45, 45, 60, 0.2)'
-//         }, inset 0 1.5px 1px ${blue[400]}, inset 0 -2px 1px ${blue[600]};
-
-//   &:hover {
-//     background-color: ${blue[600]};
-//   }
-
-//   &:active {
-//     background-color: ${blue[700]};
-//     box-shadow: none;
-//   }
-
-//   &:focus-visible {
-//     box-shadow: 0 0 0 4px ${theme.palette.mode === 'dark' ? blue[300] : blue[200]};
-//     outline: none;
-//   }
-
-//   &.disabled {
-//     opacity: 0.4;
-//     cursor: not-allowed;
-//     box-shadow: none;
-//     &:hover {
-//       background-color: ${blue[500]};
-//     }
-//   }
-// `,
-// );
 
 export default ButtonPDFExport;

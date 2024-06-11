@@ -16,3 +16,13 @@
     background-color: #388004;
     color: white;
 }
+
+.btn-stats-pdf{
+    background-color: #CB4335;
+    color: white;
+}
+
+.btn-stats-pdf:hover{
+    background-color: #e6433d;
+    color: white;
+}

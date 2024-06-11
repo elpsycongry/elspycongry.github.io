@@ -107,12 +107,12 @@ export function Notification() {
         renderData[index].isRead = true
         await setRenderData([...renderData])
     }
-    // const markAllReaded = async () => {
-    //     renderData.map((item) => {
-    //         item.isRead = true
-    //     })
-    //     await setRenderData([...renderData])
-    // }
+    const markAllReaded = async () => {
+        renderData.map((item) => {
+            item.isRead = true
+        })
+        await setRenderData([...renderData])
+    }
 
 
     useEffect(() => {
@@ -163,7 +163,7 @@ export function Notification() {
                         <div className={"header"}>
                             <div className={'top-header'}>
                                 <h4 className={"title"}>Thông báo</h4>
-                                {/*<SubmenuNotification markAllReaded={markAllReaded}/>*/}
+                                <SubmenuNotification markAllReaded={markAllReaded}/>
                             </div>
                             <div className={"btns"}>
                                 <div
@@ -195,7 +195,11 @@ export function Notification() {
                                         clickIn={() => {
                                             markReaded(index).then(sendDatas().then(() => {
                                                 if (notiItem.link) {
-                                                    window.location.href = `http://localhost:3000${notiItem.link}`
+                                                    if (notiItem.link.indexOf("mail.google.com") >= 0) {
+                                                        window.location.href = `https://mail.google.com/`
+                                                    } else  {
+                                                        window.location.href = `http://localhost:3000${notiItem.link}`
+                                                    }
                                                 }
                                             }))
                                         }}
@@ -233,18 +237,20 @@ export async function sendNotifications(
     content,
     roleReceiver,
     listReceiverId,
-    link
+    link,
+    listReceiverEmail,
 ) {
     var date = new Date()
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const notificationInfo = {
-        creatorId: creatorId , // Nếu creatorId là null hoặc rỗng, gán giá trị là người dùng hiện tại
+        creatorId: creatorId ,
         content: content,
         listRoleReceiver: roleReceiver,
         listReceiverId: listReceiverId,
         timeCreate: date.toISOString(),
         link: link,
+        listReceiverEmail: listReceiverEmail,
     }
     await axios.post('http://localhost:8080/api/notifications', notificationInfo)
 }

@@ -128,6 +128,7 @@ export default function RecruitmentPlan() {
     const [idUser, setIdUser] = useState();
     async function getAll(pageNumber) {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        console.log(user);
 
         if (user != null) {
             try {
@@ -275,9 +276,9 @@ export default function RecruitmentPlan() {
                                     <td className="text-center">{item.users.name}</td>
                                     <td className="text-right p-tricklord">
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} userRoles={userLogin} />
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={false} statusItem={item.status} reasonItem={item.reason} idUser={idUser} userRoles={userLogin} />
                                         ) : (
-                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} statusItem={item.status} userRoles={userLogin} />
+                                            <DialogRecruitmentPlanFormWatch id={item.id} check={true} statusItem={item.status} userRoles={userLogin} idUser={idUser} />
                                         )}
                                         {item.status === "Bị từ chối " || item.status.toLowerCase() === "đã xác nhận" || item.status === "Bị từ chối bởi DECAN" ? (
 

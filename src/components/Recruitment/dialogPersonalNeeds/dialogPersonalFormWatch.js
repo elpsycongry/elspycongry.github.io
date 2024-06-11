@@ -1,18 +1,20 @@
-import {Dialog, DialogTitle, Grid, IconButton, Tooltip} from "@mui/material";
-import {useEffect, useState} from "react";
+import { Accordion, AccordionDetails, Dialog, DialogTitle, Grid, IconButton, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DialogPersonalFormReason from "./dialogPersonalFormReason";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import axios from "axios";
-import {useFormik} from "formik";
+import { useFormik } from "formik";
 import DialogRecruitmentPlanFormCreateSuccess from "./dialogRecruitmentPlanFormCreateSuccess";
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
-import {Link} from "react-router-dom";
-import {Icon} from "@iconify/react/dist/iconify.js";
+import { Link } from "react-router-dom";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import AccordionSummary from '@mui/material/AccordionSummary';
 
-export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
+export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     const [tenhnology, setTenhnology] = useState([]);
     const hasRoleAdmin = () => {
         return userRoles.some((role) => role.authority === "ROLE_ADMIN" || role.authority === "ROLE_TM");
@@ -20,6 +22,18 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
     const hasRoleKSCL = () => {
         return userRoles.some((role) => role.authority === "ROLE_QC");
     };
+    const hasRoleDM = () => {
+        return userRoles.some((role) => role.authority === "ROLE_DM");
+    };
+    const hasRoleHR = () => {
+        return userRoles.some((role) => role.authority === "ROLE_HR");
+    };
+    const shouldShowLink = !(hasRoleHR() || hasRoleDM());
+
+    const [dropProgress, setDropProgress] = useState(true);
+    const clickProgress = () => {
+        setDropProgress(!dropProgress);
+    }
     // Dữ liệu fake
     const formData = useFormik({
         initialValues: {
@@ -42,6 +56,7 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
     });
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
+        console.log(user);
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios
@@ -50,7 +65,7 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
                     formData.setValues(res.data);
                     const detail = res.data.details;
                     setTenhnology(
-                        detail.map((item) => ({type: item.type, quantity: item.quantity}))
+                        detail.map((item) => ({ type: item.type, quantity: item.quantity }))
                     );
                 });
         }
@@ -63,6 +78,7 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
         setOpenForm(true);
     };
     const handleClickFormClose = () => {
+        setDropProgress(true);
         setOpenForm(false);
     };
 
@@ -95,20 +111,32 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
     const activeStep = steps.step;
     const deleteIcon = () => {
         return (
-            <Icon icon="typcn:delete" width="24" height="24"/>
+            <Icon icon="typcn:delete" width="24" height="24" />
         )
     }
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/process/request/${id}`);
-                setSteps(response.data);
+                console.log(response.data);
+                setSteps(prevSteps => {
+                    const updatedSteps = response.data;
+                    if (updatedSteps.intern === updatedSteps.totalIntern && updatedSteps.intern > 0) {
+                        updatedSteps.step = 7;
+                    }
+                    return updatedSteps;
+                });
             } catch (error) {
                 console.error(error);
             }
         };
         fetchData();
     }, []);
+
+
+
+
+
     const checkDecan = () => {
         if (steps.decanAccept === null || steps.decanAccept === "") {
             return false;
@@ -156,312 +184,306 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
                                 }}
                                 onClick={handleClickFormClose}
                             >
-                                <ClearIcon className="fs-1_5em cursor-pointer"/>
+                                <ClearIcon className="fs-1_5em cursor-pointer" />
                             </IconButton>
                         </div>
                         <div className="col-md-12 ">
                             <table className="w-100">
                                 <thead>
-                                <tr>
-                                    <th>
-                                        <label
-                                            htmlFor="name"
-                                            style={{color: "#6F6F6F"}}
-                                            className="form-label fw-500 mr-15 fs-20"
-                                        >
-                                            Tên:{" "}
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <p className="namePersonal" style={{color: "#838383"}}>
-                                            {formData.values.recruitmentRequest.name}
-                                        </p>
-                                    </th>
-                                    <th style={{width: '55.05px'}}>
-                                        <label
-                                            htmlFor="name"
-                                            style={{color: "#6F6F6F"}}
-                                            className="form-label fw-500 mr-15 fs-20"
-                                        >
-                                        </label>
-                                    </th>
-                                </tr>
+                                    <tr>
+                                        <th>
+                                            <label
+                                                htmlFor="name"
+                                                style={{ color: "#6F6F6F" }}
+                                                className="form-label fw-500 mr-15 fs-20"
+                                            >
+                                                Tên:{" "}
+                                            </label>
+                                        </th>
+                                        <th>
+                                            <p className="namePersonal" style={{ color: "#838383" }}>
+                                                {formData.values.recruitmentRequest.name}
+                                            </p>
+                                        </th>
+                                        <th style={{ width: '55.05px' }}>
+                                            <label
+                                                htmlFor="name"
+                                                style={{ color: "#6F6F6F" }}
+                                                className="form-label fw-500 mr-15 fs-20"
+                                            >
+                                            </label>
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <table className="table-edit">
-                                            <thead className="grey-text">
-                                            <th
-                                                style={{color: "#6F6F6F"}}
-                                                className="text-center p-2 w-250 fw-500"
-                                            >
-                                                Công nghệ
-                                            </th>
-                                            <th
-                                                style={{color: "#6F6F6F"}}
-                                                className="text-center p-2 w-250 fw-500"
-                                            >
-                                                Số lượng nhân sự
-                                            </th>
-                                            </thead>
-                                            <tbody>
-                                            {tenhnology.map((item) => (
-                                                <tr key={item.type}>
-                                                    <td
-                                                        style={{color: "#838383"}}
-                                                        className="text-center p-2 w-250 fs-15 grey-text"
+                                    <tr>
+                                        <td></td>
+                                        <td className="center-tech">
+                                            <table className="table-edit">
+                                                <thead className="grey-text">
+                                                    <th
+                                                        style={{ color: "#6F6F6F" }}
+                                                        className="text-center p-2 w-250 fw-500"
                                                     >
-                                                        {item.type}
-                                                    </td>
-                                                    <td
-                                                        style={{color: "#838383"}}
-                                                        className="text-center p-2 w-250 fs-15 grey-text"
+                                                        Công nghệ
+                                                    </th>
+                                                    <th
+                                                        style={{ color: "#6F6F6F" }}
+                                                        className="text-center p-2 w-250 fw-500"
                                                     >
-                                                        {item.quantity}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
+                                                        Số lượng nhân sự
+                                                    </th>
+                                                </thead>
+                                                <tbody>
+                                                    {tenhnology.map((item) => (
+                                                        <tr key={item.type}>
+                                                            <td
+                                                                style={{ color: "#838383" }}
+                                                                className="text-center p-2 w-250 fs-15 grey-text"
+                                                            >
+                                                                {item.type}
+                                                            </td>
+                                                            <td
+                                                                style={{ color: "#838383" }}
+                                                                className="text-center p-2 w-250 fs-15 grey-text"
+                                                            >
+                                                                {item.quantity}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div className="col-md-12 mt-2 d-flex height-35">
                             <label
                                 htmlFor="time"
-                                style={{color: "#6F6F6F"}}
+                                style={{ color: "#6F6F6F" }}
                                 className="form-label fs-20"
                             >
                                 Thời hạn bàn giao:{" "}
                             </label>
-                            <p className="time-edit" style={{color: "#838383"}}>
+                            <p className="time-edit" style={{ color: "#838383" }}>
                                 {formData.values.recruitmentRequest.dateEnd}
                             </p>
                         </div>
-                        {!hasRoleKSCL() ?
-                            formData.values.recruitmentRequest.status ===
-                            "Bị từ chối bởi DET" ? (
-                                <div className="col-md-12 mt-2 d-flex ">
-                                    <label
+                        <div className="col-md-12 mt-0 d-flex ">
+                            <label
+                                htmlFor="time"
+                                style={{ color: "#6F6F6F" }}
+                                className="form-label fs-20 mb-0"
+                            >
+                                Trạng thái:{" "}
+                            </label>
+                            <p
+                                className=" namePersonal mb-0 ms-2"
+                                style={{ color: "#838383" }}
+                            >
+                                {formData.values.recruitmentRequest.status}
+                            </p>
+                        </div>
+                        <div className=" mt-0">
+                            <div className="col-md-12 mt-2 progressDiv">
+                                <Accordion>
+                                    <AccordionSummary
                                         htmlFor="time"
-                                        style={{color: "#6F6F6F", whiteSpace: "nowrap"}}
-                                        className="form-label fs-20 me-2"
+                                        style={{ color: "#6F6F6F" }}
+                                        className=" form-label fs-20 mb-0 p-0 btn-progress"
+                                        onClick={clickProgress}
                                     >
-                                        Lý do:
-                                    </label>
-                                    <textarea
-                                        readOnly
-                                        className="form-control resize pt-2 w-372"
-                                        style={{color: "#838383"}}
-                                        value={formData.values.recruitmentRequest.reason}>
-                                    </textarea>
-                                </div>
-                            ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" || formData.values.recruitmentRequest.status === "Đang tuyển dụng" ? ("") :
-                                    (formData.values.recruitmentRequest.status === "Bị từ chối bởi DECAN" ? (
-                                        <div className="col-md-12 mt-2 d-flex ">
-                                            <label
-                                                htmlFor="time"
-                                                style={{color: "#6F6F6F", whiteSpace: "nowrap"}}
-                                                className="form-label fs-20 me-2">
-
-                                                Lý do:
-                                            </label>
-                                            <textarea
-                                                readOnly
-                                                className="form-control resize pt-2 "
-                                                style={{color: "#838383"}}
-                                                value={formData.values.recruitmentRequest.reason}
-                                            ></textarea>
-                                        </div>
-                                    ) : (
-                                        hasRoleAdmin() && (
-                                            <div className="col-md-12 mt-0 d-flex">
-                                                <div className="col-md-3 mt-2">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
-                                                        onClick={handleCloseWatchOpenReason}
-                                                    >
-                                                        Từ chối
-                                                    </button>
-                                                </div>
-                                                <div className="col-md-9 mt-2 ms-2">
-                                                    <button
-                                                        type="button"
-                                                        className=" btn-edit btn btn-success w-98   bg-clr-success"
-                                                        onClick={handleCloseWatchOpenCreate}>
-                                                        Khởi tạo kế hoạch tuyển dụng
-                                                    </button>
-                                                </div>
+                                        <span className="span-progress position-relative">
+                                            Quy trình
+                                            <KeyboardArrowUpIcon className={`Icon-Keyboard ${dropProgress ? '' : 'active'} position-absolute`} />
+                                        </span>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div className="col-md-12 d-flex justify-content-center">
+                                            <div className="col-md-4 d-flex flex-column mw-300">
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Khởi tạo nhu cầu nhân sự</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">DET xác nhận</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">DCAN xác nhận</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Tuyển dụng</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Đào tạo</span>
+                                                <div style={{ height: '24px' }}></div>
+                                                <span className="ws-nowrap p-es-8 h-40 text-right me-2 fs-18 lh-24 fw-600 grey-text">Bàn giao nhân sự</span>
                                             </div>
-                                        )
-
-                                    ))
-                            ) :
-                            <div className=" mt-0">
-                                <div className="col-md-12 d-flex ">
-                                    <label
-                                        htmlFor="time"
-                                        style={{color: "#6F6F6F"}}
-                                        className="form-label fs-20 mb-0"
-                                    >
-                                        Trạng thái:{" "}
-                                    </label>
-                                    <p
-                                        className=" namePersonal mb-0 ms-2"
-                                        style={{color: "#838383"}}
-                                    >
-                                        {formData.values.recruitmentRequest.status}
-                                    </p>
-                                </div>
-                                <div className="col-md-12 mt-2">
-                                    <label
-                                        htmlFor="time"
-                                        style={{color: "#6F6F6F"}}
-                                        className="form-label fs-20 mb-0"
-                                    >
-                                        Quy trình:{" "}
-                                    </label>
-                                    <div className="col-md-12 d-flex">
-                                        <div className="col-md-4 d-flex flex-column mw-200">
-                                            <span
-                                                className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Khởi tạo nhu cầu nhân sự</span>
-                                            <div style={{height: '24px'}}></div>
-                                            <span
-                                                className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DET xác nhận</span>
-                                            <div style={{height: '24px'}}></div>
-                                            <span
-                                                className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">DCAN xác nhận</span>
-                                            <div style={{height: '24px'}}></div>
-                                            <span
-                                                className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Tuyển dụng</span>
-                                            <div style={{height: '24px'}}></div>
-                                            <span
-                                                className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Đào tạo</span>
-                                            <div style={{height: '24px'}}></div>
-                                            <span
-                                                className="ws-nowrap p-es-8 h-40 text-right mr-15 fs-14 fw-600 grey-text">Bàn giao nhân sự</span>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <Stepper activeStep={activeStep} orientation="vertical">
-                                                <Step>
-                                                    <StepLabel className="ws-nowrap svg-size"><span
-                                                        className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator}
-                                                        <span className="fs-16">{steps.requestName}</span></span>
-                                                    </StepLabel>
-                                                </Step>
-                                                <Step>
-                                                    <StepLabel
-                                                        StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''}
-                                                        className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
-                                                        {checkDet() ?
-                                                            steps.detAccept === "true" || steps.detAccept === true ?
-                                                                <span
-                                                                    className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link
-                                                                    to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`}
-                                                                    className="a-progress cursor-pointer">{steps.planName}</Link></span>
-                                                                :
-                                                                steps.decanAccept === "false" || steps.decanAccept === false ?
+                                            <div className="col-md-6">
+                                                <Stepper activeStep={activeStep} orientation="vertical">
+                                                    <Step>
+                                                        <StepLabel className="ws-nowrap svg-size"><span className=" bg-c d-flex flex-column align-items-start mt-12">{steps.requestCreator} <span className="fs-16">{steps.requestName}</span></span> </StepLabel>
+                                                    </Step>
+                                                    <Step>
+                                                        <StepLabel StepIconComponent={steps.detAccept === "false" || steps.detAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.detAccept === "false" || steps.detAccept === false ? 'svg-size-err' : ''}`}>
+                                                            {checkDet() ?
+                                                                steps.detAccept === "true" || steps.detAccept === true ?
                                                                     <span
-                                                                        className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                        className="d-flex flex-column align-items-start mt-12">DET khởi tạo kế hoạch tuyển dụng <Link
+                                                                            to={`/recruitment/recruitmentPlan?idPlan=${steps.planId}`}
+                                                                            className="a-progress cursor-pointer">{steps.planName}</Link></span>
                                                                     :
-                                                                    <span
-                                                                        className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                    steps.decanAccept === "false" || steps.decanAccept === false ?
+                                                                        <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                        :
+                                                                        <span className="d-flex flex-column align-items-start mt-10">DET từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
 
-                                                            :
-                                                            <span
-                                                                className="d-flex flex-column align-items-start mt-12"><a
-                                                                className="a-progress"></a></span>
-                                                        }
-                                                    </StepLabel>
-
-                                                </Step>
-                                                <Step>
-                                                    <StepLabel
-                                                        StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''}
-                                                        className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
-                                                        {checkDecan() ?
-                                                            steps.decanAccept === "true" || steps.decanAccept === true ?
-                                                                <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a
-                                                                    className="a-progress"></a></span>
                                                                 :
-                                                                <span
-                                                                    className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
+                                                            }
+                                                        </StepLabel>
+
+                                                    </Step>
+                                                    <Step>
+                                                        <StepLabel StepIconComponent={steps.decanAccept === "false" || steps.decanAccept === false ? deleteIcon : ''} className={`ws-nowrap svg-size ${steps.decanAccept === "false" || steps.decanAccept === false ? 'svg-size-err' : ''}`}>
+                                                            {checkDecan() ?
+                                                                steps.decanAccept === "true" || steps.decanAccept === true ?
+                                                                    <span className="d-flex flex-column align-items-start">DECAN khởi tạo kế hoạch tuyển dụng <a className="a-progress"></a></span>
+                                                                    :
+                                                                    <span className="d-flex flex-column align-items-start mt-10">DECAN từ chối kế hoạch tuyển dụng <span>Lý do: {steps.reason}</span></span>
+                                                                :
+                                                                <span className="d-flex flex-column align-items-start mt-12"><a className="a-progress"></a></span>
+                                                            }
+
+                                                        </StepLabel>
+                                                    </Step>
+                                                    <Step>
+                                                        {steps.step >= 3 ?
+                                                            steps.applicants === 0 ?
+                                                                <StepLabel
+                                                                    className="ws-nowrap svg-size svg-size-none"><span
+                                                                        className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants}
+                                                                        <a className="a-progress"></a></span> </StepLabel>
+
+                                                                :
+                                                                <StepLabel className="ws-nowrap svg-size"><span
+                                                                    className={`d-flex flex-column align-items-start ${!hasRoleDM() ? 'mt-12 test' : ''}`}>Số lượng ứng viên ứng tuyển: {steps.applicants}
+                                                                    {!hasRoleDM() ?
+                                                                        <Link
+                                                                            to={`/recruitment/candidateManagement?planName=${steps.planName}`}
+                                                                            className="a-progress cursor-pointer">Xem kết quả tuyển dụng</Link>
+                                                                        :
+                                                                        <Link
+                                                                            className="a-progress">
+                                                                        </Link>
+                                                                    }
+                                                                </span>
+                                                                </StepLabel>
                                                             :
-                                                            <span
-                                                                className="d-flex flex-column align-items-start mt-12"><a
-                                                                className="a-progress"></a></span>
+                                                            <StepLabel className="ws-nowrap svg-size"><span
+                                                                className="d-flex flex-column align-items-start"> <a></a></span>
+                                                            </StepLabel>
                                                         }
-
-                                                    </StepLabel>
-                                                </Step>
-                                                <Step>
-                                                    {steps.step >= 3 ?
-                                                        steps.applicants === 0 ?
-                                                            <StepLabel
-                                                                className="ws-nowrap svg-size svg-size-none"><span
-                                                                className="d-flex flex-column align-items-start ">Số lượng ứng viên ứng tuyển: {steps.applicants}
-                                                                <a className="a-progress"></a></span> </StepLabel>
-
+                                                    </Step>
+                                                    <Step>
+                                                        {steps.step >= 4 ?
+                                                            steps.training === 0 ?
+                                                                <StepLabel className={`ws-nowrap svg-size svg-size-none `}>
+                                                                    <span
+                                                                        className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training}
+                                                                        <a className="a-progress"></a></span>
+                                                                </StepLabel>
+                                                                :
+                                                                <StepLabel className="ws-nowrap svg-size"><span
+                                                                    className={`d-flex flex-column align-items-start ${shouldShowLink ? 'mt-12' : ''}`}>Số lượng TTS tham gia đào tạo: {steps.training}
+                                                                    {shouldShowLink ?
+                                                                        <Link
+                                                                            to={`/training?&planName=${steps.planName}`}
+                                                                            className="a-progress cursor-pointer">Xem kết quả đào tạo</Link>
+                                                                        :
+                                                                        <Link
+                                                                            className="a-progress"></Link>
+                                                                    }
+                                                                </span>
+                                                                </StepLabel>
                                                             :
                                                             <StepLabel className="ws-nowrap svg-size"><span
-                                                                className="d-flex flex-column align-items-start mt-12">Số lượng ứng viên ứng tuyển: {steps.applicants}
-                                                                <Link
-                                                                    to={`/recruitment/candidateManagement?planName=${steps.planName}`}
-                                                                    className="a-progress cursor-pointer">Xem kết quả tuyển dụng</Link></span>
+                                                                className="d-flex flex-column align-items-start"> <a></a></span>
                                                             </StepLabel>
-                                                        :
-                                                        <StepLabel className="ws-nowrap svg-size"><span
-                                                            className="d-flex flex-column align-items-start"> <a></a></span>
-                                                        </StepLabel>
-                                                    }
-                                                </Step>
-                                                <Step>
-                                                    {steps.step >= 4 ?
-                                                        steps.training === 0 ?
-                                                            <StepLabel className={`ws-nowrap svg-size svg-size-none `}>
-                                                                <span
-                                                                    className={`d-flex flex-column align-items-start`}>Số lượng TTS tham gia đào tạo: {steps.training}
-                                                                    <a className="a-progress"></a></span>
+                                                        }
+                                                    </Step>
+                                                    <Step>
+                                                        {steps.step >= 5 ?
+                                                            <StepLabel className={`ws-nowrap svg-size  ${steps.intern !== steps.totalIntern ? 'svg-size-none' : ''}`}>
+                                                                <span className={`d-flex flex-column align-items-start ${shouldShowLink ? 'mt-12' : ''}`}>Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự
+                                                                    {steps.intern !== 0 ?
+                                                                        shouldShowLink &&
+                                                                        <Link to={`/training?&planName=${steps.planName}&is_pass=Pass`} className="a-progress cursor-pointer">Xem nhân sự</Link>
+                                                                        :
+                                                                        <Link className="a-progress"></Link>
+                                                                    }
+                                                                </span>
                                                             </StepLabel>
                                                             :
                                                             <StepLabel className="ws-nowrap svg-size"><span
-                                                                className="d-flex flex-column align-items-start mt-12">Số lượng TTS tham gia đào tạo: {steps.training}
-                                                                <Link
-                                                                    to={`/recruitment/candidateManagement?&planName=${steps.planName}&status=Đã nhận việc`}
-                                                                    className="a-progress cursor-pointer">Xem kết quả đào tạo</Link></span>
+                                                                className="d-flex flex-column align-items-start"> <a></a></span>
                                                             </StepLabel>
-                                                        :
-                                                        <StepLabel className="ws-nowrap svg-size"><span
-                                                            className="d-flex flex-column align-items-start"> <a></a></span>
-                                                        </StepLabel>
-                                                    }
-                                                </Step>
-                                                <Step>
-                                                    {steps.step >= 5 ?
-                                                        <StepLabel className="ws-nowrap svg-size"><span
-                                                            className="d-flex flex-column align-items-start">Đã bàn giao {steps.intern}/{steps.totalIntern} nhân sự <a
-                                                            className="a-progress"></a></span> </StepLabel>
-                                                        :
-                                                        <StepLabel className="ws-nowrap svg-size"><span
-                                                            className="d-flex flex-column align-items-start"> <a></a></span>
-                                                        </StepLabel>
-                                                    }
-                                                </Step>
-                                            </Stepper>
+                                                        }
+                                                    </Step>
+                                                </Stepper>
+                                            </div>
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </div>
+                        </div>
+                        {/* {!hasRoleKSCL() ? */}
+                        {formData.values.recruitmentRequest.status ===
+                            "Bị từ chối bởi DET" ? (
+                            <div className="col-md-12 mt-2 d-flex ">
+                                <label
+                                    htmlFor="time"
+                                    style={{ color: "#6F6F6F", whiteSpace: "nowrap" }}
+                                    className="form-label fs-20 me-2"
+                                >
+                                    Lý do:
+                                </label>
+                                <textarea
+                                    readOnly
+                                    className="form-control resize pt-2 "
+                                    style={{ color: "#838383" }}
+                                    value={formData.values.recruitmentRequest.reason}>
+                                </textarea>
+                            </div>
+                        ) : (formData.values.recruitmentRequest.status === "Đã xác nhận" || formData.values.recruitmentRequest.status === "Đang tuyển dụng" ? ("") :
+                            (formData.values.recruitmentRequest.status === "Bị từ chối bởi DECAN" ? (
+                              <></>
+                            ) : (
+                                hasRoleAdmin() && (
+                                    <div className="col-md-12 mt-0 d-flex">
+                                        <div className="col-md-3 mt-2">
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger w-100 bg-clr-danger btn-edit stop"
+                                                onClick={handleCloseWatchOpenReason}
+                                            >
+                                                Từ chối
+                                            </button>
+                                        </div>
+                                        <div className="col-md-9 mt-2 ms-2">
+                                            <button
+                                                type="button"
+                                                className=" btn-edit btn btn-success w-98   bg-clr-success"
+                                                onClick={handleCloseWatchOpenCreate}>
+                                                Khởi tạo kế hoạch tuyển dụng
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        }
+                                )
+
+                            ))
+                        )}
+
+
                     </form>
                 </DialogTitle>
-            </Dialog>
+            </Dialog >
             <DialogPersonalFormReason
                 data={formData}
                 nameNeedPlan={formData.values.recruitmentRequest.name}
@@ -470,8 +492,8 @@ export default function DialogPersonalFormWatch({id, userRoles, checkId}) {
                 onClose={() => setOpenFormReason(false)}
             />
             <DialogRecruitmentPlanFormCreateSuccess userRoles={userRoles} id={formData.values.recruitmentRequest.id}
-                                                    open={openFormCreateSuccess}
-                                                    onClose={() => setOpenFormCreateSuccess(false)}/>
+                open={openFormCreateSuccess}
+                onClose={() => setOpenFormCreateSuccess(false)} />
 
         </>
     );
