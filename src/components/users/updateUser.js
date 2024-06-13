@@ -12,6 +12,8 @@ import './updateUser.css';
 import '../../assets/css/cssRecruitment/recruitment.css';
 
 export default function DialogUpdateUserForm({ userId, onUpdate,defaultOpen = false }) {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const [open, setOpen] = useState(defaultOpen);
     const [roles, setRoles] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
@@ -46,7 +48,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate,defaultOpen = fa
             const errors = {};
             if (values.phone) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/admin/users/check-phone/${values.phone}`);
+                    const response = await axios.get(`${localhost}admin/users/check-phone/${values.phone}`);
                     if (response.data.exists) {
                         errors.phone = "Số điện thoại đã tồn tại";
                     }
@@ -58,7 +60,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate,defaultOpen = fa
         },
         onSubmit: async (values) => {
             try {
-                await axios.put(`http://localhost:8080/admin/users/update/${userId}`, values);
+                await axios.put(`${localhost}admin/users/update/${userId}`, values);
                 enqueueSnackbar('Cập nhật thành công!', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 onUpdate();
                 setOpen(false);
@@ -70,7 +72,7 @@ export default function DialogUpdateUserForm({ userId, onUpdate,defaultOpen = fa
 
     // Fetch user data
     useEffect(() => {
-        axios.get(`http://localhost:8080/admin/users/view/${userId}`)
+        axios.get(`${localhost}admin/users/view/${userId}`)
             .then((res) => {
                 setRoles(res.data.roles);
                 formik.setValues(res.data);

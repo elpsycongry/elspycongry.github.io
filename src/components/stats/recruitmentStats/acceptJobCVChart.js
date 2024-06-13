@@ -10,6 +10,8 @@ import jsPDF from 'jspdf';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
+const localhost = process.env.REACT_APP_API_BACK_END;
+
 export default function AcceptJobCVChart() {
     const pdfRef = useRef(null); 
     const [recruitmentChart, setRecuitmentChart] = useState(new Array(12).fill({
@@ -22,7 +24,7 @@ export default function AcceptJobCVChart() {
             if (user != null) {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=2024`);
+                    const response = await axios.get(`${localhost}/api/recruitmentStats/recruitmentChart/year?year=2024`);
                     setRecuitmentChart(response.data)
                 } catch (error) {
                     console.error("Error fetching data:", error);

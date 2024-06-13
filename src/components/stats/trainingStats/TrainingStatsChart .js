@@ -23,6 +23,8 @@ import { Icon } from '@iconify/react';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 export default function TrainingStatsChart({ year }) {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const date = new Date();
     const pdfRef = useRef(null); 
     const downloadPDF = async () =>{
@@ -193,7 +195,7 @@ export default function TrainingStatsChart({ year }) {
             if (user != null) {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 try {
-                    const response = await axios.get("http://localhost:8080/api/stats/trainingCharts/year?year=" + year);
+                    const response = await axios.get(`${localhost}api/stats/trainingCharts/year?year=` + year);
                     setTrainingCharts(response.data);
                 } catch (error) {
                     console.error("Error fetching data:", error);

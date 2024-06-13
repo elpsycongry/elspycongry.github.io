@@ -49,6 +49,7 @@ function Copyright(props) {
 }
 
 export default function Training() {
+    
   const location = useLocation();
 
   const [open, setOpen] = useState(false);

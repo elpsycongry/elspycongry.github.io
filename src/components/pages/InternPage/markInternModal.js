@@ -22,6 +22,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { set } from "lodash";
 import { ClearIcon } from "@mui/x-date-pickers";
 
+const localhost = process.env.REACT_APP_API_BACK_END;
+const localhost3000 = process.env.REACT_APP_API_FRONT_END;
+
 export function MarkInternModal({ userID, updateFunction }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(false)
@@ -224,6 +227,7 @@ export function MarkInternModal({ userID, updateFunction }) {
 
     // Tính kết quả thực tập theo điểm tổng kết và đánh giá team
     const fetchFinalResultPass = (finalScore, inTeamScore) => {
+       
         // Set fail nếu training state là stop_training
         if (data.isPass != null) {
             setFinalResultPass(data.isPass)
@@ -272,12 +276,12 @@ export function MarkInternModal({ userID, updateFunction }) {
 
     useEffect(() => {
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
-        axios.get('http://localhost:8080/api/interns/checkNumberOfRecruitment?id=' + userID).then(res1 => {
+        axios.get(`${localhost}api/interns/checkNumberOfRecruitment?id=` + userID).then(res1 => {
             if (res1.data === "enough") {
                 setCheckNumberOfRecruitment(true)
             }
         })
-        axios.get(`http://localhost:8080/api/interns/?id=${userID}`).then(res => {
+        axios.get(`${localhost}api/interns/?id=${userID}`).then(res => {
             checkCommentSubject(res.data)
             setData(res.data)
             setFinalResultPass(data.isPass)
@@ -312,7 +316,7 @@ export function MarkInternModal({ userID, updateFunction }) {
             sendData = { ...data }
         }
         axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.accessToken;
-        axios.put('http://localhost:8080/api/interns', sendData).then(res => {
+        axios.put(`${localhost}api/interns`, sendData).then(res => {
             enqueueSnackbar("Lưu thành công !", {
                 variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" }
             })

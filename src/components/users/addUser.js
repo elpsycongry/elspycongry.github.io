@@ -13,6 +13,8 @@ import '../../assets/css/cssRecruitment/recruitment.css';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export default function DialogAddUserForm({ token, onAdd }) {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const [open, setOpen] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -47,7 +49,7 @@ export default function DialogAddUserForm({ token, onAdd }) {
             const errors = {};
             if (values.phone) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/admin/users/check-phone/${values.phone}`);
+                    const response = await axios.get(`${localhost}admin/users/check-phone/${values.phone}`);
                     if (response.data.exists) {
                         errors.phone = "Số điện thoại đã tồn tại";
                     }
@@ -58,7 +60,7 @@ export default function DialogAddUserForm({ token, onAdd }) {
 
             if (values.email) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/admin/users/check-email/${values.email}`);
+                    const response = await axios.get(`${localhost}admin/users/check-email/${values.email}`);
                     if (response.data.exists) {
                         errors.email = "Email đã tồn tại";
                     }
@@ -79,7 +81,7 @@ export default function DialogAddUserForm({ token, onAdd }) {
                     status: values.status
                 };
 
-                const response = await axios.post('http://localhost:8080/admin/users/add', userData);
+                const response = await axios.post(`${localhost}admin/users/add`, userData);
 
                 if (response.status === 201) {
                     enqueueSnackbar('Thêm thành công!', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });

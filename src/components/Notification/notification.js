@@ -15,8 +15,12 @@ import {NotificationItem} from "./notificationItem";
 import {useNavigate} from "react-router-dom";
 import {SubmenuNotification} from "./submenuNotification";
 
+const localhost = process.env.REACT_APP_API_BACK_END;
+const localhost3000 = process.env.REACT_APP_API_FRONT_END;
 
 export function Notification() {
+ 
+
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [open, setOpen] = useState(false);
     const [type, setType] = useState('all');
@@ -125,14 +129,15 @@ export function Notification() {
     }, [type]);
 
     const sendDatas = async () => {
+
         try {
-            const response = await axios.put(`http://localhost:8080/api/notifications/${currentUser.id}`, renderData);
+            const response = await axios.put(`${localhost}api/notifications/${currentUser.id}`, renderData);
         } catch (error) {
             console.error('Error sending data:', error);
         }
     };
     const getDatas = () => {
-        axios.get(`http://localhost:8080/api/notifications/${currentUser.id}`, {
+        axios.get(`${localhost}api/notifications/${currentUser.id}`, {
             params: {
                 type: type
             }
@@ -201,7 +206,7 @@ export function Notification() {
                                                     if (notiItem.link.indexOf("mail.google.com") >= 0) {
                                                         window.location.href = `https://mail.google.com/`
                                                     } else  {
-                                                        window.location.href = `http://localhost:3000${notiItem.link}`
+                                                        window.location.href = `${localhost3000}${notiItem.link}`
                                                     }
                                                 }
                                             }))
@@ -256,5 +261,5 @@ export async function sendNotifications(
         link: link,
         listReceiverEmail: listReceiverEmail,
     }
-    await axios.post('http://localhost:8080/api/notifications', notificationInfo)
+    await axios.post(`${localhost}api/notifications`, notificationInfo)
 }

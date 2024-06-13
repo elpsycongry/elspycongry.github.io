@@ -41,6 +41,8 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function Header() {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const [userRoles, setUserRoles] = React.useState([]);
     const [userLogin, setUserLogin] = React.useState({
         name: '',
@@ -52,7 +54,7 @@ export default function Header() {
         const user = JSON.parse(localStorage.getItem("currentUser"));
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get('http://localhost:8080/roles/users/view/' + user.id).then(res => {
+            axios.get(`${localhost}roles/users/view/` + user.id).then(res => {
                 setUserLogin(res.data);
             }).catch((e) => {
                 console.error(e)});

@@ -4,6 +4,8 @@ import { Icon } from '@iconify/react';
 import './trainingStats.css';
 
 const ExportButton = ({ month, quarter, year }) => {
+  const localhost = process.env.REACT_APP_API_BACK_END;
+
   const user = JSON.parse(localStorage.getItem("currentUser"))
   const handleExport = async () => {
     // Tạo một biến thời gian hiện tại
@@ -23,16 +25,16 @@ const ExportButton = ({ month, quarter, year }) => {
       let filename;
 
       if (month == currentMonth && quarter == currentQuarter && year == currentYear) {
-        endpoint = 'http://localhost:8080/api/stats/exportExcelTrainingStatsAll';
-        filename = 'Chỉ số thống kê đào tạo toàn hệ thống.xlsx';
+        endpoint = `${localhost}api/stats/exportExcelTrainingStatsAll`;
+        filename = `Chỉ số thống kê đào tạo toàn hệ thống.xlsx`;
       } else if (month !== 0) {
-        endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/monthExportExcel?month=${month}&year=${year}`;
+        endpoint = `${localhost}api/stats/exportExcelTrainingStats/monthExportExcel?month=${month}&year=${year}`;
         filename = `Chỉ số thống kê đào tạo tháng ${month}.xlsx`;
       } else if (quarter !== 0) {
-        endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/quarterExportExcel?quarter=${quarter}&year=${year}`;
+        endpoint = `${localhost}api/stats/exportExcelTrainingStats/quarterExportExcel?quarter=${quarter}&year=${year}`;
         filename = `Chỉ số thống kê đào tạo quý ${quarter}.xlsx`;
       } else if (year !== 0) {
-        endpoint = `http://localhost:8080/api/stats/exportExcelTrainingStats/year?year=${year}`;
+        endpoint = `${localhost}api/stats/exportExcelTrainingStats/year?year=${year}`;
         filename = `Chỉ số thống kê đào tạo năm ${year}.xlsx`;
       } else {
         console.log("Không có endpoint hợp lệ tồn tại");

@@ -12,6 +12,8 @@ import swal from 'sweetalert';
 import './blockUser.css';
 
 export default function  BlockUser({ userId, status, onUpdate }) {
+  const localhost = process.env.REACT_APP_API_BACK_END;
+
     const [isBlocked, setIsBlocked] = React.useState(status);
   
     const blockUserWithId = async () => {
@@ -27,7 +29,7 @@ export default function  BlockUser({ userId, status, onUpdate }) {
             const user = JSON.parse(localStorage.getItem("currentUser"));
             if (user != null) {
               axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-              await axios.post(`http://localhost:8080/admin/block/${userId}`, { isBlocked: !isBlocked });
+              await axios.post(`${localhost}admin/block/${userId}`, { isBlocked: !isBlocked });
               onUpdate();
               setIsBlocked(!isBlocked);
               swal(isBlocked ? "Đã chặn quyền truy cập người dùng!" : "Đã bỏ chặn quyền truy cập người dùng!", {

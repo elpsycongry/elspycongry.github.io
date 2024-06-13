@@ -21,6 +21,8 @@ import ButtonPDFExport from './buttonPDFExport';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, ChartDataLabels);
 
 export default function RecruitmentStatsChart({ year }) {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const pdfRef = useRef(null); 
     const [trainingCharts, setTrainingCharts] = useState(new Array(12).fill({
         totalCV: 0,
@@ -39,7 +41,7 @@ export default function RecruitmentStatsChart({ year }) {
             if (user != null) {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=${year}`);
+                    const response = await axios.get(`${localhost}api/recruitmentStats/recruitmentChart/year?year=${year}`);
                     setTrainingCharts(response.data);
                     console.log(response.data);
                     console.log(trainingCharts);

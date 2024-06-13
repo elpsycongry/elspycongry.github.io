@@ -37,6 +37,9 @@ function Copyright(props) {
     );
 }
 
+const localhost = process.env.REACT_APP_API_BACK_END;
+
+
 export default function RecruitmentStats() {
     // Tạo một biến thời gian hiện tại
     const currentDate = new Date();
@@ -69,6 +72,7 @@ export default function RecruitmentStats() {
     const pdfRef3 = useRef(null);
 
     const handleClickStat = (event) => {
+
         const theValue = event.currentTarget.value;
         if (theValue === "stats3") {
             setTitleStatistics("Năm")
@@ -78,11 +82,11 @@ export default function RecruitmentStats() {
             setMonth(0)
             setQuarter(0)
             setYear(currentYear)
-            axios.get(`http://localhost:8080/api/recruitmentStats/year?year=${currentYear}`)
+            axios.get(`${localhost}api/recruitmentStats/year?year=${currentYear}`)
                 .then(res => {
                     setGrowthStatistics(res.data)
                 })
-            axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+            axios.get(`${localhost}api/recruitmentStats/maxRecruitmentWithYear`)
                 .then(res1 => {
                     setMaxGrowthStatistics(res1.data)
                 })
@@ -97,7 +101,7 @@ export default function RecruitmentStats() {
             setMonth(currentMonth)
             setQuarter(currentQuarter)
             setYear(currentYear)
-            axios.get(`http://localhost:8080/api/recruitmentStats/month?month=${currentMonth}&year=${currentYear}`)
+            axios.get(`${localhost}api/recruitmentStats/month?month=${currentMonth}&year=${currentYear}`)
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
@@ -115,36 +119,36 @@ export default function RecruitmentStats() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/api/recruitmentStats/month?month=${currentMonth}&year=${currentYear}`)
+            axios.get(`${localhost}api/recruitmentStats/month?month=${currentMonth}&year=${currentYear}`)
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
             if (year > 0) {
-                axios.get(`http://localhost:8080/api/recruitmentStats/year?year=${year}`)
+                axios.get(`${localhost}api/recruitmentStats/year?year=${year}`)
                     .then(res => {
                         setGrowthStatistics(res.data)
                     })
-                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithYear")
+                axios.get(`${localhost}api/recruitmentStats/maxRecruitmentWithYear`)
                     .then(res1 => {
                         setMaxGrowthStatistics(res1.data)
                     })
             }
             if (quarter != 0) {
-                axios.get(`http://localhost:8080/api/recruitmentStats/quarter?quarter=${quarter}&year=${currentYear}`)
+                axios.get(`${localhost}api/recruitmentStats/quarter?quarter=${quarter}&year=${currentYear}`)
                     .then(res4 => {
                         setGrowthStatistics(res4.data)
                     })
-                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithQuarter")
+                axios.get(`${localhost}api/recruitmentStats/maxRecruitmentWithQuarter`)
                     .then(res1 => {
                         setMaxGrowthStatistics(res1.data)
                     })
             }
             if (month != 0) {
-                axios.get(`http://localhost:8080/api/recruitmentStats/month?month=${month}&year=${currentYear}`)
+                axios.get(`${localhost}api/recruitmentStats/month?month=${month}&year=${currentYear}`)
                     .then(res3 => {
                         setGrowthStatistics(res3.data)
                     })
-                axios.get("http://localhost:8080/api/recruitmentStats/maxRecruitmentWithMonth")
+                axios.get(`${localhost}api/recruitmentStats/maxRecruitmentWithMonth`)
                     .then(res1 => {
                         setMaxGrowthStatistics(res1.data)
                     })
@@ -162,7 +166,7 @@ export default function RecruitmentStats() {
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get(`http://localhost:8080/api/recruitmentStats/month?month=${currentMonth}&year=${currentYear}`)
+            axios.get(`${localhost}api/recruitmentStats/month?month=${currentMonth}&year=${currentYear}`)
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
@@ -174,7 +178,7 @@ export default function RecruitmentStats() {
             setActive2(true)
             setActive3(false)
             setActive4(false)
-            axios.get(`http://localhost:8080/api/recruitmentStats/quarter?quarter=${currentQuarter}&year=${currentYear}`)
+            axios.get(`${localhost}api/recruitmentStats/quarter?quarter=${currentQuarter}&year=${currentYear}`)
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
@@ -186,7 +190,7 @@ export default function RecruitmentStats() {
             setActive2(false)
             setActive3(true)
             setActive4(false)
-            axios.get(`http://localhost:8080/api/recruitmentStats/year?year=${currentYear}`)
+            axios.get(`${localhost}api/recruitmentStats/year?year=${currentYear}`)
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })
@@ -200,7 +204,7 @@ export default function RecruitmentStats() {
             setActive4(true)
 
 
-            axios.get("http://localhost:8080/api/recruitmentStats")
+            axios.get(`${localhost}api/recruitmentStats`)
                 .then(res => {
                     setRecruitmentStats(res.data)
                 })

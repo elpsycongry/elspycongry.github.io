@@ -30,6 +30,7 @@ function Copyright(props) {
         </Typography>
     );
 }
+const localhost = process.env.REACT_APP_API_BACK_END;
 
 export default function TrainingStats() {
     // Tạo một biến thời gian hiện tại
@@ -62,6 +63,7 @@ export default function TrainingStats() {
     const [month, setMonth] = useState(currentMonth);
     const [quarter, setQuarter] = useState(currentQuarter);
     const handleClickStat = (event) => {
+
         const theValue = event.currentTarget.value;
         if (theValue === "stats3") {
             setTitleStatistics("Năm")
@@ -71,11 +73,11 @@ export default function TrainingStats() {
             setMonth(0)
             setQuarter(0)
             setYear(currentYear)
-            axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=${year}`)
+            axios.get(`${localhost}api/stats/getGrowthStatisticsWithYear?year=${year}`)
                 .then(res => {
                     setGrowthStatistics(res.data)
                 })
-            axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithYear")
+            axios.get(`${localhost}api/stats/getMaxGrowthStatisticsWithYear`)
                 .then(res1 => {
                     setMaxGrowthStatistics(res1.data)
                 })
@@ -89,7 +91,7 @@ export default function TrainingStats() {
             setQuarter(currentQuarter)
             setYear(currentYear)
             setTitle(`Kết quả đào tạo tháng ${currentMonth} năm ${currentYear}`)
-            axios.get(`http://localhost:8080/api/stats/trainingStats/month?month=${month}&year=${year}`)
+            axios.get(`${localhost}api/stats/trainingStats/month?month=${month}&year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -101,35 +103,35 @@ export default function TrainingStats() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get(`http://localhost:8080/api/stats/trainingStats/month?month=${month}&year=${year}`)
+            axios.get(`${localhost}api/stats/trainingStats/month?month=${month}&year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
             if (year > 12) {
-                axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=${year}`)
+                axios.get(`${localhost}api/stats/getGrowthStatisticsWithYear?year=${year}`)
                     .then(res1 => {
                         setGrowthStatistics(res1.data)
                     })
-                axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithYear")
+                axios.get(`${localhost}api/stats/getMaxGrowthStatisticsWithYear`)
                     .then(res1 => {
                         setMaxGrowthStatistics(res1.data)
                     })
             } if (quarter != 0) {
-                axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithQuarter?quarter=${quarter}&year=${currentYear}`)
+                axios.get(`${localhost}api/stats/getGrowthStatisticsWithQuarter?quarter=${quarter}&year=${currentYear}`)
                     .then(res4 => {
                         setGrowthStatistics(res4.data)
                     })
-                axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithQuarter")
+                axios.get(`${localhost}api/stats/getMaxGrowthStatisticsWithQuarter`)
                     .then(res1 => {
                         setMaxGrowthStatistics(res1.data)
                     })
             }
             if (month != 0) {
-                axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithMonth?month=${month}&year=${currentYear}`)
+                axios.get(`${localhost}api/stats/getGrowthStatisticsWithMonth?month=${month}&year=${currentYear}`)
                     .then(res3 => {
                         setGrowthStatistics(res3.data)
                     })
-                axios.get("http://localhost:8080/api/stats/getMaxGrowthStatisticsWithMonth")
+                axios.get(`${localhost}api/stats/getMaxGrowthStatisticsWithMonth`)
                     .then(res1 => {
                         setMaxGrowthStatistics(res1.data)
                     })
@@ -150,7 +152,7 @@ export default function TrainingStats() {
             setActive2(false)
             setActive3(false)
             setActive4(false)
-            axios.get(`http://localhost:8080/api/stats/trainingStats/month?month=${month}&year=${year}`)
+            axios.get(`${localhost}api/stats/trainingStats/month?month=${month}&year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -162,7 +164,7 @@ export default function TrainingStats() {
             setActive2(true)
             setActive3(false)
             setActive4(false)
-            axios.get(`http://localhost:8080/api/stats/trainingStats/quarter?quarter=${currentQuarter}&year=${currentYear}`)
+            axios.get(`${localhost}api/stats/trainingStats/quarter?quarter=${currentQuarter}&year=${currentYear}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -174,7 +176,7 @@ export default function TrainingStats() {
             setActive2(false)
             setActive3(true)
             setActive4(false)
-            axios.get(`http://localhost:8080/api/stats/trainingStats/year?year=${year}`)
+            axios.get(`${localhost}api/stats/trainingStats/year?year=${year}`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -188,7 +190,7 @@ export default function TrainingStats() {
             setActive4(true)
 
 
-            axios.get("http://localhost:8080/api/stats/trainingStats/all")
+            axios.get(`${localhost}api/stats/trainingStats/all`)
                 .then(res => {
                     setTrainingStats(res.data)
                 })
@@ -222,7 +224,7 @@ export default function TrainingStats() {
             setActive5(false)
             setActive6(false)
             setActive7(true)
-            axios.get(`http://localhost:8080/api/stats/getGrowthStatisticsWithYear?year=${year}`)
+            axios.get(`${localhost}api/stats/getGrowthStatisticsWithYear?year=${year}`)
                 .then(res => {
                     setGrowthStatistics(res.data)
                 })

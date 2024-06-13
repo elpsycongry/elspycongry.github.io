@@ -51,6 +51,8 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function Register() {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+    const localhost3000 = process.env.REACT_APP_API_FRONT_END;
     const [visible, setVisible] = React.useState(true)
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
@@ -60,7 +62,7 @@ function Register() {
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
-        axios.post("http://localhost:8080/register", data).then(
+        axios.post(`${localhost}register`, data).then(
             res => {
                 if (res.data.code) {
                     if (res.data.code === "400" || res.data.code === "409") {
@@ -200,7 +202,7 @@ function Register() {
                     password: "Email0" + userInfo.data.email,
                 };
                 console.log(dataGoogle);
-                axios.post("http://localhost:8080/loginGoogle", dataGoogle).then(
+                axios.post(`${localhost}loginGoogle`, dataGoogle).then(
                     res => {
                         if (res.data.code === "401") {
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
@@ -343,7 +345,7 @@ function Register() {
                             Sign Up
                         </Button>
                         <div class="form-link">
-                            <span>Already have an account? <a href="http://localhost:3000/login" class="link login-link">Login</a></span>
+                            <span>Already have an account? <a href={`${localhost3000}login`} class="link login-link">Login</a></span>
                         </div>
                         <div class="line" sx={{ mt: 2 }}></div>
                         <Button fullWidth sx={{ mt: 2, mb: 2, fontSize: "50", fontWeight: 550 }} variant="outlined" size='medium' onClick={() => registerAccountGoogle()}>

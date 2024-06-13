@@ -23,6 +23,8 @@ function Copyright(props) {
 }
 
 const HomePage = () => {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const navigate = useNavigate()
     const [personnelNeeds, setPersonnelNeeds] = React.useState(
         {
@@ -59,16 +61,16 @@ const HomePage = () => {
             if (user != null) {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/dashboard/personnelNeeds`);
+                    const response = await axios.get(`${localhost}api/dashboard/personnelNeeds`);
                     setPersonnelNeeds(response.data)
 
-                    const response1 = await axios.get(`http://localhost:8080/api/dashboard/recruitmentPlan`);
+                    const response1 = await axios.get(`${localhost}api/dashboard/recruitmentPlan`);
                     setRecuitmentPlan(response1.data)
 
-                    const response2 = await axios.get(`http://localhost:8080/api/dashboard/candidate`);
+                    const response2 = await axios.get(`${localhost}api/dashboard/candidate`);
                     setCandidate(response2.data)
 
-                    const response3 = await axios.get(`http://localhost:8080/api/dashboard/intern`);
+                    const response3 = await axios.get(`${localhost}api/dashboard/intern`);
                     setIntern(response3.data)
 
                 } catch (error) {

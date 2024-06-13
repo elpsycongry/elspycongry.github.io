@@ -28,8 +28,9 @@ import { sendNotifications } from "../../Notification/notification";
 
 import { useEffect } from 'react';
 import { elements } from 'chart.js';
-function Copyright(props) {
 
+
+function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
@@ -57,7 +58,9 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function Login() {
-    
+    const localhost = process.env.REACT_APP_API_BACK_END;
+    const localhost3000 = process.env.REACT_APP_API_FRONT_END;
+
     const [local, setLocal] = useState('')
     useEffect(() => {
         const storedLocation = localStorage.getItem('currentLocation');
@@ -82,7 +85,7 @@ function Login() {
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
-        axios.post("http://localhost:8080/login", data).then(
+        axios.post(`${localhost}login`, data).then(
             res => {
                 if (res.data.code === "401") {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
@@ -191,7 +194,7 @@ function Login() {
                     password: "Email0" + userInfo.data.email,
                 };
                 console.log(dataGoogle);
-                axios.post("http://localhost:8080/loginGoogle", dataGoogle).then(
+                axios.post(`${localhost}loginGoogle`, dataGoogle).then(
                     res => {
                         if (res.data.code === "401") {
                             enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
@@ -310,7 +313,7 @@ function Login() {
                             Sign In
                         </Button>
                         <div class="form-link">
-                            <span>Don't have an account? <a href="http://localhost:3000/register" class="link signup-link">Sign up</a></span>
+                            <span>Don't have an account? <a href={`${localhost3000}register`} class="link signup-link">Sign up</a></span>
                         </div>
 
 

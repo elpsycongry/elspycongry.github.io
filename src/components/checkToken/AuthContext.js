@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 
+const localhost = process.env.REACT_APP_API_BACK_END;
+const localhost3000 = process.env.REACT_APP_API_FRONT_END;
 
 // Check Token
 function AuthContext({ children }) {
+   
+
     const location = useLocation();
     useEffect(() => {
         const newLocation = location.pathname + location.search;
@@ -23,17 +27,17 @@ function AuthContext({ children }) {
             return <Navigate to="/login"/>
         }
     } else {
-        axios.get(`http://localhost:8080/api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
+        axios.get(`${localhost}api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
                 console.log(res)
             }
         ).catch(e => {
-            axios.post("http://localhost:8080/logoutUser", {}, {
+            axios.post(`${localhost}logoutUser`, {}, {
                 headers: {
                     Authorization: `Bearer ${currentUser.accessToken}` // Thêm token vào header
                 }
             })
             localStorage.removeItem("currentUser");
-            window.location.href= 'http://localhost:3000/';
+            window.location.href= `${localhost3000}`;
         })
 
         const roles = currentUser.roles.map(role => role.authority); // Lấy danh sách vai trò của người dùng
@@ -87,7 +91,7 @@ function AuthContext({ children }) {
     // Kiểm tra xem người dùng có tồn tại không
     if (user) {
         // Gửi yêu cầu đăng xuất đến server
-         axios.post("http://localhost:8080/logoutUser", {}, {
+         axios.post(`${localhost}logoutUser`, {}, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}` // Thêm token vào header
             }

@@ -80,7 +80,7 @@ export default function CandidateManagement() {
         event.preventDefault();
         try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            const response = await axios.get(`${localhost}}api/plansIntern/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}api/plansIntern/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);

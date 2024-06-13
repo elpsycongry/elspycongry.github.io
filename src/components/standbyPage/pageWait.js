@@ -47,6 +47,8 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function PageWait() {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+    const localhost3000 = process.env.REACT_APP_API_FRONT_END;
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
     const {state} = useLocation();
@@ -61,7 +63,7 @@ function PageWait() {
         try {   
             console.log(currentUser);
             console.log(data)
-            axios.post("http://localhost:8080/login", data).then(
+            axios.post(`${localhost}login`, data).then(
                 res => {
                     if (res.data.code === "401") {
                         enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });

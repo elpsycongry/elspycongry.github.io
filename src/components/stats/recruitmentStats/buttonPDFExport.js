@@ -10,6 +10,7 @@ import { get } from 'lodash';
 import { Icon } from '@iconify/react';
 
 const ButtonPDFExport = ({ listChartElem, year }) => {
+    const localhost = process.env.REACT_APP_API_BACK_END;
     const [anchor, setAnchor] = React.useState(null);
     const date = new Date();
     const [checkboxes, setCheckboxes] = React.useState({
@@ -42,9 +43,9 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             if (user != null) {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=${year}`);
+                    const response = await axios.get(`${localhost}api/recruitmentStats/recruitmentChart/year?year=${year}`);
                     setTrainingCharts(response.data);
-                    const response1 = await axios.get(`http://localhost:8080/api/recruitmentStats/recruitmentChart/year?year=2024`);
+                    const response1 = await axios.get(`${localhost}api/recruitmentStats/recruitmentChart/year?year=2024`);
                     setRecuitmentChart(response1.data)
                 } catch (error) {
                     console.error("Error fetching data:", error);

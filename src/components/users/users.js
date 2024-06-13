@@ -31,6 +31,8 @@ import ReportIcon from '@mui/icons-material/Report';
 
 
 export default function Users() {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const [open, setOpen] = useState(false);
     const handleClickPracticeClose = () => {
         setOpen(false);
@@ -70,7 +72,7 @@ export default function Users() {
         setToken(user.accessToken)
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/admin/users/role").then((res) => {
+            axios.get(`${localhost}admin/users/role`).then((res) => {
                 setListRoleSelect(res.data);
             });
         }
@@ -110,7 +112,7 @@ export default function Users() {
         if (user != null) {
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                axios.get(`http://localhost:8080/admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}&state=${selectedState}`)
+                axios.get(`${localhost}admin/users/filterWithFields?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&role_id=${selectedRole}&state=${selectedState}`)
                     .then((res) => {
                         setListUser(res.data.content);
                         setPagination({
@@ -139,7 +141,7 @@ export default function Users() {
                         const user = JSON.parse(localStorage.getItem("currentUser"));
                         if (user != null) {
                             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                            await axios.post(`http://localhost:8080/admin/block/${userId}`, {isBlocked});
+                            await axios.post(`${localhost}admin/block/${userId}`, {isBlocked});
                             handleFilterWithFields();
                             swal(isBlocked ? "Đã chặn quyền truy cập người dùng!" : "Đã bỏ chặn quyền truy cập người dùng!", {
                                 icon: "success",

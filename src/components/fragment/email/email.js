@@ -4,6 +4,8 @@ import axios from 'axios';
 import {sendNotifications} from "../../Notification/notification";
 
 export default function Email() {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+
     const [toSend, setToSend] = useState([]);
     const [dataSendPersonalNeed, setDataSendPersonalNeed] = useState([]);
     const [dataSendRecruitmentPlan, setDataSendRecruitmentPlan] = useState([]);
@@ -12,7 +14,7 @@ export default function Email() {
     const timeoutRef = useRef(null);
 
     const emailApi = () => {
-        axios.get('http://localhost:8080/api/send/').then(res => {
+        axios.get(`${localhost}api/send/`).then(res => {
             setToSend(res.data.emailData);
         })
 
