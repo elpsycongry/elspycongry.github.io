@@ -5,7 +5,6 @@ import { Navigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 
 
-
 // Check Token
 function AuthContext({ children }) {
     const location = useLocation();
@@ -17,10 +16,12 @@ function AuthContext({ children }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
     if (currentUser === null) {
-        if (pathName !== "/login") {
-            return <Navigate to="/login" />
+        if (pathName === '/') {
+            return children
         }
-    
+        if (pathName !== "/login" && pathName !== "/register") {
+            return <Navigate to="/login"/>
+        }
     } else {
         axios.get(`http://localhost:8080/api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
                 console.log(res)
