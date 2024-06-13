@@ -102,7 +102,7 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
     }
   }
   // Xử lý số lượng nhân sự
-
+const localhost = process.env.REACT_APP_API_BACK_END;
   const formData = useFormik({
     initialValues: {
       id: "",
@@ -171,7 +171,7 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
         return;
       } else {
         try {
-          await axios.put("http://localhost:8080/api/plansIntern/" + id, values).then(res => {
+          await axios.put(`${localhost}api/plansIntern/` + id, values).then(res => {
             swal(" cập nhật thông tin ứng viên thành công", {
               icon: "success",
               buttons: false,
@@ -197,10 +197,10 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
     const user = JSON.parse(localStorage.getItem("currentUser"))
     if (user != null) {
       try {
-        axios.get("http://localhost:8080/api/plans").then((res) => {
+        axios.get(`${localhost}api/plans`).then((res) => {
           setPlans(res.data);
         });
-        axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
+        axios.get(`${localhost}api/plansIntern/` + id).then((res) => {
           formData.setValues(res.data);
           setFinalResult(res.data.finalResult);
           const formatT = res.data.interviewTime;
@@ -209,7 +209,7 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
           setFinalResult(res.data.finalResult);
         });
         axios
-        .get("http://localhost:8080/api/plansIntern/getAllInternsCheckUpdate/" + id)
+        .get(`${localhost}api/plansIntern/getAllInternsCheckUpdate/` + id)
         .then((res) => {
           setPhoneCheck(res.data);
         });
@@ -223,7 +223,7 @@ export default function DialogCandidateFormUpdate({ id, check, userRoles }) {
     const updatedPlans = await Promise.all(
       plans.map(async (item) => {
         try {
-          const res = await axios.get(`http://localhost:8080/api/plansIntern/isFull/${item.id}`);
+          const res = await axios.get(`${localhost}api/plansIntern/isFull/${item.id}`);
           return { ...item, isFullManagement: res.data };
         } catch (error) {
           console.error(`Error fetching isFullManagement for plan ${item.id}:`, error);

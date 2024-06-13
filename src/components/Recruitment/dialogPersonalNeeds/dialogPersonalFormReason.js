@@ -14,11 +14,12 @@ import { sendNotifications } from "../../Notification/notification";
 
 export default function DialogPersonalFormReason({nameNeedPlan,data, idUser, open, onClose }) {
     const [reason, setReason] = useState('');
+    const localhost = process.env.REACT_APP_API_BACK_END;
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await axios.post(
-                'http://localhost:8080/api/recruitmentRequests/' + idUser + '/users/2',
+                `${localhost}api/recruitmentRequests/` + idUser + '/users/2',
                 { reason }
             ).then(() => {
                 swal("Cập nhật lý do thành công", {

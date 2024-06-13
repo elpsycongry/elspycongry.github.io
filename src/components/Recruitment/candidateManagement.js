@@ -74,12 +74,13 @@ export default function CandidateManagement() {
             }, 3000)
         }
     };
+    const localhost = process.env.REACT_APP_API_BACK_END;
     const handleSubmitSearch = async (event, pageNumber) => {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         event.preventDefault();
         try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}}api/plansIntern/search?keyword=${event.target.value}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -114,7 +115,7 @@ export default function CandidateManagement() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -136,7 +137,7 @@ export default function CandidateManagement() {
         const user = JSON.parse(localStorage.getItem("currentUser"))
         try {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-            const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -157,7 +158,7 @@ export default function CandidateManagement() {
         if (user != null) {
             try {
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                const res = await axios.get('http://localhost:8080/api/plans')
+                const res = await axios.get(`${localhost}api/plans`)
                 console.log(res.data)
                 setRecruitmentPlan(res.data);
             } catch (error) {
@@ -180,7 +181,7 @@ export default function CandidateManagement() {
             try {
                 console.log(status)
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                const response = await axios.get(`http://localhost:8080/api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
+                const response = await axios.get(`${localhost}api/plansIntern/search?keyword=${valueRecuitments}&status=${selectedStatus}&namePlan=${selectPlan}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
                 setPage(response.data.pageable.pageNumber);
                 setTotalPages(response.data.totalPages);

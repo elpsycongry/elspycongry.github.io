@@ -69,11 +69,11 @@ export default function RecruitmentPlan() {
             }, 3000)
         }
     };
-
+const localhost = process.env.REACT_APP_API_BACK_END;
     const handleSubmitSearch = async (event, pageNumber) => {
         event.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}api/plans/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
             console.log(response.data)
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
@@ -108,7 +108,7 @@ export default function RecruitmentPlan() {
 
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -135,7 +135,7 @@ export default function RecruitmentPlan() {
                 setUserLogin(user.roles);
                 setIdUser(user.id);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                const response = await axios.get(`http://localhost:8080/api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+                const response = await axios.get(`${localhost}api/plans/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
                 setPage(response.data.pageable.pageNumber);
                 setTotalPages(response.data.totalPages);
@@ -175,7 +175,7 @@ export default function RecruitmentPlan() {
     // Nếu có idPlan thì mở modal8
     useEffect(() => {
         if (idPlan){
-            axios.get(`http://localhost:8080/api/plans/${idPlan}`)
+            axios.get(`${localhost}api/plans/${idPlan}`)
                 .then(res => {recruitmentRequestData.current= res.data.recruitmentPlan.recruitmentRequest })
         }
         }, []);

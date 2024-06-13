@@ -102,7 +102,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({id, open, onClos
             return true;
         }
     }
-
+const localhost = process.env.REACT_APP_API_BACK_END;
     const formData = useFormik({
         initialValues: {
             idUser: user.id,
@@ -155,7 +155,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({id, open, onClos
                 setSubmitting(true);
                 try {
                     await axios
-                        .post("http://localhost:8080/api/plans", values)
+                        .post(`${localhost}api/plans`, values)
                         .then((res) => {
                             console.log(res.data.id)
                             swal("Thêm kế hoạch tuyển dụng thành công", {
@@ -198,7 +198,7 @@ export default function DialogRecruitmentPlanFormCreateSuccess({id, open, onClos
 
         if (id !== null) {
             axios
-                .get("http://localhost:8080/api/recruitmentRequests/" + id)
+                .get(`${localhost}api/recruitmentRequests/` + id)
                 .then((res => {
                         setRecuitmentName(res.data.recruitmentRequest.name);
                         setIdRecruitment(res.data.recruitmentRequest.id);
