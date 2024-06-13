@@ -141,7 +141,7 @@ export default function DialogRecruitmentPlanFormCreate({userRoles}) {
             return true;
         }
     };
-
+const localhost = process.env.REACT_APP_API_BACK_END;
     const formData = useFormik({
         initialValues: {
             idUser: user.id,
@@ -194,7 +194,7 @@ export default function DialogRecruitmentPlanFormCreate({userRoles}) {
                 setSubmitting(true);
                 try {
                     await axios
-                        .post("http://localhost:8080/api/plans", values)
+                        .post(`${localhost}api/plans`, values)
                         .then((res) => {
                             swal("Thêm kế hoạch tuyển dụng thành công", {
                                 icon: "success",
@@ -239,7 +239,7 @@ export default function DialogRecruitmentPlanFormCreate({userRoles}) {
         if (user != null) {
             axios.defaults.headers.common["Authorization"] =
                 "Bearer " + user.accessToken;
-            axios.get("http://localhost:8080/api/recruitmentRequests").then((res) => {
+            axios.get(`${localhost}api/recruitmentRequests`).then((res) => {
                 setRecuitment(res.data);
             });
 

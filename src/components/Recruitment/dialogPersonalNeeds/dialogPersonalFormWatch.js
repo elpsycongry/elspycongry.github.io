@@ -34,6 +34,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     const clickProgress = () => {
         setDropProgress(!dropProgress);
     }
+    const localhost = process.env.REACT_APP_API_BACK_END;
     // Dữ liệu fake
     const formData = useFormik({
         initialValues: {
@@ -60,7 +61,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
         if (user != null) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
             axios
-                .get("http://localhost:8080/api/recruitmentRequests/" + id)
+                .get(`${localhost}api/recruitmentRequests/` + id)
                 .then((res) => {
                     formData.setValues(res.data);
                     const detail = res.data.details;
@@ -117,7 +118,7 @@ export default function DialogPersonalFormWatch({ id, userRoles, checkId }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/process/request/${id}`);
+                const response = await axios.get(`${localhost}process/request/${id}`);
                 console.log(response.data);
                 setSteps(prevSteps => {
                     const updatedSteps = response.data;

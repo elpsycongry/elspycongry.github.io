@@ -34,9 +34,9 @@ export default function DialogCandidateFormWatch({ id }) {
     },
  })
   // Call api
- 
+ const localhost = process.env.REACT_APP_API_BACK_END;
   useEffect(() => {
-      axios.get("http://localhost:8080/api/plansIntern/" + id).then((res) => {
+      axios.get(`${localhost}api/plansIntern/` + id).then((res) => {
         formData.setValues(res.data);
         const formatT= res.data.interviewTime;
         const dateNow = dayjs(formatT);

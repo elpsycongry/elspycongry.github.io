@@ -123,7 +123,7 @@ export default function DialogCandidateFormCreate({ userRoles }) {
       return true;
     }
   };
-
+ const localhost = process.env.REACT_APP_API_BACK_END;
   const formData = useFormik({
     initialValues: {
       id: "",
@@ -189,8 +189,7 @@ export default function DialogCandidateFormCreate({ userRoles }) {
       } else {
         try {
           await axios
-            .post("http://localhost:8080/api/plansIntern", values)
-            .then((res) => {
+            .post(`${localhost}api/plansIntern`, values).then((res) => {
               swal("Thêm ứng viên thành công", {
                 icon: "success",
                 buttons: false,
@@ -212,6 +211,7 @@ export default function DialogCandidateFormCreate({ userRoles }) {
       }
     },
   });
+ 
   // Call api
   const [plansLoaded, setPlansLoaded] = useState(false);
   const [plans, setPlans] = useState([]);
@@ -221,11 +221,11 @@ export default function DialogCandidateFormCreate({ userRoles }) {
       try {
         axios.defaults.headers.common["Authorization"] =
           "Bearer " + user.accessToken;
-        axios.get("http://localhost:8080/api/plans").then((res) => {
+        axios.get(`${localhost}api/plans`).then((res) => {
           setPlans(res.data);
         });
         axios
-          .get("http://localhost:8080/api/plansIntern/getAllInterns")
+          .get(`${localhost}api/plansIntern/getAllInterns`)
           .then((res) => {
             setPhoneCheck(res.data);
             console.log(res.data);
@@ -241,7 +241,7 @@ export default function DialogCandidateFormCreate({ userRoles }) {
       plans.map(async (item) => {
         try {
           const res = await axios.get(
-            `http://localhost:8080/api/plansIntern/isFull/${item.id}`
+            `${localhost}api/plansIntern/isFull/${item.id}`
           );
           return { ...item, isFullManagement: res.data };
         } catch (error) {

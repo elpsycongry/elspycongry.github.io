@@ -69,6 +69,7 @@ export default function DialogPersonalFormCreate({userRoles}) {
   const hasRoleAdmin = () => {
     return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_DM");
   };
+  const localhost = process.env.REACT_APP_API_BACK_END;
   const formData = useFormik({
     initialValues: {
       idUser: user.id,
@@ -105,7 +106,7 @@ export default function DialogPersonalFormCreate({userRoles}) {
         values.details = [...tech];
         values.idUser = user.id;
         try {
-          await axios.post("http://localhost:8080/api/recruitmentRequests", values).then(res => {
+          await axios.post(`${localhost}api/recruitmentRequests`, values).then(res => {
             swal("tạo nhu cầu nhân sự thành công", {
               icon: "success",
               buttons: false,

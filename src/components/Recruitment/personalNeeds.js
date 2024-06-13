@@ -60,11 +60,11 @@ export default function PersonalNeeds() {
             }, 3000);
         }
     };
-
+    const localhost = process.env.REACT_APP_API_BACK_END;
     const handleSubmitSearch = async (event, pageNumber) => {
         event.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}api/recruitmentRequests/search?name=${event.target.value}&status=${selectedStatus}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -96,7 +96,7 @@ export default function PersonalNeeds() {
 
     const handleSubmitSelect = async (selectedStatus, pageNumber) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+            const response = await axios.get(`${localhost}api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
             setRecuitment(response.data.content);
             setPage(response.data.pageable.pageNumber);
             setTotalPages(response.data.totalPages);
@@ -121,7 +121,7 @@ export default function PersonalNeeds() {
                 setIdUser(user.id);
 
                 axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-                const response = await axios.get(`http://localhost:8080/api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
+                const response = await axios.get(`${localhost}api/recruitmentRequests/search?name=${valueRecuitments}&status=${selectedStatus}&page=${pageNumber}`);
                 setRecuitment(response.data.content);
                 setPage(response.data.pageable.pageNumber);
                 setTotalPages(response.data.totalPages);

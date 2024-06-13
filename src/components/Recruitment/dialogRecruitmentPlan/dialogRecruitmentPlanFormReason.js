@@ -15,11 +15,12 @@ export default function DialogRecruitmentPlanFormReason({
                                                             onClose
                                                         }) {
     const [reason, setReason] = useState('');
+    const localhost = process.env.REACT_APP_API_BACK_END;
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await axios.post(
-                'http://localhost:8080/api/plans/' + idPlan + '/users/1',
+                `${localhost}api/plans/` + idPlan + '/users/1',
                 {reason}
             ).then(() => {
                 swal("Cập nhật lý do thành công", {

@@ -75,6 +75,7 @@ export default function DialogPersonalFormUpdate({ id, check,userRoles,idUser })
   const hasRoleAdmin = () => {
     return userRoles.some((role) => role.authority === "ROLE_ADMIN"|| role.authority === "ROLE_DM");
   };
+  const localhost = process.env.REACT_APP_API_BACK_END;
   // Xử lý số lượng nhân sự
   const formData = useFormik({
     initialValues: {
@@ -106,7 +107,7 @@ export default function DialogPersonalFormUpdate({ id, check,userRoles,idUser })
         values.details = [...tech];
         console.log(values);
         try {
-          await axios.put("http://localhost:8080/api/recruitmentRequests/" + id, values).then(res => {
+          await axios.put(`${localhost}api/recruitmentRequests/` + id, values).then(res => {
             swal("cập nhật nhu cầu nhân sự thành công", {
               icon: "success",
               buttons: false,
@@ -224,7 +225,7 @@ export default function DialogPersonalFormUpdate({ id, check,userRoles,idUser })
   }
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/recruitmentRequests/" + id)
+      .get(`${localhost}api/recruitmentRequests/` + id)
       .then((res) => {
         formData.setValues(res.data);
         const detail = res.data.details;

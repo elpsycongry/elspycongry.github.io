@@ -117,7 +117,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
       return false;
     }
   };
-  
+  const localhost = process.env.REACT_APP_API_BACK_END;
   const formData = useFormik({
     initialValues: {
       idUser: idUser,
@@ -172,7 +172,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
           values.planDetails = [...tech];
           setSubmitting(true);
           await axios
-            .put("http://localhost:8080/api/plans/" + id, values)
+            .put(`${localhost}api/plans/` + id, values)
             .then((res) => {
               swal("Cập nhật kế hoạch tuyển dụng thành công", {
                 icon: "success",
@@ -195,7 +195,7 @@ export default function DialogRecruitmentPlanFormUpdate({ check, id,userRoles,id
   // Call api
   useEffect(() => {
 
-    axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
+    axios.get(`${localhost}api/plans/` + id).then((res) => {
       formData.setValues(res.data);
       setHandoverDeadline(res.data.recruitmentPlan.handoverDeadline);
       const detail = res.data.planDetails;

@@ -44,45 +44,47 @@ export function MarkInternModal({ userID, updateFunction }) {
     const [data, setData] = useState({
         name: '', startDate: "2024-02-12", endDate: "", trainingState: '', isPass: null, scoreInTeam: null,
 
-        subjects: [{
-            name: "Git",
-            theoryScore: '',
-            practiceScore: '',
-            attitudeScore: '',
-            comment: { id: 1, value: 'Comment 1' }
-        }, {
-            name: "CSDL",
-            theoryScore: '',
-            practiceScore: '',
-            attitudeScore: '',
-            comment: { id: 2, value: 'Comment 2' }
-        }, {
-            name: "Scrum", theoryScore: '', practiceScore: '', attitudeScore: '', comment: { id: 3, value: 'Comment 3' }
-        }, {
-            name: "React JS",
-            theoryScore: '',
-            practiceScore: '',
-            attitudeScore: '',
-            comment: { id: 4, value: 'Comment 4' }
-        }, {
-            name: "Spring boot",
-            theoryScore: '',
-            practiceScore: '',
-            attitudeScore: '',
-            comment: { id: 5, value: 'Comment 5' }
-        }, {
-            name: "Java",
-            theoryScore: '',
-            practiceScore: '',
-            attitudeScore: '',
-            comment: { id: 6, value: 'Comment 6' }
-        }, {
-            name: "HTML",
-            theoryScore: '',
-            practiceScore: '',
-            attitudeScore: '',
-            comment: { id: 7, value: 'Comment 7' }
-        },],
+        subjects: [
+        // {
+        //     name: "Git",
+        //     theoryScore: '',
+        //     practiceScore: '',
+        //     attitudeScore: '',
+        //     comment: { id: 1, value: 'Comment 1' }
+        // }, {
+        //     name: "CSDL",
+        //     theoryScore: '',
+        //     practiceScore: '',
+        //     attitudeScore: '',
+        //     comment: { id: 2, value: 'Comment 2' }
+        // }, {
+        //     name: "Scrum", theoryScore: '', practiceScore: '', attitudeScore: '', comment: { id: 3, value: 'Comment 3' }
+        // }, {
+        //     name: "React JS",
+        //     theoryScore: '',
+        //     practiceScore: '',
+        //     attitudeScore: '',
+        //     comment: { id: 4, value: 'Comment 4' }
+        // }, {
+        //     name: "Spring boot",
+        //     theoryScore: '',
+        //     practiceScore: '',
+        //     attitudeScore: '',
+        //     comment: { id: 5, value: 'Comment 5' }
+        // }, {
+        //     name: "Java",
+        //     theoryScore: '',
+        //     practiceScore: '',
+        //     attitudeScore: '',
+        //     comment: { id: 6, value: 'Comment 6' }
+        // }, {
+        //     name: "HTML",
+        //     theoryScore: '',
+        //     practiceScore: '',
+        //     attitudeScore: '',
+        //     comment: { id: 7, value: 'Comment 7' }
+        // },
+        ],
 
 
     })

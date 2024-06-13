@@ -38,6 +38,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
   const clickProgress = () => {
     setDropProgress(!dropProgress);
   }
+  const localhost = process.env.REACT_APP_API_BACK_END;
   // Dữ liệu fake
   const formData = useFormik({
     initialValues: {
@@ -84,7 +85,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     const user = JSON.parse(localStorage.getItem("currentUser"));
     if (user != null) {
       try {
-        axios.put(`http://localhost:8080/api/plans/${id}/users/${idUser}`).then(() => {
+        axios.put(`${localhost}api/plans/${id}/users/${idUser}`).then(() => {
           setOpenForm(false);
           Swal.fire({
             position: "center",
@@ -119,7 +120,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
     const user = JSON.parse(localStorage.getItem("currentUser"))
     if (user != null) {
       axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-      axios.get("http://localhost:8080/api/plans/" + id).then((res) => {
+      axios.get(`${localhost}api/plans/` + id).then((res) => {
         formData.setValues(res.data);
         const detail = res.data.planDetails;
         setTenhnology(detail);
@@ -165,7 +166,7 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/process/plan/${id}`);
+        const response = await axios.get(`${localhost}process/plan/${id}`);
         setSteps(prevSteps => {
           const updatedSteps = response.data;
           if (updatedSteps.intern === updatedSteps.totalIntern && updatedSteps.intern > 0) {

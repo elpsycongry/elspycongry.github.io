@@ -84,7 +84,7 @@ export default function Training() {
       fetchListInternSelect(pagination);
   }, [selectedTrainingState, selectedRecruitmentPlan]);
 
-
+const localhost = process.env.REACT_APP_API_BACK_END;
   // Dữ liệu 
   const listTestSelect = [
       { id: 1, text: "Đang thực tập", name: "training" },
@@ -129,7 +129,7 @@ export default function Training() {
       const user = JSON.parse(localStorage.getItem("currentUser"))
       if (user != null) {
           axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-          axios.get("http://localhost:8080/api/interns/subject").then((res) => {
+          axios.get(`${localhost}api/interns/subject`).then((res) => {
               setListSubjectSelect(res.data);
           });
       }
@@ -141,7 +141,7 @@ export default function Training() {
       if (user != null) {
           try {
               axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-              axios.get(`http://localhost:8080/api/interns/searchValue?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}&recruitmentPlan=${selectedRecruitmentPlan}`).then((res) => {
+              axios.get(`${localhost}api/interns/searchValue?page=${newPagination.page}&size=${newPagination.size}&keyword=${searchTerm}&trainingState=${selectedTrainingState}&recruitmentPlan=${selectedRecruitmentPlan}`).then((res) => {
                   setListIntern(res.data.content);
                   setPagination({
                       ...newPagination,
@@ -160,7 +160,7 @@ export default function Training() {
       if (user != null) {
           try {
               axios.defaults.headers.common["Authorization"] = "Bearer " + user.accessToken;
-              axios.get("http://localhost:8080/api/interns/recruitment_plan").then((res) => {
+              axios.get(`${localhost}api/interns/recruitment_plan`).then((res) => {
                   setListRecruitmentPlan(res.data);
               });
           } catch (error) {
