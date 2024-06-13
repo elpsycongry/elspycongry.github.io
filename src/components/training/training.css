@@ -2,14 +2,34 @@
     width: 0;
 }
 
+.status .MuiInputBase-root {
+    height: 35px;
+}
+
 .table-container {
     width: 100%;
+    table-layout: fixed;
+}
+
+.table-training thead,
+.table-training tbody {
+    width: 100%;
+    /* Đảm bảo rằng thead và tbody chiếm 100% chiều rộng của table */
+    display: table;
+    /* Để thead và tbody được hiển thị dưới dạng bảng */
+    table-layout: fixed;
+    /* Đặt thuộc tính này cho thead và tbody để các ô co giãn */
+}
+
+
+div .table-container th {
+    height: 100px;
 }
 
 .table_training {
     display: flex;
     flex-direction: row;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     flex: 1;
 }
 
@@ -19,16 +39,24 @@
     flex-direction: column;
 }
 
-.table_training tr {
+/* .table_training tr {
     display: flex;
+} */
+
+.table_training div td:not(.training-id, .training-name, .training-total-days, .team-score),
+.table_training div th:not(.training-id, .training-name, .training-total-days, .team-score) {
+    align-items: center;
+    text-align: center;
+    width: auto;
+    min-width: 140px;
+    flex: 1 !important;
+    padding: 8px;
+    white-space: nowrap;
 }
 
-.table_training td,
-.table_training th {
-    text-align: center;
-    min-width: 120px;
+.table_training div {
     flex: 1;
-    padding: 8px;
+    height: 550px;
 }
 
 /* .table_training th{
@@ -38,20 +66,51 @@
 } */
 
 .wrapper {
-    width: 330px;
+    /* width: 40%; */
     /* background-color: white; */
-    display: flex;
+    /* margin-top: 15px; */
     overflow-x: auto;
     flex-flow: column;
-    flex: 1;
+    text-wrap: nowrap;
+    align-items: center;
+}
+
+.wrapper th {
+    font-weight: 400;
+}
+
+.wrapper td {
+    height: 43px;
+}
+
+.no-scrolling td {
+    height: 43px;
 }
 
 .training-id {
-    max-width: 60px;
-    padding-left: 0;
+    text-align: center;
+    min-width: 100px;
 }
 
-.input-intern{
+.training-name {
+    text-align: center;
+    min-width: 140px;
+    flex: 1;
+}
+
+.training-total-days {
+    padding: 8px;
+    width: 150px;
+    text-align: center;
+}
+
+.team-score {
+    padding: 8px;
+    width: 130px;
+    text-align: center;
+}
+
+.input-intern {
     text-rendering: auto;
     color: fieldtext;
     letter-spacing: normal;
@@ -78,6 +137,33 @@
     width: 300px;
 }
 
-.pl-15{
+.pl-15 {
     padding-left: 15px;
+}
+
+table .table-training tr,
+table .table-training th,
+table .table-training td {
+    flex: 1;
+    min-width: 140px;
+    padding: 8px;
+    text-align: center;
+}
+
+
+.position-p {
+    position: absolute;
+    top: 16px;
+}
+
+.w-184 {
+    width: 184px;
+}
+
+.w-124 {
+    width: 124px;
+}
+
+.w-84 {
+    width: 84px;
 }

@@ -13,11 +13,24 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logoImage from '../../../assets/image/logoCodeGym.png';
+import logoGoogle from '../../../assets/image/google.png';
 import { useState } from "react";
-function Copyright(props) {
 
+import { GoogleLogin } from '@react-oauth/google';
+// import { jwtDecode } from "jwt-decode";
+import { useGoogleLogin } from '@react-oauth/google';
+import { Password } from '@mui/icons-material';
+import './login.css';
+import GoogleIcon from '@mui/icons-material/Google';
+import { sendNotifications } from "../../Notification/notification";
+
+import { useEffect } from 'react';
+import { elements } from 'chart.js';
+
+
+function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
@@ -45,7 +58,22 @@ const EndAdorment = ({ visible, setVisible }) => {
 const defaultTheme = createTheme();
 
 function Login() {
+    const localhost = process.env.REACT_APP_API_BACK_END;
+    const localhost3000 = process.env.REACT_APP_API_FRONT_END;
 
+    const [local, setLocal] = useState('')
+    useEffect(() => {
+        const storedLocation = localStorage.getItem('currentLocation');
+        try {
+            const parsedLocation = JSON.parse(storedLocation);
+            setLocal(parsedLocation) // In ra đối tượng JavaScript đã phân tích
+        } catch (error) {
+            console.error(error); // In ra lỗi nếu có
+        }
+    }, []);
+    const localCheck = local.split('=');
+    const localPath = localCheck[0];
+    const number = localCheck[1];
 
 
     const [visible, setVisible] = React.useState(true)
@@ -57,23 +85,36 @@ function Login() {
         const formData = new FormData(event.currentTarget);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
-        axios.post("http://localhost:8080/login", data).then(
+        axios.post(`${localhost}login`, data).then(
             res => {
-
                 if (res.data.code === "401") {
                     enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
                 }
                 if (res.data.code === "200") {
                     localStorage.setItem("currentUser", JSON.stringify(res.data.data))
                     enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
-                    navigate("/users")
+                    navigate("/dashboard")
                 }
-                setFlagValidate({ ...flagValidate, validSubmit: true })
+                if (res.data.code === "202") {
+                    localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                    localStorage.setItem("pendingUser", JSON.stringify(data))
+                    navigate("/pageWait", {state: {data}})
+                    if(localPath === "/recruitment/personalNeeds?idRequest" || localPath === "/recruitment/recruitmentPlan?idPlan"){
+                        navigate(local);
+                    } else{
+                        navigate("/users")
+                    }
+                }
+                if(res.data.code === "203") {
+                    enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                }
+                setFlagValidate({...flagValidate, validSubmit: true})
             }
         ).catch(reason => {
             enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
             setFlagValidate({ ...flagValidate, validSubmit: true })
         })
+       
     };
 
     // Ép buộc component re-render
@@ -129,25 +170,88 @@ function Login() {
     // Disabled submit nếu một trong các flag là false
     const validForm = Object.values(flagValidate).some(value => !value);
 
-    // Tạo các ref dể lấy giá trị của input nếu cần
+    // Tạo các ref dể lấy giá trị của input
     const emailInput = React.useRef();
     const passwordInput = React.useRef();
     const submitButton = React.useRef();
 
+    const loginAccountGoogle = useGoogleLogin({
+        onSuccess: async (response) => {
+            try {
+                // Lấy access token
+                const { access_token } = response;
+
+                // Sử dụng access token để lấy thông tin người dùng từ Google
+                const userInfo = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                });
+                const dataGoogle = {
+                    name: userInfo.data.name,
+                    phone: "",
+                    email: userInfo.data.email,
+                    password: "Email0" + userInfo.data.email,
+                };
+                console.log(dataGoogle);
+                axios.post(`${localhost}loginGoogle`, dataGoogle).then(
+                    res => {
+                        if (res.data.code === "401") {
+                            enqueueSnackbar(res.data.msg, { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                        }
+                        if (res.data.code === "200") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            navigate("/dashboard")
+                        }
+                        if (res.data.code === "201") {
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
+                            sendNotifications(
+                                null,
+                                `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
+                                ['ROLE_ADMIN'],
+                                null,
+                                `/users?idUser=${res.data.id}`);
+                            enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            navigate("/pageWait", { state: { dataGoogle } })
+                        }
+
+                        if (res.data.code === "202") {
+                            console.log(res.data);
+                            localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+                            localStorage.setItem("pendingUser", JSON.stringify(dataGoogle))
+                            enqueueSnackbar('Đăng nhập thành công!', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
+                            navigate("/pageWait", { state: { dataGoogle } })
+                        }
+                        setFlagValidate({ ...flagValidate, validSubmit: true })
+                    }
+                ).catch(reason => {
+                    enqueueSnackbar("Có lỗi ở phía máy chủ", { variant: "error", anchorOrigin: { horizontal: "right", vertical: "top" }, autoHideDuration: 3000 });
+                    setFlagValidate({ ...flagValidate, validSubmit: true })
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
+
+
+
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs" style={{ paddingTop: '140px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <Container component="main" maxWidth="xs" style={{display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: '146px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: '#282781' }}>
-                        <img src={logoImage} style={{ width: '30px', height: '30px' }} />
+                    <Avatar style={{ width: '100px', height: '100px' }} sx={{ m: 1, bgcolor: '#282781' }}>
+                        <img src={logoImage} style={{ width: '80px', height: '80px' }} />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
@@ -159,7 +263,7 @@ function Login() {
                             fullWidth
                             id="email"
                             label="Email Address"
-                            name="name"
+                            name="email"
                             autoComplete="email"
                             placeholder="Example123@gmail.com"
 
@@ -175,10 +279,6 @@ function Login() {
                             margin="normal"
                             required
                             fullWidth
-                            // onInput = {(e) =>{
-                            //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4)
-                            // }}
-                            // inputProps={{maxLenght: 12}}
                             name="password"
                             label="Password"
                             type={visible ? "password" : "text"}
@@ -191,7 +291,7 @@ function Login() {
                             onFocus={() => {
                                 setShowMsg({ ...showMsg, showPassError: true })
                             }}
-                            placeholder={"Example123"}
+                            placeholder={"Example0123"}
                             inputRef={passwordInput}
                             error={showMsg.showPassError && !flagValidate.validPass}
                             onChange={(e) => checkPass(e.currentTarget.value)}
@@ -209,19 +309,30 @@ function Login() {
                                 This is a success Alert.
                             </Alert>
                         }
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            disabled={validForm}
-                            ref={submitButton}
-                        >
+                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 2,  padding: "8px 0px", fontWeight: 600}} disabled={validForm} ref={submitButton}>
                             Sign In
+                        </Button>
+                        <div class="form-link">
+                            <span>Don't have an account? <a href={`${localhost3000}register`} class="link signup-link">Sign up</a></span>
+                        </div>
+
+
+                        <div class="line" sx={{ mt: 2 }}></div>
+
+                        <Button fullWidth sx={{ mt: 2, mb: 2, fontWeight: 800}} variant="outlined" size='medium' onClick={() => loginAccountGoogle()}>
+                            <img src={logoGoogle} style={{ width: '40px', height: '40px' }} />
+                            Login with Google
                         </Button>
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 36, mb: 4 }} />
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ position: 'fixed', bottom: '20px' }}>
+                        <Copyright sx={{ mt: 36, mb: 4, marginTop: '0px', marginBottom: '0px' }} />
+                    </div>
+
+                </div>
+                
             </Container>
         </ThemeProvider>
     )

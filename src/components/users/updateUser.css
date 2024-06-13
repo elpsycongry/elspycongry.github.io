@@ -7,12 +7,18 @@
     font-weight: 0;
 }
 
-.send-btn {
-    width: 80px;
+.send-btn-update-user {
+    margin-top: 10px;
+    width: 160px;
+    height: 40px;
     text-align: left;
     background-color: #388738;
     color: #fdfdfd;
     border-radius: 3px;
+}
+
+.send-btn-update-user:hover{
+    background-color: #0dab0d;
 }
 
 .css-ahj2mt-MuiTypography-root{
@@ -21,4 +27,26 @@
 
 .cursor:hover {
     cursor: pointer;
+}
+
+.form-update-user{
+    width: 550px;
+    padding: 25px;
+    min-height: 450px;
+}
+
+.form-label-input{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-container-user{
+    display: flex;
+    justify-content: end;
+}
+
+.update-title{
+    padding: 0;
+    padding-left: 23px;
+    padding-top: 10px;
 }

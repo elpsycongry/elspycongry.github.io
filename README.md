@@ -4,7 +4,50 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+### `config .env`
+Open [link](https://dashboard.emailjs.com/sign-in), then sign in, if you doesn't have an account, sign up now. 
+In sidebar:
+ - Select 'Email service' -> click 'Add new service' -> choose gmail then select connect account and create service(in there have Service ID)
+ - Select 'Email Templates' -> create new templates -> create templates, template like :
+
+ main form (Images are for illustration purposes only): 
+
+![alt text](image/image1.png)
+
+ Edit Content -> Code Editor code in Html (we have form template in formEmailJs.txt), create to template, one for recruitment plan, one for personal need:
+
+![alt text](image/image.png)
+
+Then you click apply changes -> save (take Template ID in settings).
+ 
+ + Change data in Subject is your name web and to email is {{to_email}}
+    
+    ex: 
+
+![alt text](image.png)
+
+![alt text](image-1.png)
+
+ - You can take 'Public Key' in  Account. 
+
+In project, create new file .env in project (file .env in big project) ex: 
+
+![alt text](image/project.png)
+
+import three variable: 
+
+ - REACT_APP_API_SERVICE_ID = your Service ID
+ - REACT_APP_API_TEMPLATE_PERSONAL_NEED_ID = your Template PN ID
+ - REACT_APP_API_TEMPLATE_RECRUITMENT_PLAN_ID = your Template RP ID
+ - REACT_APP_API_PUBLIC_KEY =  your Public Key
+ 
+ Example: REACT_APP_API_SERVICE_ID = service_aswr1v7d
+
+ Note: `if u changes some of ID or key, u must turn off your project and run again !!!`
+
+
+### `npm install`
+You must be run this to update package-lock.json before run start
 
 ### `npm start`
 
@@ -39,32 +82,3 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

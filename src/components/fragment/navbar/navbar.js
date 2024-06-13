@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -19,7 +19,6 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Link } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
-import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 const drawerWidth = 240;
 
@@ -86,7 +85,6 @@ function Navbar() {
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
-
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -125,25 +123,34 @@ function Navbar() {
         )
     }
 
+    const HomeIcon = () => {
+        return (
+            <Icon icon="fa:home" width="25" height="25" />
+        )
+    }
+
     const listItems = [
-        { id: 1, text: "Người dùng", IconText: GroupIcon, linkTo: `/users`, roles: ['ROLE_ADMIN'] },
+        { id: 1, text: "Dashboard", IconText: HomeIcon, linkTo: `/dashboard`, roles: [] },
         { id: 2, text: "Đào tạo", IconText: Book, linkTo: `/training`, roles: ['ROLE_TM', 'ROLE_ADMIN'] },
         {
-            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_HR'], children: [
+            id: 3, text: "Tuyển dụng", IconText: BusinessCenterIcon, roles: ['ROLE_ADMIN', 'ROLE_TM', 'ROLE_DM', 'ROLE_HR', 'ROLE_QC'], children: [
                 {
                     id: 1,
                     name: "Nhu cầu",
                     linkTo: "/recruitment/personalNeeds",
+                    roles: ['ROLE_ADMIN', 'ROLE_TM', 'ROLE_DM', 'ROLE_HR', 'ROLE_QC']
                 },
                 {
                     id: 2,
                     name: "Kế hoạch tuyển dụng",
                     linkTo: "/recruitment/recruitmentPlan",
+                    roles: ['ROLE_ADMIN', 'ROLE_TM', 'ROLE_DM', 'ROLE_HR', 'ROLE_QC']
                 },
                 {
                     id: 3,
                     name: "Quản lý ứng viên",
                     linkTo: "/recruitment/candidateManagement",
+                    roles: ['ROLE_ADMIN', 'ROLE_TM', 'ROLE_HR', 'ROLE_QC']
                 }
             ]
         },
@@ -157,17 +164,16 @@ function Navbar() {
                 , {
                     id: 2,
                     name: "Kết quả tuyển dụng",
-                    linkTo: "/recruitment/personalNeeds",
+                    linkTo: "/recruitment/stats",
                 }, {
                     id: 3,
-                    name: "Thống kê sau quả đào tạo",
-                    linkTo: "/recruitment/personalNeeds",
+                    name: "Thống kê sau đào tạo",
+                    linkTo: "/afterTraining/stats",
                 },
             ]
-        }
-
+        },
+        { id: 5, text: "Người dùng", IconText: GroupIcon, linkTo: `/users`, roles: ['ROLE_ADMIN'] }
     ]
-
     const [openChil, setOpenChil] = useState({});
     const handleClick = (id) => {
         setOpenChil(prev => ({ ...prev, [id]: !prev[id] }));
@@ -224,10 +230,15 @@ function Navbar() {
                             {children && (
                                 <Collapse in={openChil[id] ?? false} timeout="auto" unmountOnExit>
                                     <List className='listChild' component="div" disablePadding>
-                                        {Object.keys(children).map((subItem, index) => (
-                                            <ListItem button key={subItem} sx={{ pl: 4 }}>
-                                                <Link className='linkChild' to={children[subItem].linkTo}>
-                                                    <ListItemText className='child' primary={children[subItem].name} />
+                                        {children.filter(subItem => {
+                                            if (!subItem.roles || subItem.roles.length === 0) {
+                                                return true;
+                                            }
+                                            return subItem.roles.some(role => roles.includes(role));
+                                        }).map((subItem, index) => (
+                                            <ListItem button key={subItem.id} sx={{ pl: 4 }}>
+                                                <Link className='linkChild' to={subItem.linkTo}>
+                                                    <ListItemText className='child' primary={subItem.name} />
                                                 </Link>
                                             </ListItem>
                                         ))}
@@ -238,7 +249,6 @@ function Navbar() {
                     ))}
                 </List>
             </Drawer>
-
         </Box >
     );
 }

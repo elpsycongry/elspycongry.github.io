@@ -1,0 +1,20 @@
+.form-link{
+    text-align: center;
+    margin-top: 10px;
+}
+.form-link span,
+.form-link a{
+    font-size: 16px;
+    font-weight: 400;
+    color: #232836;
+}
+.form-link a{
+    color: #0171d3;
+    text-decoration: none;
+}
+.form-link a:hover {
+    cursor: pointer;
+}
+.form-content-link a:hover{
+    text-decoration: underline;
+}

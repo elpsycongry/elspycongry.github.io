@@ -1,58 +1,111 @@
 import axios from "axios";
-import {enqueueSnackbar} from "notistack";
-import {Navigate} from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+
+const localhost = process.env.REACT_APP_API_BACK_END;
+const localhost3000 = process.env.REACT_APP_API_FRONT_END;
 
 // Check Token
-function AuthContext({children}) {
+function AuthContext({ children }) {
+   
 
+    const location = useLocation();
+    useEffect(() => {
+        const newLocation = location.pathname + location.search;
+        localStorage.setItem('currentLocation', JSON.stringify(newLocation)); // Lưu dữ liệu dưới dạng chuỗi JSON
+    }, [location]);
+    // 
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const pathName = window.location.pathname;
     if (currentUser === null) {
-        if (pathName !== "/login") {
+        if (pathName === '/') {
+            return children
+        }
+        if (pathName !== "/login" && pathName !== "/register") {
             return <Navigate to="/login"/>
         }
     } else {
-        let roles = []
-        currentUser.roles.forEach(element => {
-            roles = [...roles, element.authority]
-        });
-        const isAdmin = roles.find((role) => role === 'ROLE_ADMIN') 
-        const isManager = roles.find((role) => role === 'ROLE_TM') 
-        if (pathName === '/users'){
+        axios.get(`${localhost}api/tokens/checkToken?token=${currentUser.accessToken}`).then(res => {
+                console.log(res)
+            }
+        ).catch(e => {
+            axios.post(`${localhost}logoutUser`, {}, {
+                headers: {
+                    Authorization: `Bearer ${currentUser.accessToken}` // Thêm token vào header
+                }
+            })
+            localStorage.removeItem("currentUser");
+            window.location.href= `${localhost3000}`;
+        })
+
+        const roles = currentUser.roles.map(role => role.authority); // Lấy danh sách vai trò của người dùng
+        const isAdmin = roles.includes('ROLE_ADMIN'); // Kiểm tra xem người dùng có vai trò admin hay không
+        const isManager = roles.includes('ROLE_TM'); // Kiểm tra xem người dùng có vai trò quản lý hay không
+        const isDivisionManager = roles.includes('ROLE_DM'); // Kiểm tra xem người dùng có vai trò quản lý bộ phận hay không
+        const isQualityController = roles.includes('ROLE_QC'); // Kiểm tra xem người dùng có vai trò kiểm soát chất lượng hay không
+        const isHumanResource = roles.includes('ROLE_HR'); // Kiểm tra xem người dùng có vai trò nhân sự hay không
+        const isPending = currentUser.accessToken === 'Tài khoản của bạn chưa được xác nhận'
+        const status = currentUser.status;
+        const state = currentUser.state;
+
+        if (isPending && pathName!== "/pageWait" && pathName !== "/login") {
+            return <Navigate to={"/pageWait"}/>
+        }
+
+        if (pathName === '/') {
+                return <Navigate to={"/dashboard"}/>
+        }
+        if (pathName === '/users' || pathName === '/recruitment/stats') {
             if (!isAdmin) {
-                return <Navigate to={"/"}/>
-            } 
+                return <Navigate to={"/dashboard"}/>
+            }
         }
         if (pathName === "/training") {
             if (!isAdmin && !isManager) {
+                return <Navigate to={"/dashboard"}/>
+            }
+        }
+        if (pathName === '/users' && !isAdmin) {
+            return <Navigate to="/dashboard"/>;
+        }
+        if (pathName === "/training/stats") {
+            if (!isAdmin) {
                 return <Navigate to={"/"}/>
-            } 
+            }
         }
-        {isAdmin && <div></div>}
-        if (pathName === "/login") {
-            return <Navigate to="/"/>
+        if (pathName === "/login" && !isPending) {
+            return <Navigate to="/dashboard"/>
         }
-
     }
-    if (children === undefined) {
-        return <Navigate to="/notFound"/>
-    }
-    return (<>{children}</>)
-
+    return children ? <>{children}</> : <Navigate to="/notFound" />;
 }
 
-export function doLogout(navigate) {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-    if (user != null) {
-        axios.post("http://localhost:8080/logoutUser", {Authorization: `Bearer ${user.accessToken}`}).then(res => {
-            // enqueueSnackbar("Đăng xuất thành công", {variant: "success"});
+
+// Hàm đăng xuất
+ export async function doLogout(navigate) {
+
+    const user = JSON.parse(localStorage.getItem("currentUser")); // Lấy thông tin người dùng hiện tại từ localStorage
+
+    // Kiểm tra xem người dùng có tồn tại không
+    if (user) {
+        // Gửi yêu cầu đăng xuất đến server
+         axios.post(`${localhost}logoutUser`, {}, {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}` // Thêm token vào header
+            }
+        }).then(() => {
         }).catch(e => {
-            console.error(e)
-            // enqueueSnackbar("Có lỗi xảy ra không thể đăng xuất", {variant: "error"});
-        })
-        localStorage.removeItem("currentUser");
-        navigate("/login")
+            console.error(e); // In lỗi ra console
+        });
+        localStorage.setItem('currentLocation', '');
+        localStorage.removeItem("currentUser"); // Xóa thông tin người dùng khỏi localStorage
+        navigate("/"); // Điều hướng người dùng đến trang chủ
+    } else {
+        navigate("/"); // Nếu không có người dùng, điều hướng trực tiếp đến trang chủ
     }
 }
+
 
 export default AuthContext;

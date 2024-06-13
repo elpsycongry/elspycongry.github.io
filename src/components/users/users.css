@@ -1,29 +1,21 @@
-.table-container {
+.status .MuiInputBase-root{
+    height: 35px;
+}
+
+.table-container-user {
     width: 100%;
 }
 
 .table-user {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    flex: 1;
+    width: 100%;
+    table-layout: fixed; /* Đặt thuộc tính này để cho phép các ô trong table co giãn */
 }
 
-.table-user tr {
-    display: flex;
-}
-
-.table-user td,
-.table-user th {
-    text-align: center;
-    min-width: 120px;
-    flex: 1;
-    padding: 8px;
-}
-
-.user-id {
-    max-width: 60px;
-    padding-left: 0;
+.table-user thead,
+.table-user tbody {
+    width: 100%; /* Đảm bảo rằng thead và tbody chiếm 100% chiều rộng của table */
+    display: table; /* Để thead và tbody được hiển thị dưới dạng bảng */
+    table-layout: fixed; /* Đặt thuộc tính này cho thead và tbody để các ô co giãn */
 }
 
 .input-username-email{
@@ -56,4 +48,50 @@
 
 .pl-15{
     padding-left: 15px;
+}
+
+.user-roles{
+    text-align: center;
+    padding: 8px;
+}
+
+div .table-user th{
+    height: 100px;
+    font-size: 25px;
+    font-weight: 400;
+    flex: 1;
+}
+
+.table-user th:not(.user-id),
+.table-user td:not(.user-id) {
+    width: auto; /* Cho phép các ô co giãn tự động */
+    min-width: 200px; /* Đặt giá trị tối thiểu cho chiều rộng của các ô */
+    padding: 8px;
+    text-align: center;
+    height: 43px;
+}
+
+.user-name{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+}
+
+.user-id{
+    width: 10%;
+    padding: 8px;
+    text-align: center;
+}
+
+.user-actions {
+    width: 200px; /* Chiều rộng cố định cho cột "Hành động" */
+}
+
+.user-name,
+.user-email,
+.user-phone,
+.user-roles {
+    flex-grow: 1; /* Cho phép co giãn tự động theo chiều rộng của table */
+    min-width: 200px; /* Giá trị tối thiểu để đảm bảo không bị quá nhỏ */
 }

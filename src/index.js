@@ -6,12 +6,16 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
 import AuthContext from "./components/checkToken/AuthContext";
 import {SnackbarProvider} from "notistack";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <SnackbarProvider style={{ marginTop: '60px' , marginRight: '18px'}} autoHideDuration={1500} anchorOrigin={{vertical: "top", horizontal: "right"}}>
+    <SnackbarProvider  autoHideDuration={1500} anchorOrigin={{vertical: "top", horizontal: "right"}}>
         <BrowserRouter >
-            <App />
+            <GoogleOAuthProvider clientId="1026149724502-sfvljrh0assd45c3k5m5dbnkntfsu3n1.apps.googleusercontent.com">
+                 <App />
+            </GoogleOAuthProvider>;
         </BrowserRouter>
     </SnackbarProvider>
 );
