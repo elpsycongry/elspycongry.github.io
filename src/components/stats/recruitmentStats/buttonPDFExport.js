@@ -150,11 +150,11 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
             })
         }
         if (checkboxes.checkbox3 === true) {
-            if (checkboxes.checkbox2 === true) {
+            if (checkboxes.checkbox1 === true || checkboxes.checkbox2 === true) {
                 pdf.addPage()
             }
             
-            if (checkboxes.checkbox2 === false) {
+            if (checkboxes.checkbox2 === false && checkboxes.checkbox1 === false) {
                 pdf.text('Statistical chart', 90, 10);
             }
             listChartElem()[2].current.style.visibility = "visible";
@@ -190,10 +190,10 @@ const ButtonPDFExport = ({ listChartElem, year }) => {
         }
         if (checkboxes.checkbox4 === true) {
             listChartElem()[3].current.style.visibility = "visible";
-            if (checkboxes.checkbox3 === true) {
+            if (checkboxes.checkbox3 === true || checkboxes.checkbox2 === true || checkboxes.checkbox1 === true) {
                 pdf.addPage()
             }
-            if (checkboxes.checkbox3 === false) {
+            if (checkboxes.checkbox3 === false && checkboxes.checkbox2 === false && checkboxes.checkbox1 === false) {
                 pdf.text('Statistical chart', 90, 10);
             }
             const canvas3 = await html2canvas(listChartElem()[3].current);

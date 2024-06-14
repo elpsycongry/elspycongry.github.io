@@ -80,7 +80,7 @@ function Register() {
                         `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
                         ['ROLE_ADMIN'],
                         null,
-                        `/users?idUser=${res.data.id}`)
+                        `users?idUser=${res.data.id}`)
                     navigate("/login")
                 }
                 setFlagValidate({ ...flagValidate, validSubmit: true })
@@ -220,7 +220,7 @@ function Register() {
                                 `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
                                 ['ROLE_ADMIN'],
                                 null,
-                                `/users?idUser=${res.data.id}`)
+                                `users?idUser=${res.data.id}`)
                             enqueueSnackbar('Đăng nhập thành công!', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                             navigate("/pageWait", { state: { dataGoogle } })
                         }

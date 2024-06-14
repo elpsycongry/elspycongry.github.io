@@ -212,7 +212,7 @@ function Login() {
                                 `Có người dùng mới đăng ký với email <b>${res.data.email}</b> `,
                                 ['ROLE_ADMIN'],
                                 null,
-                                `/users?idUser=${res.data.id}`);
+                                `users?idUser=${res.data.id}`);
                             enqueueSnackbar('Đăng nhập thành công !', { variant: "success", anchorOrigin: { horizontal: "right", vertical: "top" } });
                             navigate("/pageWait", { state: { dataGoogle } })
                         }
@@ -313,7 +313,7 @@ function Login() {
                             Sign In
                         </Button>
                         <div class="form-link">
-                            <span>Don't have an account????? <a href={`${localhost3000}register`} class="link signup-link">Sign up</a></span>
+                            <span>Don't have an account? <a href={`${localhost3000}register`} class="link signup-link">Sign up</a></span>
                         </div>
 
 

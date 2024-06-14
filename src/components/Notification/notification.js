@@ -249,7 +249,11 @@ export async function sendNotifications(
     link,
     listReceiverEmail,
 ) {
+    const notiPre = process.env.REACT_APP_API_NOTIFICATION_PREFEX
     var date = new Date()
+    if (notiPre) {
+        link = notiPre + link
+    }
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const notificationInfo = {
@@ -261,5 +265,6 @@ export async function sendNotifications(
         link: link,
         listReceiverEmail: listReceiverEmail,
     }
+    
     await axios.post(`${localhost}api/notifications`, notificationInfo)
 }

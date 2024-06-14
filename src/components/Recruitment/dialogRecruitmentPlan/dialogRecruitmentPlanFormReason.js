@@ -32,13 +32,13 @@ export default function DialogRecruitmentPlanFormReason({
                         `Nhu cầu nhân sự ${recruitmentRequestName} vừa cập nhật trạng thái: Bị từ chối bởi DCAN`,
                         ['ROLE_DM'],
                         null,
-                        `/recruitment/personalNeeds?idRequest=${data.values.recruitmentPlan.recruitmentRequest.id}`)
+                        `recruitment/personalNeeds?idRequest=${data.values.recruitmentPlan.recruitmentRequest.id}`)
                         .then(sendNotifications(
                             null,
                             `Kế hoạch tuyển dụng <b>${requestPlanName}</b> vừa cập nhật trạng thái: <b>Bị từ chối</b> `,
                             ['ROLE_TM'],
                             null,
-                            `/recruitment/recruitmentPlan?idPlan=${data.values.recruitmentPlan.id}`))
+                            `recruitment/recruitmentPlan?idPlan=${data.values.recruitmentPlan.id}`))
 
                     window.location.href = "/recruitment/personalNeeds";
                 });

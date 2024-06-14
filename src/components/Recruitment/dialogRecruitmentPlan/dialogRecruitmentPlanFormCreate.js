@@ -206,14 +206,14 @@ const localhost = process.env.REACT_APP_API_BACK_END;
                                     `Nhu cầu nhân sự <b>${formData.values.recruitmentPlan.recruitmentRequest.name}</b> vừa cập nhật trạng thái: <b>Đã xác nhận</b>`,
                                     ['ROLE_DM'],
                                     null,
-                                    `/recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`
+                                    `recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`
                                         .then(
                                             sendNotifications(
                                                 null,
                                                 `Có kế hoạch tuyển dụng mới: <b>${formData.values.recruitmentPlan.name}</b> `,
                                                 ['ROLE_HR'],
                                             null,
-                                            `/recruitment/recruitmentPlan?idPlan=${formData.values.recruitmentPlan.id}`
+                                            `recruitment/recruitmentPlan?idPlan=${formData.values.recruitmentPlan.id}`
                                         )))
                                 window.location.href = "/recruitment/recruitmentPlan"
                             });

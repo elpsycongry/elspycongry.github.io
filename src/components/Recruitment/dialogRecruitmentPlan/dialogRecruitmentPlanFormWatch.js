@@ -100,13 +100,13 @@ export default function DialogRecruitmentPlanFormWatch({ id, check, statusItem, 
                   `Nhu cầu nhân sự <b>${formData.values.recruitmentPlan.recruitmentRequest.name}</b> vừa cập nhật trạng thái: <b>Đang tuyển dụng</b>`,
                   ['ROLE_DM'],
                   null,
-                  `/recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`)
+                  `recruitment/personalNeeds?idRequest=${formData.values.recruitmentPlan.recruitmentRequest.id}`)
               .then(sendNotifications(
                   null,
                   `Kế hoạch tuyển dụng <b>${formData.values.recruitmentPlan.name}</b> vừa cập nhật trạng thái: <b>Đã phê duyệt</b>`,
                   ['ROLE_TM'],
                   null,
-                      `/recruitment/recruitmentPlan?idPlan=${formData.values.recruitmentPlan.id}`
+                      `recruitment/recruitmentPlan?idPlan=${formData.values.recruitmentPlan.id}`
                   ))}).then(() => {
                 window.location.href = "/recruitment/recruitmentPlan"
           })});
